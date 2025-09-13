@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>ИИ-помощник</h2>
-<p>Здесь будет ИИ-помощник</p>
+<div class="container">
+    <div class="cyber-card p-5 text-center">
+        <i class="bi bi-robot display-1 text-cyber-primary mb-3"></i>
+        <h2 class="cyber-text glow-text">🤖 ИИ-помощник</h2>
+        <p class="cyber-subtext lead">Скоро здесь появится ваш персональный консультант по кибербезопасности!</p>
+        <div class="alert alert-dark cyber-border">
+            <i class="bi bi-info-circle"></i> Этот раздел находится в разработке
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn-cyber">
+            <i class="bi bi-arrow-left"></i> На главную
+        </a>
+    </div>
+</div>
 {% endblock %}

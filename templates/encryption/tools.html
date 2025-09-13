@@ -2,4 +2,16 @@
 
 {% block content %}
 <div class="container">
-    <div class="cyber
+    <div class="cyber-card p-5 text-center">
+        <i class="bi bi-lock display-1 text-cyber-accent mb-3"></i>
+        <h2 class="cyber-text glow-text">🔒 Шифрование данных</h2>
+        <p class="cyber-subtext lead">Скоро здесь появятся инструменты для шифрования текстов и файлов!</p>
+        <div class="alert alert-dark cyber-border">
+            <i class="bi bi-info-circle"></i> Этот раздел находится в разработке
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn-cyber">
+            <i class="bi bi-arrow-left"></i> На главную
+        </a>
+    </div>
+</div>
+{% endblock %}
