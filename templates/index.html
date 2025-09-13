@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Герой секция -->
+<section class="hero-section text-center py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold cyber-text mb-4 glow-text">
+                    <i class="bi bi-shield-shaded"></i> CyberGuardian
+                </h1>
+                <p class="lead cyber-subtext mb-4">
+                    Ваш цифровой щит в мире кибербезопасности. 
+                    Защищайся, учись и шифруй с помощью современных технологий.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber btn-lg">
+                        <i class="bi bi-book me-2"></i>Начать обучение
+                    </a>
+                    <a href="{{ url_for('passwords.password_generator') }}" class="btn btn-cyber-outline btn-lg">
+                        <i class="bi bi-key me-2"></i>Проверить пароль
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Фичи -->
+<section class="features-section py-5">
+    <div class="container">
+        <h2 class="text-center cyber-text mb-5 glow-text">Возможности платформы</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="bi bi-book display-4 text-cyber-primary mb-3"></i>
+                    <h5 class="text-cyber-primary">Интерактивное обучение</h5>
+                    <p class="cyber-subtext">Уроки по кибербезопасности, тесты и симуляции атак</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="bi bi-key display-4 text-cyber-secondary mb-3"></i>
+                    <h5 class="text-cyber-secondary">Генератор паролей</h5>
+                    <p class="cyber-subtext">Создание и проверка надежных паролей</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="bi bi-lock display-4 text-cyber-accent mb-3"></i>
+                    <h5 class="text-cyber-accent">Шифрование данных</h5>
+                    <p class="cyber-subtext">Шифрование текстов и файлов с различными алгоритмами</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="bi bi-robot display-4 text-cyber-primary mb-3"></i>
+                    <h5 class="text-cyber-primary">ИИ-помощник</h5>
+                    <p class="cyber-subtext">Персональный консультант по безопасности</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Статистика -->
+<section class="stats-section py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <h3 class="text-cyber-primary fw-bold glow-text">100+</h3>
+                <p class="cyber-subtext">Учебных материалов</p>
+            </div>
+            <div class="col-md-3">
+                <h3 class="text-cyber-secondary fw-bold glow-text">50+</h3>
+                <p class="cyber-subtext">Алгоритмов шифрования</p>
+            </div>
+            <div class="col-md-3">
+                <h3 class="text-cyber-accent fw-bold glow-text">24/7</h3>
+                <p class="cyber-subtext">ИИ-помощник доступен</p>
+            </div>
+            <div class="col-md-3">
+                <h3 class="text-cyber-primary fw-bold glow-text">100%</h3>
+                <p class="cyber-subtext">Безопасность данных</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

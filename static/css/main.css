@@ -1,0 +1,200 @@
+/* Кибер-цветовая палитра */
+:root {
+    --cyber-dark: #0a0a0a;
+    --cyber-darker: #050505;
+    --cyber-primary: #00ff88;
+    --cyber-secondary: #0088ff;
+    --cyber-accent: #ff0088;
+    --cyber-text: #ffffff;
+    --cyber-subtext: #888888;
+    --cyber-border: #222222;
+    --cyber-glow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+/* Базовые стили */
+body.cyber-bg {
+    background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
+    color: var(--cyber-text);
+    min-height: 100vh;
+    font-family: 'Courier New', monospace;
+    background-attachment: fixed;
+}
+
+/* Навигация */
+.cyber-navbar {
+    background: rgba(10, 10, 10, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--cyber-border);
+    box-shadow: 0 2px 20px rgba(0, 255, 136, 0.1);
+}
+
+.cyber-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cyber-text {
+    color: var(--cyber-primary) !important;
+    text-shadow: var(--cyber-glow);
+}
+
+.cyber-subtext {
+    color: var(--cyber-subtext);
+}
+
+.cyber-link {
+    color: var(--cyber-text) !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+    margin: 0 0.5rem;
+}
+
+.cyber-link:hover {
+    color: var(--cyber-primary) !important;
+    border-bottom-color: var(--cyber-primary);
+    text-shadow: var(--cyber-glow);
+}
+
+.cyber-toggler {
+    border: 1px solid var(--cyber-primary);
+}
+
+.cyber-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 255, 136, 0.25);
+}
+
+/* Основной контент */
+.cyber-main {
+    min-height: calc(100vh - 200px);
+    padding: 2rem 0;
+}
+
+/* Карточки */
+.cyber-card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.cyber-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--cyber-primary);
+    box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+}
+
+/* Кнопки */
+.btn-cyber {
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary));
+    border: none;
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-cyber::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-cyber:hover::before {
+    left: 100%;
+}
+
+.btn-cyber:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+}
+
+.btn-cyber-outline {
+    background: transparent;
+    border: 2px solid var(--cyber-primary);
+    color: var(--cyber-primary);
+    font-weight: bold;
+}
+
+.btn-cyber-outline:hover {
+    background: var(--cyber-primary);
+    color: black;
+    transform: translateY(-2px);
+}
+
+/* Футер */
+.cyber-footer {
+    background: rgba(5, 5, 5, 0.95);
+    border-top: 1px solid var(--cyber-border);
+    padding: 2rem 0;
+    margin-top: auto;
+}
+
+.cyber-social {
+    margin-top: 1rem;
+}
+
+.cyber-social-link {
+    color: var(--cyber-subtext);
+    font-size: 1.2rem;
+    margin-left: 1rem;
+    transition: all 0.3s ease;
+}
+
+.cyber-social-link:hover {
+    color: var(--cyber-primary);
+    text-shadow: var(--cyber-glow);
+}
+
+/* Анимации */
+@keyframes cyber-glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.cyber-glitch {
+    animation: cyber-glitch 0.5s infinite;
+}
+
+.cyber-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Специальные эффекты */
+.glow-text {
+    text-shadow: 0 0 10px currentColor;
+}
+
+.cyber-border {
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+}
+
+/* Утилиты */
+.text-cyber-primary { color: var(--cyber-primary); }
+.text-cyber-secondary { color: var(--cyber-secondary); }
+.text-cyber-accent { color: var(--cyber-accent); }
+.bg-cyber-dark { background: var(--cyber-dark); }
+.bg-cyber-darker { background: var(--cyber-darker); }
