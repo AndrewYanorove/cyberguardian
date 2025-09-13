@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="cyber-card p-4 text-center">
+                <div class="cyber-avatar mb-3">
+                    <i class="bi bi-person-circle display-1 text-cyber-primary"></i>
+                </div>
+                <h3 class="cyber-text">{{ user.username }}</h3>
+                <p class="cyber-subtext">{{ user.email }}</p>
+                <p class="cyber-subtext small">
+                    <i class="bi bi-calendar me-1"></i>
+                    Зарегистрирован: {{ user.created_at.strftime('%d.%m.%Y') }}
+                </p>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-cyber-outline btn-sm">
+                    <i class="bi bi-box-arrow-right me-1"></i>Выйти
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="cyber-card p-4">
+                <h4 class="cyber-text mb-4">📊 Ваш прогресс</h4>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center p-3 cyber-stat">
+                            <i class="bi bi-book display-6 text-cyber-primary mb-2"></i>
+                            <h3 class="cyber-text">{{ user.get_progress().completed_lessons }}</h3>
+                            <p class="cyber-subtext">Пройдено уроков</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center p-3 cyber-stat">
+                            <i class="bi bi-key display-6 text-cyber-secondary mb-2"></i>
+                            <h3 class="cyber-text">{{ user.get_progress().password_score }}</h3>
+                            <p class="cyber-subtext">Очков паролей</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center p-3 cyber-stat">
+                            <i class="bi bi-lock display-6 text-cyber-accent mb-2"></i>
+                            <h3 class="cyber-text">{{ user.get_progress().encryption_usage }}</h3>
+                            <p class="cyber-subtext">Шифрований</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h5 class="cyber-text mb-3">🏆 Достижения</h5>
+                    <div class="cyber-achievements">
+                        <div class="achievement-item">
+                            <i class="bi bi-trophy text-warning me-2"></i>
+                            <span>Новичок кибербезопасности</span>
+                        </div>
+                        <div class="achievement-item">
+                            <i class="bi bi-trophy text-secondary me-2"></i>
+                            <span>Первый урок пройден</span>
+                        </div>
+                        <div class="achievement-item text-muted">
+                            <i class="bi bi-trophy me-2"></i>
+                            <span>Мастер шифрования (скрыто)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
