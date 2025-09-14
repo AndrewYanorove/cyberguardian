@@ -824,3 +824,189 @@ body.cyber-bg {
     background: var(--cyber-secondary);
 }
    
+/* Стили для образования */
+.lesson-card {
+    transition: all 0.3s ease;
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.lesson-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--cyber-primary);
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+}
+
+.lesson-completed {
+    border-color: var(--cyber-primary) !important;
+    background: rgba(0, 255, 136, 0.1) !important;
+}
+
+.difficulty-badge {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.difficulty-beginner {
+    background: rgba(0, 255, 136, 0.2);
+    color: var(--cyber-primary);
+    border: 1px solid var(--cyber-primary);
+}
+
+.difficulty-intermediate {
+    background: rgba(0, 136, 255, 0.2);
+    color: var(--cyber-secondary);
+    border: 1px solid var(--cyber-secondary);
+}
+
+.difficulty-advanced {
+    background: rgba(255, 0, 136, 0.2);
+    color: var(--cyber-accent);
+    border: 1px solid var(--cyber-accent);
+}
+
+.progress-ring {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: conic-gradient(var(--cyber-primary) 0% var(--progress, 0%), transparent var(--progress, 0%) 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-ring::before {
+    content: attr(data-progress) '%';
+    position: absolute;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+}
+
+.progress-ring::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: var(--cyber-dark);
+    border-radius: 50%;
+}
+
+/* Стили для контента уроков */
+.content-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    color: var(--cyber-text);
+}
+
+.content-warning {
+    background: rgba(255, 0, 68, 0.1);
+    border-left: 4px solid #ff0044;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+    color: var(--cyber-text);
+}
+
+.content-tip {
+    background: rgba(0, 255, 136, 0.1);
+    border-left: 4px solid var(--cyber-primary);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+    color: var(--cyber-text);
+}
+
+.content-example {
+    background: rgba(0, 136, 255, 0.1);
+    border-left: 4px solid var(--cyber-secondary);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 8px 8px 0;
+    font-family: 'Courier New', monospace;
+    color: var(--cyber-text);
+}
+
+/* Викторина */
+.quiz-question {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.quiz-option {
+    background: rgba(30, 30, 30, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin: 0.8rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.quiz-option:hover {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: var(--cyber-primary);
+    transform: translateX(5px);
+}
+
+.quiz-option.correct {
+    background: rgba(0, 255, 136, 0.2);
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.quiz-option.incorrect {
+    background: rgba(255, 0, 68, 0.2);
+    border-color: #ff0044;
+    box-shadow: 0 0 20px rgba(255, 0, 68, 0.3);
+}
+
+.quiz-explanation {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(0, 136, 255, 0.1);
+    border-radius: 10px;
+    border-left: 4px solid var(--cyber-secondary);
+}
+
+/* Навигация */
+.navigation-buttons {
+    position: sticky;
+    bottom: 0;
+    background: var(--cyber-darker);
+    padding: 1.5rem 0;
+    border-top: 2px solid var(--cyber-border);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+/* Хлебные крошки */
+.breadcrumb {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--cyber-border);
+}
+
+.breadcrumb-item a {
+    color: var(--cyber-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--cyber-text);
+    text-shadow: var(--cyber-glow);
+}
+
+.breadcrumb-item.active {
+    color: var(--cyber-text);
+}

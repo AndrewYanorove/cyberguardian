@@ -1,17 +1,150 @@
 {% extends "base.html" %}
 
+{% block title %}Обучение кибербезопасности - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.lesson-card {
+    transition: all 0.3s ease;
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.lesson-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--cyber-primary);
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+}
+
+.lesson-completed {
+    border-color: var(--cyber-primary) !important;
+    background: rgba(0, 255, 136, 0.1) !important;
+}
+
+.difficulty-badge {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+}
+
+.difficulty-beginner {
+    background: rgba(0, 255, 136, 0.2);
+    color: var(--cyber-primary);
+}
+
+.difficulty-intermediate {
+    background: rgba(0, 136, 255, 0.2);
+    color: var(--cyber-secondary);
+}
+
+.difficulty-advanced {
+    background: rgba(255, 0, 136, 0.2);
+    color: var(--cyber-accent);
+}
+
+.progress-ring {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: conic-gradient(var(--cyber-primary) 0% var(--progress, 0%), transparent var(--progress, 0%) 100%);
+    position: relative;
+}
+
+.progress-ring::before {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: var(--cyber-dark);
+    border-radius: 50%;
+    top: 5px;
+    left: 5px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <div class="cyber-card p-5 text-center">
-        <i class="bi bi-book display-1 text-cyber-primary mb-3"></i>
-        <h2 class="cyber-text glow-text">📚 Раздел обучения</h2>
-        <p class="cyber-subtext lead">Скоро здесь появятся интерактивные уроки по кибербезопасности!</p>
-        <div class="alert alert-dark cyber-border">
-            <i class="bi bi-info-circle"></i> Этот раздел находится в разработке
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-book me-2"></i>Курс кибербезопасности
+            </h1>
+            <p class="cyber-subtext lead">
+                Освойте essential навыки цифровой безопасности через интерактивные уроки
+            </p>
         </div>
-        <a href="{{ url_for('index') }}" class="btn btn-cyber">
-            <i class="bi bi-arrow-left"></i> На главную
-        </a>
+    </div>
+
+    <!-- Прогресс -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="cyber-card p-4">
+                <h4 class="cyber-text mb-3">📊 Ваш прогресс</h4>
+                <div class="d-flex align-items-center">
+                    <div class="progress-ring me-3" style="--progress: {{ (progress|length / lessons|length * 100)|default(0) }}%"></div>
+                    <div>
+                        <h5 class="mb-0">{{ progress|length }} из {{ lessons|length }} уроков</h5>
+                        <small class="cyber-subtext">Завершено</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список уроков -->
+    <div class="row g-4">
+        {% for lesson_id, lesson in lessons.items() %}
+        <div class="col-md-6 col-lg-4">
+            <div class="lesson-card cyber-card p-4 h-100 {% if progress.get(lesson_id, {}).completed %}lesson-completed{% endif %}">
+                <!-- Иконка и заголовок -->
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi {{ lesson.icon }} display-6 text-cyber-primary me-3"></i>
+                    <h5 class="cyber-text mb-0">{{ lesson.title }}</h5>
+                </div>
+
+                <!-- Описание -->
+                <p class="cyber-subtext mb-3">{{ lesson.description }}</p>
+
+                <!-- Мета-информация -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="difficulty-badge difficulty-{{ lesson.difficulty }}">
+                        {{ lesson.difficulty|title }}
+                    </span>
+                    <span class="cyber-subtext">
+                        <i class="bi bi-clock"></i> {{ lesson.estimated_time }}
+                    </span>
+                </div>
+
+                <!-- Прогресс урока -->
+                {% if progress.get(lesson_id, {}).completed %}
+                <div class="alert alert-success cyber-border mb-0">
+                    <i class="bi bi-check-circle me-2"></i>Завершено
+                </div>
+                {% else %}
+                <a href="{{ url_for('education.lesson', lesson_id=lesson_id) }}" 
+                   class="btn btn-cyber w-100">
+                    <i class="bi bi-play-circle me-2"></i>Начать урок
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Мотивация -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <div class="cyber-card p-5">
+                <i class="bi bi-shield-check display-1 text-cyber-primary mb-3"></i>
+                <h3 class="cyber-text">Знания - лучшая защита</h3>
+                <p class="cyber-subtext">
+                    Каждый пройденный урок делает вас на шаг ближе к цифровой безопасности
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
