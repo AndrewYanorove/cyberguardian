@@ -1,0 +1,454 @@
+{% extends "base.html" %}
+
+{% block title %}Шифрование текста - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.encryption-card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.algorithm-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.algorithm-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.algorithm-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--cyber-primary);
+}
+
+.algorithm-card.active {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: var(--cyber-primary);
+}
+
+.result-container {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    border-left: 4px solid var(--cyber-primary);
+}
+
+.password-strength {
+    height: 8px;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    margin: 0.5rem 0;
+    overflow: hidden;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+.encrypted-text {
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    word-break: break-all;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Заголовок -->
+            <div class="text-center mb-5">
+                <h1 class="cyber-text glow-text mb-3">
+                    <i class="bi bi-textarea-t me-2"></i>Шифрование текста
+                </h1>
+                <p class="cyber-subtext">Защитите ваши сообщения с помощью криптографии</p>
+            </div>
+
+            <!-- Основная форма -->
+            <div class="encryption-card">
+                <!-- Выбор алгоритма -->
+                <h4 class="cyber-text mb-3">🔒 Выберите алгоритм шифрования</h4>
+                <div class="algorithm-selector">
+                    <div class="algorithm-card active" data-algorithm="aes">
+                        <i class="bi bi-shield-check display-6 text-cyber-primary mb-2"></i>
+                        <h6>AES-256</h6>
+                        <small class="cyber-subtext">Надежно</small>
+                    </div>
+                    <div class="algorithm-card" data-algorithm="caesar">
+                        <i class="bi bi-arrow-left-right display-6 text-cyber-secondary mb-2"></i>
+                        <h6>Caesar</h6>
+                        <small class="cyber-subtext">Просто</small>
+                    </div>
+                    <div class="algorithm-card" data-algorithm="xor">
+                        <i class="bi bi-x-circle display-6 text-cyber-accent mb-2"></i>
+                        <h6>XOR</h6>
+                        <small class="cyber-subtext">Быстро</small>
+                    </div>
+                </div>
+
+                <!-- Дополнительные опции для Caesar -->
+                <div id="caesar-options" style="display: none;">
+                    <label class="form-label cyber-text">Сдвиг:</label>
+                    <input type="number" class="form-control cyber-input mb-3" id="caesar-shift" value="3" min="1" max="25">
+                </div>
+
+                <!-- Поле ввода текста -->
+                <div class="mb-3">
+                    <label class="form-label cyber-text">Текст для шифрования:</label>
+                    <textarea class="form-control cyber-input" id="input-text" 
+                              rows="5" placeholder="Введите текст для шифрования..."></textarea>
+                </div>
+
+                <!-- Поле пароля -->
+                <div class="mb-3">
+                    <label class="form-label cyber-text">Пароль для шифрования:</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control cyber-input" id="encryption-password" 
+                               placeholder="Введите пароль...">
+                        <button class="btn btn-cyber-outline" type="button" id="toggle-password">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength mt-2">
+                        <div class="strength-bar" id="password-strength-bar"></div>
+                    </div>
+                    <small class="cyber-subtext">
+                        Используйте надежный пароль длиной не менее 8 символов
+                    </small>
+                </div>
+
+                <!-- Кнопка шифрования -->
+                <button onclick="encryptText()" class="btn btn-cyber w-100 mb-3">
+                    <i class="bi bi-lock me-2"></i>Зашифровать
+                </button>
+
+                <!-- Результат -->
+                <div class="result-container" id="result-container">
+                    <h5 class="cyber-text mb-3">
+                        <i class="bi bi-check-circle text-success me-2"></i>Текст зашифрован
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label cyber-text">Зашифрованный текст:</label>
+                        <div class="encrypted-text" id="encrypted-result"></div>
+                    </div>
+
+                    <div id="aes-salt-container" style="display: none;">
+                        <label class="form-label cyber-text">Соль (для AES):</label>
+                        <div class="encrypted-text" id="salt-result"></div>
+                        <small class="cyber-subtext">Сохраните эту соль для дешифрования</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label cyber-text">Алгоритм:</label>
+                        <div class="cyber-subtext" id="algorithm-result"></div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button onclick="copyToClipboard('encrypted-result')" class="btn btn-cyber-outline">
+                            <i class="bi bi-clipboard me-2"></i>Копировать
+                        </button>
+                        <button onclick="decryptText()" class="btn btn-cyber">
+                            <i class="bi bi-unlock me-2"></i>Расшифровать
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Информация -->
+            <div class="cyber-card p-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-info-circle me-2"></i>Важная информация
+                </h4>
+                <div class="content-warning">
+                    <strong>⚠️ Внимание:</strong> Для дешифрования AES потребуется тот же пароль и соль. 
+                    Не теряйте их!
+                </div>
+                <div class="content-tip mt-3">
+                    <strong>💡 Совет:</strong> Используйте AES-256 для максимальной безопасности. 
+                    Caesar и XOR подходят только для обучения.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!-- В блок extra_js добавь console.log для отладки -->
+{% block extra_js %}
+<script>
+console.log('Скрипт шифрования загружен!');
+
+let currentAlgorithm = 'aes';
+let currentSalt = '';
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM загружен, инициализируем шифрование...');
+    
+    // Выбор алгоритма
+    document.querySelectorAll('.algorithm-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.algorithm-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            currentAlgorithm = this.dataset.algorithm;
+            console.log('Выбран алгоритм:', currentAlgorithm);
+            
+            document.getElementById('caesar-options').style.display = 
+                currentAlgorithm === 'caesar' ? 'block' : 'none';
+        });
+    });
+
+    // Остальной код инициализации...
+});
+async function decryptText() {
+    console.log('Начало дешифрования...');
+    
+    const encryptedText = document.getElementById('encrypted-result').textContent;
+    const algorithm = document.getElementById('algorithm-result').textContent;
+    
+    console.log('Зашифрованный текст:', encryptedText);
+    console.log('Алгоритм:', algorithm);
+    console.log('Соль:', currentSalt);
+
+    // Запрашиваем пароль через модальное окно вместо prompt
+    const password = await showPasswordPrompt();
+    if (!password) {
+        console.log('Пользователь отменил ввод пароля');
+        return;
+    }
+
+    console.log('Введенный пароль:', password);
+
+    try {
+        const data = {
+            encrypted_text: encryptedText,
+            password: password,
+            algorithm: algorithm
+        };
+
+        // Добавляем соль только для AES
+        if (algorithm.startsWith('AES') && currentSalt) {
+            data.salt = currentSalt;
+            console.log('Добавляем соль для AES:', currentSalt);
+        }
+
+        console.log('Отправляемые данные для дешифрования:', data);
+
+        const response = await fetch('/encryption/decrypt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        console.log('Ответ сервера при дешифровании:', response.status);
+        const result = await response.json();
+        console.log('Результат дешифрования:', result);
+
+        if (result.success) {
+            document.getElementById('input-text').value = result.decrypted_text;
+            showNotification('Текст успешно расшифрован!', 'success');
+        } else {
+            console.error('Ошибка от сервера при дешифровании:', result.error);
+            showNotification(result.error || 'Ошибка дешифрования', 'danger');
+        }
+    } catch (error) {
+        console.error('Ошибка при дешифровании:', error);
+        showNotification('Ошибка при дешифровании', 'danger');
+    }
+}
+
+// Функция для красивого ввода пароля
+function showPasswordPrompt() {
+    return new Promise((resolve) => {
+        // Создаем модальное окно для ввода пароля
+        const modalHtml = `
+            <div class="modal fade" id="decryptModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content cyber-card">
+                        <div class="modal-header">
+                            <h5 class="modal-title cyber-text">
+                                <i class="bi bi-key me-2"></i>Введите пароль для дешифрования
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label cyber-text">Пароль:</label>
+                                <input type="password" class="form-control cyber-input" id="decrypt-password" 
+                                       placeholder="Введите пароль...">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-cyber-outline" data-bs-dismiss="modal">
+                                Отмена
+                            </button>
+                            <button type="button" class="btn btn-cyber" onclick="confirmDecrypt()">
+                                <i class="bi bi-unlock me-2"></i>Расшифровать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Добавляем модальное окно в DOM
+        const modalContainer = document.createElement('div');
+        modalContainer.innerHTML = modalHtml;
+        document.body.appendChild(modalContainer);
+
+        // Показываем модальное окно
+        const modal = new bootstrap.Modal(document.getElementById('decryptModal'));
+        modal.show();
+
+        // Фокус на поле ввода
+        setTimeout(() => {
+            document.getElementById('decrypt-password').focus();
+        }, 500);
+
+        // Глобальная функция для подтверждения
+        window.confirmDecrypt = function() {
+            const password = document.getElementById('decrypt-password').value.trim();
+            modal.hide();
+            
+            // Убираем модальное окно из DOM
+            setTimeout(() => {
+                modalContainer.remove();
+                delete window.confirmDecrypt;
+            }, 500);
+            
+            resolve(password);
+        };
+
+        // Обработка закрытия модального окна
+        document.getElementById('decryptModal').addEventListener('hidden.bs.modal', function () {
+            modalContainer.remove();
+            delete window.confirmDecrypt;
+            resolve(null);
+        });
+    });
+}
+
+async function encryptText() {
+    console.log('Начало шифрования...');
+    const text = document.getElementById('input-text').value.trim();
+    const password = document.getElementById('encryption-password').value.trim();
+    
+    console.log('Текст:', text);
+    console.log('Пароль:', password);
+    console.log('Алгоритм:', currentAlgorithm);
+    
+    if (!text) {
+        showNotification('Введите текст для шифрования', 'warning');
+        return;
+    }
+    
+    if (!password) {
+        showNotification('Введите пароль для шифрования', 'warning');
+        return;
+    }
+
+    try {
+        const data = {
+            text: text,
+            password: password,
+            algorithm: currentAlgorithm
+        };
+
+        if (currentAlgorithm === 'caesar') {
+            data.shift = parseInt(document.getElementById('caesar-shift').value) || 3;
+            console.log('Сдвиг Caesar:', data.shift);
+        }
+
+        console.log('Отправляемые данные:', data);
+
+        const response = await fetch('/encryption/text', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        console.log('Ответ сервера:', response.status);
+        const result = await response.json();
+        console.log('Результат:', result);
+
+        if (result.success) {
+            document.getElementById('encrypted-result').textContent = result.encrypted_text;
+            document.getElementById('algorithm-result').textContent = result.algorithm;
+            
+            if (result.salt) {
+                currentSalt = result.salt;
+                document.getElementById('salt-result').textContent = result.salt;
+                document.getElementById('aes-salt-container').style.display = 'block';
+            } else {
+                document.getElementById('aes-salt-container').style.display = 'none';
+            }
+            
+            document.getElementById('result-container').style.display = 'block';
+            showNotification('Текст успешно зашифрован!', 'success');
+        } else {
+            console.error('Ошибка от сервера:', result.error);
+            showNotification(result.error || 'Ошибка шифрования', 'danger');
+        }
+    } catch (error) {
+        console.error('Ошибка при шифровании:', error);
+        showNotification('Ошибка при шифровании', 'danger');
+    }
+}
+
+function checkPasswordStrength(password) {
+    const bar = document.getElementById('password-strength-bar');
+    let strength = 0;
+    
+    if (password.length >= 8) strength += 25;
+    if (password.length >= 12) strength += 25;
+    if (/[A-Z]/.test(password)) strength += 25;
+    if (/[0-9]/.test(password)) strength += 25;
+    
+    bar.style.width = strength + '%';
+    bar.style.background = strength >= 75 ? '#28a745' : strength >= 50 ? '#ffc107' : '#dc3545';
+}
+
+function copyToClipboard(elementId) {
+    const text = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Скопировано в буфер обмена!', 'success');
+    });
+}
+
+function showNotification(message, type) {
+    // Реализация из main.js
+    if (window.CyberGuardian && window.CyberGuardian.showNotification) {
+        window.CyberGuardian.showNotification(message, type);
+    } else {
+        alert(message);
+    }
+}
+</script>
+
+{% endblock %}

@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from auth.models import db
 from auth.routes import init_login_manager  # Добавляем импорт
-
+from encryption.routes import encryption_bp
 # Загрузка переменных окружения
 load_dotenv()
 

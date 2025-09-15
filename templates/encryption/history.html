@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}История шифрования - CyberGuardian{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Заголовок -->
+            <div class="text-center mb-5">
+                <h1 class="cyber-text glow-text mb-3">
+                    <i class="bi bi-clock-history me-2"></i>История операций
+                </h1>
+                <p class="cyber-subtext">Все ваши операции шифрования и дешифрования</p>
+            </div>
+
+            <!-- История -->
+            <div class="cyber-card p-4">
+                {% if history %}
+                <div class="table-responsive">
+                    <table class="table cyber-table">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Операция</th>
+                                <th>Алгоритм</th>
+                                <th>Исходный текст</th>
+                                <th>Результат</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in history %}
+                            <tr>
+                                <td>{{ record.timestamp.strftime('%d.%m.%Y %H:%M') }}</td>
+                                <td>
+                                    <span class="cyber-badge {% if record.operation_type == 'encrypt' %}cyber-badge-secondary{% else %}cyber-badge-accent{% endif %}">
+                                        {{ 'Шифрование' if record.operation_type == 'encrypt' else 'Дешифрование' }}
+                                    </span>
+                                </td>
+                                <td>{{ record.algorithm }}</td>
+                                <td>
+                                    <span class="text-truncate" style="max-width: 150px;" 
+                                          title="{{ record.original_text }}">
+                                        {{ record.original_text[:50] }}{% if record.original_text|length > 50 %}...{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-truncate" style="max-width: 150px;" 
+                                          title="{{ record.processed_text }}">
+                                        {{ record.processed_text[:50] }}{% if record.processed_text|length > 50 %}...{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox display-1 text-muted"></i>
+                    <p class="cyber-subtext mt-3">История операций пуста</p>
+                    <a href="{{ url_for('encryption.text_encryption') }}" class="btn btn-cyber mt-2">
+                        <i class="bi bi-lock me-2"></i>Начать шифрование
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

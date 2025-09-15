@@ -1,17 +1,112 @@
 {% extends "base.html" %}
 
+{% block title %}Инструменты шифрования - CyberGuardian{% endblock %}
+
 {% block content %}
 <div class="container">
-    <div class="cyber-card p-5 text-center">
-        <i class="bi bi-lock display-1 text-cyber-accent mb-3"></i>
-        <h2 class="cyber-text glow-text">🔒 Шифрование данных</h2>
-        <p class="cyber-subtext lead">Скоро здесь появятся инструменты для шифрования текстов и файлов!</p>
-        <div class="alert alert-dark cyber-border">
-            <i class="bi bi-info-circle"></i> Этот раздел находится в разработке
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-lock me-2"></i>Инструменты шифрования
+            </h1>
+            <p class="cyber-subtext lead">
+                Защитите ваши данные с помощью современных алгоритмов шифрования
+            </p>
         </div>
-        <a href="{{ url_for('index') }}" class="btn btn-cyber">
-            <i class="bi bi-arrow-left"></i> На главную
-        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Шифрование текста -->
+        <div class="col-md-4">
+            <div class="cyber-card h-100 p-4 text-center">
+                <i class="bi bi-textarea-t display-4 text-cyber-primary mb-3"></i>
+                <h4 class="cyber-text">Шифрование текста</h4>
+                <p class="cyber-subtext">
+                    Зашифруйте любой текст с помощью AES, Caesar или XOR шифрования
+                </p>
+                <a href="{{ url_for('encryption.text_encryption') }}" class="btn btn-cyber w-100">
+                    <i class="bi bi-arrow-right me-2"></i>Начать
+                </a>
+            </div>
+        </div>
+
+        <!-- История операций -->
+        <div class="col-md-4">
+            <div class="cyber-card h-100 p-4 text-center">
+                <i class="bi bi-clock-history display-4 text-cyber-secondary mb-3"></i>
+                <h4 class="cyber-text">История операций</h4>
+                <p class="cyber-subtext">
+                    Просматривайте историю всех ваших операций шифрования и дешифрования
+                </p>
+                <a href="{{ url_for('encryption.encryption_history') }}" class="btn btn-cyber-outline w-100">
+                    <i class="bi bi-list-ul me-2"></i>Посмотреть
+                </a>
+            </div>
+        </div>
+
+        <!-- О шифровании -->
+        <div class="col-md-4">
+            <div class="cyber-card h-100 p-4 text-center">
+                <i class="bi bi-info-circle display-4 text-cyber-accent mb-3"></i>
+                <h4 class="cyber-text">О шифровании</h4>
+                <p class="cyber-subtext">
+                    Узнайте о различных алгоритмах шифрования и их применении
+                </p>
+                <button class="btn btn-cyber-outline w-100" data-bs-toggle="modal" data-bs-target="#infoModal">
+                    <i class="bi bi-book me-2"></i>Узнать больше
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="cyber-card p-4">
+                <h3 class="cyber-text text-center mb-4">📊 Доступные алгоритмы</h3>
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <i class="bi bi-shield-check display-6 text-cyber-primary mb-2"></i>
+                        <h5>AES-256</h5>
+                        <p class="cyber-subtext">Современное симметричное шифрование</p>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="bi bi-arrow-left-right display-6 text-cyber-secondary mb-2"></i>
+                        <h5>Caesar Cipher</h5>
+                        <p class="cyber-subtext">Классический алгоритм подстановки</p>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="bi bi-x-circle display-6 text-cyber-accent mb-2"></i>
+                        <h5>XOR Cipher</h5>
+                        <p class="cyber-subtext">Побитовое шифрование исключающим ИЛИ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно с информацией -->
+<div class="modal fade" id="infoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content cyber-card">
+            <div class="modal-header">
+                <h5 class="modal-title cyber-text">🔐 О шифровании</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="content-tip mb-3">
+                    <strong>AES-256</strong> - современный стандарт шифрования, используемый правительством США и банками по всему миру. Обеспечивает максимальную безопасность.
+                </div>
+                <div class="content-tip mb-3">
+                    <strong>Шифр Цезаря</strong> - один из древнейших алгоритмов. Подходит для обучения основам криптографии, но не обеспечивает реальной защиты.
+                </div>
+                <div class="content-tip">
+                    <strong>XOR шифрование</strong> - простое побитовое шифрование. Полезно для понимания основ, но уязвимо к атакам при неправильном использовании.
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
