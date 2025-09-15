@@ -1,17 +1,411 @@
 {% extends "base.html" %}
 
+{% block title %}Генератор паролей - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.password-section {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.password-result {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+#generated-password {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background: rgba(30, 30, 30, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 10px;
+    color: var(--cyber-primary);
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.strength-meter {
+    width: 100%;
+    height: 12px;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: all 0.5s ease;
+    border-radius: 10px;
+}
+
+.strength-weak { background: #dc3545; width: 25%; }
+.strength-medium { background: #ffc107; width: 50%; }
+.strength-strong { background: #28a745; width: 75%; }
+.strength-very-strong { background: #007bff; width: 100%; }
+
+.feedback-item {
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 8px;
+    border-left: 4px solid var(--cyber-primary);
+}
+
+.entropy-display {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.entropy-label {
+    text-align: center;
+    color: var(--cyber-subtext);
+    font-size: 0.9rem;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.option-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-card:hover {
+    border-color: var(--cyber-primary);
+    transform: translateY(-2px);
+}
+
+.option-card.active {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: var(--cyber-primary);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <div class="cyber-card p-5 text-center">
-        <i class="bi bi-key display-1 text-cyber-secondary mb-3"></i>
-        <h2 class="cyber-text glow-text">🔑 Генератор паролей</h2>
-        <p class="cyber-subtext lead">Скоро здесь появится мощный генератор и анализатор паролей!</p>
-        <div class="alert alert-dark cyber-border">
-            <i class="bi bi-info-circle"></i> Этот раздел находится в разработке
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-key me-2"></i>Генератор паролей
+            </h1>
+            <p class="cyber-subtext lead">
+                Создавайте надежные пароли и проверяйте их безопасность
+            </p>
         </div>
-        <a href="{{ url_for('index') }}" class="btn btn-cyber">
-            <i class="bi bi-arrow-left"></i> На главную
-        </a>
+    </div>
+
+    <div class="row">
+        <!-- Генератор паролей -->
+        <div class="col-lg-6">
+            <div class="password-section">
+                <h3 class="cyber-text mb-4">
+                    <i class="bi bi-magic me-2"></i>Сгенерировать пароль
+                </h3>
+
+                <div class="options-grid">
+                    <div class="option-card active" data-type="strong">
+                        <i class="bi bi-shield-check display-6 text-cyber-primary mb-2"></i>
+                        <h5>Надежный</h5>
+                        <small class="cyber-subtext">Случайные символы</small>
+                    </div>
+                    
+                    <div class="option-card" data-type="memorable">
+                        <i class="bi bi-lightbulb display-6 text-cyber-secondary mb-2"></i>
+                        <h5>Запоминающийся</h5>
+                        <small class="cyber-subtext">Слова через дефис</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label cyber-text">Длина пароля: <span id="length-value">16</span> символов</label>
+                    <input type="range" class="form-range" id="length-slider" min="8" max="32" value="16">
+                </div>
+
+                <button onclick="generatePassword()" class="btn btn-cyber w-100 mb-3">
+                    <i class="bi bi-arrow-repeat me-2"></i>Сгенерировать
+                </button>
+
+                <div class="password-result">
+                    <input type="text" id="generated-password" readonly>
+                    <button onclick="copyPassword()" class="btn btn-cyber" title="Скопировать">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Проверка пароля -->
+        <div class="col-lg-6">
+            <div class="password-section">
+                <h3 class="cyber-text mb-4">
+                    <i class="bi bi-search me-2"></i>Проверить пароль
+                </h3>
+
+                <div class="mb-3">
+                    <input type="password" class="form-control cyber-input" id="password-input" 
+                           placeholder="Введите пароль для проверки">
+                </div>
+
+                <button onclick="checkPassword()" class="btn btn-cyber-outline w-100 mb-3">
+                    <i class="bi bi-shield me-2"></i>Проверить надежность
+                </button>
+
+                <div id="password-strength" class="hidden">
+                    <div class="strength-meter">
+                        <div class="strength-bar" id="strength-bar"></div>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <h4 class="cyber-text" id="strength-text">Надежность</h4>
+                        <p class="cyber-subtext">Длина: <span id="password-length">0</span> символов</p>
+                    </div>
+
+                    <div class="entropy-display" id="entropy-value">0</div>
+                    <div class="entropy-label">Бит энтропии</div>
+
+                    <div id="password-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Дополнительная информация -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="password-section">
+                <h3 class="cyber-text mb-4">
+                    <i class="bi bi-info-circle me-2"></i>Советы по паролям
+                </h3>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center p-3">
+                            <i class="bi bi-12-circle display-4 text-cyber-primary mb-2"></i>
+                            <h5>Длина</h5>
+                            <p class="cyber-subtext">Используйте не менее 12 символов</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center p-3">
+                            <i class="bi bi-shuffle display-4 text-cyber-secondary mb-2"></i>
+                            <h5>Разнообразие</h5>
+                            <p class="cyber-subtext">Комбинируйте разные типы символов</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center p-3">
+                            <i class="bi bi-key-fill display-4 text-cyber-accent mb-2"></i>
+                            <h5>Уникальность</h5>
+                            <p class="cyber-subtext">Не используйте один пароль везде</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+let currentPasswordType = 'strong';
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', function() {
+    // Выбор типа пароля
+    document.querySelectorAll('.option-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            currentPasswordType = this.dataset.type;
+        });
+    });
+
+    // Слайдер длины
+    const lengthSlider = document.getElementById('length-slider');
+    const lengthValue = document.getElementById('length-value');
+    
+    lengthSlider.addEventListener('input', function() {
+        lengthValue.textContent = this.value;
+    });
+
+    // Enter для проверки пароля
+    document.getElementById('password-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkPassword();
+        }
+    });
+});
+
+async function generatePassword() {
+    const length = document.getElementById('length-slider').value;
+    
+    try {
+        const response = await fetch('/passwords/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                type: currentPasswordType,
+                length: parseInt(length)
+            })
+        });
+        
+        const data = await response.json();
+        document.getElementById('generated-password').value = data.password;
+        
+        // Автоматически проверяем сгенерированный пароль
+        document.getElementById('password-input').value = data.password;
+        checkPassword();
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showNotification('Ошибка при генерации пароля', 'danger');
+    }
+}
+
+async function checkPassword() {
+    const password = document.getElementById('password-input').value;
+    
+    if (!password) {
+        showNotification('Введите пароль для проверки', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/passwords/check-strength', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: password })
+        });
+        
+        const result = await response.json();
+        displayPasswordStrength(result);
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showNotification('Ошибка при проверке пароля', 'danger');
+    }
+}
+
+function displayPasswordStrength(result) {
+    const strengthElement = document.getElementById('password-strength');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthText = document.getElementById('strength-text');
+    const passwordLength = document.getElementById('password-length');
+    const entropyValue = document.getElementById('entropy-value');
+    const feedbackContainer = document.getElementById('password-feedback');
+    
+    // Обновляем данные
+    strengthBar.className = `strength-bar strength-${result.strength_class}`;
+    strengthText.textContent = result.strength;
+    strengthText.className = `cyber-text ${
+        result.strength_class === 'strong' ? 'text-success' :
+        result.strength_class === 'medium' ? 'text-warning' : 'text-danger'
+    }`;
+    
+    passwordLength.textContent = result.length;
+    entropyValue.textContent = result.entropy;
+    
+    // Показываем обратную связь
+    feedbackContainer.innerHTML = '';
+    if (result.feedback.length > 0) {
+        result.feedback.forEach(item => {
+            const feedbackItem = document.createElement('div');
+            feedbackItem.className = 'feedback-item';
+            feedbackItem.innerHTML = `
+                <i class="bi bi-exclamation-circle me-2"></i>
+                ${item}
+            `;
+            feedbackContainer.appendChild(feedbackItem);
+        });
+    }
+    
+    // Показываем результат
+    strengthElement.classList.remove('hidden');
+}
+
+function copyPassword() {
+    const passwordField = document.getElementById('generated-password');
+    if (!passwordField.value) {
+        showNotification('Сначала сгенерируйте пароль', 'warning');
+        return;
+    }
+    
+    passwordField.select();
+    document.execCommand('copy');
+    showNotification('Пароль скопирован в буфер обмена!', 'success');
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} position-fixed`;
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.zIndex = '9999';
+    notification.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="bi ${
+                type === 'success' ? 'bi-check-circle' :
+                type === 'danger' ? 'bi-exclamation-circle' :
+                type === 'warning' ? 'bi-exclamation-triangle' : 'bi-info-circle'
+            } me-2"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
+}
+
+// Показываем/скрываем пароль
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password-input');
+    const toggleBtn = document.getElementById('toggle-password');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.innerHTML = '<i class="bi bi-eye-slash"></i>';
+    } else {
+        passwordInput.type = 'password';
+        toggleBtn.innerHTML = '<i class="bi bi-eye"></i>';
+    }
+}
+</script>
+{% endblock %}
+       
