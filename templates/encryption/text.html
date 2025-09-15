@@ -71,6 +71,45 @@
     border-radius: 8px;
     word-break: break-all;
 }
+.decrypted-result-container {
+    background: rgba(0, 255, 136, 0.1);
+    border: 2px solid var(--cyber-primary);
+    border-radius: 10px;
+    padding: 1.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.decrypted-text {
+    color: var(--cyber-text);
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Анимация появления результата */
+@keyframes slideInResult {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-modal .modal-content {
+    animation: slideInResult 0.3s ease;
+}
+
+/* Стили для кнопок в модальном окне */
+.modal-footer .btn {
+    min-width: 120px;
+}
 </style>
 {% endblock %}
 
@@ -232,14 +271,14 @@ async function decryptText() {
     console.log('Алгоритм:', algorithm);
     console.log('Соль:', currentSalt);
 
-    // Запрашиваем пароль через модальное окно вместо prompt
+    // Запрашиваем пароль
     const password = await showPasswordPrompt();
     if (!password) {
         console.log('Пользователь отменил ввод пароля');
         return;
     }
 
-    console.log('Введенный пароль:', password);
+
 
     try {
         const data = {
@@ -248,13 +287,13 @@ async function decryptText() {
             algorithm: algorithm
         };
 
-        // Добавляем соль только для AES
+
         if (algorithm.startsWith('AES') && currentSalt) {
             data.salt = currentSalt;
-            console.log('Добавляем соль для AES:', currentSalt);
+
         }
 
-        console.log('Отправляемые данные для дешифрования:', data);
+
 
         const response = await fetch('/encryption/decrypt', {
             method: 'POST',
@@ -264,15 +303,15 @@ async function decryptText() {
             body: JSON.stringify(data)
         });
 
-        console.log('Ответ сервера при дешифровании:', response.status);
+
         const result = await response.json();
-        console.log('Результат дешифрования:', result);
+
 
         if (result.success) {
-            document.getElementById('input-text').value = result.decrypted_text;
-            showNotification('Текст успешно расшифрован!', 'success');
+            // ПОКАЗЫВАЕМ РАСШИФРОВАННЫЙ ТЕКСТ В КРАСИВОМ ОКНЕ
+            showDecryptedResult(result.decrypted_text);
         } else {
-            console.error('Ошибка от сервера при дешифровании:', result.error);
+            console.error('Ошибка от сервера:', result.error);
             showNotification(result.error || 'Ошибка дешифрования', 'danger');
         }
     } catch (error) {
@@ -281,6 +320,77 @@ async function decryptText() {
     }
 }
 
+// Функция для показа расшифрованного текста
+function showDecryptedResult(decryptedText) {
+    // Создаем модальное окно с результатом
+    const modalHtml = `
+        <div class="modal fade" id="resultModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content cyber-card">
+                    <div class="modal-header">
+                        <h5 class="modal-title cyber-text">
+                            <i class="bi bi-check-circle text-success me-2"></i>Текст расшифрован!
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label cyber-text">Расшифрованный текст:</label>
+                            <div class="decrypted-result-container">
+                                <pre class="decrypted-text">${decryptedText}</pre>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label cyber-text">Действия:</label>
+                            <div class="d-flex gap-2">
+                                <button onclick="copyDecryptedText()" class="btn btn-cyber-outline">
+                                    <i class="bi bi-clipboard me-2"></i>Копировать текст
+                                </button>
+                                <button onclick="replaceOriginalText()" class="btn btn-cyber">
+                                    <i class="bi bi-arrow-left me-2"></i>Вставить в исходное поле
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-cyber" data-bs-dismiss="modal">
+                            <i class="bi bi-check me-2"></i>Готово
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Добавляем модальное окно в DOM
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    document.body.appendChild(modalContainer);
+
+    // Показываем модальное окно
+    const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+    modal.show();
+
+    // Глобальные функции для действий
+    window.copyDecryptedText = function() {
+        navigator.clipboard.writeText(decryptedText).then(() => {
+            showNotification('Текст скопирован в буфер обмена!', 'success');
+        });
+    };
+
+    window.replaceOriginalText = function() {
+        document.getElementById('input-text').value = decryptedText;
+        modal.hide();
+        showNotification('Текст вставлен в исходное поле!', 'success');
+    };
+
+    // Убираем модальное окно при закрытии
+    document.getElementById('resultModal').addEventListener('hidden.bs.modal', function () {
+        modalContainer.remove();
+        delete window.copyDecryptedText;
+        delete window.replaceOriginalText;
+    });
+}
 // Функция для красивого ввода пароля
 function showPasswordPrompt() {
     return new Promise((resolve) => {
