@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}О проекте - CyberGuardian{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-info-circle me-2"></i>О проекте CyberGuardian
+            </h1>
+            <p class="cyber-subtext lead">
+                Ваш надежный помощник в мире кибербезопасности
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Основная информация -->
+        <div class="col-lg-8 mx-auto">
+            <div class="cyber-card p-5">
+                <h3 class="cyber-text mb-4">🎯 Наша миссия</h3>
+                <p class="content-text">
+                    CyberGuardian создан чтобы сделать кибербезопасность доступной для каждого. 
+                    Мы верим что знания - лучшая защита в цифровом мире.
+                </p>
+
+                <h3 class="cyber-text mb-4 mt-5">🛡️ Возможности платформы</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-book display-6 text-cyber-primary me-3"></i>
+                            <div>
+                                <h5>Обучение</h5>
+                                <p class="cyber-subtext mb-0">Интерактивные уроки по безопасности</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-key display-6 text-cyber-secondary me-3"></i>
+                            <div>
+                                <h5>Пароли</h5>
+                                <p class="cyber-subtext mb-0">Генерация и проверка надежных паролей</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-lock display-6 text-cyber-accent me-3"></i>
+                            <div>
+                                <h5>Шифрование</h5>
+                                <p class="cyber-subtext mb-0">Защита данных алгоритмами шифрования</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-robot display-6 text-cyber-primary me-3"></i>
+                            <div>
+                                <h5>ИИ-помощник</h5>
+                                <p class="cyber-subtext mb-0">Персональный консультант по безопасности</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="cyber-text mb-4 mt-5">📊 Технологии</h3>
+                <div class="row text-center">
+                    <div class="col-3">
+                        <i class="bi bi-code-slash display-6 text-cyber-primary"></i>
+                        <p class="cyber-subtext mt-2">Flask</p>
+                    </div>
+                    <div class="col-3">
+                        <i class="bi bi-database display-6 text-cyber-secondary"></i>
+                        <p class="cyber-subtext mt-2">SQLite</p>
+                    </div>
+                    <div class="col-3">
+                        <i class="bi bi-shield display-6 text-cyber-accent"></i>
+                        <p class="cyber-subtext mt-2">Cryptography</p>
+                    </div>
+                    <div class="col-3">
+                        <i class="bi bi-cpu display-6 text-cyber-primary"></i>
+                        <p class="cyber-subtext mt-2">OpenAI API</p>
+                    </div>
+                </div>
+
+                <h3 class="cyber-text mb-4 mt-5">👨‍💻 Разработчик</h3>
+                <div class="d-flex align-items-center">
+                    <div class="cyber-avatar me-3">
+                        <i class="bi bi-person display-6"></i>
+                    </div>
+                    <div>
+                        <h5 class="cyber-text mb-1">Андрей</h5>
+                        <p class="cyber-subtext mb-0">Full-stack разработчик</p>
+                        <p class="cyber-subtext small">Специализация: кибербезопасность и веб-разработка</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <a href="{{ url_for('index') }}" class="btn btn-cyber">
+                        <i class="bi bi-arrow-left me-2"></i>На главную
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

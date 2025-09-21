@@ -42,6 +42,15 @@ def create_app():
     def health_check():
         return {'status': 'healthy', 'timestamp': datetime.now().isoformat()}
     
+    # Добавь в app.py после главной страницы
+    @app.route('/about')
+    def about():
+        return render_template('about.html', current_year=datetime.now().year)
+    
+    @app.route('/contact')
+    def contact():
+        return render_template('contact.html', current_year=datetime.now().year)
+    
     # Создаем таблицы при первом запуске
     with app.app_context():
         db.create_all()

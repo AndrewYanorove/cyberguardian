@@ -37,6 +37,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link cyber-link" href="{{ url_for('about') }}">
+                            <i class="bi bi-info-circle me-1"></i>О проекте
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link cyber-link" href="{{ url_for('education.education_home') }}">
                             <i class="bi bi-book me-1"></i>Обучение
                         </a>
@@ -120,22 +125,30 @@
     <!-- Футер -->
     <footer class="cyber-footer">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="cyber-text">
-                        <i class="bi bi-shield-shaded me-2"></i>CyberGuardian
-                    </h5>
-                    <p class="cyber-subtext">Ваш цифровой защитник в мире кибербезопасности</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="cyber-subtext">© {{ current_year }} | Все права защищены</p>
-                    <div class="cyber-social">
-                        <a href="#" class="cyber-social-link"><i class="bi bi-github"></i></a>
-                        <a href="#" class="cyber-social-link"><i class="bi bi-telegram"></i></a>
-                        <a href="#" class="cyber-social-link"><i class="bi bi-envelope"></i></a>
-                    </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="cyber-text">
+                    <i class="bi bi-shield-shaded me-2"></i>CyberGuardian
+                </h5>
+                <p class="cyber-subtext">Ваш цифровой защитник в мире кибербезопасности</p>
+            </div>
+            <div class="col-md-4">
+                <h6 class="cyber-text">🔗 Быстрые ссылки</h6>
+                <div class="d-flex flex-column">
+                    <a href="{{ url_for('about') }}" class="cyber-link mb-2">О проекте</a>
+                    <a href="{{ url_for('contact') }}" class="cyber-link mb-2">Контакты</a>
+                    <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">Обучение</a>
                 </div>
             </div>
+            <div class="col-md-4 text-md-end">
+                <p class="cyber-subtext">© {{ current_year }} | Все права защищены</p>
+                <div class="cyber-social">
+                    <a href="#" class="cyber-social-link"><i class="bi bi-github"></i></a>
+                    <a href="#" class="cyber-social-link"><i class="bi bi-telegram"></i></a>
+                    <a href="#" class="cyber-social-link"><i class="bi bi-envelope"></i></a>
+                </div>
+            </div>
+        </div>
         </div>
     </footer>
 
