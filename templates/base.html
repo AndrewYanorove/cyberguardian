@@ -17,28 +17,108 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body class="cyber-bg">
-    <!-- Навигация -->
+    <!-- Боковое меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-shield-shaded display-6 text-cyber-primary me-3"></i>
+                <div>
+                    <h5 class="cyber-text mb-0">CyberGuardian</h5>
+                    <small class="cyber-subtext">Меню навигации</small>
+                </div>
+            </div>
+            <button class="sidebar-close" onclick="closeSidebar()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="{{ url_for('index') }}" class="sidebar-item">
+                <i class="bi bi-house me-3"></i>
+                <span>Главная</span>
+            </a>
+            
+            <a href="{{ url_for('education.education_home') }}" class="sidebar-item">
+                <i class="bi bi-book me-3"></i>
+                <span>Обучение</span>
+            </a>
+            
+            <a href="{{ url_for('passwords.password_generator') }}" class="sidebar-item">
+                <i class="bi bi-key me-3"></i>
+                <span>Генератор паролей</span>
+            </a>
+            
+            <a href="{{ url_for('encryption.encryption_tools') }}" class="sidebar-item">
+                <i class="bi bi-lock me-3"></i>
+                <span>Шифрование</span>
+            </a>
+            
+            <a href="{{ url_for('ai.ai_chat') }}" class="sidebar-item">
+                <i class="bi bi-robot me-3"></i>
+                <span>ИИ-помощник</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('auth.profile') }}" class="sidebar-item">
+                <i class="bi bi-person me-3"></i>
+                <span>Профиль</span>
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-item">
+                <i class="bi bi-box-arrow-right me-3"></i>
+                <span>Выйти</span>
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}" class="sidebar-item">
+                <i class="bi bi-box-arrow-in-right me-3"></i>
+                <span>Войти</span>
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="sidebar-item">
+                <i class="bi bi-person-plus me-3"></i>
+                <span>Регистрация</span>
+            </a>
+            {% endif %}
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="cyber-social">
+                <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="cyber-social-link" target="_blank">
+                    <i class="bi bi-telegram"></i>
+                </a>
+                <a href="https://github.com" class="cyber-social-link" target="_blank">
+                    <i class="bi bi-github"></i>
+                </a>
+                <a href="mailto:contact@cyberguardian.ru" class="cyber-social-link">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay для закрытия меню -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Верхняя навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark cyber-navbar">
         <div class="container">
+            <!-- Кнопка меню -->
+            <button class="navbar-toggler cyber-toggler me-3" type="button" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <!-- Лого -->
             <a class="navbar-brand cyber-brand" href="{{ url_for('index') }}">
                 <i class="bi bi-shield-shaded me-2"></i>
                 <span class="cyber-text">CyberGuardian</span>
             </a>
-            
-            <button class="navbar-toggler cyber-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
+
+            <!-- Десктопное меню (скрыто на мобильных) -->
+            <div class="d-none d-lg-block">
                 <ul class="navbar-nav ms-auto cyber-nav">
                     <li class="nav-item">
                         <a class="nav-link cyber-link" href="{{ url_for('index') }}">
                             <i class="bi bi-house me-1"></i>Главная
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('about') }}">
-                            <i class="bi bi-info-circle me-1"></i>О проекте
                         </a>
                     </li>
                     <li class="nav-item">
@@ -61,7 +141,12 @@
                             <i class="bi bi-robot me-1"></i>ИИ-помощник
                         </a>
                     </li>
-                    
+                </ul>
+            </div>
+
+            <!-- Правая часть (авторизация) -->
+            <div class="d-none d-lg-block">
+                <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link cyber-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -131,69 +216,32 @@
                         <i class="bi bi-shield-shaded me-2"></i>CyberGuardian
                     </h5>
                     <p class="cyber-subtext">Ваш цифровой защитник в мире кибербезопасности</p>
-                    <div class="cyber-social">
-                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="cyber-social-link" target="_blank">
-                            <i class="bi bi-telegram"></i> Telegram
-                        </a>
-                        <a href="https://github.com/AndrewYanorove/cyberguardian" class="cyber-social-link" target="_blank">
-                            <i class="bi bi-github"></i> GitHub
-                        </a>
-                        <a href="andrewtaroska12@gmai.com" class="cyber-social-link">
-                            <i class="bi bi-envelope"></i> Email
-                        </a>
-                    </div>
                 </div>
-            
+                
                 <div class="col-md-4">
                     <h6 class="cyber-text">🔗 Быстрые ссылки</h6>
                     <div class="d-flex flex-column">
-                        <a href="{{ url_for('index') }}" class="cyber-link mb-2">
-                            <i class="bi bi-house me-2"></i>Главная
-                        </a>
-                        <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">
-                            <i class="bi bi-book me-2"></i>Обучение
-                        </a>
-                        <a href="{{ url_for('passwords.password_generator') }}" class="cyber-link mb-2">
-                            <i class="bi bi-key me-2"></i>Пароли
-                        </a>
-                        <a href="{{ url_for('encryption.encryption_tools') }}" class="cyber-link mb-2">
-                            <i class="bi bi-lock me-2"></i>Шифрование
-                        </a>
-                        <a href="{{ url_for('ai.ai_chat') }}" class="cyber-link mb-2">
-                            <i class="bi bi-robot me-2"></i>ИИ-помощник
-                        </a>
+                        <a href="{{ url_for('index') }}" class="cyber-link mb-2">Главная</a>
+                        <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">Обучение</a>
+                        <a href="{{ url_for('passwords.password_generator') }}" class="cyber-link mb-2">Пароли</a>
+                        <a href="{{ url_for('encryption.encryption_tools') }}" class="cyber-link mb-2">Шифрование</a>
+                        <a href="{{ url_for('ai.ai_chat') }}" class="cyber-link mb-2">ИИ-помощник</a>
                     </div>
                 </div>
-            
-                <div class="col-md-4">
-                    <h6 class="cyber-text">🛡️ Безопасность</h6>
-                    <div class="d-flex flex-column">
-                        <a href="{{ url_for('passwords.password_generator') }}" class="cyber-link mb-2">
-                            <i class="bi bi-shield-check me-2"></i>Проверка паролей
+                
+                <div class="col-md-4 text-md-end">
+                    <p class="cyber-subtext">© {{ current_year }} | Все права защищены</p>
+                    <div class="cyber-social">
+                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="cyber-social-link" target="_blank">
+                            <i class="bi bi-telegram"></i>
                         </a>
-                        <a href="{{ url_for('encryption.encryption_tools') }}" class="cyber-link mb-2">
-                            <i class="bi bi-file-lock me-2"></i>Шифрование данных
+                        <a href="https://github.com" class="cyber-social-link" target="_blank">
+                            <i class="bi bi-github"></i>
                         </a>
-                        <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">
-                            <i class="bi bi-graph-up me-2"></i>Курсы безопасности
-                        </a>
-                        <a href="{{ url_for('ai.ai_chat') }}" class="cyber-link mb-2">
-                            <i class="bi bi-question-circle me-2"></i>Консультация ИИ
+                        <a href="mailto:contact@cyberguardian.ru" class="cyber-social-link">
+                            <i class="bi bi-envelope"></i>
                         </a>
                     </div>
-                </div>
-            </div>
-        
-            <div class="row mt-4 pt-3 border-top border-cyber-border">
-                <div class="col-md-6">
-                    <p class="cyber-subtext mb-0">
-                        <i class="bi bi-c-circle me-1"></i> {{ current_year }} CyberGuardian. Все права защищены.
-                    </p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="cyber-subtext mb-0">
-                        Сделано с <i class="bi bi-heart-fill text-danger mx-1"></i> для безопасности в интернете
-                    </p>
                 </div>
             </div>
         </div>
@@ -207,19 +255,35 @@
     
     {% block extra_js %}{% endblock %}
 
-    <!-- Тестовый элемент для проверки работы -->
-    <div id="cyber-test" style="position: fixed; bottom: 10px; right: 10px; background: #00ff88; color: black; padding: 5px 10px; border-radius: 5px; font-size: 12px; z-index: 10000; display: none;">
-        CSS+JS loaded!
-    </div>
+    <!-- Скрипт для бокового меню -->
     <script>
-        // Показываем тестовый элемент если все загружено
-        document.addEventListener('DOMContentLoaded', function() {
-            const testElement = document.getElementById('cyber-test');
-            if (testElement) {
-                testElement.style.display = 'block';
-                setTimeout(() => {
-                    testElement.style.display = 'none';
-                }, 3000);
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Закрытие меню при клике на ссылку (на мобильных)
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth < 992) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Закрытие меню при изменении размера окна
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 992) {
+                closeSidebar();
             }
         });
     </script>
