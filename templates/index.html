@@ -20,6 +20,12 @@
                     <a href="{{ url_for('passwords.password_generator') }}" class="btn btn-cyber-outline btn-lg">
                         <i class="bi bi-key me-2"></i>Проверить пароль
                     </a>
+                    <a href="{{ url_for('encryption.encryption_tools') }}" class="btn btn-cyber btn-lg">
+                        <i class="bi bi-lock me-2"></i>Шифрование
+                    </a>
+                    <a href="{{ url_for('ai.ai_chat') }}" class="btn btn-cyber-outline btn-lg">
+                        <i class="bi bi-robot me-2"></i>ИИ-помощник
+                    </a>
                 </div>
             </div>
         </div>
@@ -36,6 +42,9 @@
                     <i class="bi bi-book display-4 text-cyber-primary mb-3"></i>
                     <h5 class="text-cyber-primary">Интерактивное обучение</h5>
                     <p class="cyber-subtext">Уроки по кибербезопасности, тесты и симуляции атак</p>
+                    <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                        Изучать
+                    </a>
                 </div>
             </div>
             <div class="col-md-3">
@@ -43,6 +52,9 @@
                     <i class="bi bi-key display-4 text-cyber-secondary mb-3"></i>
                     <h5 class="text-cyber-secondary">Генератор паролей</h5>
                     <p class="cyber-subtext">Создание и проверка надежных паролей</p>
+                    <a href="{{ url_for('passwords.password_generator') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                        Использовать
+                    </a>
                 </div>
             </div>
             <div class="col-md-3">
@@ -50,6 +62,9 @@
                     <i class="bi bi-lock display-4 text-cyber-accent mb-3"></i>
                     <h5 class="text-cyber-accent">Шифрование данных</h5>
                     <p class="cyber-subtext">Шифрование текстов и файлов с различными алгоритмами</p>
+                    <a href="{{ url_for('encryption.encryption_tools') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                        Шифровать
+                    </a>
                 </div>
             </div>
             <div class="col-md-3">
@@ -57,6 +72,9 @@
                     <i class="bi bi-robot display-4 text-cyber-primary mb-3"></i>
                     <h5 class="text-cyber-primary">ИИ-помощник</h5>
                     <p class="cyber-subtext">Персональный консультант по безопасности</p>
+                    <a href="{{ url_for('ai.ai_chat') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                        Спросить
+                    </a>
                 </div>
             </div>
         </div>
@@ -70,18 +88,44 @@
             <div class="col-md-3">
                 <h3 class="text-cyber-primary fw-bold glow-text">100+</h3>
                 <p class="cyber-subtext">Учебных материалов</p>
+                
             </div>
             <div class="col-md-3">
                 <h3 class="text-cyber-secondary fw-bold glow-text">50+</h3>
                 <p class="cyber-subtext">Алгоритмов шифрования</p>
+                
             </div>
             <div class="col-md-3">
                 <h3 class="text-cyber-accent fw-bold glow-text">24/7</h3>
                 <p class="cyber-subtext">ИИ-помощник доступен</p>
+                
             </div>
             <div class="col-md-3">
                 <h3 class="text-cyber-primary fw-bold glow-text">100%</h3>
                 <p class="cyber-subtext">Безопасность данных</p>
+               
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Призыв к действию -->
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="cyber-card p-5">
+                    <h3 class="cyber-text glow-text mb-3">Готов стать киберзащитником?</h3>
+                    <p class="cyber-subtext mb-4">Присоединяйся к сообществу CyberGuardian и прокачай свои навыки безопасности</p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-cyber btn-lg">
+                            <i class="bi bi-person-plus me-2"></i>Присоединиться
+                        </a>
+                        <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber-outline btn-lg">
+                            <i class="bi bi-play-circle me-2"></i>Начать обучение
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

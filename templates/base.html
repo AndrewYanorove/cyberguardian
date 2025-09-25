@@ -125,30 +125,77 @@
     <!-- Футер -->
     <footer class="cyber-footer">
         <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <h5 class="cyber-text">
-                    <i class="bi bi-shield-shaded me-2"></i>CyberGuardian
-                </h5>
-                <p class="cyber-subtext">Ваш цифровой защитник в мире кибербезопасности</p>
-            </div>
-            <div class="col-md-4">
-                <h6 class="cyber-text">🔗 Быстрые ссылки</h6>
-                <div class="d-flex flex-column">
-                    <a href="{{ url_for('about') }}" class="cyber-link mb-2">О проекте</a>
-                    <a href="{{ url_for('contact') }}" class="cyber-link mb-2">Контакты</a>
-                    <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">Обучение</a>
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="cyber-text">
+                        <i class="bi bi-shield-shaded me-2"></i>CyberGuardian
+                    </h5>
+                    <p class="cyber-subtext">Ваш цифровой защитник в мире кибербезопасности</p>
+                    <div class="cyber-social">
+                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="cyber-social-link" target="_blank">
+                            <i class="bi bi-telegram"></i> Telegram
+                        </a>
+                        <a href="https://github.com/AndrewYanorove/cyberguardian" class="cyber-social-link" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                        <a href="andrewtaroska12@gmai.com" class="cyber-social-link">
+                            <i class="bi bi-envelope"></i> Email
+                        </a>
+                    </div>
+                </div>
+            
+                <div class="col-md-4">
+                    <h6 class="cyber-text">🔗 Быстрые ссылки</h6>
+                    <div class="d-flex flex-column">
+                        <a href="{{ url_for('index') }}" class="cyber-link mb-2">
+                            <i class="bi bi-house me-2"></i>Главная
+                        </a>
+                        <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">
+                            <i class="bi bi-book me-2"></i>Обучение
+                        </a>
+                        <a href="{{ url_for('passwords.password_generator') }}" class="cyber-link mb-2">
+                            <i class="bi bi-key me-2"></i>Пароли
+                        </a>
+                        <a href="{{ url_for('encryption.encryption_tools') }}" class="cyber-link mb-2">
+                            <i class="bi bi-lock me-2"></i>Шифрование
+                        </a>
+                        <a href="{{ url_for('ai.ai_chat') }}" class="cyber-link mb-2">
+                            <i class="bi bi-robot me-2"></i>ИИ-помощник
+                        </a>
+                    </div>
+                </div>
+            
+                <div class="col-md-4">
+                    <h6 class="cyber-text">🛡️ Безопасность</h6>
+                    <div class="d-flex flex-column">
+                        <a href="{{ url_for('passwords.password_generator') }}" class="cyber-link mb-2">
+                            <i class="bi bi-shield-check me-2"></i>Проверка паролей
+                        </a>
+                        <a href="{{ url_for('encryption.encryption_tools') }}" class="cyber-link mb-2">
+                            <i class="bi bi-file-lock me-2"></i>Шифрование данных
+                        </a>
+                        <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">
+                            <i class="bi bi-graph-up me-2"></i>Курсы безопасности
+                        </a>
+                        <a href="{{ url_for('ai.ai_chat') }}" class="cyber-link mb-2">
+                            <i class="bi bi-question-circle me-2"></i>Консультация ИИ
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 text-md-end">
-                <p class="cyber-subtext">© {{ current_year }} | Все права защищены</p>
-                <div class="cyber-social">
-                    <a href="#" class="cyber-social-link"><i class="bi bi-github"></i></a>
-                    <a href="#" class="cyber-social-link"><i class="bi bi-telegram"></i></a>
-                    <a href="#" class="cyber-social-link"><i class="bi bi-envelope"></i></a>
+        
+            <div class="row mt-4 pt-3 border-top border-cyber-border">
+                <div class="col-md-6">
+                    <p class="cyber-subtext mb-0">
+                        <i class="bi bi-c-circle me-1"></i> {{ current_year }} CyberGuardian. Все права защищены.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="cyber-subtext mb-0">
+                        Сделано с <i class="bi bi-heart-fill text-danger mx-1"></i> для безопасности в интернете
+                    </p>
                 </div>
             </div>
-        </div>
         </div>
     </footer>
 

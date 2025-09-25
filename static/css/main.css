@@ -1010,3 +1010,36 @@ body.cyber-bg {
 .breadcrumb-item.active {
     color: var(--cyber-text);
 }
+
+/* Добавляем в конец main.css */
+.btn-cyber, .btn-cyber-outline {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-cyber:hover, .btn-cyber-outline:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+}
+
+.cyber-link {
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.cyber-link:hover {
+    color: var(--cyber-primary) !important;
+    text-shadow: var(--cyber-glow);
+}
+
+.cyber-social-link {
+    display: inline-block;
+    margin-right: 1rem;
+    transition: all 0.3s ease;
+}
+
+.cyber-social-link:hover {
+    color: var(--cyber-primary) !important;
+    transform: translateY(-2px);
+}

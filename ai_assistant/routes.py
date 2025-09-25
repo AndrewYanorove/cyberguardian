@@ -1,6 +1,6 @@
 from flask import render_template, request, jsonify
 from . import ai_bp
-import openai
+
 import os
 
 class AIAssistant:
