@@ -1,5 +1,5 @@
 # encryption/models.py
-from app import db
+from database import db
 from datetime import datetime
 
 class EncryptionHistory(db.Model):

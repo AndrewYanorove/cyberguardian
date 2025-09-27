@@ -14,7 +14,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # Инициализация базы данных
-    from database import db
+    from auth.models import db
     db.init_app(app)
     
     # Инициализация Flask-Login

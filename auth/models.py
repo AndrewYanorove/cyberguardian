@@ -1,9 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
+from database import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import json
-
-db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -16,7 +14,7 @@ class User(db.Model):
     last_login = db.Column(db.DateTime)
     
     # Прогресс пользователя
-    completed_lessons = db.Column(db.Text, default='[]')  # JSON список пройденных уроков
+    completed_lessons = db.Column(db.Text, default='[]')
     password_strength_score = db.Column(db.Integer, default=0)
     encryption_usage = db.Column(db.Integer, default=0)
     
@@ -52,3 +50,26 @@ class User(db.Model):
     
     def get_id(self):
         return str(self.id)
+    
+    def get_learning_statistics(self):
+        """Получить статистику обучения пользователя"""
+        from education.models import UserProgress
+        
+        completed_lessons = UserProgress.query.filter_by(
+            user_id=self.id, 
+            completed=True
+        ).count()
+        
+        total_time = db.session.query(db.func.sum(UserProgress.time_spent)).filter_by(
+            user_id=self.id
+        ).scalar() or 0
+        
+        average_score = db.session.query(db.func.avg(UserProgress.score)).filter_by(
+            user_id=self.id
+        ).scalar() or 0
+        
+        return {
+            'completed_lessons': completed_lessons,
+            'total_time_hours': round(total_time / 3600, 1),
+            'average_score': round(average_score, 1)
+        }
