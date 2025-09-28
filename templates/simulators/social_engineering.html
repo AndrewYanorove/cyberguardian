@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block title %}Социальная инженерия - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.scenario-container {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--cyber-primary);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.dialogue {
+    margin: 2rem 0;
+}
+
+.message {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 10px;
+    max-width: 80%;
+    position: relative;
+}
+
+.message.incoming {
+    background: rgba(0, 136, 255, 0.2);
+    border-left: 4px solid var(--cyber-secondary);
+    margin-right: auto;
+}
+
+.message.outgoing {
+    background: rgba(0, 255, 136, 0.2);
+    border-left: 4px solid var(--cyber-primary);
+    margin-left: auto;
+}
+
+.message::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.message.incoming::before {
+    left: -6px;
+    background: var(--cyber-secondary);
+}
+
+.message.outgoing::before {
+    right: -6px;
+    background: var(--cyber-primary);
+}
+
+.options-grid {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.option-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-card:hover {
+    border-color: var(--cyber-primary);
+    transform: translateY(-2px);
+}
+
+.option-card.selected {
+    background: rgba(0, 255, 136, 0.2);
+    border-color: var(--cyber-primary);
+}
+
+.psychology-tips {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.progress-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+}
+
+.progress-text {
+    color: var(--cyber-primary);
+    font-weight: bold;
+}
+
+.analysis-box {
+    background: rgba(0, 136, 255, 0.1);
+    border: 1px solid var(--cyber-secondary);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-top: 2rem;
+    animation: slideIn 0.5s ease;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav class="mb-4">
+        <a href="{{ url_for('simulators.simulators_home') }}" class="btn btn-cyber-outline">
+            <i class="bi bi-arrow-left me-2"></i>Назад к симуляторам
+        </a>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="cyber-card p-4">
+                <!-- Заголовок и прогресс -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="cyber-text glow-text mb-2">
+                            <i class="bi bi-brain me-2"></i>СОЦИАЛЬНАЯ ИНЖЕНЕРИЯ
+                        </h1>
+                        <p class="cyber-subtext">Сценарий {{ level }} из 5</p>
+                    </div>
+                    <div class="text-end">
+                        <div class="cyber-badge">🏆 {{ score }} очков</div>
+                    </div>
+                </div>
+
+                <!-- Прогресс -->
+                <div class="progress-indicator">
+                    <div class="progress-text">Уровень сложности: 
+                        <span class="text-warning">{% if level == 1 %}Начинающий{% elif level == 2 %}Легкий{% elif level == 3 %}Средний{% elif level == 4 %}Сложный{% else %}Эксперт{% endif %}</span>
+                    </div>
+                    <div class="cyber-subtext">Правильных ответов: {{ score // 15 }}/5</div>
+                </div>
+
+                <!-- Сценарий -->
+                <div class="scenario-container">
+                    {{ scenario.scenario|safe }}
+                </div>
+
+                <!-- Психологические приемы -->
+                <div class="psychology-tips">
+                    <h5 class="text-warning mb-3">
+                        <i class="bi bi-lightbulb me-2"></i>ПСИХОЛОГИЧЕСКИЕ ПРИЕМЫ В АТАКЕ:
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Создание срочности:</strong> "Немедленно нужно действовать!"</p>
+                            <p><strong>Авторитет:</strong> "Я из службы безопасности..."</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Социальное доказательство:</strong> "Все так делают"</p>
+                            <p><strong>Взаимность:</strong> "Я вам помог, теперь вы мне"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Варианты ответов -->
+                <div class="options-grid">
+                    {% for option in scenario.options %}
+                    <div class="option-card" onclick="selectOption({{ loop.index0 }})" id="option{{ loop.index0 }}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="scenarioOption" 
+                                   id="option{{ loop.index0 }}Radio" value="{{ loop.index0 }}">
+                            <label class="form-check-label cyber-text" for="option{{ loop.index0 }}Radio">
+                                {{ option }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Кнопка проверки -->
+                <div class="text-center">
+                    <button id="checkBtn" class="btn btn-cyber btn-lg" onclick="checkAnswer()" disabled>
+                        <i class="bi bi-check-circle me-2"></i>ПРОВЕРИТЬ ОТВЕТ
+                    </button>
+                </div>
+
+                <!-- Анализ -->
+                <div id="analysis" class="analysis-box" style="display: none;">
+                    <h4 class="cyber-text mb-3">
+                        <i class="bi bi-search me-2"></i>АНАЛИЗ СИТУАЦИИ
+                    </h4>
+                    <p id="analysis-text" class="mb-3"></p>
+                    <div class="text-center">
+                        <button id="nextBtn" class="btn btn-cyber" onclick="nextScenario()">
+                            <i class="bi bi-arrow-right me-2"></i>СЛЕДУЮЩИЙ СЦЕНАРИЙ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedOption = null;
+
+function selectOption(optionIndex) {
+    selectedOption = optionIndex;
+    
+    // Сбрасываем выделение
+    document.querySelectorAll('.option-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Выделяем выбранный вариант
+    document.getElementById(`option${optionIndex}`).classList.add('selected');
+    document.getElementById(`option${optionIndex}Radio`).checked = true;
+    
+    // Активируем кнопку проверки
+    document.getElementById('checkBtn').disabled = false;
+}
+
+function checkAnswer() {
+    if (selectedOption === null) return;
+    
+    const checkBtn = document.getElementById('checkBtn');
+    checkBtn.disabled = true;
+    checkBtn.innerHTML = '<div class="spinner-border spinner-border-sm me-2"></div>ПРОВЕРЯЕМ...';
+    
+    fetch('/simulators/check-social', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            level: {{ level }},
+            answer: selectedOption
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Показываем правильный/неправильный вариант
+        document.querySelectorAll('.option-card').forEach((card, index) => {
+            if (index === {{ scenario.correct_answer }}) {
+                card.style.borderColor = 'var(--cyber-primary)';
+                card.style.background = 'rgba(0, 255, 136, 0.2)';
+            } else if (index === selectedOption && !data.correct) {
+                card.style.borderColor = '#ff4444';
+                card.style.background = 'rgba(255, 68, 68, 0.2)';
+            }
+        });
+        
+        // Показываем анализ
+        document.getElementById('analysis-text').textContent = data.explanation;
+        document.getElementById('analysis').style.display = 'block';
+        
+        // Обновляем кнопку
+        if (data.correct) {
+            showNotification('✅ Правильно! +15 очков', 'success');
+            checkBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>ВЕРНО!';
+        } else {
+            showNotification('❌ Неправильно! Изучите анализ', 'danger');
+            checkBtn.innerHTML = '<i class="bi bi-x-circle me-2"></i>НЕВЕРНО';
+        }
+    });
+}
+
+function nextScenario() {
+    window.location.reload();
+}
+</script>
+{% endblock %}

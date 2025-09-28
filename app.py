@@ -27,12 +27,14 @@ def create_app():
     from passwords.routes import passwords_bp
     from encryption.routes import encryption_bp
     from ai_assistant.routes import ai_bp
+    from templates.simulators.routes import simulators_bp
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(education_bp, url_prefix='/education')
     app.register_blueprint(passwords_bp, url_prefix='/passwords')
     app.register_blueprint(encryption_bp, url_prefix='/encryption')
     app.register_blueprint(ai_bp, url_prefix='/ai')
+    app.register_blueprint(simulators_bp, url_prefix='/simulators')
     
     # Маршруты
     @app.route('/')

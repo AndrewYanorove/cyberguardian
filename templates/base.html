@@ -52,6 +52,13 @@
                 <i class="bi bi-lock me-3"></i>
                 <span>Шифрование</span>
             </a>
+
+            <!-- НОВАЯ КНОПКА СИМУЛЯТОРОВ -->
+            <a href="{{ url_for('simulators.simulators_home') }}" class="sidebar-item">
+                <i class="bi bi-joystick me-3"></i>
+                <span>Кибер-симуляторы</span>
+                <span class="cyber-badge ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
             
             <a href="{{ url_for('ai.ai_chat') }}" class="sidebar-item">
                 <i class="bi bi-robot me-3"></i>
@@ -134,6 +141,13 @@
                     <li class="nav-item">
                         <a class="nav-link cyber-link" href="{{ url_for('encryption.encryption_tools') }}">
                             <i class="bi bi-lock me-1"></i>Шифрование
+                        </a>
+                    </li>
+                    <!-- НОВАЯ КНОПКА СИМУЛЯТОРОВ -->
+                    <li class="nav-item">
+                        <a class="nav-link cyber-link" href="{{ url_for('simulators.simulators_home') }}">
+                            <i class="bi bi-joystick me-1"></i>Симуляторы
+                            <span class="cyber-badge ms-1" style="font-size: 0.6rem;">NEW</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -225,6 +239,7 @@
                         <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">Обучение</a>
                         <a href="{{ url_for('passwords.password_generator') }}" class="cyber-link mb-2">Пароли</a>
                         <a href="{{ url_for('encryption.encryption_tools') }}" class="cyber-link mb-2">Шифрование</a>
+                        <a href="{{ url_for('simulators.simulators_home') }}" class="cyber-link mb-2">Симуляторы</a>
                         <a href="{{ url_for('ai.ai_chat') }}" class="cyber-link mb-2">ИИ-помощник</a>
                     </div>
                 </div>

@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block title %}Кибер-симуляторы - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.simulator-hero {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 136, 255, 0.1) 100%);
+    border: 1px solid var(--cyber-primary);
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.simulator-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300ff88' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+    animation: float 20s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-50px, -50px) rotate(360deg); }
+}
+
+.simulator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.simulator-card {
+    background: linear-gradient(145deg, rgba(20, 20, 20, 0.9), rgba(10, 10, 10, 0.9));
+    border: 1px solid;
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(10px);
+}
+
+.simulator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.simulator-card:hover::before {
+    left: 100%;
+}
+
+.simulator-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+}
+
+.simulator-card.phishing {
+    border-color: #ff6b6b;
+    background: linear-gradient(145deg, rgba(255, 107, 107, 0.1), rgba(20, 20, 20, 0.9));
+}
+
+.simulator-card.password {
+    border-color: #4ecdc4;
+    background: linear-gradient(145deg, rgba(78, 205, 196, 0.1), rgba(20, 20, 20, 0.9));
+}
+
+.simulator-card.network {
+    border-color: #45b7d1;
+    background: linear-gradient(145deg, rgba(69, 183, 209, 0.1), rgba(20, 20, 20, 0.9));
+}
+
+.simulator-card.social {
+    border-color: #96ceb4;
+    background: linear-gradient(145deg, rgba(150, 206, 180, 0.1), rgba(20, 20, 20, 0.9));
+}
+
+.simulator-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    padding: 1rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.card-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.difficulty-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.difficulty-easy { background: rgba(0, 255, 136, 0.2); color: var(--cyber-primary); }
+.difficulty-medium { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+.difficulty-hard { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+.difficulty-expert { background: rgba(108, 117, 125, 0.2); color: #6c757d; }
+
+.progress-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(var(--cyber-primary) 0% var(--progress, 0%), transparent var(--progress, 0%) 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.progress-ring::before {
+    content: attr(data-progress) '%';
+    position: absolute;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+}
+
+.progress-ring::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: var(--cyber-dark);
+    border-radius: 50%;
+}
+
+.cyber-pulse {
+    animation: cyberPulse 2s infinite;
+}
+
+@keyframes cyberPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.feature-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feature-list li:last-child {
+    border-bottom: none;
+}
+
+.feature-list li::before {
+    content: '▸';
+    color: var(--cyber-primary);
+    margin-right: 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Герой секция -->
+    <section class="simulator-hero cyber-pulse">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold cyber-text glow-text mb-4">
+                    <i class="bi bi-joystick me-3"></i>КИБЕР-СИМУЛЯТОРЫ
+                </h1>
+                <p class="lead cyber-subtext mb-4">
+                    Тренируйтесь в реальных условиях. Распознавайте атаки, взламывайте пароли, 
+                    сканируйте сети - все в безопасной среде.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <span class="cyber-badge">🎯 Практические навыки</span>
+                    <span class="cyber-badge">🛡️ Безопасная среда</span>
+                    <span class="cyber-badge">📈 Прогресс обучения</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Сетка симуляторов -->
+    <div class="simulator-grid">
+        <!-- Фишинг симулятор -->
+        <div class="simulator-card phishing">
+            <span class="difficulty-badge difficulty-easy">Начинающий</span>
+            <div class="text-center">
+                <i class="bi bi-envelope-exclamation simulator-icon text-danger"></i>
+                <h3 class="cyber-text mb-3">Фишинг Атаки</h3>
+                <p class="cyber-subtext">
+                    Научитесь распознавать фишинг-письма. 10 уровней сложности с реальными примерами из жизни.
+                </p>
+                
+                <ul class="feature-list text-start">
+                    <li>Реальные примеры писем</li>
+                    <li>Детальный анализ ошибок</li>
+                    <li>Прогрессивная сложность</li>
+                    <li>Статистика успеваемости</li>
+                </ul>
+
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Уровней</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">85%</span>
+                        <span class="stat-label">Успех</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.8</span>
+                        <span class="stat-label">Рейтинг</span>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('simulators.phishing_simulator') }}" class="btn btn-cyber w-100 mt-3">
+                    <i class="bi bi-play-circle me-2"></i>Запустить симулятор
+                </a>
+            </div>
+        </div>
+
+        <!-- Взлом паролей -->
+        <div class="simulator-card password">
+            <span class="difficulty-badge difficulty-medium">Средний</span>
+            <div class="text-center">
+                <i class="bi bi-shield-lock simulator-icon text-warning"></i>
+                <h3 class="cyber-text mb-3">Взлом Паролей</h3>
+                <p class="cyber-subtext">
+                    Узнайте, как быстро взламываются слабые пароли. Brute-force атака в реальном времени.
+                </p>
+                
+                <ul class="feature-list text-start">
+                    <li>Brute-force симуляция</li>
+                    <li>Анализ сложности паролей</li>
+                    <li>Время взлома в реальном времени</li>
+                    <li>Рекомендации по улучшению</li>
+                </ul>
+
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">Тестов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">Реальное</span>
+                        <span class="stat-label">Время</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.9</span>
+                        <span class="stat-label">Рейтинг</span>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('simulators.password_cracker') }}" class="btn btn-cyber w-100 mt-3">
+                    <i class="bi bi-cpu me-2"></i>Запустить взлом
+                </a>
+            </div>
+        </div>
+
+        <!-- Сканер сети -->
+        <div class="simulator-card network">
+            <span class="difficulty-badge difficulty-hard">Продвинутый</span>
+            <div class="text-center">
+                <i class="bi bi-hdd-network simulator-icon text-info"></i>
+                <h3 class="cyber-text mb-3">Сканер Сети</h3>
+                <p class="cyber-subtext">
+                    Симуляция сетевого сканирования. Обнаружение открытых портов и уязвимостей системы.
+                </p>
+                
+                <ul class="feature-list text-start">
+                    <li>Сканирование портов</li>
+                    <li>Обнаружение сервисов</li>
+                    <li>Анализ уязвимостей</li>
+                    <li>Отчеты безопасности</li>
+                </ul>
+
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Портов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Сервисов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.7</span>
+                        <span class="stat-label">Рейтинг</span>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('simulators.network_scanner') }}" class="btn btn-cyber w-100 mt-3">
+                    <i class="bi bi-radar me-2"></i>Начать сканирование
+                </a>
+            </div>
+        </div>
+
+        <!-- Социальная инженерия -->
+        <div class="simulator-card social">
+            <span class="difficulty-badge difficulty-expert">Эксперт</span>
+            <div class="text-center">
+                <i class="bi bi-people simulator-icon text-success"></i>
+                <h3 class="cyber-text mb-3">Социальная Инженерия</h3>
+                <p class="cyber-subtext">
+                    Симуляция атак социальной инженерии. Узнайте, как манипулируют людьми хакеры.
+                </p>
+                
+                <ul class="feature-list text-start">
+                    <li>Сценарии атак</li>
+                    <li>Психологические приемы</li>
+                    <li>Защита от манипуляций</li>
+                    <li>Кейсы из реальной жизни</li>
+                </ul>
+
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">15</span>
+                        <span class="stat-label">Сценариев</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">92%</span>
+                        <span class="stat-label">Эффективность</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.8</span>
+                        <span class="stat-label">Рейтинг</span>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('simulators.social_engineering') }}" class="btn btn-cyber w-100 mt-3">
+                    <i class="bi bi-brain me-2"></i>Изучить приемы
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика прогресса -->
+    {% if current_user.is_authenticated %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="cyber-card p-4">
+                <h3 class="cyber-text text-center mb-4">📊 Ваш прогресс в симуляторах</h3>
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="progress-ring" data-progress="65" style="--progress: 65%"></div>
+                        <h5 class="cyber-text mt-2">Фишинг</h5>
+                        <small class="cyber-subtext">6/10 уровней</small>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="progress-ring" data-progress="40" style="--progress: 40%"></div>
+                        <h5 class="cyber-text mt-2">Пароли</h5>
+                        <small class="cyber-subtext">12 тестов</small>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="progress-ring" data-progress="25" style="--progress: 25%"></div>
+                        <h5 class="cyber-text mt-2">Сети</h5>
+                        <small class="cyber-subtext">3 сканирования</small>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="progress-ring" data-progress="10" style="--progress: 10%"></div>
+                        <h5 class="cyber-text mt-2">Соц. инженерия</h5>
+                        <small class="cyber-subtext">2 сценария</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

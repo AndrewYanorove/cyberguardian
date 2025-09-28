@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{% block title %}Сканер сети - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.scanner-interface {
+    background: #0a0a0a;
+    border: 2px solid var(--cyber-primary);
+    border-radius: 15px;
+    padding: 2rem;
+    font-family: 'Courier New', monospace;
+}
+
+.scan-controls {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.target-input {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    color: var(--cyber-primary);
+    padding: 0.75rem 1rem;
+    font-family: 'Courier New', monospace;
+}
+
+.scan-results {
+    margin-top: 2rem;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.port-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto auto;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    align-items: center;
+}
+
+.port-number {
+    background: rgba(0, 136, 255, 0.2);
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.status-open {
+    color: var(--cyber-primary);
+}
+
+.status-closed {
+    color: var(--cyber-subtext);
+}
+
+.vulnerability-high {
+    color: #ff4444;
+}
+
+.vulnerability-medium {
+    color: #ffaa00;
+}
+
+.vulnerability-low {
+    color: #00ff00;
+}
+
+.scan-animation {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 2rem 0;
+}
+
+.scan-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--cyber-primary);
+    animation: scanPulse 1.5s infinite;
+}
+
+.scan-dot:nth-child(2) { animation-delay: 0.2s; }
+.scan-dot:nth-child(3) { animation-delay: 0.4s; }
+.scan-dot:nth-child(4) { animation-delay: 0.6s; }
+.scan-dot:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes scanPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.recommendations {
+    background: rgba(0, 136, 255, 0.1);
+    border: 1px solid var(--cyber-secondary);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.scan-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stat-card {
+    background: rgba(30, 30, 30, 0.8);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav class="mb-4">
+        <a href="{{ url_for('simulators.simulators_home') }}" class="btn btn-cyber-outline">
+            <i class="bi bi-arrow-left me-2"></i>Назад к симуляторам
+        </a>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="cyber-card p-4">
+                <div class="text-center mb-4">
+                    <h1 class="cyber-text glow-text mb-3">
+                        <i class="bi bi-radar me-2"></i>СКАНЕР СЕТИ
+                    </h1>
+                    <p class="cyber-subtext">
+                        Симуляция сетевого сканирования. Обнаружение открытых портов и уязвимостей.
+                    </p>
+                </div>
+
+                <!-- Элементы управления -->
+                <div class="scanner-interface">
+                    <div class="scan-controls">
+                        <input type="text" id="targetInput" class="target-input" 
+                               placeholder="Введите IP-адрес или домен (например: 192.168.1.1)"
+                               value="192.168.1.1">
+                        <button id="scanBtn" class="btn btn-cyber" onclick="startScan()">
+                            <i class="bi bi-play-circle me-2"></i>ЗАПУСТИТЬ СКАНИРОВАНИЕ
+                        </button>
+                    </div>
+
+                    <!-- Анимация сканирования -->
+                    <div id="scanAnimation" class="scan-animation" style="display: none;">
+                        <div class="scan-dot"></div>
+                        <div class="scan-dot"></div>
+                        <div class="scan-dot"></div>
+                        <div class="scan-dot"></div>
+                        <div class="scan-dot"></div>
+                    </div>
+
+                    <!-- Статистика -->
+                    <div id="scanStats" class="scan-stats" style="display: none;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="portsOpen">0</div>
+                            <div class="stat-label">ОТКРЫТЫХ ПОРТОВ</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="portsScanned">0</div>
+                            <div class="stat-label">ПРОСКАНИРОВАНО</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="vulnCount">0</div>
+                            <div class="stat-label">УЯЗВИМОСТЕЙ</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="scanTime">0с</div>
+                            <div class="stat-label">ВРЕМЯ СКАНИРОВАНИЯ</div>
+                        </div>
+                    </div>
+
+                    <!-- Результаты -->
+                    <div id="scanResults" class="scan-results" style="display: none;">
+                        <h5 class="cyber-text mb-3">📊 РЕЗУЛЬТАТЫ СКАНИРОВАНИЯ:</h5>
+                        <div id="portsList"></div>
+                    </div>
+
+                    <!-- Рекомендации -->
+                    <div id="recommendations" class="recommendations" style="display: none;">
+                        <h5 class="cyber-text mb-3">🛡️ РЕКОМЕНДАЦИИ ПО БЕЗОПАСНОСТИ:</h5>
+                        <div id="recommendationsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function startScan() {
+    const target = document.getElementById('targetInput').value.trim();
+    if (!target) {
+        showNotification('⚠️ Введите IP-адрес или домен для сканирования', 'warning');
+        return;
+    }
+
+    const scanBtn = document.getElementById('scanBtn');
+    const scanAnimation = document.getElementById('scanAnimation');
+    const scanStats = document.getElementById('scanStats');
+    const scanResults = document.getElementById('scanResults');
+    const recommendations = document.getElementById('recommendations');
+
+    // Блокируем кнопку
+    scanBtn.disabled = true;
+    scanBtn.innerHTML = '<div class="spinner-border spinner-border-sm me-2"></div>СКАНИРУЕМ...';
+
+    // Показываем анимацию и статистику
+    scanAnimation.style.display = 'flex';
+    scanStats.style.display = 'grid';
+
+    // Симуляция прогресса сканирования
+    let portsScanned = 0;
+    const totalPorts = 1000;
+    const progressInterval = setInterval(() => {
+        portsScanned += Math.floor(Math.random() * 50) + 10;
+        if (portsScanned >= totalPorts) {
+            portsScanned = totalPorts;
+            clearInterval(progressInterval);
+            completeScan(target);
+        }
+        document.getElementById('portsScanned').textContent = portsScanned;
+        document.getElementById('scanTime').textContent = Math.floor(portsScanned / 100) + 'с';
+    }, 100);
+
+    // Сбрасываем предыдущие результаты
+    scanResults.style.display = 'none';
+    recommendations.style.display = 'none';
+}
+
+function completeScan(target) {
+    const scanBtn = document.getElementById('scanBtn');
+    const scanAnimation = document.getElementById('scanAnimation');
+    
+    // Отправляем запрос на сервер
+    fetch('/simulators/api/scan-network', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({target: target})
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Скрываем анимацию
+        scanAnimation.style.display = 'none';
+        
+        // Обновляем статистику
+        document.getElementById('portsOpen').textContent = data.ports_found;
+        document.getElementById('vulnCount').textContent = data.ports.filter(p => p.vulnerability !== 'None').length;
+
+        // Показываем результаты
+        displayScanResults(data);
+        
+        // Разблокируем кнопку
+        scanBtn.disabled = false;
+        scanBtn.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>ПОВТОРИТЬ СКАНИРОВАНИЕ';
+    });
+}
+
+function displayScanResults(data) {
+    const portsList = document.getElementById('portsList');
+    const recommendationsList = document.getElementById('recommendationsList');
+    const scanResults = document.getElementById('scanResults');
+    const recommendations = document.getElementById('recommendations');
+
+    // Отображаем порты
+    portsList.innerHTML = '';
+    data.ports.forEach(port => {
+        if (port.status === 'open') {
+            const portItem = document.createElement('div');
+            portItem.className = 'port-item';
+            portItem.innerHTML = `
+                <div class="port-number">${port.port}</div>
+                <div>${port.service}</div>
+                <div class="status-open">● ОТКРЫТ</div>
+                <div class="vulnerability-${port.vulnerability.toLowerCase()}">
+                    ${port.vulnerability}
+                </div>
+            `;
+            portsList.appendChild(portItem);
+        }
+    });
+
+    // Отображаем рекомендации
+    recommendationsList.innerHTML = '';
+    data.recommendations.forEach(rec => {
+        const recItem = document.createElement('div');
+        recItem.className = 'mb-2';
+        recItem.innerHTML = `• ${rec}`;
+        recommendationsList.appendChild(recItem);
+    });
+
+    // Показываем результаты и рекомендации
+    scanResults.style.display = 'block';
+    recommendations.style.display = 'block';
+}
+
+// Enter для запуска сканирования
+document.getElementById('targetInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        startScan();
+    }
+});
+</script>
+{% endblock %}

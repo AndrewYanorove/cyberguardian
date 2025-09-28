@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Фишинг симулятор - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.email-simulator {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.email-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+}
+
+.email-body {
+    padding: 3rem;
+    color: #333;
+    line-height: 1.6;
+    min-height: 400px;
+}
+
+.phishing-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.option-card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 255, 136, 0.3);
+}
+
+.option-card.phishing {
+    border-color: #ff6b6b;
+}
+
+.option-card.legitimate {
+    border-color: #4ecdc4;
+}
+
+.option-card.correct {
+    background: rgba(0, 255, 136, 0.2);
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+}
+
+.option-card.incorrect {
+    background: rgba(255, 107, 107, 0.2);
+    border-color: #ff6b6b;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+}
+
+.level-progress {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 2rem 0;
+}
+
+.level-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--cyber-border);
+    transition: all 0.3s ease;
+}
+
+.level-dot.active {
+    background: var(--cyber-primary);
+    box-shadow: 0 0 10px var(--cyber-primary);
+    transform: scale(1.2);
+}
+
+.level-dot.completed {
+    background: var(--cyber-secondary);
+}
+
+.score-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.explanation-box {
+    background: rgba(0, 136, 255, 0.1);
+    border: 1px solid var(--cyber-secondary);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-top: 2rem;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.timer {
+    font-size: 1.2rem;
+    color: var(--cyber-primary);
+    text-align: center;
+    margin: 1rem 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Навигация -->
+    <nav class="mb-4">
+        <a href="{{ url_for('simulators.simulators_home') }}" class="btn btn-cyber-outline">
+            <i class="bi bi-arrow-left me-2"></i>Назад к симуляторам
+        </a>
+    </nav>
+
+    <!-- Заголовок -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="cyber-card p-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h1 class="cyber-text glow-text mb-2">
+                            <i class="bi bi-envelope-exclamation me-2"></i>ФИШИНГ СИМУЛЯТОР
+                        </h1>
+                        <p class="cyber-subtext">Уровень {{ level }} из {{ total_levels }}</p>
+                    </div>
+                    <div class="text-end">
+                        <div class="score-display">🏆 {{ score }} очков</div>
+                        <div class="cyber-subtext">Правильно: {{ correct }}/{{ total }}</div>
+                    </div>
+                </div>
+                
+                <!-- Прогресс уровней -->
+                <div class="level-progress">
+                    {% for i in range(1, 11) %}
+                    <div class="level-dot {% if i == level %}active{% elif i < level %}completed{% endif %}"></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Симулятор -->
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="cyber-card p-4">
+                <!-- Таймер -->
+                <div class="timer">
+                    ⏱️ Время на ответ: <span id="timer">30</span> сек
+                </div>
+
+                <!-- Email симулятор -->
+                <div class="email-simulator">
+                    <!-- Заголовок письма -->
+                    <div class="email-header">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <strong>От:</strong> {{ email.sender }}
+                            </div>
+                            <div>
+                                {{ email.time|default('Сегодня, 14:30') }}
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Тема:</strong> {{ email.subject }}
+                        </div>
+                    </div>
+                    
+                    <!-- Тело письма -->
+                    <div class="email-body">
+                        {{ email.body|safe }}
+                    </div>
+                </div>
+
+                <!-- Вопрос -->
+                <div class="mt-4 text-center">
+                    <h3 class="cyber-text mb-4">
+                        🤔 Это фишинг письмо или легитимное сообщение?
+                    </h3>
+                    
+                    <div class="phishing-options">
+                        <div class="option-card phishing" onclick="checkAnswer(true)">
+                            <i class="bi bi-exclamation-triangle display-4 text-danger mb-3"></i>
+                            <h4>ФИШИНГ</h4>
+                            <p class="cyber-subtext">Подозрительное письмо</p>
+                            <div class="cyber-badge bg-danger">Опасно</div>
+                        </div>
+                        
+                        <div class="option-card legitimate" onclick="checkAnswer(false)">
+                            <i class="bi bi-check-circle display-4 text-success mb-3"></i>
+                            <h4>ЛЕГИТИМНОЕ</h4>
+                            <p class="cyber-subtext">Настоящее письмо</p>
+                            <div class="cyber-badge bg-success">Безопасно</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Объяснение -->
+                <div id="explanation" class="explanation-box" style="display: none;">
+                    <h4 class="cyber-text mb-3">
+                        <i class="bi bi-search me-2"></i>АНАЛИЗ ПИСЬМА
+                    </h4>
+                    <p id="explanation-text" class="mb-0"></p>
+                    
+                    <div class="text-center mt-3">
+                        <button id="nextBtn" class="btn btn-cyber btn-lg" onclick="nextLevel()">
+                            <i class="bi bi-arrow-right me-2"></i>Следующий уровень
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentAnswer = null;
+let timer = 30;
+let timerInterval;
+
+// Запуск таймера
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timer--;
+        document.getElementById('timer').textContent = timer;
+        
+        if (timer <= 0) {
+            clearInterval(timerInterval);
+            showNotification('⏰ Время вышло!', 'warning');
+            // Автоматически проверяем как неправильный ответ
+            checkAnswer(false);
+        }
+    }, 1000);
+}
+
+function checkAnswer(isPhishing) {
+    clearInterval(timerInterval);
+    currentAnswer = isPhishing;
+    
+    const options = document.querySelectorAll('.option-card');
+    options.forEach(opt => opt.style.pointerEvents = 'none');
+    
+    fetch('/simulators/check-phishing', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({level: {{ level }}, answer: isPhishing})
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Показываем результат
+        const phishingOption = document.querySelector('.option-card.phishing');
+        const legitOption = document.querySelector('.option-card.legitimate');
+        
+        if (data.correct) {
+            showNotification('✅ Правильно! +10 очков', 'success');
+            (isPhishing ? phishingOption : legitOption).classList.add('correct');
+        } else {
+            showNotification('❌ Неправильно!', 'danger');
+            (isPhishing ? phishingOption : legitOption).classList.add('incorrect');
+            // Показываем правильный вариант
+            (!isPhishing ? phishingOption : legitOption).classList.add('correct');
+        }
+        
+        // Показываем объяснение
+        document.getElementById('explanation-text').textContent = data.explanation;
+        document.getElementById('explanation').style.display = 'block';
+    });
+}
+
+function nextLevel() {
+    window.location.reload();
+}
+
+// Запускаем таймер при загрузке
+document.addEventListener('DOMContentLoaded', startTimer);
+</script>
+{% endblock %}
