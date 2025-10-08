@@ -33,6 +33,7 @@
         </div>
         
         <div class="sidebar-menu">
+            <!-- Основная навигация -->
             <a href="{{ url_for('index') }}" class="sidebar-item">
                 <i class="bi bi-house me-3"></i>
                 <span>Главная</span>
@@ -45,6 +46,7 @@
             
             <div class="sidebar-divider"></div>
             
+            <!-- Основные модули -->
             <a href="{{ url_for('education.education_home') }}" class="sidebar-item">
                 <i class="bi bi-book me-3"></i>
                 <span>Обучение</span>
@@ -67,7 +69,9 @@
             
             <div class="sidebar-divider"></div>
             
-            <!-- Новые модули -->
+            <!-- Экспертные инструменты -->
+            <div class="sidebar-category">Экспертные инструменты</div>
+            
             <a href="{{ url_for('threats.threat_dashboard') }}" class="sidebar-item">
                 <i class="bi bi-shield-exclamation me-3"></i>
                 <span>Мониторинг угроз</span>
@@ -95,12 +99,35 @@
             
             <div class="sidebar-divider"></div>
             
+            <!-- Информационные страницы -->
+            <a href="{{ url_for('about') }}" class="sidebar-item">
+                <i class="bi bi-info-circle me-3"></i>
+                <span>О проекте</span>
+            </a>
+            
+            <a href="{{ url_for('contact') }}" class="sidebar-item">
+                <i class="bi bi-envelope me-3"></i>
+                <span>Контакты</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            
+            <!-- Авторизация -->
             {% if current_user.is_authenticated %}
+            <div class="sidebar-user-info">
+                <div class="user-avatar-sidebar">
+                    <i class="bi bi-person"></i>
+                </div>
+                <div class="user-details">
+                    <div class="username">{{ current_user.username }}</div>
+                    <div class="user-email cyber-subtext">{{ current_user.email if current_user.email else 'Пользователь' }}</div>
+                </div>
+            </div>
             <a href="{{ url_for('auth.profile') }}" class="sidebar-item">
                 <i class="bi bi-person me-3"></i>
                 <span>Профиль</span>
             </a>
-            <a href="{{ url_for('auth.logout') }}" class="sidebar-item">
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-item text-danger">
                 <i class="bi bi-box-arrow-right me-3"></i>
                 <span>Выйти</span>
             </a>
@@ -137,9 +164,10 @@
     <!-- Верхняя навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark cyber-navbar">
         <div class="container">
-            <!-- Кнопка меню -->
+            <!-- Кнопка меню - ВИДНА НА ВСЕХ УСТРОЙСТВАХ -->
             <button class="navbar-toggler cyber-toggler me-3" type="button" onclick="toggleSidebar()">
                 <i class="bi bi-list"></i>
+                <span class="menu-text d-none d-sm-inline ms-2">Меню</span>
             </button>
             
             <!-- Лого -->
@@ -149,109 +177,53 @@
                 <small class="cyber-subtext ms-2">v2.0</small>
             </a>
 
-            <!-- Десктопное меню (скрыто на мобильных) -->
-            <div class="d-none d-lg-block">
-                <ul class="navbar-nav ms-auto cyber-nav">
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('index') }}">
-                            <i class="bi bi-house me-1"></i>Главная
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('dashboard') }}">
-                            <i class="bi bi-speedometer2 me-1"></i>Дашборд
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('education.education_home') }}">
-                            <i class="bi bi-book me-1"></i>Обучение
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('passwords.password_generator') }}">
-                            <i class="bi bi-key me-1"></i>Пароли
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('encryption.encryption_tools') }}">
-                            <i class="bi bi-lock me-1"></i>Шифрование
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('ai.ai_chat') }}">
-                            <i class="bi bi-robot me-1"></i>ИИ-помощник
-                        </a>
-                    </li>
-                    <!-- Новые модули -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link cyber-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-stars me-1"></i>Экспертные инструменты
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="{{ url_for('threats.threat_dashboard') }}">
-                                    <i class="bi bi-shield-exclamation me-2"></i>Мониторинг угроз
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ url_for('scanner.scanner_dashboard') }}">
-                                    <i class="bi bi-shield-check me-2"></i>Сканер безопасности
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ url_for('games.games_dashboard') }}">
-                                    <i class="bi bi-joystick me-2"></i>Кибер-игры
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="{{ url_for('ddos.ddos_simulator') }}">
-                                    <i class="bi bi-lightning-charge me-2"></i>DDoS Simulator
-                                    <span class="badge bg-danger ms-2">NEW</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Правая часть (авторизация) -->
-            <div class="d-none d-lg-block">
-                <ul class="navbar-nav">
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link cyber-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <div class="user-avatar">
-                                <i class="bi bi-person"></i>
-                            </div>
-                            {{ current_user.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+            <!-- Правая часть с пользователем -->
+            <div class="ms-auto d-flex align-items-center">
+                {% if current_user.is_authenticated %}
+                <div class="dropdown user-dropdown">
+                    <button class="btn user-dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <div class="user-avatar-nav">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <span class="user-name-nav d-none d-md-inline">{{ current_user.username }}</span>
+                        <i class="bi bi-chevron-down ms-1 d-none d-md-inline"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('auth.profile') }}">
                                 <i class="bi bi-person me-2"></i>Профиль
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('dashboard') }}">
                                 <i class="bi bi-speedometer2 me-2"></i>Дашборд
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">
                                 <i class="bi bi-box-arrow-right me-2"></i>Выйти
-                            </a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('auth.login') }}">
-                            <i class="bi bi-box-arrow-in-right me-1"></i>Войти
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('auth.register') }}">
-                            <i class="bi bi-person-plus me-1"></i>Регистрация
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                {% else %}
+                <div class="d-none d-lg-flex gap-2">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-cyber-outline btn-sm">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Войти
+                    </a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-cyber btn-sm">
+                        <i class="bi bi-person-plus me-1"></i>Регистрация
+                    </a>
+                </div>
+                {% endif %}
+                
+                <!-- Индикатор статуса -->
+                <div class="d-none d-lg-block ms-3">
+                    <div class="cyber-badge bg-success">
+                        <i class="bi bi-check-circle me-1"></i>Система активна
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -340,6 +312,13 @@
             const overlay = document.getElementById('sidebarOverlay');
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
+            
+            // Блокируем прокрутку body когда меню открыто
+            if (sidebar.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
         }
 
         function closeSidebar() {
@@ -347,20 +326,22 @@
             const overlay = document.getElementById('sidebarOverlay');
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
+            document.body.style.overflow = '';
         }
 
-        // Закрытие меню при клике на ссылку (на мобильных)
+        // Закрытие меню при клике на ссылку
         document.querySelectorAll('.sidebar-item').forEach(item => {
             item.addEventListener('click', () => {
-                if (window.innerWidth < 992) {
-                    closeSidebar();
-                }
+                closeSidebar();
             });
         });
 
-        // Закрытие меню при изменении размера окна
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 992) {
+        // Закрытие меню при клике на оверлей
+        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+        // Закрытие меню при нажатии Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
                 closeSidebar();
             }
         });
