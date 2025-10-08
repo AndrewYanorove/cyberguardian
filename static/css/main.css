@@ -2,13 +2,13 @@
 :root {
     --cyber-dark: #0a0a0a;
     --cyber-darker: #050505;
-    --cyber-primary: #00ff88;
-    --cyber-secondary: #0088ff;
+    --cyber-primary: #02b9da;
+    --cyber-secondary: #00fcda;
     --cyber-accent: #ff0088;
     --cyber-text: #ffffff;
     --cyber-subtext: #888888;
     --cyber-border: #222222;
-    --cyber-glow: 0 0 10px rgba(0, 255, 136, 0.5);
+    --cyber-glow: 0 0 10px rgba(0, 206, 233, 0.5);
 }
 
 /* Базовые стили */
