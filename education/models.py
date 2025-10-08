@@ -7,6 +7,7 @@ class UserProgress(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     course_id = db.Column(db.String(100), nullable=False)
+    module_id = db.Column(db.String(100), nullable=False)  # Добавляем module_id
     lesson_id = db.Column(db.String(100), nullable=False)
     completed = db.Column(db.Boolean, default=False)
     score = db.Column(db.Integer, default=0)
@@ -19,6 +20,7 @@ class UserProgress(db.Model):
             'id': self.id,
             'user_id': self.user_id,
             'course_id': self.course_id,
+            'module_id': self.module_id,
             'lesson_id': self.lesson_id,
             'completed': self.completed,
             'score': self.score,
