@@ -1,0 +1,912 @@
+{% extends "base.html" %}
+{% block title %}DDoS Simulator - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.attack-dashboard {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(20, 20, 20, 0.9) 100%);
+    border: 2px solid #dc3545;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.attack-dashboard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.1), transparent);
+    animation: dashboardShine 3s infinite;
+}
+
+@keyframes dashboardShine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.glow-card {
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transition: left 0.5s ease;
+}
+
+.glow-card:hover::before {
+    left: 100%;
+}
+
+.glow-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.stat-card:hover {
+    border-color: #dc3545;
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.live-graph {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1rem;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.graph-line {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: #dc3545;
+    animation: graphPulse 2s ease-in-out infinite;
+}
+
+.attack-visual {
+    position: relative;
+    height: 120px;
+    background: rgba(10, 10, 10, 0.8);
+    border-radius: 10px;
+    margin: 1rem 0;
+    overflow: hidden;
+}
+
+.packet {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: packetFloat 3s linear infinite;
+}
+
+.botnet-node {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #0dcaf0;
+    border-radius: 50%;
+    animation: nodePulse 2s ease-in-out infinite;
+}
+
+.target-server {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: #20c997;
+    border-radius: 50%;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    animation: serverGlow 2s ease-in-out infinite;
+}
+
+@keyframes packetFloat {
+    0% { 
+        left: -10px; 
+        opacity: 0; 
+        transform: translateY(0) scale(0.5);
+    }
+    10% { 
+        opacity: 1;
+        transform: translateY(-10px) scale(1);
+    }
+    90% { 
+        opacity: 1;
+        transform: translateY(10px) scale(1);
+    }
+    100% { 
+        left: 100%; 
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+    }
+}
+
+@keyframes nodePulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes serverGlow {
+    0%, 100% { 
+        box-shadow: 0 0 20px #20c997;
+    }
+    50% { 
+        box-shadow: 0 0 40px #20c997, 0 0 60px #20c997;
+    }
+}
+
+@keyframes graphPulse {
+    0%, 100% { 
+        opacity: 0.7;
+        transform: scaleX(1);
+    }
+    50% { 
+        opacity: 1;
+        transform: scaleX(1.05);
+    }
+}
+
+.phase-indicator {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    margin: 0.5rem;
+    animation: phasePulse 2s ease-in-out infinite;
+}
+
+@keyframes phasePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.attack-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.attack-type-card {
+    background: rgba(30, 30, 30, 0.9);
+    border: 2px solid;
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.attack-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.attack-type-card:hover::before {
+    left: 100%;
+}
+
+.attack-type-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.warning-banner {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.warning-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: warningShine 3s linear infinite;
+}
+
+@keyframes warningShine {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.quick-action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.quick-action {
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.quick-action:hover {
+    border-color: #dc3545;
+    transform: translateY(-3px);
+    text-decoration: none;
+    color: inherit;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Предупреждение -->
+    <div class="warning-banner">
+        <div class="position-relative">
+            <h4 class="text-white mb-3">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                УЧЕБНЫЙ СИМУЛЯТОР DDoS АТАК
+            </h4>
+            <p class="text-white mb-0">
+                ⚠️ Этот инструмент предназначен исключительно для образовательных целей. 
+                Все атаки симулируются и не наносят реального ущерба. 
+                Использование этих знаний для реальных атак незаконно и преследуется по закону!
+            </p>
+        </div>
+    </div>
+
+    <!-- Заголовок -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="cyber-text glow-text mb-2">
+                        <i class="bi bi-lightning-charge me-2"></i>DDoS Attack Simulator
+                    </h1>
+                    <p class="cyber-subtext">Изучение механизмов DDoS атак в безопасной среде</p>
+                </div>
+                <div class="text-end">
+                    <div class="cyber-badge bg-danger">
+                        <i class="bi bi-activity me-1"></i>
+                        <span id="activeAttacksCount">0</span> активных атак
+                    </div>
+                    <div class="cyber-subtext small mt-1" id="lastUpdate">Обновлено: --:--:--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основная статистика -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="stats-grid" id="mainStats">
+                <!-- Статистика загрузится через JS -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Левая колонка -->
+        <div class="col-lg-8">
+            <!-- Визуализация атаки -->
+            <div class="attack-dashboard">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-activity me-2"></i>Живая визуализация атаки
+                </h4>
+                
+                <div class="attack-visual" id="attackVisualization">
+                    <!-- Ботнет ноды -->
+                    <div class="botnet-node" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+                    <div class="botnet-node" style="top: 40%; left: 15%; animation-delay: 0.2s;"></div>
+                    <div class="botnet-node" style="top: 60%; left: 8%; animation-delay: 0.4s;"></div>
+                    <div class="botnet-node" style="top: 80%; left: 12%; animation-delay: 0.6s;"></div>
+                    <div class="botnet-node" style="top: 30%; left: 5%; animation-delay: 0.8s;"></div>
+                    
+                    <!-- Целевой сервер -->
+                    <div class="target-server" id="targetServer">
+                        <i class="bi bi-server"></i>
+                    </div>
+                </div>
+
+                <!-- Статистика в реальном времени -->
+                <div class="stats-grid" id="liveStats">
+                    <!-- Live stats загрузятся через JS -->
+                </div>
+
+                <!-- Активные атаки -->
+                <div id="activeAttacksContainer">
+                    <!-- Активные атаки загрузятся через JS -->
+                </div>
+            </div>
+
+            <!-- Типы атак -->
+            <div class="glow-card">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-list-ul me-2"></i>Типы DDoS атак
+                </h4>
+                <div class="attack-type-grid" id="attackTypesGrid">
+                    <!-- Типы атак загрузятся через JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая колонка -->
+        <div class="col-lg-4">
+            <!-- Быстрые действия -->
+            <div class="glow-card">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Быстрые действия
+                </h4>
+                <div class="quick-action-grid">
+                    <a href="{{ url_for('ddos.attack_interface') }}" class="quick-action">
+                        <i class="bi bi-play-circle display-6 text-danger mb-3"></i>
+                        <h6 class="cyber-text">Запустить атаку</h6>
+                        <p class="cyber-subtext small">Начать симуляцию DDoS атаки</p>
+                    </a>
+                    <a href="{{ url_for('ddos.ddos_education') }}" class="quick-action">
+                        <i class="bi bi-book display-6 text-warning mb-3"></i>
+                        <h6 class="cyber-text">Обучение</h6>
+                        <p class="cyber-subtext small">Изучить механизмы атак</p>
+                    </a>
+                    <a href="{{ url_for('ddos.protection_guide') }}" class="quick-action">
+                        <i class="bi bi-shield-check display-6 text-success mb-3"></i>
+                        <h6 class="cyber-text">Защита</h6>
+                        <p class="cyber-subtext small">Методы защиты от DDoS</p>
+                    </a>
+                    <a href="{{ url_for('threats.threat_dashboard') }}" class="quick-action">
+                        <i class="bi bi-eye display-6 text-info mb-3"></i>
+                        <h6 class="cyber-text">Мониторинг</h6>
+                        <p class="cyber-subtext small">Отслеживание угроз</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- История атак -->
+            <div class="glow-card">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-clock-history me-2"></i>История атак
+                </h4>
+                <div id="attackHistory">
+                    <!-- История загрузится через JS -->
+                </div>
+            </div>
+
+            <!-- Фазы атаки -->
+            <div class="glow-card">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-graph-up me-2"></i>Фазы DDoS атаки
+                </h4>
+                <div class="text-center">
+                    <div class="phase-indicator bg-warning text-dark">🟡 Подготовка</div>
+                    <div class="phase-indicator bg-orange text-white">🟠 Наращивание</div>
+                    <div class="phase-indicator bg-danger text-white">🔴 Пиковая атака</div>
+                    <div class="phase-indicator bg-orange text-white">🟠 Снижение</div>
+                    <div class="phase-indicator bg-success text-white">🟢 Завершение</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Загрузка данных DDoS симулятора
+async function loadDDoSData() {
+    await Promise.all([
+        loadMainStats(),
+        loadAttackTypes(),
+        loadActiveAttacks(),
+        loadLiveStats(),
+        loadAttackHistory()
+    ]);
+    
+    updateLastUpdateTime();
+    
+    // Автообновление каждые 2 секунды
+    setInterval(loadDDoSData, 2000);
+}
+
+// Загрузка основной статистики
+async function loadMainStats() {
+    try {
+        const response = await fetch('/ddos/api/attack-stats');
+        const data = await response.json();
+        
+        const container = document.getElementById('mainStats');
+        container.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon text-danger">
+                    <i class="bi bi-lightning-charge"></i>
+                </div>
+                <h3 class="cyber-text">${data.total_attacks}</h3>
+                <p class="cyber-subtext">Всего атак</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon text-success">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <h3 class="cyber-text">${data.success_rate}%</h3>
+                <p class="cyber-subtext">Успешность</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon text-warning">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <h3 class="cyber-text">${data.total_packets}</h3>
+                <p class="cyber-subtext">Пакетов отправлено</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon text-info">
+                    <i class="bi bi-hdd-network"></i>
+                </div>
+                <h3 class="cyber-text">${data.total_bandwidth} GB</h3>
+                <p class="cyber-subtext">Трафик</p>
+            </div>
+        `;
+        
+        document.getElementById('activeAttacksCount').textContent = data.active_now;
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+}
+
+// Загрузка типов атак
+async function loadAttackTypes() {
+    try {
+        const response = await fetch('/ddos/api/attack-types');
+        const data = await response.json();
+        
+        const container = document.getElementById('attackTypesGrid');
+        container.innerHTML = data.attack_types.map(type => `
+            <div class="attack-type-card" style="border-color: ${type.color}">
+                <div class="d-flex align-items-start mb-3">
+                    <i class="bi ${type.icon} display-6 me-3" style="color: ${type.color}"></i>
+                    <div class="flex-grow-1">
+                        <h5 class="cyber-text">${type.name}</h5>
+                        <div class="d-flex gap-2 mb-2">
+                            <span class="badge bg-${type.difficulty === 'easy' ? 'success' : 
+                                                  type.difficulty === 'medium' ? 'warning' : 'danger'}">
+                                ${type.difficulty}
+                            </span>
+                            <span class="badge bg-${type.impact === 'low' ? 'secondary' : 
+                                                   type.impact === 'medium' ? 'warning' : 'danger'}">
+                                ${type.impact} impact
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <p class="cyber-subtext small mb-3">${type.description}</p>
+                <small class="cyber-subtext">
+                    <strong>Защита:</strong> ${type.defense}
+                </small>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки типов атак:', error);
+    }
+}
+
+// Загрузка активных атак
+async function loadActiveAttacks() {
+    try {
+        const response = await fetch('/ddos/api/attack-status');
+        const data = await response.json();
+        
+        const container = document.getElementById('activeAttacksContainer');
+        
+        if (Object.keys(data.active_attacks).length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="bi bi-shield-check display-4 text-success"></i>
+                    <p class="cyber-subtext mt-2">Активных атак нет</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = `
+            <h5 class="cyber-text mb-3">🔴 Активные атаки</h5>
+            ${Object.values(data.active_attacks).map(attack => `
+                <div class="glow-card mb-3" style="border-color: #dc3545">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <h6 class="cyber-text">${attack.target}</h6>
+                            <small class="cyber-subtext">${attack.type} • ${attack.current_phase}</small>
+                        </div>
+                        <span class="badge bg-danger">Активна</span>
+                    </div>
+                    
+                    <div class="attack-progress mb-2">
+                        <div class="progress-fill" style="width: ${(attack.elapsed_time / attack.duration) * 100}%"></div>
+                    </div>
+                    
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <small class="cyber-subtext">Пакетов</small>
+                            <div class="cyber-text">${attack.packets_sent}</div>
+                        </div>
+                        <div class="col-3">
+                            <small class="cyber-subtext">PPS</small>
+                            <div class="cyber-text">${attack.current_pps}/s</div>
+                        </div>
+                        <div class="col-3">
+                            <small class="cyber-subtext">Успешность</small
+                                                        </div>
+                        <div class="col-3">
+                            <small class="cyber-subtext">Успешность</small>
+                            <div class="cyber-text">${attack.success_rate}%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-2">
+                        <small class="cyber-subtext">
+                            <i class="bi bi-clock me-1"></i>
+                            ${Math.floor(attack.elapsed_time / 60)}:${(attack.elapsed_time % 60).toString().padStart(2, '0')} / 
+                            ${Math.floor(attack.duration / 60)}:${(attack.duration % 60).toString().padStart(2, '0')}
+                        </small>
+                    </div>
+                </div>
+            `).join('')}
+        `;
+    } catch (error) {
+        console.error('Ошибка загрузки активных атак:', error);
+    }
+}
+
+// Загрузка живой статистики
+async function loadLiveStats() {
+    try {
+        const response = await fetch('/ddos/api/live-stats');
+        const data = await response.json();
+        
+        const container = document.getElementById('liveStats');
+        container.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon text-info">
+                    <i class="bi bi-speedometer2"></i>
+                </div>
+                <h3 class="cyber-text">${data.current_pps}/s</h3>
+                <p class="cyber-subtext">Пакетов в секунду</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon text-warning">
+                    <i class="bi bi-hdd-stack"></i>
+                </div>
+                <h3 class="cyber-text">${data.current_bandwidth}</h3>
+                <p class="cyber-subtext">Текущий трафик</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon text-success">
+                    <i class="bi bi-cpu"></i>
+                </div>
+                <h3 class="cyber-text">${data.botnet_size}</h3>
+                <p class="cyber-subtext">Размер ботнета</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon text-danger">
+                    <i class="bi bi-activity"></i>
+                </div>
+                <h3 class="cyber-text">${data.attack_power}%</h3>
+                <p class="cyber-subtext">Мощность атаки</p>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Ошибка загрузки живой статистики:', error);
+    }
+}
+
+// Загрузка истории атак
+async function loadAttackHistory() {
+    try {
+        const response = await fetch('/ddos/api/attack-history');
+        const data = await response.json();
+        
+        const container = document.getElementById('attackHistory');
+        
+        if (data.history.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-3">
+                    <i class="bi bi-clock-history display-4 text-secondary"></i>
+                    <p class="cyber-subtext mt-2">История атак пуста</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = data.history.slice(0, 5).map(attack => `
+            <div class="d-flex align-items-center mb-3 p-2 border-bottom border-secondary">
+                <div class="flex-shrink-0">
+                    <i class="bi bi-${attack.successful ? 'check-circle text-success' : 'x-circle text-danger'} fs-4"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="cyber-text mb-1">${attack.target}</h6>
+                        <small class="cyber-subtext">${attack.duration}с</small>
+                    </div>
+                    <p class="cyber-subtext small mb-1">${attack.type}</p>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">${new Date(attack.timestamp).toLocaleTimeString()}</small>
+                        <small class="badge bg-${attack.impact === 'low' ? 'secondary' : 
+                                               attack.impact === 'medium' ? 'warning' : 'danger'}">
+                            ${attack.packets_sent} пакетов
+                        </small>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки истории атак:', error);
+    }
+}
+
+// Обновление времени последнего обновления
+function updateLastUpdateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('ru-RU');
+    document.getElementById('lastUpdate').textContent = `Обновлено: ${timeString}`;
+}
+
+// Анимация пакетов в визуализации
+function animatePackets() {
+    const visualization = document.getElementById('attackVisualization');
+    
+    // Очистка старых пакетов
+    const oldPackets = visualization.querySelectorAll('.packet');
+    oldPackets.forEach(packet => packet.remove());
+    
+    // Создание новых пакетов
+    const packetCount = Math.floor(Math.random() * 8) + 4; // 4-12 пакетов
+    
+    for (let i = 0; i < packetCount; i++) {
+        const packet = document.createElement('div');
+        packet.className = 'packet';
+        
+        // Случайная позиция по вертикали
+        const top = Math.random() * 80 + 10; // 10-90%
+        
+        // Случайная задержка анимации
+        const delay = Math.random() * 2;
+        
+        // Случайный цвет пакета
+        const colors = ['#dc3545', '#fd7e14', '#ffc107', '#0dcaf0'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        packet.style.cssText = `
+            top: ${top}%;
+            background: ${color};
+            animation-delay: ${delay}s;
+        `;
+        
+        visualization.appendChild(packet);
+    }
+}
+
+// Пульсация сервера при атаке
+function animateServer() {
+    const server = document.getElementById('targetServer');
+    const isUnderAttack = Math.random() > 0.3; // 70% chance of being under attack
+    
+    if (isUnderAttack) {
+        server.style.animation = 'serverGlow 0.5s ease-in-out infinite';
+        server.style.background = '#dc3545';
+    } else {
+        server.style.animation = 'serverGlow 2s ease-in-out infinite';
+        server.style.background = '#20c997';
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    loadDDoSData();
+    
+    // Запуск анимаций
+    setInterval(animatePackets, 500);
+    setInterval(animateServer, 2000);
+    
+    // Инициализация графика
+    initializeLiveGraph();
+});
+
+// Инициализация живого графика
+function initializeLiveGraph() {
+    const graphContainer = document.querySelector('.live-graph');
+    if (!graphContainer) return;
+    
+    // Создание простой анимации графика
+    const graphLine = document.createElement('div');
+    graphLine.className = 'graph-line';
+    graphContainer.appendChild(graphLine);
+    
+    // Анимация изменения высоты графика
+    setInterval(() => {
+        const randomHeight = Math.random() * 80 + 20; // 20-100%
+        graphLine.style.height = `${randomHeight}%`;
+    }, 1000);
+}
+
+// Обработчики для быстрых действий
+document.addEventListener('DOMContentLoaded', function() {
+    const quickActions = document.querySelectorAll('.quick-action');
+    
+    quickActions.forEach(action => {
+        action.addEventListener('click', function(e) {
+            // Добавление анимации загрузки
+            const icon = this.querySelector('i');
+            const originalClass = icon.className;
+            
+            icon.className = 'bi bi-arrow-repeat spinner';
+            
+            setTimeout(() => {
+                icon.className = originalClass;
+            }, 1000);
+        });
+    });
+});
+
+// Дополнительные утилиты
+function formatNumber(num) {
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'M';
+    }
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
+}
+
+function getPhaseColor(phase) {
+    const phases = {
+        'Подготовка': 'warning',
+        'Наращивание': 'orange',
+        'Пиковая атака': 'danger',
+        'Снижение': 'orange', 
+        'Завершение': 'success'
+    };
+    return phases[phase] || 'secondary';
+}
+</script>
+
+<style>
+/* Дополнительные стили для прогресс-бара */
+.attack-progress {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #dc3545, #fd7e14);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Стили для спиннера */
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .attack-type-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-action-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .phase-indicator {
+        display: block;
+        margin: 0.5rem 0;
+    }
+}
+
+/* Темная тема улучшения */
+.cyber-text {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+.cyber-subtext {
+    color: #adb5bd;
+}
+
+.cyber-badge {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    border: none;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+}
+
+/* Анимация появления элементов */
+.glow-card, .stat-card, .attack-type-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+{% endblock %}
+

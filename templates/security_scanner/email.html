@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Сканер Email - CyberGuardian{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="cyber-text glow-text mb-3">
+                    <i class="bi bi-envelope me-2"></i>Сканер Email безопасности
+                </h1>
+                <p class="cyber-subtext lead">
+                    Проверьте безопасность вашего email аккаунта
+                </p>
+            </div>
+
+            <div class="scanner-card">
+                <h4 class="cyber-text mb-4">📧 Проверка Email</h4>
+                
+                <div class="mb-4">
+                    <label class="form-label cyber-text">Введите email для проверки:</label>
+                    <input type="email" class="form-control cyber-input" id="emailInput" 
+                           placeholder="example@mail.ru">
+                    <small class="cyber-subtext">
+                        Мы не сохраняем и не передаем ваш email третьим лицам
+                    </small>
+                </div>
+
+                <button onclick="scanEmail()" class="btn btn-cyber w-100 mb-4">
+                    <i class="bi bi-search me-2"></i>Проверить Email
+                </button>
+
+                <div class="scan-result" id="emailResult" style="display: none;">
+                    <!-- Результаты загрузятся через JS -->
+                </div>
+            </div>
+
+            <!-- Советы по безопасности email -->
+            <div class="scanner-card mt-4">
+                <h4 class="cyber-text mb-4">💡 Советы по защите Email</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="content-tip mb-3">
+                            <i class="bi bi-shield-check me-2"></i>
+                            <strong>Двухфакторная аутентификация</strong>
+                            <p class="mb-0">Включите 2FA для дополнительной защиты</p>
+                        </div>
+                        <div class="content-tip mb-3">
+                            <i class="bi bi-key me-2"></i>
+                            <strong>Надежный пароль</strong>
+                            <p class="mb-0">Используйте сложный уникальный пароль</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="content-tip mb-3">
+                            <i class="bi bi-eye-slash me-2"></i>
+                            <strong>Остерегайтесь фишинга</strong>
+                            <p class="mb-0">Не переходите по подозрительным ссылкам</p>
+                        </div>
+                        <div class="content-tip">
+                            <i class="bi bi-bell me-2"></i>
+                            <strong>Мониторинг активности</strong>
+                            <p class="mb-0">Регулярно проверяйте историю входов</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Проверка email
+async function scanEmail() {
+    const email = document.getElementById('emailInput').value;
+    
+    if (!email || !email.includes('@')) {
+        alert('Введите корректный email адрес');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/scanner/api/scan/email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email })
+        });
+        
+        const result = await response.json();
+        displayEmailResult(result);
+        
+    } catch (error) {
+        console.error('Ошибка проверки email:', error);
+        alert('Ошибка при проверке email');
+    }
+}
+
+// Отображение результата
+function displayEmailResult(result) {
+    const container = document.getElementById('emailResult');
+    
+    container.style.display = 'block';
+    container.innerHTML = `
+        <h5 class="cyber-text mb-3">
+            <i class="bi bi-${result.score >= 80 ? 'check-circle text-success' : 
+                              result.score >= 60 ? 'exclamation-triangle text-warning' : 
+                              'exclamation-circle text-danger'} me-2"></i>
+            Результат проверки
+        </h5>
+        
+        <div class="row text-center mb-4">
+            <div class="col-md-6">
+                <div class="security-level level-${getSecurityLevel(result.score)}">
+                    ${result.score}%
+                </div>
+                <p class="cyber-subtext">Оценка безопасности</p>
+            </div>
+            <div class="col-md-6">
+                <div class="security-level">
+                    ${result.issues.length}
+                </div>
+                <p class="cyber-subtext">Обнаружено проблем</p>
+            </div>
+        </div>
+        
+        <div class="security-meter mb-3">
+            <div class="meter-fill" style="width: ${result.score}%; background: ${getSecurityColor(result.score)};"></div>
+        </div>
+        
+        ${result.issues.length > 0 ? `
+            <h6 class="cyber-text mb-3 text-danger">⚠️ Обнаруженные проблемы:</h6>
+            <div class="row">
+                ${result.issues.map(issue => `
+                    <div class="col-12 mb-2">
+                        <i class="bi bi-exclamation-circle text-danger me-2"></i>
+                        <span class="cyber-subtext">${issue}</span>
+                    </div>
+                `).join('')}
+            </div>
+        ` : ''}
+        
+        ${result.recommendations.length > 0 ? `
+            <h6 class="cyber-text mb-3 text-success">💡 Рекомендации:</h6>
+            <div class="row">
+                ${result.recommendations.map(rec => `
+                    <div class="col-12 mb-2">
+                        <i class="bi bi-check-circle text-success me-2"></i>
+                        <span class="cyber-subtext">${rec}</span>
+                    </div>
+                `).join('')}
+            </div>
+        ` : ''}
+    `;
+}
+
+// Определение уровня безопасности
+function getSecurityLevel(score) {
+    if (score >= 80) return 'excellent';
+    if (score >= 70) return 'good';
+    if (score >= 50) return 'fair';
+    if (score >= 30) return 'poor';
+    return 'critical';
+}
+
+// Получение цвета для уровня безопасности
+function getSecurityColor(score) {
+    if (score >= 80) return '#20c997';
+    if (score >= 70) return '#0dcaf0';
+    if (score >= 50) return '#ffc107';
+    if (score >= 30) return '#fd7e14';
+    return '#dc3545';
+}
+</script>
+{% endblock %}

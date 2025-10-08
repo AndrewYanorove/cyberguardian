@@ -1,0 +1,460 @@
+{% extends "base.html" %}
+
+{% block title %}DDoS Simulator - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.attack-card {
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    background: rgba(20, 20, 20, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.attack-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.attack-card:hover::before {
+    left: 100%;
+}
+
+.attack-card:hover {
+    border-color: #dc3545;
+    transform: translateY(-5px);
+}
+
+.attack-active {
+    border-color: #dc3545;
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.attack-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stat-item {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    border-color: #dc3545;
+    transform: translateY(-2px);
+}
+
+.attack-progress {
+    height: 8px;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #dc3545;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.attack-type-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.attack-type-card:hover {
+    border-color: #dc3545;
+    transform: translateX(5px);
+}
+
+.difficulty-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.difficulty-easy { background: #20c997; color: white; }
+.difficulty-medium { background: #ffc107; color: black; }
+.difficulty-hard { background: #fd7e14; color: white; }
+
+.impact-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.impact-low { background: #6c757d; color: white; }
+.impact-medium { background: #ffc107; color: black; }
+.impact-high { background: #dc3545; color: white; }
+
+.warning-box {
+    background: rgba(220, 53, 69, 0.1);
+    border: 2px solid #dc3545;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.attack-controls {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    flex: 1;
+    min-width: 200px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Предупреждение -->
+    <div class="warning-box">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle display-4 text-danger me-3"></i>
+            <div>
+                <h4 class="cyber-text text-danger">⚠️ ВНИМАНИЕ: УЧЕБНЫЙ СИМУЛЯТОР</h4>
+                <p class="cyber-subtext mb-0">
+                    Этот инструмент предназначен исключительно для образовательных целей. 
+                    Все атаки симулируются и не наносят реального ущерба. 
+                    Не используйте эти знания для незаконных действий!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-lightning-charge me-2"></i>DDoS Simulator
+            </h1>
+            <p class="cyber-subtext lead">
+                Изучите механизмы DDoS атак и методы защиты в безопасной среде
+            </p>
+        </div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="attack-stats" id="attackStats">
+                <!-- Статистика загрузится через JS -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Активные атаки -->
+        <div class="col-lg-6">
+            <div class="attack-card">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-activity me-2"></i>Активные атаки
+                </h4>
+                <div id="activeAttacks">
+                    <!-- Активные атаки загрузятся через JS -->
+                    <div class="text-center py-4">
+                        <i class="bi bi-shield-check display-4 text-success"></i>
+                        <p class="cyber-subtext mt-2">Активных атак нет</p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('ddos.attack_interface') }}" class="btn btn-danger">
+                        <i class="bi bi-play-circle me-2"></i>Запустить новую атаку
+                    </a>
+                </div>
+            </div>
+
+            <!-- История атак -->
+            <div class="attack-card">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-clock-history me-2"></i>История атак
+                </h4>
+                <div id="attackHistory">
+                    <!-- История загрузится через JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Типы атак -->
+        <div class="col-lg-6">
+            <div class="attack-card">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-list-ul me-2"></i>Типы DDoS атак
+                </h4>
+                <div id="attackTypes">
+                    <!-- Типы атак загрузятся через JS -->
+                </div>
+            </div>
+            <!-- В блоке "Быстрый доступ" добавляем карточку DDoS Simulator -->
+            <div class="quick-card">
+                 <div class="d-flex align-items-start mb-3">
+                    <i class="bi bi-lightning-charge display-6 text-danger me-3"></i>
+                <div>
+                    <h5 class="cyber-text">DDoS Simulator</h5>
+                    <p class="cyber-subtext small">Изучение механизмов атак</p>
+                </div>
+            </div>
+    <div class="cyber-badge bg-danger mb-3">
+        <i class="bi bi-exclamation-triangle me-1"></i>Учебный режим
+    </div>
+    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-danger w-100">
+        <i class="bi bi-play-circle me-2"></i>Исследовать
+    </a>
+</div>
+
+            <!-- Быстрый старт -->
+            <div class="attack-card">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Быстрый старт
+                </h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('ddos.attack_interface') }}" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-lightning me-2"></i>Симулятор атак
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('ddos.ddos_education') }}" class="btn btn-outline-warning w-100">
+                            <i class="bi bi-book me-2"></i>Обучение
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('ddos.protection_guide') }}" class="btn btn-outline-success w-100">
+                            <i class="bi bi-shield-check me-2"></i>Защита
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('threats.threat_dashboard') }}" class="btn btn-outline-info w-100">
+                            <i class="bi bi-eye me-2"></i>Мониторинг
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Загрузка данных DDoS симулятора
+async function loadDDoSData() {
+    await Promise.all([
+        loadAttackStats(),
+        loadActiveAttacks(),
+        loadAttackHistory(),
+        loadAttackTypes()
+    ]);
+    
+    // Автообновление каждые 5 секунд
+    setInterval(loadDDoSData, 5000);
+}
+
+// Загрузка статистики
+async function loadAttackStats() {
+    try {
+        const response = await fetch('/ddos/api/attack-stats');
+        const data = await response.json();
+        
+        const container = document.getElementById('attackStats');
+        container.innerHTML = `
+            <div class="stat-item">
+                <i class="bi bi-lightning display-6 text-danger mb-2"></i>
+                <h3 class="cyber-text">${data.total_attacks}</h3>
+                <p class="cyber-subtext">Всего атак</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-check-circle display-6 text-success mb-2"></i>
+                <h3 class="cyber-text">${data.success_rate}%</h3>
+                <p class="cyber-subtext">Успешность</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-clock display-6 text-warning mb-2"></i>
+                <h3 class="cyber-text">${data.average_duration}s</h3>
+                <p class="cyber-subtext">Средняя длительность</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-activity display-6 text-info mb-2"></i>
+                <h3 class="cyber-text">${data.active_now}</h3>
+                <p class="cyber-subtext">Активно сейчас</p>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+}
+
+// Загрузка активных атак
+async function loadActiveAttacks() {
+    try {
+        const response = await fetch('/ddos/api/attack-status');
+        const data = await response.json();
+        
+        const container = document.getElementById('activeAttacks');
+        
+        if (Object.keys(data.active_attacks).length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="bi bi-shield-check display-4 text-success"></i>
+                    <p class="cyber-subtext mt-2">Активных атак нет</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = Object.values(data.active_attacks).map(attack => `
+            <div class="attack-type-card attack-active">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="cyber-text">${attack.target} - ${attack.type}</h6>
+                    <span class="badge bg-danger">Активна</span>
+                </div>
+                
+                <div class="attack-progress">
+                    <div class="progress-fill" style="width: ${(attack.elapsed_time / attack.duration) * 100}%"></div>
+                </div>
+                
+                <div class="row text-center">
+                    <div class="col-4">
+                        <small class="cyber-subtext">Пакетов</small>
+                        <div class="cyber-text">${attack.packets_sent}</div>
+                    </div>
+                    <div class="col-4">
+                        <small class="cyber-subtext">Успешность</small>
+                        <div class="cyber-text">${attack.success_rate}%</div>
+                    </div>
+                    <div class="col-4">
+                        <small class="cyber-subtext">Время</small>
+                        <div class="cyber-text">${Math.round(attack.elapsed_time)}s</div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-sm btn-outline-danger w-100 mt-2" onclick="stopAttack('${attack.id}')">
+                    <i class="bi bi-stop-circle me-1"></i>Остановить
+                </button>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки активных атак:', error);
+    }
+}
+
+// Загрузка истории атак
+async function loadAttackHistory() {
+    try {
+        const response = await fetch('/ddos/api/attack-history');
+        const data = await response.json();
+        
+        const container = document.getElementById('attackHistory');
+        
+        if (data.attack_history.length === 0) {
+            container.innerHTML = '<p class="cyber-subtext text-center">История атак пуста</p>';
+            return;
+        }
+        
+        container.innerHTML = data.attack_history.slice(0, 5).map(attack => `
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-cyber">
+                <div>
+                    <small class="cyber-text">${attack.target}</small>
+                    <br>
+                    <small class="cyber-subtext">${attack.type}</small>
+                </div>
+                <div class="text-end">
+                    <small class="cyber-subtext">${attack.success_rate}%</small>
+                    <br>
+                    <small class="cyber-subtext">${attack.duration}s</small>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки истории:', error);
+    }
+}
+
+// Загрузка типов атак
+async function loadAttackTypes() {
+    try {
+        const response = await fetch('/ddos/api/attack-types');
+        const data = await response.json();
+        
+        const container = document.getElementById('attackTypes');
+        container.innerHTML = data.attack_types.map(type => `
+            <div class="attack-type-card">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="cyber-text">${type.name}</h6>
+                    <div>
+                        <span class="difficulty-badge difficulty-${type.difficulty} me-1">
+                            ${type.difficulty}
+                        </span>
+                        <span class="impact-badge impact-${type.impact}">
+                            ${type.impact}
+                        </span>
+                    </div>
+                </div>
+                <p class="cyber-subtext small mb-2">${type.description}</p>
+                <small class="cyber-subtext">
+                    <strong>Защита:</strong> ${type.defense}
+                </small>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки типов атак:', error);
+    }
+}
+
+// Остановка атаки
+async function stopAttack(attackId) {
+    try {
+        const response = await fetch('/ddos/api/stop-attack', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ attack_id: attackId })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            loadActiveAttacks();
+            loadAttackStats();
+        }
+    } catch (error) {
+        console.error('Ошибка остановки атаки:', error);
+    }
+}
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', function() {
+    loadDDoSData();
+});
+</script>
+{% endblock %}

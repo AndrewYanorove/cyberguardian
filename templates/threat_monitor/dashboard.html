@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+
+{% block title %}Мониторинг угроз - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.threat-card {
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+}
+
+.threat-critical { border-left-color: #dc3545; background: rgba(220, 53, 69, 0.1); }
+.threat-high { border-left-color: #fd7e14; background: rgba(253, 126, 20, 0.1); }
+.threat-medium { border-left-color: #ffc107; background: rgba(255, 193, 7, 0.1); }
+.threat-low { border-left-color: #20c997; background: rgba(32, 201, 151, 0.1); }
+
+.live-feed {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.feed-item {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--cyber-border);
+    transition: background 0.3s ease;
+}
+
+.feed-item:hover {
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.threat-map {
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 10px;
+    padding: 1rem;
+    height: 300px;
+    position: relative;
+}
+
+.map-point {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stat-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--cyber-primary);
+}
+
+.severity-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.badge-critical { background: #dc3545; color: white; }
+.badge-high { background: #fd7e14; color: white; }
+.badge-medium { background: #ffc107; color: black; }
+.badge-low { background: #20c997; color: white; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Заголовок -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="cyber-text glow-text mb-2">
+                        <i class="bi bi-shield-exclamation me-2"></i>Мониторинг угроз
+                    </h1>
+                    <p class="cyber-subtext">Отслеживание киберугроз в реальном времени</p>
+                </div>
+                <div class="text-end">
+                    <div class="cyber-badge bg-success">
+                        <i class="bi bi-check-circle me-1"></i>Система активна
+                    </div>
+                    <div class="cyber-subtext small mt-1" id="lastUpdate">Обновлено: --:--:--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="stats-grid" id="statsGrid">
+                <!-- Статистика загрузится через JS -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Активные угрозы -->
+        <div class="col-lg-6">
+            <div class="cyber-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="cyber-text">
+                        <i class="bi bi-activity me-2"></i>Активные угрозы
+                    </h4>
+                    <span class="cyber-badge bg-danger" id="activeThreatsCount">0</span>
+                </div>
+                <div id="activeThreatsList">
+                    <!-- Угрозы загрузятся через JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Живая лента -->
+        <div class="col-lg-6">
+            <div class="cyber-card p-4 h-100">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-rss me-2"></i>Живая лента событий
+                </h4>
+                <div class="live-feed" id="liveFeed">
+                    <!-- События загрузятся через JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Карта угроз -->
+        <div class="col-12">
+            <div class="cyber-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="cyber-text">
+                        <i class="bi bi-globe me-2"></i>Карта угроз
+                    </h4>
+                    <div class="cyber-subtext">Обновляется в реальном времени</div>
+                </div>
+                <div class="threat-map" id="threatMap">
+                    <!-- Карта загрузится через JS -->
+                    <div class="text-center cyber-subtext mt-5">
+                        <i class="bi bi-globe display-4"></i>
+                        <p class="mt-2">Загрузка карты угроз...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Загрузка данных
+async function loadThreatData() {
+    await Promise.all([
+        loadStats(),
+        loadActiveThreats(),
+        loadLiveFeed(),
+        loadThreatMap()
+    ]);
+    
+    // Обновляем время
+    updateLastUpdateTime();
+    
+    // Автообновление каждые 30 секунд
+    setInterval(loadThreatData, 30000);
+}
+
+// Загрузка статистики
+async function loadStats() {
+    try {
+        const response = await fetch('/threats/api/threat-stats');
+        const data = await response.json();
+        
+        const statsGrid = document.getElementById('statsGrid');
+        statsGrid.innerHTML = `
+            <div class="stat-card">
+                <i class="bi bi-shield-check display-6 text-success mb-2"></i>
+                <h3 class="cyber-text">${data.success_rate}%</h3>
+                <p class="cyber-subtext">Эффективность защиты</p>
+            </div>
+            <div class="stat-card">
+                <i class="bi bi-clock display-6 text-warning mb-2"></i>
+                <h3 class="cyber-text">${data.avg_response_time}</h3>
+                <p class="cyber-subtext">Среднее время реакции</p>
+            </div>
+            <div class="stat-card">
+                <i class="bi bi-exclamation-triangle display-6 text-danger mb-2"></i>
+                <h3 class="cyber-text">${data.threats_today}</h3>
+                <p class="cyber-subtext">Угроз сегодня</p>
+            </div>
+            <div class="stat-card">
+                <i class="bi bi-graph-up display-6 text-info mb-2"></i>
+                <h3 class="cyber-text">${data.total_threats}</h3>
+                <p class="cyber-subtext">Всего угроз</p>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+}
+
+// Загрузка активных угроз
+async function loadActiveThreats() {
+    try {
+        const response = await fetch('/threats/api/active-threats');
+        const data = await response.json();
+        
+        const container = document.getElementById('activeThreatsList');
+        const countElement = document.getElementById('activeThreatsCount');
+        
+        countElement.textContent = data.threats.length;
+        
+        if (data.threats.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="bi bi-check-circle display-4 text-success"></i>
+                    <p class="cyber-subtext mt-2">Активных угроз не обнаружено</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = data.threats.map(threat => `
+            <div class="threat-card p-3 mb-3 threat-${threat.severity}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="cyber-text mb-1">${threat.name}</h6>
+                        <p class="cyber-subtext small mb-2">${threat.description}</p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <span class="severity-badge badge-${threat.severity}">
+                                ${threat.severity === 'critical' ? 'Критическая' : 
+                                  threat.severity === 'high' ? 'Высокая' :
+                                  threat.severity === 'medium' ? 'Средняя' : 'Низкая'}
+                            </span>
+                            <span class="cyber-subtext small">
+                                <i class="bi bi-clock"></i> ${new Date(threat.detected).toLocaleTimeString()}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <small class="cyber-subtext">${threat.affected_users} пользователей</small>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки угроз:', error);
+    }
+}
+
+// Загрузка живой ленты
+async function loadLiveFeed() {
+    try {
+        const response = await fetch('/threats/api/live-feed');
+        const data = await response.json();
+        
+        const container = document.getElementById('liveFeed');
+        container.innerHTML = data.events.map(event => `
+            <div class="feed-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="severity-badge badge-${event.severity} me-2">
+                            ${event.severity}
+                        </span>
+                        <span class="cyber-text">${event.description}</span>
+                    </div>
+                    <div class="text-end">
+                        <small class="cyber-subtext">${event.source_ip}</small>
+                        <br>
+                        <small class="text-${event.action === 'Блокировано' ? 'success' : 'warning'}">
+                            ${event.action}
+                        </small>
+                    </div>
+                </div>
+                <small class="cyber-subtext">
+                    ${new Date(event.timestamp).toLocaleTimeString()}
+                </small>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки ленты:', error);
+    }
+}
+
+// Загрузка карты угроз
+async function loadThreatMap() {
+    try {
+        const response = await fetch('/threats/api/threat-map');
+        const data = await response.json();
+        
+        const container = document.getElementById('threatMap');
+        container.innerHTML = `
+            <div class="position-relative h-100">
+                ${data.threat_map.map(country => `
+                    <div class="map-point" 
+                         style="top: ${Math.random() * 80 + 10}%; left: ${Math.random() * 80 + 10}%;
+                                background: ${country.severity === 'high' ? '#dc3545' : 
+                                            country.severity === 'medium' ? '#ffc107' : '#20c997'};"
+                         title="${country.country}: ${country.threats} угроз">
+                    </div>
+                `).join('')}
+                <div class="position-absolute bottom-0 start-0 p-3">
+                    <div class="d-flex gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="map-point me-2" style="position: static; background: #dc3545;"></div>
+                            <small class="cyber-subtext">Высокая угроза</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="map-point me-2" style="position: static; background: #ffc107;"></div>
+                            <small class="cyber-subtext">Средняя угроза</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="map-point me-2" style="position: static; background: #20c997;"></div>
+                            <small class="cyber-subtext">Низкая угроза</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Ошибка загрузки карты:', error);
+    }
+}
+
+// Обновление времени
+function updateLastUpdateTime() {
+    const element = document.getElementById('lastUpdate');
+    element.textContent = `Обновлено: ${new Date().toLocaleTimeString()}`;
+}
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', function() {
+    loadThreatData();
+});
+</script>
+{% endblock %}

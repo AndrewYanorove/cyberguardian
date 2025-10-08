@@ -12,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     
     <!-- Наши стили -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=2.0">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -24,7 +24,7 @@
                 <i class="bi bi-shield-shaded display-6 text-cyber-primary me-3"></i>
                 <div>
                     <h5 class="cyber-text mb-0">CyberGuardian</h5>
-                    <small class="cyber-subtext">Меню навигации</small>
+                    <small class="cyber-subtext">v2.0</small>
                 </div>
             </div>
             <button class="sidebar-close" onclick="closeSidebar()">
@@ -38,6 +38,13 @@
                 <span>Главная</span>
             </a>
             
+            <a href="{{ url_for('dashboard') }}" class="sidebar-item">
+                <i class="bi bi-speedometer2 me-3"></i>
+                <span>Дашборд</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            
             <a href="{{ url_for('education.education_home') }}" class="sidebar-item">
                 <i class="bi bi-book me-3"></i>
                 <span>Обучение</span>
@@ -45,7 +52,7 @@
             
             <a href="{{ url_for('passwords.password_generator') }}" class="sidebar-item">
                 <i class="bi bi-key me-3"></i>
-                <span>Генератор паролей</span>
+                <span>Пароли</span>
             </a>
             
             <a href="{{ url_for('encryption.encryption_tools') }}" class="sidebar-item">
@@ -53,16 +60,37 @@
                 <span>Шифрование</span>
             </a>
 
-            <!-- НОВАЯ КНОПКА СИМУЛЯТОРОВ -->
-            <a href="{{ url_for('simulators.simulators_home') }}" class="sidebar-item">
-                <i class="bi bi-joystick me-3"></i>
-                <span>Кибер-симуляторы</span>
-                <span class="cyber-badge ms-auto" style="font-size: 0.6rem;">NEW</span>
-            </a>
-            
             <a href="{{ url_for('ai.ai_chat') }}" class="sidebar-item">
                 <i class="bi bi-robot me-3"></i>
                 <span>ИИ-помощник</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            
+            <!-- Новые модули -->
+            <a href="{{ url_for('threats.threat_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-shield-exclamation me-3"></i>
+                <span>Мониторинг угроз</span>
+                <span class="cyber-badge ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+            
+            <a href="{{ url_for('scanner.scanner_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-shield-check me-3"></i>
+                <span>Сканер безопасности</span>
+                <span class="cyber-badge ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+            
+            <a href="{{ url_for('games.games_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-joystick me-3"></i>
+                <span>Кибер-игры</span>
+                <span class="cyber-badge ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <!-- DDoS Simulator -->
+            <a href="{{ url_for('ddos.ddos_simulator') }}" class="sidebar-item">
+                <i class="bi bi-lightning-charge me-3"></i>
+                <span>DDoS Simulator</span>
+                <span class="cyber-badge bg-danger ms-auto" style="font-size: 0.6rem;">HOT</span>
             </a>
             
             <div class="sidebar-divider"></div>
@@ -90,13 +118,13 @@
         
         <div class="sidebar-footer">
             <div class="cyber-social">
-                <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="cyber-social-link" target="_blank">
+                <a href="https://t.me/cyberguardian_support" class="cyber-social-link" target="_blank">
                     <i class="bi bi-telegram"></i>
                 </a>
                 <a href="https://github.com" class="cyber-social-link" target="_blank">
                     <i class="bi bi-github"></i>
                 </a>
-                <a href="mailto:contact@cyberguardian.ru" class="cyber-social-link">
+                <a href="mailto:support@cyberguardian.ru" class="cyber-social-link">
                     <i class="bi bi-envelope"></i>
                 </a>
             </div>
@@ -118,6 +146,7 @@
             <a class="navbar-brand cyber-brand" href="{{ url_for('index') }}">
                 <i class="bi bi-shield-shaded me-2"></i>
                 <span class="cyber-text">CyberGuardian</span>
+                <small class="cyber-subtext ms-2">v2.0</small>
             </a>
 
             <!-- Десктопное меню (скрыто на мобильных) -->
@@ -125,7 +154,12 @@
                 <ul class="navbar-nav ms-auto cyber-nav">
                     <li class="nav-item">
                         <a class="nav-link cyber-link" href="{{ url_for('index') }}">
-                            <i class="bi bi-house me-1"></i>Главная
+                            <i class="bi bi-house me-1"></i>залупа коня
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link cyber-link" href="{{ url_for('dashboard') }}">
+                            <i class="bi bi-speedometer2 me-1"></i>Дашборд
                         </a>
                     </li>
                     <li class="nav-item">
@@ -143,17 +177,40 @@
                             <i class="bi bi-lock me-1"></i>Шифрование
                         </a>
                     </li>
-                    <!-- НОВАЯ КНОПКА СИМУЛЯТОРОВ -->
-                    <li class="nav-item">
-                        <a class="nav-link cyber-link" href="{{ url_for('simulators.simulators_home') }}">
-                            <i class="bi bi-joystick me-1"></i>Симуляторы
-                            <span class="cyber-badge ms-1" style="font-size: 0.6rem;">NEW</span>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link cyber-link" href="{{ url_for('ai.ai_chat') }}">
                             <i class="bi bi-robot me-1"></i>ИИ-помощник
                         </a>
+                    </li>
+                    <!-- Новые модули -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link cyber-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-stars me-1"></i>Экспертные инструменты
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('threats.threat_dashboard') }}">
+                                    <i class="bi bi-shield-exclamation me-2"></i>Мониторинг угроз
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('scanner.scanner_dashboard') }}">
+                                    <i class="bi bi-shield-check me-2"></i>Сканер безопасности
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('games.games_dashboard') }}">
+                                    <i class="bi bi-joystick me-2"></i>Кибер-игры
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{{ url_for('ddos.ddos_simulator') }}">
+                                    <i class="bi bi-lightning-charge me-2"></i>DDoS Simulator
+                                    <span class="badge bg-danger ms-2">NEW</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -172,6 +229,9 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">
                                 <i class="bi bi-person me-2"></i>Профиль
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                                <i class="bi bi-speedometer2 me-2"></i>Дашборд
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
@@ -227,33 +287,36 @@
             <div class="row">
                 <div class="col-md-4">
                     <h5 class="cyber-text">
-                        <i class="bi bi-shield-shaded me-2"></i>CyberGuardian
+                        <i class="bi bi-shield-shaded me-2"></i>CyberGuardian v2.0
                     </h5>
                     <p class="cyber-subtext">Ваш цифровой защитник в мире кибербезопасности</p>
+                    <div class="cyber-subtext small">
+                        <i class="bi bi-cpu me-1"></i>
+                        <span id="serverStats">Загрузка статистики...</span>
+                    </div>
                 </div>
                 
                 <div class="col-md-4">
                     <h6 class="cyber-text">🔗 Быстрые ссылки</h6>
                     <div class="d-flex flex-column">
                         <a href="{{ url_for('index') }}" class="cyber-link mb-2">Главная</a>
+                        <a href="{{ url_for('dashboard') }}" class="cyber-link mb-2">Дашборд</a>
                         <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">Обучение</a>
-                        <a href="{{ url_for('passwords.password_generator') }}" class="cyber-link mb-2">Пароли</a>
-                        <a href="{{ url_for('encryption.encryption_tools') }}" class="cyber-link mb-2">Шифрование</a>
-                        <a href="{{ url_for('simulators.simulators_home') }}" class="cyber-link mb-2">Симуляторы</a>
-                        <a href="{{ url_for('ai.ai_chat') }}" class="cyber-link mb-2">ИИ-помощник</a>
+                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="cyber-link mb-2 text-danger">DDoS Simulator</a>
+                        <a href="{{ url_for('about') }}" class="cyber-link mb-2">О проекте</a>
                     </div>
                 </div>
                 
                 <div class="col-md-4 text-md-end">
-                    <p class="cyber-subtext">© {{ current_year }} | Все права защищены</p>
+                    <p class="cyber-subtext">© {{ current_year }} CyberGuardian | Все права защищены</p>
                     <div class="cyber-social">
-                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="cyber-social-link" target="_blank">
+                        <a href="https://t.me/cyberguardian_support" class="cyber-social-link" target="_blank">
                             <i class="bi bi-telegram"></i>
                         </a>
                         <a href="https://github.com" class="cyber-social-link" target="_blank">
                             <i class="bi bi-github"></i>
                         </a>
-                        <a href="mailto:contact@cyberguardian.ru" class="cyber-social-link">
+                        <a href="mailto:support@cyberguardian.ru" class="cyber-social-link">
                             <i class="bi bi-envelope"></i>
                         </a>
                     </div>
@@ -266,7 +329,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Наши скрипты -->
-    <script src="{{ url_for('static', filename='js/main.js') }}?v=1.0"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=2.0"></script>
     
     {% block extra_js %}{% endblock %}
 
@@ -300,6 +363,29 @@
             if (window.innerWidth >= 992) {
                 closeSidebar();
             }
+        });
+
+        // Загрузка статистики сервера
+        async function loadServerStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                
+                const statsElement = document.getElementById('serverStats');
+                statsElement.innerHTML = `
+                    ${data.users_online} онлайн | 
+                    ${data.lessons_today} уроков сегодня |
+                    ${data.active_threats} активных угроз
+                `;
+            } catch (error) {
+                console.error('Ошибка загрузки статистики:', error);
+            }
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            loadServerStats();
+            setInterval(loadServerStats, 60000); // Обновлять каждую минуту
         });
     </script>
 </body>

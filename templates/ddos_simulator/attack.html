@@ -1,0 +1,847 @@
+{% extends "base.html" %}
+
+{% block title %}DDoS Attack Simulator - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.attack-interface {
+    border: 2px solid #dc3545;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    background: rgba(220, 53, 69, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.attack-interface::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(220, 53, 69, 0.1), transparent);
+    animation: interfaceShine 3s infinite;
+}
+
+@keyframes interfaceShine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.attack-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.control-group {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.control-group:hover {
+    border-color: #dc3545;
+    transform: translateY(-2px);
+}
+
+.attack-visualization {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid #dc3545;
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+.network-topology {
+    position: relative;
+    height: 300px;
+    margin: 2rem 0;
+}
+
+.botnet-cluster {
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30%;
+}
+
+.bot-node {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #0dcaf0;
+    border-radius: 50%;
+    animation: nodePulse 2s ease-in-out infinite;
+}
+
+.network-line {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, #0dcaf0, #dc3545);
+    top: 50%;
+    left: 35%;
+    width: 30%;
+}
+
+.target-server {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.server-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: serverGlow 2s ease-in-out infinite;
+}
+
+.packet {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: packetTravel 1.5s linear infinite;
+}
+
+@keyframes packetTravel {
+    0% { 
+        left: 35%; 
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    10% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    90% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% { 
+        left: 65%; 
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
+
+@keyframes nodePulse {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 0.7;
+        box-shadow: 0 0 10px #0dcaf0;
+    }
+    50% { 
+        transform: scale(1.2); 
+        opacity: 1;
+        box-shadow: 0 0 20px #0dcaf0;
+    }
+}
+
+@keyframes serverGlow {
+    0%, 100% { 
+        text-shadow: 0 0 20px #20c997;
+    }
+    50% { 
+        text-shadow: 0 0 30px #20c997, 0 0 40px #20c997;
+    }
+}
+
+.attack-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stat-item {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    border-color: #dc3545;
+    transform: translateY(-2px);
+}
+
+.warning-banner {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.warning-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: warningShine 3s linear infinite;
+}
+
+@keyframes warningShine {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.attack-progress {
+    height: 10px;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 1rem 0;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #dc3545, #fd7e14);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.attack-phase {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    margin: 0.5rem 0;
+    animation: phasePulse 2s ease-in-out infinite;
+}
+
+@keyframes phasePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.live-graph {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 1rem;
+    height: 120px;
+    margin: 1rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.graph-bar {
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    background: linear-gradient(to top, #dc3545, #fd7e14);
+    border-radius: 2px 2px 0 0;
+    transition: height 0.5s ease;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Предупреждение -->
+    <div class="warning-banner">
+        <h4 class="text-white mb-3">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            УЧЕБНЫЙ СИМУЛЯТОР DDoS АТАК
+        </h4>
+        <p class="text-white mb-0">
+            ⚠️ Этот инструмент предназначен исключительно для образовательных целей. 
+            Все атаки симулируются локально в браузере и не наносят реального ущерба. 
+            Использование этих знаний для реальных атак незаконно!
+        </p>
+    </div>
+
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-lightning-charge me-2"></i>DDoS Attack Simulator
+            </h1>
+            <p class="cyber-subtext lead">
+                Реальная симуляция DDoS атак в браузере с продвинутой визуализацией
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Интерфейс атаки -->
+            <div class="attack-interface">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-play-circle me-2"></i>Настройка атаки
+                </h4>
+                
+                <div class="attack-controls">
+                    <!-- Цель атаки -->
+                    <div class="control-group">
+                        <label class="form-label cyber-text">🎯 Цель атаки</label>
+                        <select class="form-select cyber-input" id="targetSelect">
+                            <option value="example.com">example.com (Учебный сервер 1)</option>
+                            <option value="test-server.org">test-server.org (Учебный сервер 2)</option>
+                            <option value="demo-site.net">demo-site.net (Учебный сервер 3)</option>
+                            <option value="localhost:8080">localhost:8080 (Локальный тест)</option>
+                        </select>
+                        <small class="cyber-subtext">
+                            Только разрешенные учебные цели
+                        </small>
+                    </div>
+
+                    <!-- Тип атаки -->
+                    <div class="control-group">
+                        <label class="form-label cyber-text">⚡ Тип атаки</label>
+                        <select class="form-select cyber-input" id="attackType">
+                            <option value="syn_flood">SYN Flood</option>
+                            <option value="udp_flood">UDP Flood</option>
+                            <option value="http_flood">HTTP Flood</option>
+                            <option value="icmp_flood">ICMP Flood</option>
+                            <option value="slowloris">Slowloris</option>
+                            <option value="dns_amplification">DNS Amplification</option>
+                        </select>
+                        <small class="cyber-subtext" id="attackDescription">
+                            Переполнение TCP соединений SYN-пакетами
+                        </small>
+                    </div>
+
+                    <!-- Длительность -->
+                    <div class="control-group">
+                        <label class="form-label cyber-text">⏱️ Длительность</label>
+                        <input type="range" class="form-range" id="durationSlider" min="10" max="300" value="60">
+                        <div class="cyber-text text-center" id="durationValue">60 секунд</div>
+                    </div>
+
+                    <!-- Интенсивность -->
+                    <div class="control-group">
+                        <label class="form-label cyber-text">💥 Интенсивность</label>
+                        <input type="range" class="form-range" id="intensitySlider" min="1" max="10" value="5">
+                        <div class="cyber-text text-center" id="intensityValue">Средняя (5/10)</div>
+                        <small class="cyber-subtext" id="intensityStats">
+                            ~250 пакетов/сек, 50 Мбит/с
+                        </small>
+                    </div>
+                </div>
+
+                <button onclick="startAttack()" class="btn btn-danger btn-lg w-100 cyber-btn" id="startButton">
+                    <i class="bi bi-play-circle me-2"></i>Запустить реальную симуляцию
+                </button>
+
+                <button onclick="stopAttack()" class="btn btn-outline-danger btn-lg w-100 mt-2" id="stopButton" style="display: none;">
+                    <i class="bi bi-stop-circle me-2"></i>Остановить атаку
+                </button>
+            </div>
+
+            <!-- Визуализация атаки -->
+            <div class="attack-visualization" id="attackVisualization" style="display: none;">
+                <h4 class="cyber-text mb-4">
+                    <i class="bi bi-activity me-2"></i>Живая визуализация атаки
+                </h4>
+                
+                <!-- Сетевая топология -->
+                <div class="network-topology">
+                    <div class="botnet-cluster" id="botnetCluster">
+                        <!-- Ботнет ноды будут созданы через JS -->
+                    </div>
+                    <div class="network-line"></div>
+                    <div class="target-server">
+                        <div class="server-icon" id="serverIcon">🖥️</div>
+                        <h5 class="cyber-text" id="currentTarget">example.com</h5>
+                        <p class="cyber-subtext">Статус: <span id="serverStatusText">Ожидание атаки</span></p>
+                        <div class="attack-phase bg-secondary" id="attackPhase">Ожидание</div>
+                    </div>
+                    <!-- Пакеты будут созданы через JS -->
+                </div>
+
+                <!-- Прогресс атаки -->
+                <div class="attack-progress">
+                    <div class="progress-fill" id="attackProgress" style="width: 0%"></div>
+                </div>
+                <div class="d-flex justify-content-between cyber-subtext">
+                    <span>Начало</span>
+                    <span id="progressTime">0/60s</span>
+                    <span>Завершение</span>
+                </div>
+
+                <!-- График в реальном времени -->
+                <div class="live-graph" id="liveGraph">
+                    <!-- График будет создан через JS -->
+                </div>
+
+                <!-- Статистика атаки -->
+                <div class="attack-stats" id="attackStats">
+                    <!-- Статистика загрузится через JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Информация об атаке -->
+            <div class="cyber-card p-4 mb-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-info-circle me-2"></i>О текущей атаке
+                </h4>
+                <div id="attackInfo">
+                    <p class="cyber-subtext">
+                        Выберите параметры атаки и запустите симуляцию для изучения механизмов DDoS атак.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Статистика в реальном времени -->
+            <div class="cyber-card p-4 mb-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-graph-up me-2"></i>Живая статистика
+                </h4>
+                <div id="liveStats">
+                    <div class="text-center cyber-subtext">
+                        Запустите атаку для отображения статистики
+                    </div>
+                </div>
+            </div>
+
+            <!-- Лог атаки -->
+            <div class="cyber-card p-4 mb-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-list-check me-2"></i>Лог атаки
+                </h4>
+                <div id="attackLog" style="max-height: 200px; overflow-y: auto;">
+                    <div class="cyber-subtext text-center">Лог событий появится здесь</div>
+                </div>
+            </div>
+
+            <!-- Быстрые действия -->
+            <div class="cyber-card p-4">
+                <h4 class="cyber-text mb-3">🚀 Быстрые действия</h4>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('ddos.ddos_education') }}" class="btn btn-outline-warning">
+                        <i class="bi bi-book me-2"></i>Обучение DDoS
+                    </a>
+                    <a href="{{ url_for('ddos.protection_guide') }}" class="btn btn-outline-success">
+                        <i class="bi bi-shield-check me-2"></i>Методы защиты
+                    </a>
+                    <a href="{{ url_for('threats.threat_dashboard') }}" class="btn btn-outline-info">
+                        <i class="bi bi-eye me-2"></i>Мониторинг угроз
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Глобальные переменные для управления атакой
+let currentAttackId = null;
+let attackInterval = null;
+let packetInterval = null;
+let graphInterval = null;
+let attackStartTime = null;
+let totalPacketsSent = 0;
+let attackStats = {
+    packetsPerSecond: 0,
+    bandwidth: 0,
+    successRate: 95,
+    botnetSize: 0
+};
+
+// Описания типов атак
+const attackDescriptions = {
+    'syn_flood': 'Переполнение TCP соединений SYN-пакетами. Сервер тратит ресурсы на полуоткрытые соединения.',
+    'udp_flood': 'Массовая отправка UDP пакетов на случайные порты. Перегружает сетевую инфраструктуру.',
+    'http_flood': 'Множество HTTP запросов к веб-серверу. Имитирует поведение реальных пользователей.',
+    'icmp_flood': 'Переполнение ping-пакетами (ICMP). Простая но эффективная атака на сетевой уровень.',
+    'slowloris': 'Медленная атака, занимающая все доступные соединения на веб-сервере.',
+    'dns_amplification': 'Использование DNS серверов для усиления трафика атаки.'
+};
+
+// Настройки интенсивности
+const intensitySettings = {
+    1: { packets: 50, bandwidth: 10, bots: 100 },
+    2: { packets: 100, bandwidth: 20, bots: 200 },
+    3: { packets: 150, bandwidth: 30, bots: 300 },
+    4: { packets: 200, bandwidth: 40, bots: 400 },
+    5: { packets: 250, bandwidth: 50, bots: 500 },
+    6: { packets: 350, bandwidth: 70, bots: 700 },
+    7: { packets: 500, bandwidth: 100, bots: 1000 },
+    8: { packets: 750, bandwidth: 150, bots: 1500 },
+    9: { packets: 1000, bandwidth: 200, bots: 2000 },
+    10: { packets: 1500, bandwidth: 300, bots: 3000 }
+};
+
+// Обновление описания атаки
+document.getElementById('attackType').addEventListener('change', function() {
+    document.getElementById('attackDescription').textContent = attackDescriptions[this.value];
+});
+
+// Обновление значений слайдеров
+document.getElementById('durationSlider').addEventListener('input', function() {
+    document.getElementById('durationValue').textContent = this.value + ' секунд';
+});
+
+document.getElementById('intensitySlider').addEventListener('input', function() {
+    const intensity = parseInt(this.value);
+    const intensityLabels = ['Очень слабая', 'Слабая', 'Умеренная', 'Средняя', 'Сильная', 'Очень сильная', 'Экстрим', 'Максимальная', 'Апокалипсис', 'Легендарная'];
+    const settings = intensitySettings[intensity];
+    
+    document.getElementById('intensityValue').textContent = `${intensityLabels[intensity - 1]} (${intensity}/10)`;
+    document.getElementById('intensityStats').textContent = `~${settings.packets} пакетов/сек, ${settings.bandwidth} Мбит/с, ${settings.bots} ботов`;
+});
+
+// Запуск атаки
+async function startAttack() {
+    const target = document.getElementById('targetSelect').value;
+    const attackType = document.getElementById('attackType').value;
+    const duration = parseInt(document.getElementById('durationSlider').value);
+    const intensity = parseInt(document.getElementById('intensitySlider').value);
+    
+    // Генерируем уникальный ID атаки
+    currentAttackId = 'attack_' + Date.now();
+    attackStartTime = Date.now();
+    totalPacketsSent = 0;
+    
+    // Настраиваем статистику
+    const settings = intensitySettings[intensity];
+    attackStats.packetsPerSecond = settings.packets;
+    attackStats.bandwidth = settings.bandwidth;
+    attackStats.botnetSize = settings.bots;
+    
+    // Показываем интерфейс атаки
+    document.getElementById('attackVisualization').style.display = 'block';
+    document.getElementById('startButton').style.display = 'none';
+    document.getElementById('stopButton').style.display = 'block';
+    document.getElementById('currentTarget').textContent = target;
+    
+    // Добавляем запись в лог
+    addToLog('🚀 Запуск симуляции атаки...', 'info');
+    addToLog(`🎯 Цель: ${target}`, 'info');
+    addToLog(`⚡ Тип: ${attackType}`, 'info');
+    addToLog(`💥 Интенсивность: ${intensity}/10`, 'info');
+    
+    // Инициализируем визуализацию
+    initializeVisualization(intensity);
+    
+    // Запускаем симуляцию атаки
+    startAttackSimulation(attackType, intensity, duration);
+    
+    // Запускаем обновление статистики
+    startStatsUpdate();
+    
+    // Запускаем график
+    initializeGraph();
+}
+
+// Остановка атаки
+function stopAttack() {
+    if (attackInterval) {
+        clearInterval(attackInterval);
+    }
+    if (packetInterval) {
+        clearInterval(packetInterval);
+    }
+    if (graphInterval) {
+        clearInterval(graphInterval);
+    }
+    
+    // Скрываем интерфейс атаки
+    document.getElementById('attackVisualization').style.display = 'none';
+    document.getElementById('startButton').style.display = 'block';
+    document.getElementById('stopButton').style.display = 'none';
+    
+    // Добавляем запись в лог
+    addToLog('🛑 Атака остановлена пользователем', 'warning');
+    addToLog(`📊 Итоговая статистика: ${totalPacketsSent} пакетов отправлено`, 'info');
+    
+    currentAttackId = null;
+}
+
+// Инициализация визуализации
+function initializeVisualization(intensity) {
+    const botnetCluster = document.getElementById('botnetCluster');
+    const settings = intensitySettings[intensity];
+    
+    // Очищаем предыдущие элементы
+    botnetCluster.innerHTML = '';
+    
+    // Создаем ботнет ноды (ограничиваем количеством для производительности)
+    const nodeCount = Math.min(50, settings.bots / 20);
+    for (let i = 0; i < nodeCount; i++) {
+        const node = document.createElement('div');
+        node.className = 'bot-node';
+        node.style.cssText = `
+            top: ${Math.random() * 80 + 10}%;
+            left: ${Math.random() * 80 + 10}%;
+            animation-delay: ${Math.random() * 2}s;
+        `;
+        botnetCluster.appendChild(node);
+    }
+    
+    // Обновляем фазу атаки
+    document.getElementById('attackPhase').className = 'attack-phase bg-warning text-dark';
+    document.getElementById('attackPhase').textContent = 'Наращивание';
+    document.getElementById('serverStatusText').textContent = 'Обнаружена атака';
+    document.getElementById('serverIcon').textContent = '🟡';
+}
+
+// Запуск симуляции атаки
+function startAttackSimulation(attackType, intensity, duration) {
+    const settings = intensitySettings[intensity];
+    let elapsedTime = 0;
+    
+    // Запускаем отправку пакетов
+    packetInterval = setInterval(() => {
+        if (elapsedTime >= duration) {
+            stopAttack();
+            return;
+        }
+        
+        // Симулируем отправку пакетов
+        const packetsThisSecond = settings.packets + Math.floor(Math.random() * 50) - 25;
+        totalPacketsSent += packetsThisSecond;
+        
+        // Создаем визуальные пакеты
+        createPackets(packetsThisSecond);
+        
+        elapsedTime++;
+        updateProgress(elapsedTime, duration);
+        
+    }, 1000);
+    
+    // Обновляем статистику каждые 100мс для плавности
+    attackInterval = setInterval(() => {
+        const currentTime = Date.now();
+        const timeDiff = (currentTime - attackStartTime) / 1000;
+        
+        if (timeDiff >= duration) {
+            stopAttack();
+            return;
+        }
+        
+        // Динамически обновляем статистику
+        updateDynamicStats(timeDiff, duration, settings);
+        
+    }, 100);
+}
+
+// Создание визуальных пакетов
+function createPackets(count) {
+    const networkTopology = document.querySelector('.network-topology');
+    
+    for (let i = 0; i < Math.min(count / 10, 20); i++) { // Ограничиваем визуальные пакеты
+        setTimeout(() => {
+            const packet = document.createElement('div');
+            packet.className = 'packet';
+            
+            // Случайный цвет в зависимости от типа атаки
+            const colors = {
+                'syn_flood': '#dc3545',
+                'udp_flood': '#fd7e14', 
+                'http_flood': '#ffc107',
+                'icmp_flood': '#0dcaf0',
+                'slowloris': '#20c997',
+                'dns_amplification': '#6f42c1'
+            };
+            
+            const attackType = document.getElementById('attackType').value;
+            packet.style.background = colors[attackType] || '#dc3545';
+            packet.style.top = `${30 + Math.random() * 40}%`;
+            packet.style.animationDelay = `${Math.random() * 0.5}s`;
+            
+            networkTopology.appendChild(packet);
+            
+            // Удаляем пакет после анимации
+            setTimeout(() => {
+                if (packet.parentNode) {
+                    packet.remove();
+                }
+            }, 1500);
+        }, i * 50);
+    }
+}
+
+// Обновление прогресса
+function updateProgress(elapsed, total) {
+    const progress = (elapsed / total) * 100;
+    document.getElementById('attackProgress').style.width = `${progress}%`;
+    document.getElementById('progressTime').textContent = `${elapsed}/${total}s`;
+    
+    // Обновляем фазу атаки
+    const phaseElement = document.getElementById('attackPhase');
+    const serverIcon = document.getElementById('serverIcon');
+    const statusText = document.getElementById('serverStatusText');
+    
+    if (progress < 20) {
+        phaseElement.className = 'attack-phase bg-warning text-dark';
+        phaseElement.textContent = 'Наращивание';
+        serverIcon.textContent = '🟡';
+        statusText.textContent = 'Повышенная нагрузка';
+    } else if (progress < 60) {
+        phaseElement.className = 'attack-phase bg-danger text-white';
+        phaseElement.textContent = 'Пиковая атака';
+        serverIcon.textContent = '🔴';
+        statusText.textContent = 'Критическая нагрузка';
+    } else {
+        phaseElement.className = 'attack-phase bg-orange text-white';
+        phaseElement.textContent = 'Снижение';
+        serverIcon.textContent = '🟠';
+        statusText.textContent = 'Высокая нагрузка';
+    }
+}
+
+// Динамическое обновление статистики
+function updateDynamicStats(elapsed, total, settings) {
+    const progress = elapsed / total;
+    
+    // Динамически изменяем статистику для реалистичности
+    let currentPPS = settings.packets;
+    let currentBandwidth = settings.bandwidth;
+    
+    if (progress < 0.2) {
+        // Фаза наращивания
+        currentPPS = Math.floor(settings.packets * (progress / 0.2));
+        currentBandwidth = Math.floor(settings.bandwidth * (progress / 0.2));
+    } else if (progress > 0.8) {
+        // Фаза снижения
+        currentPPS = Math.floor(settings.packets * ((1 - progress) / 0.2));
+        currentBandwidth = Math.floor(settings.bandwidth * ((1 - progress) / 0.2));
+    }
+    
+    // Обновляем статистику
+    attackStats.packetsPerSecond = currentPPS;
+    attackStats.bandwidth = currentBandwidth;
+    attackStats.successRate = 95 - Math.floor(progress * 10);
+    
+    updateStatsDisplay();
+}
+
+// Обновление отображения статистики
+function updateStatsDisplay() {
+    document.getElementById('attackStats').innerHTML = `
+        <div class="stat-item">
+            <div class="cyber-text">${attackStats.packetsPerSecond}/s</div>
+            <small class="cyber-subtext">Пакетов в секунду</small>
+        </div>
+        <div class="stat-item">
+            <div class="cyber-text">${attackStats.bandwidth} Мбит/с</div>
+            <small class="cyber-subtext">Скорость трафика</small>
+        </div>
+        <div class="stat-item">
+            <div class="cyber-text">${attackStats.successRate}%</div>
+            <small class="cyber-subtext">Успешность</small>
+        </div>
+        <div class="stat-item">
+            <div class="cyber-text">${attackStats.botnetSize}</div>
+            <small class="cyber-subtext">Размер ботнета</small>
+        </div>
+    `;
+    
+    document.getElementById('liveStats').innerHTML = `
+        <div class="cyber-text h4">${totalPacketsSent.toLocaleString()}</div>
+        <small class="cyber-subtext">Всего пакетов отправлено</small>
+        <div class="mt-3">
+            <small class="cyber-subtext d-block">📊 Активность: Высокая</small>
+            <small class="cyber-subtext d-block">⏱️ Длительность: ${Math.floor((Date.now() - attackStartTime) / 1000)}с</small>
+            <small class="cyber-subtext d-block">🎯 Цель: ${document.getElementById('targetSelect').value}</small>
+        </div>
+    `;
+}
+
+// Инициализация графика
+function initializeGraph() {
+    const graph = document.getElementById('liveGraph');
+    graph.innerHTML = '';
+    
+    // Создаем 20 столбцов для графика
+    for (let i = 0; i < 20; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'graph-bar';
+        bar.style.left = `${i * 5}%`;
+        bar.style.height = '0%';
+        graph.appendChild(bar);
+    }
+    
+    // Обновляем график
+    let barIndex = 0;
+    graphInterval = setInterval(() => {
+        const bars = graph.querySelectorAll('.graph-bar');
+        const height = 20 + (attackStats.packetsPerSecond / intensitySettings[10].packets) * 80;
+        
+        bars[barIndex].style.height = `${height}%`;
+        barIndex = (barIndex + 1) % bars.length;
+    }, 500);
+}
+
+// Добавление записи в лог
+function addToLog(message, type = 'info') {
+    const log = document.getElementById('attackLog');
+    const timestamp = new Date().toLocaleTimeString();
+    
+    const logEntry = document.createElement('div');
+    logEntry.className = `small mb-1 ${type === 'info' ? 'text-info' : type === 'warning' ? 'text-warning' : 'text-danger'}`;
+    logEntry.innerHTML = `<span class="text-muted">[${timestamp}]</span> ${message}`;
+    
+    log.appendChild(logEntry);
+    log.scrollTop = log.scrollHeight;
+    
+    // Ограничиваем количество записей в логе
+    if (log.children.length > 50) {
+        log.removeChild(log.firstChild);
+    }
+}
+
+// Запуск обновления статистики
+function startStatsUpdate() {
+    // Статистика обновляется в updateDynamicStats
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    // Устанавливаем начальное описание
+    document.getElementById('attackDescription').textContent = attackDescriptions['syn_flood'];
+    
+    // Инициализируем статистику интенсивности
+    const intensity = parseInt(document.getElementById('intensitySlider').value);
+    const settings = intensitySettings[intensity];
+    document.getElementById('intensityStats').textContent = `~${settings.packets} пакетов/сек, ${settings.bandwidth} Мбит/с, ${settings.bots} ботов`;
+});
+</script>
+{% endblock %}

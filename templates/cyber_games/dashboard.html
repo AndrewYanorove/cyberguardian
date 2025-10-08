@@ -1,0 +1,476 @@
+{% extends "base.html" %}
+
+{% block title %}Кибер-игры - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.game-card {
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    background: rgba(20, 20, 20, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.game-card:hover::before {
+    left: 100%;
+}
+
+.game-card:hover {
+    border-color: var(--cyber-primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+}
+
+.game-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--cyber-accent);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.leaderboard {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 1.5rem;
+}
+
+.leader-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--cyber-border);
+    transition: background 0.3s ease;
+}
+
+.leader-item:hover {
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.leader-item:last-child {
+    border-bottom: none;
+}
+
+.leader-rank {
+    width: 30px;
+    height: 30px;
+    background: var(--cyber-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.leader-you {
+    background: var(--cyber-accent) !important;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.stat-item {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    border-color: var(--cyber-primary);
+    transform: translateY(-2px);
+}
+
+.game-progress {
+    height: 8px;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--cyber-primary);
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+.achievement {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.achievement.locked {
+    background: rgba(108, 117, 125, 0.1);
+    border-color: #6c757d;
+    opacity: 0.6;
+}
+
+.achievement-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+}
+
+.game-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-joystick me-2"></i>Кибер-игры
+            </h1>
+            <p class="cyber-subtext lead">
+                Изучайте кибербезопасность через увлекательные игры и квизы!
+            </p>
+        </div>
+    </div>
+
+    <!-- Статистика игрока -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="cyber-card p-4">
+                <h3 class="cyber-text mb-4">🎯 Ваша игровая статистика</h3>
+                <div class="stats-grid" id="playerStats">
+                    <!-- Статистика загрузится через JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Игры -->
+        <div class="col-lg-8">
+            <h3 class="cyber-text mb-4">🎮 Доступные игры</h3>
+            
+            <!-- Охотник за фишингом -->
+            <div class="game-card">
+                <span class="game-badge">Популярная</span>
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-envelope-exclamation display-4 text-cyber-primary me-4"></i>
+                    <div class="flex-grow-1">
+                        <h4 class="cyber-text mb-2">🎣 Охотник за фишингом</h4>
+                        <p class="cyber-subtext mb-3">
+                            Научитесь распознавать мошеннические письма. Анализируйте реальные фишинг-атаки и защитите себя от мошенников!
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <span class="cyber-badge">
+                                <i class="bi bi-star me-1"></i>Сложность: Средняя
+                            </span>
+                            <span class="cyber-badge cyber-badge-secondary">
+                                <i class="bi bi-clock me-1"></i>5-10 минут
+                            </span>
+                            <span class="cyber-badge cyber-badge-accent">
+                                <i class="bi bi-trophy me-1"></i>До 100 очков
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ url_for('games.phishing_hunter') }}" class="btn btn-cyber btn-lg">
+                        <i class="bi bi-play-circle me-2"></i>Начать игру
+                    </a>
+                    <span class="cyber-subtext ms-3">
+                        <i class="bi bi-people me-1"></i>
+                        <span id="phishingPlayers">...</span> игроков онлайн
+                    </span>
+                </div>
+            </div>
+
+            <!-- Мастер паролей -->
+            <div class="game-card">
+                <span class="game-badge">Новая</span>
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-shield-lock display-4 text-cyber-secondary me-4"></i>
+                    <div class="flex-grow-1">
+                        <h4 class="cyber-text mb-2">🔑 Мастер паролей</h4>
+                        <p class="cyber-subtext mb-3">
+                            Создавайте и анализируйте пароли. Узнайте, как быстро можно взломать разные типы паролей!
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <span class="cyber-badge">
+                                <i class="bi bi-star me-1"></i>Сложность: Легкая
+                            </span>
+                            <span class="cyber-badge cyber-badge-secondary">
+                                <i class="bi bi-clock me-1"></i>3-7 минут
+                            </span>
+                            <span class="cyber-badge cyber-badge-accent">
+                                <i class="bi bi-trophy me-1"></i>До 150 очков
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ url_for('games.password_master') }}" class="btn btn-cyber btn-lg">
+                        <i class="bi bi-play-circle me-2"></i>Начать игру
+                    </a>
+                    <span class="cyber-subtext ms-3">
+                        <i class="bi bi-people me-1"></i>
+                        <span id="passwordPlayers">...</span> игроков онлайн
+                    </span>
+                </div>
+            </div>
+
+            <!-- Квиз по безопасности -->
+            <div class="game-card">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-patch-question display-4 text-cyber-accent me-4"></i>
+                    <div class="flex-grow-1">
+                        <h4 class="cyber-text mb-2">🧠 Квиз по кибербезопасности</h4>
+                        <p class="cyber-subtext mb-3">
+                            Проверьте свои знания! Ответьте на вопросы по основам кибербезопасности и заработайте бонусные очки.
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <span class="cyber-badge">
+                                <i class="bi bi-star me-1"></i>Сложность: Разная
+                            </span>
+                            <span class="cyber-badge cyber-badge-secondary">
+                                <i class="bi bi-clock me-1"></i>7-15 минут
+                            </span>
+                            <span class="cyber-badge cyber-badge-accent">
+                                <i class="bi bi-trophy me-1"></i>До 200 очков
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ url_for('games.cyber_quiz') }}" class="btn btn-cyber btn-lg">
+                        <i class="bi bi-play-circle me-2"></i>Начать квиз
+                    </a>
+                    <span class="cyber-subtext ms-3">
+                        <i class="bi bi-people me-1"></i>
+                        <span id="quizPlayers">...</span> игроков онлайн
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Боковая панель -->
+        <div class="col-lg-4">
+            <!-- Таблица лидеров -->
+            <div class="leaderboard mb-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-trophy me-2"></i>Таблица лидеров
+                </h4>
+                <div id="leaderboardList">
+                    <!-- Лидеры загрузятся через JS -->
+                </div>
+            </div>
+
+            <!-- Достижения -->
+            <div class="cyber-card p-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-award me-2"></i>Ваши достижения
+                </h4>
+                <div id="achievementsList">
+                    <!-- Достижения загрузятся через JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Особенности игр -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="cyber-card p-5">
+                <h3 class="cyber-text text-center mb-4">🌟 Почему учиться через игры эффективно?</h3>
+                <div class="game-features">
+                    <div class="feature-item">
+                        <i class="bi bi-emoji-smile feature-icon text-cyber-primary"></i>
+                        <h5 class="cyber-text">Увлекательно</h5>
+                        <p class="cyber-subtext">Игровой процесс делает обучение интересным</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-graph-up feature-icon text-cyber-secondary"></i>
+                        <h5 class="cyber-text">Практично</h5>
+                        <p class="cyber-subtext">Реальные сценарии и практические навыки</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-arrow-repeat feature-icon text-cyber-accent"></i>
+                        <h5 class="cyber-text">Повторение</h5>
+                        <p class="cyber-subtext">Можно играть многократно для закрепления</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-trophy feature-icon text-warning"></i>
+                        <h5 class="cyber-text">Мотивация</h5>
+                        <p class="cyber-subtext">Система очков и достижений стимулирует</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Загрузка игровых данных
+async function loadGameData() {
+    await Promise.all([
+        loadPlayerStats(),
+        loadLeaderboard(),
+        loadAchievements(),
+        updateOnlinePlayers()
+    ]);
+}
+
+// Загрузка статистики игрока
+async function loadPlayerStats() {
+    try {
+        const response = await fetch('/games/api/games/stats');
+        const data = await response.json();
+        
+        const container = document.getElementById('playerStats');
+        
+        let totalGames = 0;
+        let totalScore = 0;
+        let gamesWon = 0;
+        
+        if (data.phishing) {
+            totalGames += data.phishing.played;
+            totalScore += data.phishing.score;
+            gamesWon += data.phishing.won;
+        }
+        
+        container.innerHTML = `
+            <div class="stat-item">
+                <i class="bi bi-joystick display-6 text-cyber-primary mb-2"></i>
+                <h3 class="cyber-text">${totalGames}</h3>
+                <p class="cyber-subtext">Сыграно игр</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-trophy display-6 text-warning mb-2"></i>
+                <h3 class="cyber-text">${totalScore}</h3>
+                <p class="cyber-subtext">Всего очков</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-star display-6 text-success mb-2"></i>
+                <h3 class="cyber-text">${gamesWon}</h3>
+                <p class="cyber-subtext">Побед</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-graph-up display-6 text-info mb-2"></i>
+                <h3 class="cyber-text">${totalGames > 0 ? Math.round((gamesWon / totalGames) * 100) : 0}%</h3>
+                <p class="cyber-subtext">Процент побед</p>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+}
+
+// Загрузка таблицы лидеров
+async function loadLeaderboard() {
+    try {
+        const response = await fetch('/games/api/games/leaderboard');
+        const data = await response.json();
+        
+        const container = document.getElementById('leaderboardList');
+        container.innerHTML = data.leaders.map((leader, index) => `
+            <div class="leader-item ${leader.username === '{{ current_user.username }}' ? 'leader-you' : ''}">
+                <div class="leader-rank ${leader.username === '{{ current_user.username }}' ? 'leader-you' : ''}">
+                    ${index + 1}
+                </div>
+                <div class="flex-grow-1">
+                    <div class="cyber-text">${leader.username}</div>
+                    <small class="cyber-subtext">${leader.score} очков</small>
+                </div>
+                <div class="text-end">
+                    <small class="cyber-subtext">${leader.games_played} игр</small>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Ошибка загрузки лидеров:', error);
+    }
+}
+
+// Загрузка достижений
+async function loadAchievements() {
+    const container = document.getElementById('achievementsList');
+    
+    const achievements = [
+        { name: 'Первая игра', description: 'Сыграйте в свою первую игру', icon: 'bi-joystick', unlocked: true },
+        { name: 'Мастер фишинга', description: 'Пройдите охотника за фишингом с результатом 90%+', icon: 'bi-envelope-check', unlocked: false },
+        { name: 'Эксперт паролей', description: 'Создайте пароль с оценкой 95+', icon: 'bi-shield-lock', unlocked: false },
+        { name: 'Квиз-мастер', description: 'Пройдите квиз без ошибок', icon: 'bi-patch-check', unlocked: false }
+    ];
+    
+    container.innerHTML = achievements.map(ach => `
+        <div class="achievement ${ach.unlocked ? '' : 'locked'}">
+            <i class="bi ${ach.icon} achievement-icon ${ach.unlocked ? 'text-warning' : 'text-muted'}"></i>
+            <div>
+                <h6 class="cyber-text mb-1">${ach.name}</h6>
+                <p class="cyber-subtext small mb-0">${ach.description}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Обновление онлайн игроков
+function updateOnlinePlayers() {
+    document.getElementById('phishingPlayers').textContent = Math.floor(Math.random() * 50) + 20;
+    document.getElementById('passwordPlayers').textContent = Math.floor(Math.random() * 30) + 15;
+    document.getElementById('quizPlayers').textContent = Math.floor(Math.random() * 40) + 25;
+}
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', function() {
+    loadGameData();
+    
+    // Обновляем онлайн игроков каждые 30 секунд
+    setInterval(updateOnlinePlayers, 30000);
+});
+</script>
+{% endblock %}

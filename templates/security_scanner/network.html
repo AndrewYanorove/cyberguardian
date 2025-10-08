@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}Сканер сети - CyberGuardian{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="cyber-text glow-text mb-3">
+                    <i class="bi bi-hdd-network me-2"></i>Сканер сети
+                </h1>
+                <p class="cyber-subtext lead">
+                    Анализ сетевой безопасности и обнаружение уязвимостей
+                </p>
+            </div>
+
+            <div class="scanner-card">
+                <h4 class="cyber-text mb-4">🌐 Сканирование сети</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <label class="form-label cyber-text">Цель сканирования:</label>
+                        <input type="text" class="form-control cyber-input" id="targetInput" 
+                               value="192.168.1.1" placeholder="IP адрес или домен">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label cyber-text">Тип сканирования:</label>
+                        <select class="form-select cyber-input" id="scanType">
+                            <option value="quick">Быстрое сканирование</option>
+                            <option value="full">Полное сканирование</option>
+                            <option value="ports">Только порты</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="scanNetwork()" class="btn btn-cyber w-100 mb-4">
+                    <i class="bi bi-radar me-2"></i>Начать сканирование
+                </button>
+
+                <div class="scan-animation" id="networkScanAnimation" style="display: none;">
+                    <div class="cyber-loader mx-auto mb-3"></div>
+                    <p class="cyber-text">Сканирование сети...</p>
+                    <div class="scan-progress">
+                        <div class="progress-bar" id="networkScanProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="scan-result" id="networkResult" style="display: none;">
+                    <!-- Результаты загрузятся через JS -->
+                </div>
+            </div>
+
+            <!-- Результаты сканирования -->
+            <div class="scanner-card mt-4" id="scanResults" style="display: none;">
+                <h4 class="cyber-text mb-4">📊 Результаты сканирования</h4>
+                
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="cyber-text" id="openPortsCount">0</h3>
+                            <p class="cyber-subtext">Открытых портов</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="cyber-text" id="vulnsCount">0</h3>
+                            <p class="cyber-subtext">Уязвимостей</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <h3 class="cyber-text" id="securityScore">0%</h3>
+                            <p class="cyber-subtext">Безопасность</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="cyber-text mb-3">🔍 Открытые порты</h5>
+                <div class="table-responsive">
+                    <table class="table cyber-table">
+                        <thead>
+                            <tr>
+                                <th>Порт</th>
+                                <th>Сервис</th>
+                                <th>Статус</th>
+                                <th>Безопасность</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portsTable">
+                            <!-- Порты загрузятся через JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <h5 class="cyber-text mb-3 mt-4">⚠️ Обнаруженные уязвимости</h5>
+                <div id="vulnerabilitiesList">
+                    <!-- Уязвимости загрузятся через JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Сканирование сети
+async function scanNetwork() {
+    const target = document.getElementById('targetInput').value;
+    const scanType = document.getElementById('scanType').value;
+    
+    if (!target) {
+        alert('Введите цель для сканирования');
+        return;
+    }
+    
+    const animation = document.getElementById('networkScanAnimation');
+    const result = document.getElementById('networkResult');
+    const progress = document.getElementById('networkScanProgress');
+    
+    // Показываем анимацию
+    animation.style.display = 'block';
+    result.style.display = 'none';
+    
+    // Анимация прогресса
+    let width = 0;
+    const interval = setInterval(() => {
+        width += 2;
+        progress.style.width = width + '%';
+        if (width >= 100) clearInterval(interval);
+    }, 100);
+    
+    try {
+        const response = await fetch('/scanner/api/scan/network', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                target: target,
+                scan_type: scanType
+            })
+        });
+        
+        const scanResult = await response.json();
+        displayNetworkResult(scanResult);
+        
+    } catch (error) {
+        console.error('Ошибка сканирования сети:', error);
+        animation.style.display = 'none';
+        result.style.display = 'block';
+        result.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Ошибка при сканировании сети. Попробуйте еще раз.
+            </div>
+        `;
+    }
+}
+
+// Отображение результатов сканирования сети
+function displayNetworkResult(result) {
+    const animation = document.getElementById('networkScanAnimation');
+    const resultDiv = document.getElementById('networkResult');
+    const resultsDiv = document.getElementById('scanResults');
+    
+    animation.style.display = 'none';
+    resultDiv.style.display = 'block';
+    resultsDiv.style.display = 'block';
+    
+    // Обновляем статистику
+    document.getElementById('openPortsCount').textContent = result.ports.filter(p => p.status === 'open').length;
+    document.getElementById('vulnsCount').textContent = result.vulnerabilities.length;
+    document.getElementById('securityScore').textContent = result.security_score + '%';
+    
+    // Заполняем таблицу портов
+    const portsTable = document.getElementById('portsTable');
+    portsTable.innerHTML = result.ports.map(port => `
+        <tr>
+            <td><strong>${port.port}</strong></td>
+            <td>${port.service}</td>
+            <td>
+                <span class="badge bg-${port.status === 'open' ? 'success' : 'secondary'}">
+                    ${port.status === 'open' ? 'Открыт' : 'Закрыт'}
+                </span>
+            </td>
+            <td>
+                <span class="badge bg-${port.security === 'critical' ? 'danger' : 
+                                      port.security === 'high' ? 'warning' : 
+                                      port.security === 'medium' ? 'info' : 'success'}">
+                    ${port.security === 'critical' ? 'Критично' :
+                      port.security === 'high' ? 'Высокая' :
+                      port.security === 'medium' ? 'Средняя' : 'Низкая'}
+                </span>
+            </td>
+        </tr>
+    `).join('');
+    
+    // Заполняем список уязвимостей
+    const vulnsList = document.getElementById('vulnerabilitiesList');
+    if (result.vulnerabilities.length > 0) {
+        vulnsList.innerHTML = result.vulnerabilities.map(vuln => `
+            <div class="alert alert-warning mb-2">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>${vuln}</strong>
+            </div>
+        `).join('');
+    } else {
+        vulnsList.innerHTML = `
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle me-2"></i>
+                Критических уязвимостей не обнаружено
+            </div>
+        `;
+    }
+    
+    // Показываем рекомендации
+    resultDiv.innerHTML = `
+        <h5 class="cyber-text mb-3">
+            <i class="bi bi-check-circle text-success me-2"></i>Сканирование завершено
+        </h5>
+        
+        <div class="security-meter mb-3">
+            <div class="meter-fill" style="width: ${result.security_score}%; background: ${getSecurityColor(result.security_score)};"></div>
+        </div>
+        
+        <h6 class="cyber-text mb-3">💡 Рекомендации по безопасности сети:</h6>
+        <div class="row">
+            ${result.recommendations.map(rec => `
+                <div class="col-md-6 mb-2">
+                    <i class="bi bi-arrow-right text-cyber-primary me-2"></i>
+                    <span class="cyber-subtext">${rec}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// Получение цвета для уровня безопасности
+function getSecurityColor(score) {
+    if (score >= 80) return '#20c997';
+    if (score >= 70) return '#0dcaf0';
+    if (score >= 50) return '#ffc107';
+    if (score >= 30) return '#fd7e14';
+    return '#dc3545';
+}
+</script>
+{% endblock %}

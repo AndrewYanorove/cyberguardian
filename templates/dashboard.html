@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+
+{% block title %}Дашборд - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.quick-access-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.quick-card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.quick-card:hover::before {
+    left: 100%;
+}
+
+.quick-card:hover {
+    border-color: var(--cyber-primary);
+    transform: translateY(-5px);
+}
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.stat-item {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    border-color: var(--cyber-primary);
+    transform: translateY(-2px);
+}
+
+.recent-activity {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--cyber-border);
+    transition: background 0.3s ease;
+}
+
+.activity-item:hover {
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.security-status {
+    border-left: 4px solid;
+    padding-left: 1rem;
+}
+
+.status-excellent { border-left-color: #20c997; }
+.status-good { border-left-color: #0dcaf0; }
+.status-fair { border-left-color: #ffc107; }
+.status-poor { border-left-color: #fd7e14; }
+
+.progress-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(var(--cyber-primary) 0% var(--progress, 0%), transparent var(--progress, 0%) 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.progress-ring::before {
+    content: attr(data-progress) '%';
+    position: absolute;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+}
+
+.progress-ring::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: var(--cyber-dark);
+    border-radius: 50%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Заголовок -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="cyber-text glow-text mb-2">
+                        <i class="bi bi-speedometer2 me-2"></i>Дашборд
+                    </h1>
+                    <p class="cyber-subtext">
+                        {% if current_user.is_authenticated %}
+                        Добро пожаловать, {{ current_user.username }}! Ваша статистика безопасности.
+                        {% else %}
+                        Обзор возможностей CyberGuardian
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="text-end">
+                    <div class="cyber-badge bg-success">
+                        <i class="bi bi-check-circle me-1"></i>Все системы активны
+                    </div>
+                    <div class="cyber-subtext small mt-1" id="currentTime">{{ current_time }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Общая статистика -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="stats-overview" id="globalStats">
+                <!-- Статистика загрузится через JS -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Быстрый доступ -->
+        <div class="col-lg-8">
+            <h3 class="cyber-text mb-3">⚡ Быстрый доступ</h3>
+            <div class="quick-access-grid">
+                <!-- Обучение -->
+                <div class="quick-card">
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-book display-6 text-cyber-primary me-3"></i>
+                        <div>
+                            <h5 class="cyber-text">Продолжить обучение</h5>
+                            <p class="cyber-subtext small">Изучайте основы кибербезопасности</p>
+                        </div>
+                    </div>
+                    <div class="progress-ring mb-3" data-progress="65" style="--progress: 65%"></div>
+                    <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber w-100">
+                        <i class="bi bi-arrow-right me-2"></i>Продолжить
+                    </a>
+                </div>
+
+                <!-- Сканер безопасности -->
+                <div class="quick-card">
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-shield-check display-6 text-cyber-secondary me-3"></i>
+                        <div>
+                            <h5 class="cyber-text">Проверить безопасность</h5>
+                            <p class="cyber-subtext small">Комплексная проверка системы</p>
+                        </div>
+                    </div>
+                    <div class="security-status status-good mb-3">
+                        <span class="cyber-text">Хорошая</span>
+                        <p class="cyber-subtext small mb-0">Последняя проверка: сегодня</p>
+                    </div>
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn btn-cyber w-100">
+                        <i class="bi bi-search me-2"></i>Проверить
+                    </a>
+                </div>
+
+                <!-- ИИ-помощник -->
+                <div class="quick-card">
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-robot display-6 text-cyber-accent me-3"></i>
+                        <div>
+                            <h5 class="cyber-text">Спросить ИИ</h5>
+                            <p class="cyber-subtext small">Консультация по безопасности</p>
+                        </div>
+                    </div>
+                    <div class="cyber-subtext small mb-3">
+                        <i class="bi bi-lightning"></i> Доступен 24/7
+                    </div>
+                    <a href="{{ url_for('ai.ai_chat') }}" class="btn btn-cyber w-100">
+                        <i class="bi bi-chat me-2"></i>Задать вопрос
+                    </a>
+                </div>
+
+                <!-- Игры -->
+                <div class="quick-card">
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-joystick display-6 text-warning me-3"></i>
+                        <div>
+                            <h5 class="cyber-text">Кибер-игры</h5>
+                            <p class="cyber-subtext small">Обучение через игры</p>
+                        </div>
+                    </div>
+                    <div class="cyber-badge bg-warning mb-3">
+                        <i class="bi bi-star me-1"></i>Новый контент
+                    </div>
+                    <a href="{{ url_for('games.games_dashboard') }}" class="btn btn-cyber w-100">
+                        <i class="bi bi-play-circle me-2"></i>Играть
+                    </a>
+                </div>
+            </div>
+
+            <!-- Активность -->
+            <div class="cyber-card p-4 mt-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-activity me-2"></i>Недавняя активность
+                </h4>
+                <div class="recent-activity" id="recentActivity">
+                    <!-- Активность загрузится через JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Боковая панель -->
+        <div class="col-lg-4">
+            <!-- Мониторинг угроз -->
+            <div class="cyber-card p-4 mb-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-shield-exclamation me-2"></i>Мониторинг угроз
+                </h4>
+                <div id="threatMonitor">
+                    <!-- Угрозы загрузятся через JS -->
+                </div>
+                <a href="{{ url_for('threats.threat_dashboard') }}" class="btn btn-cyber-outline w-100 mt-3">
+                    <i class="bi bi-eye me-2"></i>Подробнее
+                </a>
+            </div>
+
+            <!-- Рекомендации -->
+            <div class="cyber-card p-4">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-lightbulb me-2"></i>Рекомендации
+                </h4>
+                <div class="content-tip mb-3">
+                    <i class="bi bi-check-circle me-2"></i>
+                    <strong>Обновите пароли</strong>
+                    <p class="mb-0">Некоторые пароли используются давно</p>
+                </div>
+                <div class="content-tip mb-3">
+                    <i class="bi bi-check-circle me-2"></i>
+                    <strong>Пройдите новый курс</strong>
+                    <p class="mb-0">Доступен курс по защите от фишинга</p>
+                </div>
+                <div class="content-tip">
+                    <i class="bi bi-check-circle me-2"></i>
+                    <strong>Проверьте настройки</strong>
+                    <p class="mb-0">Рекомендуем настроить двухфакторную аутентификацию</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Обновление времени
+function updateCurrentTime() {
+    const element = document.getElementById('currentTime');
+    element.textContent = new Date().toLocaleString('ru-RU');
+}
+
+// Загрузка глобальной статистики
+async function loadGlobalStats() {
+    try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        
+        const container = document.getElementById('globalStats');
+        container.innerHTML = `
+            <div class="stat-item">
+                <i class="bi bi-people display-6 text-cyber-primary mb-2"></i>
+                <h3 class="cyber-text">${data.users_online}</h3>
+                <p class="cyber-subtext">Пользователей онлайн</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-book display-6 text-success mb-2"></i>
+                <h3 class="cyber-text">${data.lessons_today}</h3>
+                <p class="cyber-subtext">Уроков сегодня</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-shield-check display-6 text-warning mb-2"></i>
+                <h3 class="cyber-text">${data.encryptions_today}</h3>
+                <p class="cyber-subtext">Шифрований сегодня</p>
+            </div>
+            <div class="stat-item">
+                <i class="bi bi-robot display-6 text-info mb-2"></i>
+                <h3 class="cyber-text">${data.ai_questions}</h3>
+                <p class="cyber-subtext">Вопросов ИИ</p>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+}
+
+// Загрузка мониторинга угроз
+async function loadThreatMonitor() {
+    try {
+        const response = await fetch('/threats/api/active-threats');
+        const data = await response.json();
+        
+        const container = document.getElementById('threatMonitor');
+        
+        if (data.threats.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-3">
+                    <i class="bi bi-check-circle display-4 text-success"></i>
+                    <p class="cyber-subtext mt-2">Активных угроз не обнаружено</p>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Обнаружено ${data.threats.length} активных угроз
+                </div>
+                ${data.threats.slice(0, 2).map(threat => `
+                    <div class="cyber-subtext small mb-2">
+                        <i class="bi bi-dot text-${threat.severity === 'critical' ? 'danger' : 'warning'}"></i>
+                        ${threat.name}
+                    </div>
+                `).join('')}
+            `;
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки угроз:', error);
+    }
+}
+
+// Загрузка недавней активности
+async function loadRecentActivity() {
+    const activities = [
+        { action: 'Завершен урок', details: 'Основы кибербезопасности', time: '2 часа назад', icon: 'bi-book' },
+        { action: 'Сгенерирован пароль', details: 'Для аккаунта mail.ru', time: '5 часов назад', icon: 'bi-key' },
+        { action: 'Зашифрован текст', details: 'AES-256 алгоритм', time: 'Вчера', icon: 'bi-lock' },
+        { action: 'Задан вопрос ИИ', details: 'Про защиту Wi-Fi', time: 'Вчера', icon: 'bi-robot' }
+    ];
+    
+    const container = document.getElementById('recentActivity');
+    container.innerHTML = activities.map(activity => `
+        <div class="activity-item">
+            <div class="d-flex align-items-center">
+                <i class="bi ${activity.icon} display-6 text-cyber-primary me-3"></i>
+                <div class="flex-grow-1">
+                    <div class="cyber-text">${activity.action}</div>
+                    <div class="cyber-subtext small">${activity.details}</div>
+                </div>
+                <div class="text-end">
+                    <small class="cyber-subtext">${activity.time}</small>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', function() {
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+    
+    loadGlobalStats();
+    loadThreatMonitor();
+    loadRecentActivity();
+    
+    // Обновляем статистику каждые 2 минуты
+    setInterval(loadGlobalStats, 120000);
+    setInterval(loadThreatMonitor, 30000);
+});
+</script>
+{% endblock %}

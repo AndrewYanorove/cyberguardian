@@ -7,24 +7,21 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <h1 class="display-4 fw-bold cyber-text mb-4 glow-text">
-                    <i class="bi bi-shield-shaded"></i> CyberGuardian
+                    <i class="bi bi-shield-shaded"></i> CyberGuardian v2.0
                 </h1>
                 <p class="lead cyber-subtext mb-4">
                     Ваш цифровой щит в мире кибербезопасности. 
-                    Защищайся, учись и шифруй с помощью современных технологий.
+                    Защищайся, учись и исследуй с помощью современных технологий.
                 </p>
                 <div class="d-flex gap-3 justify-content-center flex-wrap">
                     <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber btn-lg">
                         <i class="bi bi-book me-2"></i>Начать обучение
                     </a>
-                    <a href="{{ url_for('passwords.password_generator') }}" class="btn btn-cyber-outline btn-lg">
-                        <i class="bi bi-key me-2"></i>Проверить пароль
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn btn-cyber-outline btn-lg">
+                        <i class="bi bi-shield-check me-2"></i>Проверить безопасность
                     </a>
-                    <a href="{{ url_for('encryption.encryption_tools') }}" class="btn btn-cyber btn-lg">
-                        <i class="bi bi-lock me-2"></i>Шифрование
-                    </a>
-                    <a href="{{ url_for('ai.ai_chat') }}" class="btn btn-cyber-outline btn-lg">
-                        <i class="bi bi-robot me-2"></i>ИИ-помощник
+                    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-danger btn-lg">
+                        <i class="bi bi-lightning-charge me-2"></i>DDoS Simulator
                     </a>
                 </div>
             </div>
@@ -78,6 +75,50 @@
                 </div>
             </div>
         </div>
+
+        <!-- Вторая строка фич -->
+        <div class="row g-4 mt-3">
+            <div class="col-md-3">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="bi bi-shield-exclamation display-4 text-warning mb-3"></i>
+                    <h5 class="text-warning">Мониторинг угроз</h5>
+                    <p class="cyber-subtext">Отслеживание киберугроз в реальном времени</p>
+                    <a href="{{ url_for('threats.threat_dashboard') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                        Мониторить
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="bi bi-shield-check display-4 text-success mb-3"></i>
+                    <h5 class="text-success">Сканер безопасности</h5>
+                    <p class="cyber-subtext">Комплексная проверка системы безопасности</p>
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                        Сканировать
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="bi bi-joystick display-4 text-info mb-3"></i>
+                    <h5 class="text-info">Кибер-игры</h5>
+                    <p class="cyber-subtext">Обучение через увлекательные игры и квизы</p>
+                    <a href="{{ url_for('games.games_dashboard') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                        Играть
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="cyber-card h-100 p-4 text-center border-danger">
+                    <i class="bi bi-lightning-charge display-4 text-danger mb-3"></i>
+                    <h5 class="text-danger">DDoS Simulator</h5>
+                    <p class="cyber-subtext">Изучение механизмов DDoS атак и защиты</p>
+                    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-danger btn-sm mt-2">
+                        Исследовать
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -86,24 +127,50 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-md-3">
-                <h3 class="text-cyber-primary fw-bold glow-text">100+</h3>
-                <p class="cyber-subtext">Учебных материалов</p>
-                
+                <h3 class="text-cyber-primary fw-bold glow-text">1500+</h3>
+                <p class="cyber-subtext">Пользователей</p>
             </div>
             <div class="col-md-3">
                 <h3 class="text-cyber-secondary fw-bold glow-text">50+</h3>
                 <p class="cyber-subtext">Алгоритмов шифрования</p>
-                
             </div>
             <div class="col-md-3">
                 <h3 class="text-cyber-accent fw-bold glow-text">24/7</h3>
                 <p class="cyber-subtext">ИИ-помощник доступен</p>
-                
             </div>
             <div class="col-md-3">
-                <h3 class="text-cyber-primary fw-bold glow-text">100%</h3>
-                <p class="cyber-subtext">Безопасность данных</p>
-               
+                <h3 class="text-danger fw-bold glow-text">100%</h3>
+                <p class="cyber-subtext">Безопасная учебная среда</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DDoS Simulator промо -->
+<section class="cta-section py-5 bg-danger bg-opacity-10">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="cyber-card p-5 border-danger">
+                    <i class="bi bi-lightning-charge display-1 text-danger mb-3"></i>
+                    <h3 class="cyber-text glow-text mb-3">🎯 Новый DDoS Simulator!</h3>
+                    <p class="cyber-subtext mb-4">
+                        Изучайте механизмы DDoS атак в безопасной учебной среде. 
+                        Понимайте как работают атаки и как от них защищаться.
+                    </p>
+                    <div class="alert alert-warning mb-4">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Только для образовательных целей!</strong> Все атаки симулируются и не наносят реального ущерба.
+                    </div>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-danger btn-lg">
+                            <i class="bi bi-play-circle me-2"></i>Запустить симулятор
+                        </a>
+                        <a href="{{ url_for('ddos.ddos_education') }}" class="btn btn-cyber-outline btn-lg">
+                            <i class="bi bi-book me-2"></i>Узнать больше
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -123,6 +190,9 @@
                         </a>
                         <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber-outline btn-lg">
                             <i class="bi bi-play-circle me-2"></i>Начать обучение
+                        </a>
+                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-outline-danger btn-lg">
+                            <i class="bi bi-lightning me-2"></i>DDoS Simulator
                         </a>
                     </div>
                 </div>
