@@ -2,155 +2,39 @@
 
 {% block title %}{{ course.title }} - CyberGuardian{% endblock %}
 
-{% block content %}
-<div class="container">
-    <!-- Хлебные крошки -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb cyber-border">
-            <li class="breadcrumb-item">
-                <a href="{{ url_for('education.education_home') }}" class="cyber-link">
-                    <i class="bi bi-book me-1"></i>Курсы
-                </a>
-            </li>
-            <li class="breadcrumb-item active cyber-text">{{ course.title }}</li>
-        </ol>
-    </nav>
-
-    <!-- Заголовок курса -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="cyber-card p-4">
-                <div class="d-flex align-items-center">
-                    <i class="bi {{ course.icon }} display-4 text-cyber-primary me-3"></i>
-                    <div class="flex-grow-1">
-                        <h1 class="cyber-text glow-text mb-2">{{ course.title }}</h1>
-                        <p class="cyber-subtext mb-3">{{ course.description }}</p>
-                        <div class="d-flex gap-3 flex-wrap">
-                            <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                {{ course.difficulty|title }}
-                            </span>
-                            <span class="cyber-subtext">
-                                <i class="bi bi-clock"></i> {{ course.estimated_time }}
-                            </span>
-                            <span class="cyber-subtext">
-                                <i class="bi bi-list-ul"></i> {{ course.modules|length }} модулей
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Прогресс курса -->
-                <div class="mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="cyber-subtext">Прогресс курса:</span>
-                        <span class="cyber-text">{{ progress.percentage }}% ({{ progress.completed }}/{{ progress.total }} уроков)</span>
-                    </div>
-                    <div class="cyber-progress">
-                        <div class="cyber-progress-bar" style="width: {{ progress.percentage }}%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Модули курса -->
-    <div class="row">
-        <div class="col-lg-8">
-            <h3 class="cyber-text mb-4">📚 Модули курса</h3>
-            
-            {% for module in course.modules %}
-            <div class="cyber-card p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <h4 class="cyber-text mb-2">
-                            <i class="bi bi-folder me-2"></i>{{ module.title }}
-                        </h4>
-                        <p class="cyber-subtext">{{ module.description }}</p>
-                    </div>
-                    <span class="cyber-badge">{{ module.lessons|length }} уроков</span>
-                </div>
-
-                <!-- Уроки модуля -->
-                <div class="lesson-list">
-                    {% for lesson in module.lessons %}
-                    <div class="lesson-item d-flex align-items-center p-3 mb-2 cyber-border rounded">
-                        <div class="flex-grow-1">
-                            <h6 class="cyber-text mb-1">{{ lesson.title }}</h6>
-                            <small class="cyber-subtext">
-                                <i class="bi bi-clock"></i> {{ lesson.duration }} мин
-                                {% if lesson.quiz %}
-                                • <i class="bi bi-question-circle"></i> Тест
-                                {% endif %}
-                            </small>
-                        </div>
-                        <div class="ms-3">
-                            {% set lesson_completed = namespace(value=false) %}
-                            {% for prog_course_id, prog_data in progress.items() %}
-                                {% if prog_course_id == course.id %}
-                                    {% set lesson_completed.value = true %}
-                                {% endif %}
-                            {% endfor %}
-                            
-                            {% if lesson_completed.value %}
-                            <span class="cyber-badge bg-success">
-                                <i class="bi bi-check-circle"></i> Завершено
-                            </span>
-                            {% else %}
-                            <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}" 
-                               class="btn btn-cyber btn-sm">
-                                <i class="bi bi-play-circle"></i> Начать
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Боковая панель -->
-        <div class="col-lg-4">
-            <div class="cyber-card p-4">
-                <h4 class="cyber-text mb-3">📈 Статистика</h4>
-                
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="cyber-subtext">Завершено уроков:</span>
-                        <span class="cyber-text">{{ progress.completed }}/{{ progress.total }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="cyber-subtext">Общее время:</span>
-                        <span class="cyber-text">{{ course.estimated_time }}</span>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <h5 class="cyber-text mb-3">🏆 Достижения</h5>
-                    <div class="achievement-list">
-                        {% if progress.percentage >= 100 %}
-                        <div class="achievement-item">
-                            <i class="bi bi-trophy text-warning me-2"></i>
-                            <span>Курс завершен!</span>
-                        </div>
-                        {% endif %}
-                        {% if progress.completed >= progress.total // 2 %}
-                        <div class="achievement-item">
-                            <i class="bi bi-star text-success me-2"></i>
-                            <span>Половина пути пройдена</span>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+{% block extra_css %}
 <style>
-.lesson-item {
+.course-hero {
+    background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
+    border-bottom: 2px solid var(--cyber-border);
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.module-card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
     transition: all 0.3s ease;
+}
+
+.module-card:hover {
+    border-color: var(--cyber-primary);
+    box-shadow: 0 5px 20px rgba(0, 255, 136, 0.1);
+}
+
+.lesson-item {
+    background: rgba(30, 30, 30, 0.6);
     border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .lesson-item:hover {
@@ -158,12 +42,392 @@
     transform: translateX(5px);
 }
 
-.achievement-item {
-    padding: 0.8rem;
-    background: rgba(30, 30, 30, 0.5);
-    border-radius: 8px;
-    border-left: 3px solid var(--cyber-primary);
-    margin-bottom: 0.5rem;
+.lesson-item.completed {
+    border-color: var(--cyber-primary);
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.lesson-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 255, 136, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cyber-primary);
+    flex-shrink: 0;
+}
+
+.lesson-content {
+    flex-grow: 1;
+}
+
+.lesson-duration {
+    color: var(--cyber-subtext);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lesson-actions {
+    flex-shrink: 0;
+}
+
+.completion-badge {
+    background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
+    color: var(--cyber-darker);
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.sidebar-card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.course-progress-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+}
+
+.course-progress-ring-circle {
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.course-progress-ring-bg {
+    fill: none;
+    stroke: var(--cyber-border);
+    stroke-width: 8;
+}
+
+.course-progress-ring-fill {
+    fill: none;
+    stroke: var(--cyber-primary);
+    stroke-width: 8;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 314;
+    transition: stroke-dashoffset 1s ease;
+}
+
+.course-progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+}
+
+.final-exam-card {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+    border: 2px solid #ffc107;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.requirements-list {
+    list-style: none;
+    padding: 0;
+}
+
+.requirements-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--cyber-border);
+}
+
+.requirements-list li:last-child {
+    border-bottom: none;
+}
+
+.requirements-list li::before {
+    content: '✅';
+    margin-right: 0.5rem;
+}
+
+.quiz-badge {
+    background: rgba(0, 136, 255, 0.2);
+    color: var(--cyber-secondary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    border: 1px solid var(--cyber-secondary);
+    margin-left: 0.5rem;
 }
 </style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="course-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb cyber-border">
+                        <li class="breadcrumb-item">
+                            <a href="{{ url_for('education.education_home') }}" class="cyber-link">
+                                <i class="bi bi-book me-1"></i>Курсы
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active cyber-text">{{ course.title }}</li>
+                    </ol>
+                </nav>
+
+                <h1 class="cyber-title glow-text mb-3">{{ course.title }}</h1>
+                <p class="cyber-subtext lead mb-4">{{ course.description }}</p>
+                
+                <div class="d-flex gap-3 flex-wrap">
+                    <span class="difficulty-badge difficulty-{{ course.difficulty }}">
+                        {{ course.difficulty|title }}
+                    </span>
+                    <span class="cyber-badge bg-primary">
+                        <i class="bi bi-clock me-1"></i> {{ course.estimated_time }}
+                    </span>
+                    <span class="cyber-badge bg-success">
+                        <i class="bi bi-list-ul me-1"></i> {{ course.modules|length }} модулей
+                    </span>
+                    <span class="cyber-badge bg-info">
+                        <i class="bi bi-star me-1"></i> {{ course.rating }}/5
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="course-progress-ring">
+                    <svg class="course-progress-ring-circle" width="120" height="120">
+                        <circle class="course-progress-ring-bg" cx="60" cy="60" r="50"></circle>
+                        <circle class="course-progress-ring-fill" cx="60" cy="60" r="50" 
+                                style="stroke-dashoffset: {{ 314 - (314 * progress.percentage / 100) }}"></circle>
+                    </svg>
+                    <div class="course-progress-text">{{ progress.percentage }}%</div>
+                </div>
+                <h5 class="cyber-text">Прогресс курса</h5>
+                <p class="cyber-subtext">{{ progress.completed }}/{{ progress.total }} уроков</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Основной контент -->
+        <div class="col-lg-8">
+            <h3 class="cyber-text mb-4">
+                <i class="bi bi-list-check me-2"></i>Содержание курса
+            </h3>
+
+            {% for module in course.modules %}
+            <div class="module-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h4 class="cyber-text mb-2">
+                            <i class="bi bi-folder2-open me-2"></i>{{ module.title }}
+                        </h4>
+                        <p class="cyber-subtext">{{ module.description }}</p>
+                    </div>
+                    <span class="cyber-badge">{{ module.lessons|length }} уроков</span>
+                </div>
+
+                <!-- Уроки модуля - УПРОЩЕННАЯ ВЕРСИЯ -->
+                <div class="lesson-list">
+                    {% for lesson in module.lessons %}
+                    <div class="lesson-item">
+                        <div class="lesson-icon">
+                            <i class="bi bi-play-fill"></i>
+                        </div>
+                        
+                        <div class="lesson-content">
+                            <h6 class="cyber-text mb-1">{{ lesson.title }}</h6>
+                            <div class="lesson-duration">
+                                <i class="bi bi-clock"></i> {{ lesson.duration }} минут
+                                {% if lesson.quiz %}
+                                <span class="quiz-badge">Тест</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="lesson-actions">
+                            <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}" 
+                               class="btn btn-cyber btn-sm">
+                                <i class="bi bi-play-circle me-1"></i> Начать
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Финальный экзамен -->
+            {% if course.final_exam and progress.percentage == 100 and not course_completed %}
+            <div class="final-exam-card">
+                <h4 class="cyber-text-warning mb-3">
+                    <i class="bi bi-patch-check me-2"></i>{{ course.final_exam.title }}
+                </h4>
+                <p class="cyber-text-muted mb-3">
+                    Поздравляем! Вы завершили все уроки курса. Теперь пройдите финальный экзамен для получения сертификата.
+                </p>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <small class="cyber-text-muted">Время</small>
+                        <div class="cyber-text">{{ course.final_exam.duration }} минут</div>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="cyber-text-muted">Вопросов</small>
+                        <div class="cyber-text">{{ course.final_exam.questions|length }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="cyber-text-muted">Проходной балл</small>
+                        <div class="cyber-text">{{ course.final_exam.passing_score }}%</div>
+                    </div>
+                </div>
+                <a href="{{ url_for('education.final_exam', course_id=course.id) }}" 
+                   class="btn btn-warning btn-lg">
+                    <i class="bi bi-pencil-square me-2"></i>Начать экзамен
+                </a>
+            </div>
+            {% elif course_completed %}
+            <div class="final-exam-card" style="border-color: var(--cyber-primary);">
+                <h4 class="cyber-text-primary mb-3">
+                    <i class="bi bi-trophy me-2"></i>Курс завершен!
+                </h4>
+                <p class="cyber-text-muted mb-3">
+                    Поздравляем! Вы успешно завершили этот курс. Ваши знания подтверждены.
+                </p>
+                <div class="completion-badge" style="font-size: 1.1rem;">
+                    <i class="bi bi-award me-2"></i>Сертификат готов
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Боковая панель -->
+        <div class="col-lg-4">
+            <!-- Прогресс -->
+            <div class="sidebar-card">
+                <h5 class="cyber-text mb-3">
+                    <i class="bi bi-graph-up me-2"></i>Ваш прогресс
+                </h5>
+                
+                {% if progress.percentage == 100 %}
+                <div class="alert alert-success cyber-border mb-3">
+                    <i class="bi bi-check-circle me-2"></i>
+                    Все уроки завершены!
+                </div>
+                {% elif progress.percentage > 0 %}
+                <div class="alert alert-info cyber-border mb-3">
+                    <i class="bi bi-clock-history me-2"></i>
+                    Курс в процессе изучения
+                </div>
+                {% else %}
+                <div class="alert alert-secondary cyber-border mb-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Начните обучение
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="cyber-subtext">Прогресс:</small>
+                        <small class="cyber-text">{{ progress.percentage }}%</small>
+                    </div>
+                    <div class="cyber-progress">
+                        <div class="cyber-progress-bar" style="width: {{ progress.percentage }}%"></div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <span class="cyber-subtext">Уроков завершено:</span>
+                    <span class="cyber-text">{{ progress.completed }}/{{ progress.total }}</span>
+                </div>
+            </div>
+
+            <!-- Информация о курсе -->
+            <div class="sidebar-card">
+                <h5 class="cyber-text mb-3">
+                    <i class="bi bi-info-circle me-2"></i>О курсе
+                </h5>
+                <ul class="requirements-list">
+                    <li>Уровень: {{ course.level }}</li>
+                    <li>Категория: {{ course.category }}</li>
+                    <li>Студентов: {{ course.students_count }}</li>
+                    <li>Рейтинг: {{ course.rating }}/5</li>
+                    <li>Обновлен: Сегодня</li>
+                </ul>
+            </div>
+
+            <!-- Действия -->
+            <div class="sidebar-card">
+                <h5 class="cyber-text mb-3">
+                    <i class="bi bi-lightning me-2"></i>Действия
+                </h5>
+                {% if progress.percentage == 100 and not course_completed %}
+                <button class="btn btn-cyber w-100 mb-2" onclick="completeCourse('{{ course.id }}')">
+                    <i class="bi bi-check-circle me-2"></i>Завершить курс
+                </button>
+                {% endif %}
+                <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber-outline w-100">
+                    <i class="bi bi-arrow-left me-2"></i>К списку курсов
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function completeCourse(courseId) {
+    if (confirm('Вы уверены, что хотите отметить курс как завершенный?')) {
+        fetch('/education/api/complete-course', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                course_id: courseId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showCyberNotification('success', '🎉 Курс успешно завершен!');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                showCyberNotification('error', '❌ Ошибка при завершении курса');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showCyberNotification('error', '❌ Ошибка сети');
+        });
+    }
+}
+
+// Анимация прогресс-кольца
+document.addEventListener('DOMContentLoaded', function() {
+    const progressRing = document.querySelector('.course-progress-ring-fill');
+    if (progressRing) {
+        const progress = progressRing.style.strokeDashoffset;
+        progressRing.style.strokeDashoffset = '314';
+        setTimeout(() => {
+            progressRing.style.strokeDashoffset = progress;
+        }, 500);
+    }
+});
+</script>
 {% endblock %}

@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+
+{% block title %}Финальный экзамен - {{ course.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.exam-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.exam-question {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+}
+
+.exam-question:hover {
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+}
+
+.exam-option {
+    background: rgba(30, 30, 30, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.exam-option:hover {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: var(--cyber-primary);
+    transform: translateX(10px);
+}
+
+.exam-option.selected {
+    background: rgba(0, 255, 136, 0.2);
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.exam-progress {
+    position: sticky;
+    top: 0;
+    background: var(--cyber-darker);
+    padding: 1rem;
+    border-bottom: 2px solid var(--cyber-border);
+    z-index: 100;
+}
+
+.timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+    text-align: center;
+}
+
+.requirements {
+    background: rgba(255, 193, 7, 0.1);
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Хлебные крошки -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb cyber-border">
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('education.education_home') }}" class="cyber-link">
+                    <i class="bi bi-book me-1"></i>Обучение
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('education.course_detail', course_id=course.id) }}" class="cyber-link">
+                    {{ course.title }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active cyber-text-primary">{{ exam.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="exam-container">
+        <!-- Заголовок экзамена -->
+        <div class="text-center mb-5">
+            <h1 class="cyber-title mb-3">
+                <i class="bi bi-patch-check-fill me-3"></i>{{ exam.title }}
+            </h1>
+            <p class="cyber-text-muted">Проверьте свои знания по всему курсу</p>
+        </div>
+
+        <!-- Требования -->
+        <div class="requirements">
+            <h5 class="text-warning mb-3">
+                <i class="bi bi-exclamation-triangle me-2"></i>Требования к экзамену
+            </h5>
+            <ul class="mb-0">
+                <li>Минимальный проходной балл: <strong>70%</strong></li>
+                <li>Время на выполнение: <strong>60 минут</strong></li>
+                <li>Количество вопросов: <strong>{{ exam.questions|length }}</strong></li>
+                <li>Все вопросы обязательны для ответа</li>
+            </ul>
+        </div>
+
+        <!-- Прогресс и таймер -->
+        <div class="exam-progress">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="progress cyber-progress">
+                        <div class="progress-bar cyber-bg-primary" role="progressbar" 
+                             id="progressBar" style="width: 0%">
+                            <span id="progressText">0/{{ exam.questions|length }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="timer">
+                        <i class="bi bi-clock me-2"></i>
+                        <span id="timer">60:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Форма экзамена -->
+        <form id="examForm">
+            <input type="hidden" name="course_id" value="{{ course.id }}">
+            
+            {% for question in exam.questions %}
+            <div class="exam-question" id="question-{{ loop.index0 }}" 
+                 {% if loop.index0 > 0 %}style="display: none;"{% endif %}>
+                <h4 class="cyber-text-primary mb-4">
+                    Вопрос {{ loop.index }} из {{ exam.questions|length }}
+                </h4>
+                
+                <p class="question-text mb-4">{{ question.question }}</p>
+                
+                <div class="options-container">
+                    {% for option in question.options %}
+                    <div class="exam-option" onclick="selectOption(this, {{ loop.index0 }})">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" 
+                                   name="question-{{ loop.index0 }}" 
+                                   id="option-{{ loop.index0 }}-{{ loop.parentloop.index0 }}"
+                                   value="{{ loop.index0 }}" style="display: none;">
+                            <label class="form-check-label w-100" 
+                                   for="option-{{ loop.index0 }}-{{ loop.parentloop.index0 }}">
+                                {{ option }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Навигация -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-cyber-outline" id="prevBtn" 
+                        onclick="prevQuestion()" style="display: none;">
+                    <i class="bi bi-arrow-left me-2"></i>Назад
+                </button>
+                
+                <button type="button" class="btn btn-cyber-primary ms-auto" id="nextBtn"
+                        onclick="nextQuestion()">
+                    Далее<i class="bi bi-arrow-right ms-2"></i>
+                </button>
+                
+                <button type="button" class="btn btn-cyber-success" id="submitBtn"
+                        onclick="submitExam()" style="display: none;">
+                    <i class="bi bi-send-check me-2"></i>Завершить экзамен
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentQuestion = 0;
+let totalQuestions = {{ exam.questions|length }};
+let answers = new Array(totalQuestions).fill(null);
+let timeLeft = 60 * 60; // 60 минут в секундах
+
+// Таймер
+function updateTimer() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    document.getElementById('timer').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft <= 0) {
+        submitExam();
+    } else {
+        timeLeft--;
+    }
+}
+
+setInterval(updateTimer, 1000);
+
+// Обновление прогресса
+function updateProgress() {
+    const answered = answers.filter(a => a !== null).length;
+    const progress = (answered / totalQuestions) * 100;
+    
+    document.getElementById('progressBar').style.width = `${progress}%`;
+    document.getElementById('progressText').textContent = `${answered}/${totalQuestions}`;
+}
+
+// Выбор варианта ответа
+function selectOption(element, optionIndex) {
+    const questionElement = element.closest('.exam-question');
+    const options = questionElement.querySelectorAll('.exam-option');
+    
+    options.forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+    
+    answers[currentQuestion] = optionIndex;
+    updateProgress();
+}
+
+// Навигация по вопросам
+function showQuestion(index) {
+    document.querySelectorAll('.exam-question').forEach(q => q.style.display = 'none');
+    document.getElementById(`question-${index}`).style.display = 'block';
+    
+    // Обновляем кнопки навигации
+    document.getElementById('prevBtn').style.display = index > 0 ? 'block' : 'none';
+    document.getElementById('nextBtn').style.display = index < totalQuestions - 1 ? 'block' : 'none';
+    document.getElementById('submitBtn').style.display = index === totalQuestions - 1 ? 'block' : 'none';
+}
+
+function nextQuestion() {
+    if (currentQuestion < totalQuestions - 1) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+    }
+}
+
+// Отправка экзамена
+async function submitExam() {
+    if (answers.some(a => a === null)) {
+        if (!confirm('Вы ответили не на все вопросы. Вы уверены, что хотите завершить экзамен?')) {
+            return;
+        }
+    }
+    
+    try {
+        const response = await fetch('{{ url_for("education.submit_final_exam") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                course_id: '{{ course.id }}',
+                answers: answers
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            if (result.passed) {
+                showCyberNotification('success', 
+                    `🎉 Поздравляем! Вы сдали экзамен с результатом ${result.score}%`);
+            } else {
+                showCyberNotification('warning',
+                    `📚 Вы набрали ${result.score}%. Для сдачи необходимо 70%. Попробуйте еще раз!`);
+            }
+            
+            // Перенаправляем на страницу курса через 3 секунды
+            setTimeout(() => {
+                window.location.href = '{{ url_for("education.course_detail", course_id=course.id) }}';
+            }, 3000);
+        } else {
+            showCyberNotification('error', 'Ошибка при отправке экзамена');
+        }
+    } catch (error) {
+        showCyberNotification('error', 'Ошибка сети при отправке экзамена');
+    }
+}
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', function() {
+    updateProgress();
+});
+</script>
+{% endblock %}
+[file content end]
+
+# [file name]: achievements.html
+[file content begin]
+{% extends "base.html" %}
+
+{% block title %}Мои достижения - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.achievement-card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.achievement-card:hover {
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    transform: translateY(-5px);
+}
+
+.achievement-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.progress-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.progress-ring-circle {
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.progress-ring-bg {
+    fill: none;
+    stroke: var(--cyber-border);
+    stroke-width: 8;
+}
+
+.progress-ring-fill {
+    fill: none;
+    stroke: var(--cyber-primary);
+    stroke-width: 8;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 314;
+    transition: stroke-dashoffset 1s ease;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+    margin-bottom: 0.5rem;
+}
+
+.completion-badge {
+    background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
+    color: var(--cyber-darker);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок -->
+    <div class="text-center mb-5">
+        <h1 class="cyber-title mb-3">
+            <i class="bi bi-trophy-fill me-3"></i>Мои достижения
+        </h1>
+        <p class="cyber-text-muted">Отслеживайте ваш прогресс в обучении кибербезопасности</p>
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ completed_count }}</div>
+            <div class="cyber-text-muted">Завершено курсов</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_courses }}</div>
+            <div class="cyber-text-muted">Всего курсов</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">
+                {{ ((completed_count / total_courses) * 100)|round|int if total_courses > 0 else 0 }}%
+            </div>
+            <div class="cyber-text-muted">Общий прогресс</div>
+        </div>
+    </div>
+
+    <!-- Прогресс по курсам -->
+    <h3 class="cyber-subtitle mb-4">
+        <i class="bi bi-graph-up me-2"></i>Прогресс обучения
+    </h3>
+
+    {% for course_id, course in courses.items() %}
+    <div class="achievement-card">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <div class="achievement-icon">
+                    <i class="bi {{ course.icon }} cyber-text-primary"></i>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <h4 class="cyber-text-primary mb-2">{{ course.title }}</h4>
+                <p class="cyber-text-muted mb-3">{{ course.description }}</p>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge cyber-bg-{{ course.difficulty }}">{{ course.difficulty }}</span>
+                    <span class="cyber-text-muted">
+                        <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="col-md-2 text-center">
+                {% set course_completed = completions[course_id] %}
+                {% if course_completed %}
+                    {% set completion = completed_courses|selectattr("course_id", "equalto", course_id)|first %}
+                    <div class="completion-badge">
+                        <i class="bi bi-check-lg me-1"></i>Сдан
+                    </div>
+                    <small class="cyber-text-muted mt-2 d-block">
+                        Оценка: {{ completion.final_score }}%
+                    </small>
+                {% else %}
+                    {% set progress = progress[course_id] %}
+                    <div class="progress-ring">
+                        <svg class="progress-ring-circle" width="120" height="120">
+                            <circle class="progress-ring-bg" cx="60" cy="60" r="50"></circle>
+                            <circle class="progress-ring-fill" cx="60" cy="60" r="50" 
+                                    style="stroke-dashoffset: {{ 314 - (314 * progress.percentage / 100) }}"></circle>
+                        </svg>
+                        <div class="progress-text">{{ progress.percentage }}%</div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-2 text-end">
+                {% if course_completed %}
+                    <a href="{{ url_for('education.course_detail', course_id=course_id) }}" 
+                       class="btn btn-cyber-outline">
+                        <i class="bi bi-eye me-1"></i>Просмотр
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('education.course_detail', course_id=course_id) }}" 
+                       class="btn btn-cyber-primary">
+                        {% if progress[course_id].percentage > 0 %}
+                            <i class="bi bi-play-circle me-1"></i>Продолжить
+                        {% else %}
+                            <i class="bi bi-play-fill me-1"></i>Начать
+                        {% endif %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Мотивационное сообщение -->
+    {% if completed_count == total_courses and total_courses > 0 %}
+    <div class="text-center mt-5">
+        <div class="achievement-card" style="border-color: #ffd700;">
+            <h3 class="cyber-text-warning mb-3">
+                <i class="bi bi-award-fill me-2"></i>Поздравляем!
+            </h3>
+            <p class="cyber-text-muted mb-3">
+                Вы успешно завершили все доступные курсы по кибербезопасности!
+            </p>
+            <p class="cyber-text-primary">
+                Продолжайте практиковаться и следите за обновлениями новых курсов.
+            </p>
+        </div>
+    </div>
+    {% elif completed_count > 0 %}
+    <div class="text-center mt-4">
+        <p class="cyber-text-muted">
+            Вы завершили {{ completed_count }} из {{ total_courses }} курсов. 
+            Продолжайте в том же духе! 🚀
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+[file content end]
