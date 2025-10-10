@@ -8,6 +8,7 @@ from flask import send_file
 from datetime import datetime
 import json
 from io import BytesIO
+import re
 
 # Импортируем blueprint из __init__.py
 from . import encryption_bp
@@ -161,70 +162,77 @@ def file_encryption():
                     return jsonify({'error': 'Пароль обязателен'}), 400
                 
                 try:
-                    # Читаем stealth-файл и извлекаем данные
                     file_content = file.read()
-                    encrypted_text, algorithm, salt = EncryptionService.extract_from_stealth_file(file_content)
+                    encrypted_text, algorithm_code, salt = EncryptionService.extract_from_encrypted_file(file_content)
+                    print(f"🔍 Извлечено: код алгоритма={algorithm_code}")
                     
                 except Exception as e:
-                    return jsonify({'error': f'Неверный формат файла: {str(e)}'}), 400
+                    return jsonify({'error': f'Неверный формат файла'}), 400
                 
-                # Дешифруем
-                if algorithm.startswith('AES'):
-                    if not salt:
-                        return jsonify({'error': 'Для AES шифрования требуется соль'}), 400
-                    decrypted_text = EncryptionService.decrypt_aes(encrypted_text, password, salt)
-                elif algorithm.startswith('Caesar'):
-                    try:
-                        shift = int(algorithm.split('(')[1].split(')')[0].replace('shift', '').strip())
-                        decrypted_text = EncryptionService.caesar_cipher(encrypted_text, shift, False)
-                    except:
-                        return jsonify({'error': 'Неверный формат алгоритма Caesar'}), 400
-                elif algorithm == 'XOR':
-                    decrypted_text = EncryptionService.xor_cipher(encrypted_text, password)
-                else:
-                    return jsonify({'error': 'Неизвестный алгоритм шифрования'}), 400
+                # ДЕШИФРУЕМ ПО КОДОВЫМ СЛОВАМ
+                try:
+                    if algorithm_code == 'GIGA133':  # AES
+                        algorithm_name = 'AES'
+                        decrypted_text = EncryptionService.decrypt_aes(encrypted_text, password, salt)
+                    elif algorithm_code == 'COLSAW19':  # Caesar
+                        algorithm_name = 'Caesar (shift 3)'
+                        decrypted_text = EncryptionService.caesar_cipher(encrypted_text, 3, False)
+                    elif algorithm_code == 'SIGALW5':  # XOR
+                        algorithm_name = 'XOR'
+                        decrypted_text = EncryptionService.xor_cipher(encrypted_text, password)
+                    else:
+                        return jsonify({'error': f'Неизвестный код алгоритма: {algorithm_code}'}), 400
+                    
+                except Exception as e:
+                    return jsonify({'error': f'Ошибка дешифрования: {str(e)}'}), 400
                 
                 if current_user.is_authenticated:
-                    add_to_history(current_user.id, 'decrypt', algorithm, encrypted_text, decrypted_text)
+                    add_to_history(current_user.id, 'decrypt', algorithm_name, encrypted_text, decrypted_text)
                 
                 return jsonify({
                     'success': True,
                     'decrypted_text': decrypted_text,
-                    'algorithm': algorithm
+                    'algorithm': algorithm_name
                 })
             
-            # Обработка шифрования текста и скачивания
+            # ШИФРУЕМ
             elif request.form.get('action') == 'encrypt_and_download':
                 text = request.form.get('text', '').strip()
                 password = request.form.get('password', '').strip()
-                algorithm = request.form.get('algorithm', 'aes')
+                algorithm_type = request.form.get('algorithm', 'aes')
                 filename = request.form.get('filename', 'document').strip()
                 
                 if not text or not password:
                     return jsonify({'error': 'Текст и пароль обязательны'}), 400
                 
-                # Шифруем текст
-                if algorithm == 'aes':
+                # ШИФРУЕМ И СОЗДАЕМ КОДОВОЕ СЛОВО
+                if algorithm_type == 'aes':
                     result = EncryptionService.encrypt_aes(text, password)
                     encrypted_text = result['encrypted_text']
                     salt = result['salt']
+                    algorithm_code = 'GIGA133'  # Код для AES
                     algorithm_name = 'AES'
-                elif algorithm == 'caesar':
+                    
+                elif algorithm_type == 'caesar':
                     shift = int(request.form.get('shift', 3))
                     encrypted_text = EncryptionService.caesar_cipher(text, shift, True)
                     salt = ''
+                    algorithm_code = 'COLSAW19'  # Код для Caesar
                     algorithm_name = f'Caesar (shift {shift})'
-                elif algorithm == 'xor':
+                    
+                elif algorithm_type == 'xor':
                     encrypted_text = EncryptionService.xor_cipher(text, password)
                     salt = ''
+                    algorithm_code = 'SIGALW5'  # Код для XOR
                     algorithm_name = 'XOR'
+                    
                 else:
                     return jsonify({'error': 'Неизвестный алгоритм'}), 400
                 
-                # Создаем stealth-файл
-                file_content = EncryptionService.create_stealth_file(
+                # СОЗДАЕМ JSON ФАЙЛ С КОДОВЫМ СЛОВОМ
+                file_content = EncryptionService.create_encrypted_file(
                     encrypted_text, 
-                    algorithm_name, 
+                    algorithm_code,  # Передаем кодовое слово вместо названия
                     salt, 
                     f"{filename}.txt"
                 )
@@ -232,7 +240,6 @@ def file_encryption():
                 if current_user.is_authenticated:
                     add_to_history(current_user.id, 'encrypt', algorithm_name, text, encrypted_text)
                 
-                # Создаем файл для скачивания
                 output = BytesIO()
                 output.write(file_content)
                 output.seek(0)
@@ -240,11 +247,11 @@ def file_encryption():
                 return send_file(
                     output,
                     as_attachment=True,
-                    download_name=f"{filename}.txt",  # Обычный .txt файл!
-                    mimetype='text/plain'
+                    download_name=f"{filename}.cyber",
+                    mimetype='application/json'
                 )
                 
         except Exception as e:
-            return jsonify({'error': f'Ошибка обработки файла: {str(e)}'}), 500
+            return jsonify({'error': f'Ошибка: {str(e)}'}), 500
     
     return render_template('encryption/file.html')
