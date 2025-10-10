@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обучение - CyberGuardian</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --cyber-darker: #0a0a0f;
+            --cyber-dark: #111122;
+            --cyber-border: #1a1a2e;
+            --cyber-primary: #00ff88;
+            --cyber-secondary: #0088ff;
+            --cyber-subtext: #8899aa;
+            --cyber-text: #e0e0ff;
+        }
+
+        body {
+            background-color: var(--cyber-darker);
+            color: var(--cyber-text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .cyber-title {
+            color: var(--cyber-primary);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            font-weight: 700;
+        }
+
+        .cyber-text {
+            color: var(--cyber-text);
+        }
+
+        .cyber-subtext {
+            color: var(--cyber-subtext);
+        }
+
+        .cyber-border {
+            border-color: var(--cyber-border) !important;
+        }
+
+        .cyber-badge {
+            background: rgba(30, 30, 45, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .bg-primary { background: rgba(0, 255, 136, 0.15) !important; border-color: var(--cyber-primary) !important; }
+        .bg-secondary { background: rgba(136, 136, 255, 0.15) !important; border-color: #8888ff !important; }
+        .bg-info { background: rgba(0, 136, 255, 0.15) !important; border-color: var(--cyber-secondary) !important; }
+        .bg-dark { background: rgba(30, 30, 45, 0.8) !important; border-color: var(--cyber-border) !important; }
+
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
+            border: none;
+            color: var(--cyber-darker);
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-cyber:hover::before {
+            left: 100%;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-cyber-outline {
+            background: transparent;
+            border: 2px solid var(--cyber-primary);
+            color: var(--cyber-primary);
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cyber-outline:hover {
+            background: var(--cyber-primary);
+            color: var(--cyber-darker);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .cyber-progress {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--cyber-border);
+        }
+
+        .cyber-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-primary), #00cc88);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .learning-hero {
+            background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
+            padding: 4rem 0;
+            border-bottom: 2px solid var(--cyber-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .learning-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff88' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .course-card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid var(--cyber-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .course-card:hover::before {
+            left: 100%;
+        }
+
+        .course-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.15);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-darker);
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .difficulty-beginner {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--cyber-primary);
+            border: 1px solid var(--cyber-primary);
+        }
+
+        .difficulty-intermediate {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .difficulty-advanced {
+            background: rgba(255, 0, 68, 0.15);
+            color: #ff0044;
+            border: 1px solid #ff0044;
+        }
+
+        .progress-section {
+            margin-top: 1.5rem;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--cyber-subtext);
+        }
+
+        .progress-percent {
+            font-weight: bold;
+            color: var(--cyber-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--cyber-primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--cyber-subtext);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-courses {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
+            border-radius: 2px;
+        }
+
+        .learning-pathways {
+            background: rgba(20, 20, 20, 0.6);
+            border: 2px solid var(--cyber-border);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .pathway-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            border: 1px solid var(--cyber-border);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .pathway-item:hover {
+            border-color: var(--cyber-primary);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .pathway-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .pathway-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: rgba(0, 255, 136, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 1.2rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .pathway-content {
+            flex-grow: 1;
+        }
+
+        .pathway-progress {
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .quick-action-card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quick-action-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.1);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            color: var(--cyber-primary);
+            margin-bottom: 1rem;
+        }
+
+        .recent-activity {
+            margin: 3rem 0;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--cyber-border);
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(0, 255, 136, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex-grow: 1;
+        }
+
+        .activity-time {
+            color: var(--cyber-subtext);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .course-header {
+                flex-direction: column;
+            }
+            
+            .course-icon {
+                margin-bottom: 1rem;
+            }
+            
+            .pathway-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .pathway-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .pathway-progress {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="learning-hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="cyber-title glow-text mb-3">
+                        <i class="bi bi-book me-3"></i>Центр обучения
+                    </h1>
+                    <p class="cyber-subtext lead mb-4">
+                        Освойте современные навыки кибербезопасности через практические курсы и реальные сценарии. 
+                        Станьте востребованным специалистом в области информационной безопасности.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="#courses" class="btn btn-cyber btn-lg">
+                            <i class="bi bi-play-circle me-2"></i>Начать обучение
+                        </a>
+                        <a href="#pathways" class="btn btn-cyber-outline btn-lg">
+                            <i class="bi bi-compass me-2"></i>Выбрать путь
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div class="hero-graphic">
+                        <i class="bi bi-shield-lock" style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.8;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Статистика обучения -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Активных курса</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">42%</span>
+                <span class="stat-label">Общий прогресс</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">15</span>
+                <span class="stat-label">Завершенных уроков</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">2</span>
+                <span class="stat-label">Полученных сертификата</span>
+            </div>
+        </div>
+
+        <!-- Быстрые действия -->
+        <div class="quick-actions">
+            <div class="quick-action-card" onclick="location.href='/education/certificates'">
+                <div class="quick-action-icon">
+                    <i class="bi bi-award"></i>
+                </div>
+                <h5 class="cyber-text">Мои сертификаты</h5>
+                <p class="cyber-subtext small">Просмотр полученных сертификатов</p>
+            </div>
+            <div class="quick-action-card" onclick="location.href='/education/achievements'">
+                <div class="quick-action-icon">
+                    <i class="bi bi-trophy"></i>
+                </div>
+                <h5 class="cyber-text">Достижения</h5>
+                <p class="cyber-subtext small">Мои значки и награды</p>
+            </div>
+            <div class="quick-action-card" onclick="location.href='#recent-activity'">
+                <div class="quick-action-icon">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <h5 class="cyber-text">История обучения</h5>
+                <p class="cyber-subtext small">Последняя активность</p>
+            </div>
+        </div>
+
+        <!-- Рекомендуемые курсы -->
+        <section class="featured-courses" id="courses">
+            <h2 class="section-title cyber-text">
+                <i class="bi bi-stars me-2"></i>Рекомендуемые курсы
+            </h2>
+            
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="cyber-text mb-2">Основы кибербезопасности</h4>
+                            <p class="cyber-subtext small">Полный курс по основам кибербезопасности для начинающих. Изучите фундаментальные концепции...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-meta">
+                        <span class="difficulty-badge difficulty-beginner">
+                            <i class="bi bi-shield-check"></i>
+                            Beginner
+                        </span>
+                        <span class="cyber-badge bg-secondary">
+                            <i class="bi bi-clock"></i> 40 часов
+                        </span>
+                        <span class="cyber-badge bg-info">
+                            <i class="bi bi-star-fill"></i> 4.8
+                        </span>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span class="progress-text">Прогресс курса</span>
+                            <span class="progress-percent">65%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="/education/course/cybersecurity-fundamentals" class="btn btn-cyber">
+                            <i class="bi bi-play-circle me-2"></i>Продолжить
+                        </a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-icon">
+                            <i class="bi bi-shield-exclamation"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="cyber-text mb-2">Этичный хакинг и тестирование на проникновение</h4>
+                            <p class="cyber-subtext small">Освойте методы этичного хакинга для поиска и устранения уязвимостей в системах...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-meta">
+                        <span class="difficulty-badge difficulty-intermediate">
+                            <i class="bi bi-shield-exclamation"></i>
+                            Intermediate
+                        </span>
+                        <span class="cyber-badge bg-secondary">
+                            <i class="bi bi-clock"></i> 60 часов
+                        </span>
+                        <span class="cyber-badge bg-info">
+                            <i class="bi bi-star-fill"></i> 4.9
+                        </span>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span class="progress-text">Прогресс курса</span>
+                            <span class="progress-percent">30%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="/education/course/ethical-hacking" class="btn btn-cyber">
+                            <i class="bi bi-play-circle me-2"></i>Продолжить
+                        </a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-icon">
+                            <i class="bi bi-shield-fill"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="cyber-text mb-2">Компьютерная криминалистика и расследование инцидентов</h4>
+                            <p class="cyber-subtext small">Научитесь проводить цифровые расследования, собирать доказательства и анализировать киберинциденты...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-meta">
+                        <span class="difficulty-badge difficulty-advanced">
+                            <i class="bi bi-shield-fill"></i>
+                            Advanced
+                        </span>
+                        <span class="cyber-badge bg-secondary">
+                            <i class="bi bi-clock"></i> 80 часов
+                        </span>
+                        <span class="cyber-badge bg-info">
+                            <i class="bi bi-star-fill"></i> 4.7
+                        </span>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span class="progress-text">Прогресс курса</span>
+                            <span class="progress-percent">15%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 15%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="/education/course/digital-forensics" class="btn btn-cyber">
+                            <i class="bi bi-play-circle me-2"></i>Продолжить
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Все курсы -->
+        <section id="all-courses">
+            <h2 class="section-title cyber-text">
+                <i class="bi bi-collection me-2"></i>Все курсы
+            </h2>
+            
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="cyber-text mb-2">Основы кибербезопасности</h4>
+                            <p class="cyber-subtext small">Полный курс по основам кибербезопасности для начинающих. Изучите фундаментальные концепции, инструменты и методы защиты информации...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-meta">
+                        <span class="difficulty-badge difficulty-beginner">
+                            Beginner
+                        </span>
+                        <span class="cyber-badge bg-dark">
+                            <i class="bi bi-people"></i> 15420
+                        </span>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span class="progress-text">Прогресс</span>
+                            <span class="progress-percent">65%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="/education/course/cybersecurity-fundamentals" class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            Продолжить
+                        </a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-icon">
+                            <i class="bi bi-shield-exclamation"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="cyber-text mb-2">Этичный хакинг и тестирование на проникновение</h4>
+                            <p class="cyber-subtext small">Освойте методы этичного хакинга для поиска и устранения уязвимостей в системах. Практические навыки тестирования на проникновение...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-meta">
+                        <span class="difficulty-badge difficulty-intermediate">
+                            Intermediate
+                        </span>
+                        <span class="cyber-badge bg-dark">
+                            <i class="bi bi-people"></i> 8920
+                        </span>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span class="progress-text">Прогресс</span>
+                            <span class="progress-percent">30%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="/education/course/ethical-hacking" class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            Продолжить
+                        </a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <div class="course-icon">
+                            <i class="bi bi-shield-fill"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="cyber-text mb-2">Компьютерная криминалистика и расследование инцидентов</h4>
+                            <p class="cyber-subtext small">Научитесь проводить цифровые расследования, собирать доказательства и анализировать киберинциденты. Профессиональные инструменты и методики...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-meta">
+                        <span class="difficulty-badge difficulty-advanced">
+                            Advanced
+                        </span>
+                        <span class="cyber-badge bg-dark">
+                            <i class="bi bi-people"></i> 5230
+                        </span>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span class="progress-text">Прогресс</span>
+                            <span class="progress-percent">15%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 15%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="/education/course/digital-forensics" class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            Продолжить
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Пути обучения -->
+        <section class="learning-pathways" id="pathways">
+            <h2 class="section-title cyber-text">
+                <i class="bi bi-signpost-2 me-2"></i>Пути обучения
+            </h2>
+            
+            <div class="pathway-list">
+                <div class="pathway-item">
+                    <div class="pathway-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="pathway-content">
+                        <h5 class="cyber-text mb-2">Начинающий специалист</h5>
+                        <p class="cyber-subtext small mb-0">
+                            Основы кибербезопасности для новичков. Идеально для начала карьеры в ИБ.
+                        </p>
+                    </div>
+                    <div class="pathway-progress">
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 65%"></div>
+                        </div>
+                        <small class="cyber-subtext">65% завершено</small>
+                    </div>
+                </div>
+                
+                <div class="pathway-item">
+                    <div class="pathway-icon">
+                        <i class="bi bi-bug"></i>
+                    </div>
+                    <div class="pathway-content">
+                        <h5 class="cyber-text mb-2">Этичный хакинг</h5>
+                        <p class="cyber-subtext small mb-0">
+                            Методы тестирования на проникновение и поиска уязвимостей.
+                        </p>
+                    </div>
+                    <div class="pathway-progress">
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 30%"></div>
+                        </div>
+                        <small class="cyber-subtext">30% завершено</small>
+                    </div>
+                </div>
+                
+                <div class="pathway-item">
+                    <div class="pathway-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <div class="pathway-content">
+                        <h5 class="cyber-text mb-2">Цифровая криминалистика</h5>
+                        <p class="cyber-subtext small mb-0">
+                            Расследование киберинцидентов и сбор цифровых доказательств.
+                        </p>
+                    </div>
+                    <div class="pathway-progress">
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 15%"></div>
+                        </div>
+                        <small class="cyber-subtext">15% завершено</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Недавняя активность -->
+        <section class="recent-activity" id="recent-activity">
+            <h2 class="section-title cyber-text">
+                <i class="bi bi-activity me-2"></i>Недавняя активность
+            </h2>
+            
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6 class="cyber-text mb-1">Завершен урок "Основы сетевой безопасности"</h6>
+                        <p class="cyber-subtext small mb-0">Курс: Основы кибербезопасности</p>
+                    </div>
+                    <div class="activity-time">
+                        2 часа назад
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="bi bi-patch-question"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6 class="cyber-text mb-1">Пройден тест "Типы кибератак"</h6>
+                        <p class="cyber-subtext small mb-0">Результат: 85%</p>
+                    </div>
+                    <div class="activity-time">
+                        Вчера, 14:30
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="bi bi-play-circle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6 class="cyber-text mb-1">Начат модуль "Методы социальной инженерии"</h6>
+                        <p class="cyber-subtext small mb-0">Курс: Этичный хакинг</p>
+                    </div>
+                    <div class="activity-time">
+                        2 дня назад
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
