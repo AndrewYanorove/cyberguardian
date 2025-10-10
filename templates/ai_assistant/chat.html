@@ -4,19 +4,143 @@
 
 {% block extra_css %}
 <style>
-/* Чат - максимально простой и большой */
-.chat-container {
-    height: 75vh; /* Большой чат */
+.chat-interface {
     display: flex;
-    flex-direction: column;
-    background: rgba(20, 20, 20, 0.9);
+    height: 85vh;
+    background: rgba(15, 15, 15, 0.95);
     border: 2px solid var(--cyber-border);
     border-radius: 15px;
     overflow: hidden;
-    margin-bottom: 1rem;
 }
 
-/* Область сообщений - максимум пространства */
+/* Сайдбар */
+.chat-sidebar {
+    width: 260px;
+    background: rgba(15, 15, 15, 0.95);
+    border-right: 1px solid var(--cyber-border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--cyber-border);
+}
+
+.btn-new-chat {
+    width: 100%;
+    background: var(--cyber-primary);
+    border: none;
+    color: black;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-new-chat:hover {
+    background: var(--cyber-secondary);
+    transform: translateY(-1px);
+}
+
+.chat-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.chat-item {
+    padding: 0.8rem 1rem;
+    margin: 0.2rem 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.chat-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.chat-item.active {
+    background: rgba(0, 136, 255, 0.15);
+    border-color: var(--cyber-secondary);
+}
+
+.chat-title {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-preview {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    opacity: 0.6;
+    margin-top: 0.3rem;
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--cyber-border);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--cyber-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+/* Окно чата */
+.chat-window {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chat-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--cyber-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(20, 20, 20, 0.9);
+}
+
+.chat-title-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--cyber-primary);
+}
+
 .chat-messages {
     flex: 1;
     overflow-y: auto;
@@ -26,7 +150,6 @@
     gap: 1rem;
 }
 
-/* Сообщения */
 .message {
     max-width: 85%;
     padding: 1rem 1.5rem;
@@ -55,14 +178,12 @@
     white-space: pre-wrap;
 }
 
-/* ОБЛАСТЬ ВВОДА - ПРОСТО И ЯСНО */
 .chat-input-container {
     padding: 1.5rem;
     border-top: 1px solid var(--cyber-border);
     background: rgba(10, 10, 10, 0.95);
 }
 
-/* Поле ввода - большое и заметное */
 .form-control.cyber-input {
     padding: 1rem 1.2rem;
     font-size: 1rem;
@@ -70,7 +191,6 @@
     height: auto;
 }
 
-/* Кнопка отправки */
 .btn-cyber {
     padding: 1rem 1.5rem;
     font-size: 1rem;
@@ -78,7 +198,6 @@
     margin-left: 0.5rem;
 }
 
-/* Индикатор набора */
 .typing-indicator {
     display: none;
     align-self: flex-start;
@@ -87,6 +206,7 @@
     border: 1px solid var(--cyber-primary);
     border-radius: 15px;
     border-bottom-left-radius: 5px;
+    margin: 0 1.5rem 0.5rem 1.5rem;
 }
 
 .typing-dots {
@@ -110,7 +230,6 @@
     animation-delay: 0.4s;
 }
 
-/* Статистика - маленькая и ненавязчивая */
 .usage-stats {
     background: rgba(255, 193, 7, 0.1);
     border: 1px solid #ffc107;
@@ -121,7 +240,22 @@
     font-size: 0.9rem;
 }
 
-/* Анимации */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 2rem;
+    opacity: 0.7;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
 @keyframes messageSlide {
     from {
         opacity: 0;
@@ -144,7 +278,6 @@
     }
 }
 
-/* Скроллбар */
 .chat-messages::-webkit-scrollbar {
     width: 6px;
 }
@@ -162,68 +295,93 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
             <!-- Заголовок -->
             <div class="text-center mb-4">
                 <h1 class="cyber-text glow-text mb-3">
                     <i class="bi bi-robot me-2"></i>GigaChat помощник по кибербезопасности
                 </h1>
+                <p class="cyber-subtext">Создавайте несколько чатов для разных тем</p>
             </div>
 
-            <!-- Статистика использования -->
+            <!-- Статистика -->
             <div class="usage-stats" id="usageStats" style="display: none;">
-                <div class="stats-container">
-                    <small class="text-muted">
-                        📊 Запросов: <span id="totalRequests">0</span> | 
-                        💾 Кэш: <span id="cacheHits">0</span> | 
-                        🪙 Токенов: <span id="tokensUsed">0</span>
-                    </small>
-                </div>
+                <small class="text-muted">
+                    📊 Запросов: <span id="totalRequests">0</span> | 
+                    💾 Кэш: <span id="cacheHits">0</span> | 
+                    🪙 Токенов: <span id="tokensUsed">0</span>
+                </small>
             </div>
 
-            <!-- ЧАТ - ТОЛЬКО СООБЩЕНИЯ И ВВОД -->
-            <div class="chat-container">
-                <!-- Область сообщений -->
-                <div class="chat-messages" id="chatMessages">
-                    <!-- Сообщения будут здесь -->
-                </div>
-
-                <!-- Индикатор набора -->
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="typing-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+            <!-- Основной интерфейс -->
+            <div class="chat-interface">
+                <!-- Сайдбар с чатами -->
+                <div class="chat-sidebar">
+                    <div class="sidebar-header">
+                        <button class="btn btn-new-chat" id="newChatBtn">
+                            <i class="bi bi-plus-lg"></i> Новый чат
+                        </button>
+                    </div>
+                    
+                    <div class="chat-list" id="chatList">
+                        <!-- Список чатов будет здесь -->
+                    </div>
+                    
+                    <div class="sidebar-footer">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <div class="user-name">Кибер-Специалист</div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- ОБЛАСТЬ ВВОДА - БЕЗ ПОДСКАЗОК, ПРОСТО ПОЛЕ И КНОПКА -->
-                <div class="chat-input-container">
-                    <form id="chatForm">
-                        <div class="input-group">
-                            <input type="text" class="form-control cyber-input" 
-                                   id="messageInput" 
-                                   placeholder="Введите ваш вопрос..."
-                                   autocomplete="off"
-                                   maxlength="1000">
-                            <button type="submit" class="btn btn-cyber" id="sendButton">
-                                <i class="bi bi-send"></i>
+                
+                <!-- Окно чата -->
+                <div class="chat-window">
+                    <div class="chat-header">
+                        <div class="chat-title-header" id="currentChatTitle">
+                            <i class="bi bi-robot"></i> Новый чат
+                        </div>
+                        <div class="chat-actions">
+                            <button class="btn btn-sm btn-outline-cyber" onclick="clearCurrentChat()">
+                                <i class="bi bi-trash"></i>
                             </button>
                         </div>
-                    </form>
-                </div>
-            </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="empty-state">
+                            <i class="bi bi-stars"></i>
+                            <p>Выберите чат или создайте новый</p>
+                        </div>
+                    </div>
 
-            <!-- Управление - простые кнопки -->
-            <div class="text-center mt-3">
-                <button class="btn btn-sm btn-outline-cyber me-2" onclick="clearHistory()">
-                    <i class="bi bi-trash"></i> Очистить историю
-                </button>
-                <button class="btn btn-sm btn-outline-cyber" onclick="clearCache()">
-                    <i class="bi bi-arrow-clockwise"></i> Очистить кэш
-                </button>
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <form id="chatForm">
+                            <div class="input-group">
+                                <input type="text" class="form-control cyber-input" 
+                                       id="messageInput" 
+                                       placeholder="Введите ваш вопрос..."
+                                       autocomplete="off"
+                                       maxlength="1000">
+                                <button type="submit" class="btn btn-cyber" id="sendButton">
+                                    <i class="bi bi-send"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -232,11 +390,151 @@
 
 {% block extra_js %}
 <script>
-// Убрал ВСЕ функции связанные с быстрыми вопросами
+let currentChatId = null;
+let chats = [];
+let isCreatingChat = false;
+
+// Загрузка списка чатов
+async function loadChats() {
+    try {
+        const response = await fetch('/ai/chats');
+        const data = await response.json();
+        
+        if (data.chats) {
+            chats = data.chats;
+            renderChatList();
+            
+            // Если есть чаты, открываем первый
+            if (chats.length > 0 && !currentChatId) {
+                await openChat(chats[0].id);
+            }
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки чатов:', error);
+    }
+}
+
+// Отображение списка чатов
+function renderChatList() {
+    const chatList = document.getElementById('chatList');
+    chatList.innerHTML = '';
+    
+    if (chats.length === 0) {
+        chatList.innerHTML = `
+            <div class="empty-state">
+                <i class="bi bi-chat-dots"></i>
+                <p>Нет созданных чатов</p>
+            </div>
+        `;
+        return;
+    }
+    
+    chats.forEach(chat => {
+        const lastMessage = chat.messages.length > 0 ? 
+            chat.messages[chat.messages.length - 1].content : 'Нет сообщений';
+        
+        const chatItem = document.createElement('div');
+        chatItem.className = `chat-item ${chat.id === currentChatId ? 'active' : ''}`;
+        chatItem.onclick = () => openChat(chat.id);
+        
+        chatItem.innerHTML = `
+            <div class="chat-title">${escapeHtml(chat.title)}</div>
+            <div class="chat-preview">${escapeHtml(lastMessage.substring(0, 50))}...</div>
+            <div class="chat-meta">
+                <span>${formatDate(chat.updated_at)}</span>
+                <span>${chat.messages.length} сообщ.</span>
+            </div>
+        `;
+        
+        chatList.appendChild(chatItem);
+    });
+}
+
+// Создание нового чата
+async function createNewChat() {
+    if (isCreatingChat) return; // Защита от множественных кликов
+    
+    isCreatingChat = true;
+    try {
+        const response = await fetch('/ai/chats', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('✅ Чат создан:', data.chat_id);
+            await loadChats(); // Перезагружаем список
+            await openChat(data.chat_id); // Открываем новый чат
+            return data.chat_id;
+        } else {
+            console.error('❌ Ошибка создания чата:', data.error);
+            return null;
+        }
+    } catch (error) {
+        console.error('❌ Ошибка создания чата:', error);
+        return null;
+    } finally {
+        isCreatingChat = false;
+    }
+}
+
+// Открытие чата
+async function openChat(chatId) {
+    try {
+        const response = await fetch(`/ai/chats/${chatId}`);
+        const data = await response.json();
+        
+        if (data.chat) {
+            currentChatId = chatId;
+            document.getElementById('currentChatTitle').textContent = data.chat.title;
+            renderChatMessages(data.chat.messages);
+            renderChatList(); // Обновляем активный элемент в списке
+            
+            // Активируем поле ввода
+            document.getElementById('messageInput').focus();
+            
+            console.log('✅ Чат открыт:', chatId);
+        } else {
+            console.error('❌ Чат не найден:', chatId);
+        }
+    } catch (error) {
+        console.error('❌ Ошибка открытия чата:', error);
+    }
+}
+
+// Отображение сообщений чата
+function renderChatMessages(messages) {
+    const messagesContainer = document.getElementById('chatMessages');
+    messagesContainer.innerHTML = '';
+    
+    if (messages.length === 0) {
+        messagesContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="bi bi-stars"></i>
+                <p>Начните диалог с AI-помощником</p>
+            </div>
+        `;
+        return;
+    }
+    
+    messages.forEach(message => {
+        addMessage(message.content, message.role === 'user');
+    });
+}
 
 // Добавление сообщения в чат
 function addMessage(content, isUser = false) {
     const messagesContainer = document.getElementById('chatMessages');
+    
+    // Убираем empty-state если он есть
+    if (messagesContainer.querySelector('.empty-state')) {
+        messagesContainer.innerHTML = '';
+    }
+    
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user' : 'assistant'}`;
     
@@ -249,8 +547,6 @@ function addMessage(content, isUser = false) {
     
     // Прокрутка вниз
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    
-    return messageDiv;
 }
 
 // Показать/скрыть индикатор набора
@@ -262,28 +558,25 @@ function setTyping(typing) {
     }
 }
 
-// Обновление статистики
-async function updateUsageStats() {
-    try {
-        const response = await fetch('/ai/usage-stats');
-        const stats = await response.json();
-        
-        document.getElementById('totalRequests').textContent = stats.total_requests;
-        document.getElementById('cacheHits').textContent = stats.cached_responses;
-        document.getElementById('tokensUsed').textContent = stats.tokens_used;
-        
-        // Показываем статистику после нескольких запросов
-        if (stats.total_requests > 0) {
-            document.getElementById('usageStats').style.display = 'block';
-        }
-    } catch (error) {
-        console.error('Ошибка загрузки статистики:', error);
-    }
-}
-
 // Отправка сообщения
 async function sendMessage(message) {
     if (!message.trim()) return;
+    
+    let targetChatId = currentChatId;
+    
+    // Если нет активного чата, создаем новый
+    if (!targetChatId) {
+        console.log('🔄 Создаем новый чат для сообщения...');
+        targetChatId = await createNewChat();
+        
+        if (!targetChatId) {
+            addMessage('❌ Не удалось создать чат', false);
+            return;
+        }
+        
+        // Ждем немного чтобы чат точно создался
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
     
     // Добавляем сообщение пользователя
     addMessage(message, true);
@@ -295,7 +588,8 @@ async function sendMessage(message) {
     setTyping(true);
     
     try {
-        const response = await fetch('/ai/ask', {
+        console.log('📤 Отправляем сообщение в чат:', targetChatId);
+        const response = await fetch(`/ai/chats/${targetChatId}/ask`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -306,79 +600,128 @@ async function sendMessage(message) {
         const data = await response.json();
         
         if (data.response) {
+            console.log('✅ Получен ответ от AI');
             addMessage(data.response, false);
+            await loadChats(); // Обновляем список чатов
         } else if (data.error) {
+            console.error('❌ Ошибка от сервера:', data.error);
             addMessage(`❌ ${data.error}`, false);
-        } else {
-            addMessage('❌ Ошибка при получении ответа', false);
+            
+            // Если чат не найден, создаем новый
+            if (data.error.includes('не найден')) {
+                currentChatId = null;
+                await createNewChat();
+            }
         }
         
     } catch (error) {
-        console.error('Ошибка:', error);
-        addMessage('❌ Ошибка соединения. Проверьте интернет.', false);
+        console.error('❌ Ошибка сети:', error);
+        addMessage('❌ Ошибка соединения', false);
     } finally {
         setTyping(false);
         await updateUsageStats();
     }
 }
 
-// Очистка истории
-async function clearHistory() {
-    try {
-        const response = await fetch('/ai/clear-history', { method: 'POST' });
-        const data = await response.json();
-        
-        if (data.success) {
-            document.getElementById('chatMessages').innerHTML = '';
-            addMessage('🗑️ История чата очищена', false);
-        }
-    } catch (error) {
-        console.error('Ошибка очистки истории:', error);
-    }
-}
-
-// Очистка кэша
-async function clearCache() {
-    try {
-        const response = await fetch('/ai/clear-cache', { method: 'POST' });
-        const data = await response.json();
-        
-        if (data.success) {
-            addMessage('🔄 Кэш AI очищен', false);
-            await updateUsageStats();
-        }
-    } catch (error) {
-        console.error('Ошибка очистки кэша:', error);
-    }
-}
-
-// Обработка формы
-document.getElementById('chatForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const input = document.getElementById('messageInput');
-    const message = input.value.trim();
+// Очистка текущего чата
+async function clearCurrentChat() {
+    if (!currentChatId) return;
     
-    if (message) {
-        sendMessage(message);
+    if (confirm('Вы уверены, что хотите удалить этот чат?')) {
+        try {
+            const response = await fetch(`/ai/chats/${currentChatId}`, {
+                method: 'DELETE'
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                currentChatId = null;
+                document.getElementById('currentChatTitle').textContent = 'Новый чат';
+                document.getElementById('chatMessages').innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-stars"></i>
+                        <p>Выберите чат или создайте новый</p>
+                    </div>
+                `;
+                await loadChats();
+            }
+        } catch (error) {
+            console.error('Ошибка удаления чата:', error);
+        }
     }
-});
+}
 
-// Enter для отправки
-document.getElementById('messageInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+// Утилиты
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ru-RU');
+}
+
+async function updateUsageStats() {
+    try {
+        const response = await fetch('/ai/usage-stats');
+        const data = await response.json();
+        
+        if (data.error) {
+            console.error('❌ Ошибка статистики:', data.error);
+            return;
+        }
+        
+        document.getElementById('totalRequests').textContent = data.total_requests || 0;
+        document.getElementById('cacheHits').textContent = data.cached_responses || 0;
+        document.getElementById('tokensUsed').textContent = data.tokens_used || 0;
+        
+        if (data.total_requests > 0) {
+            document.getElementById('usageStats').style.display = 'block';
+        }
+    } catch (error) {
+        console.error('❌ Ошибка загрузки статистики:', error);
     }
-});
+}
 
-// Загрузка при старте
+// Обработчики событий
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Инициализация чата...');
+    
+    // Загружаем чаты и статистику
+    loadChats();
     updateUsageStats();
     
-    // Приветственное сообщение
-    setTimeout(() => {
-        addMessage('🤖 Привет! Я GigaChat помощник по кибербезопасности. Задавайте вопросы!', false);
-    }, 500);
+    // Обработчик кнопки нового чата
+    document.getElementById('newChatBtn').addEventListener('click', createNewChat);
+    
+    // Обработчик формы
+    document.getElementById('chatForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (message) {
+            console.log('📝 Отправка сообщения:', message);
+            sendMessage(message);
+        }
+    });
+    
+    // Enter для отправки
+    document.getElementById('messageInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+        }
+    });
+    
+    // Фокус на поле ввода при загрузке
+    document.getElementById('messageInput').focus();
 });
+
+// Делаем функции глобальными для кнопок
+window.clearCurrentChat = clearCurrentChat;
 </script>
 {% endblock %}

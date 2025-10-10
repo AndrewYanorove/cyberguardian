@@ -1,20 +1,100 @@
 from flask import render_template, request, jsonify, session
 from . import ai_bp
 from .gigachat_client import gigachat_client as ai_client
+from .chat_manager import chat_manager
 from .utils import SecurityUtils, ResponseFormatter
 import time
-import json
+import uuid
+
+def get_user_id():
+    """Генерирует ID пользователя на основе сессии"""
+    if 'user_id' not in session:
+        session['user_id'] = str(uuid.uuid4())
+    return session['user_id']
 
 @ai_bp.route('/')
 def ai_chat():
-    """Чат с ИИ-помощником по кибербезопасности"""
+    """Главная страница чата"""
     return render_template('ai_assistant/chat.html')
 
-@ai_bp.route('/ask', methods=['POST'])
-def ask_question():
-    """Задать вопрос ИИ с оптимизацией и защитой"""
+@ai_bp.route('/chats', methods=['GET'])
+def get_chats():
+    """Получить все чаты пользователя"""
     try:
-        # Проверка частоты запросов (не чаще 1 запроса в 2 секунды)
+        user_id = get_user_id()
+        chats = chat_manager.get_user_chats(user_id)
+        return jsonify({'chats': chats})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@ai_bp.route('/chats', methods=['POST'])
+def create_chat():
+    """Создать новый чат"""
+    try:
+        user_id = get_user_id()
+        chat_id = chat_manager.create_chat(user_id, "Новый чат")
+        
+        return jsonify({
+            'success': True, 
+            'chat_id': chat_id,
+            'message': 'Чат создан'
+        })
+    except Exception as e:
+        print(f"❌ Ошибка создания чата: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@ai_bp.route('/chats/<chat_id>', methods=['GET'])
+def get_chat(chat_id):
+    """Получить конкретный чат"""
+    try:
+        user_id = get_user_id()
+        chat = chat_manager.get_chat(chat_id)
+        
+        if not chat or chat['user_id'] != user_id:
+            return jsonify({'error': 'Чат не найден'}), 404
+        
+        return jsonify({'chat': chat})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@ai_bp.route('/chats/<chat_id>', methods=['DELETE'])
+def delete_chat(chat_id):
+    """Удалить чат"""
+    try:
+        user_id = get_user_id()
+        success = chat_manager.delete_chat(user_id, chat_id)
+        
+        if success:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'error': 'Чат не найден'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@ai_bp.route('/chats/<chat_id>/rename', methods=['POST'])
+def rename_chat(chat_id):
+    """Переименовать чат"""
+    try:
+        data = request.get_json()
+        new_title = data.get('title', '').strip()
+        
+        if not new_title:
+            return jsonify({'error': 'Название не может быть пустым'}), 400
+        
+        success = chat_manager.rename_chat(chat_id, new_title)
+        
+        if success:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'error': 'Чат не найден'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@ai_bp.route('/chats/<chat_id>/ask', methods=['POST'])
+def ask_question(chat_id):
+    """Задать вопрос в конкретном чате"""
+    try:
+        # Проверка частоты запросов
         if 'last_request' in session:
             elapsed = time.time() - session['last_request']
             if elapsed < 2:
@@ -37,66 +117,39 @@ def ask_question():
         if len(question) > 1000:
             return jsonify({'error': 'Слишком длинный вопрос (максимум 1000 символов)'}), 400
         
+        # Проверяем доступ к чату
+        user_id = get_user_id()
+        chat = chat_manager.get_chat(chat_id)
+        
+        if not chat or chat['user_id'] != user_id:
+            return jsonify({'error': 'Чат не найден'}), 404
+        
         # Очистка и проверка ввода
         sanitized_question = SecurityUtils.sanitize_input(question)
         
-        # Проверка на спам/флуд
-        if any(word in sanitized_question.lower() for word in [
-            'http://', 'https://', '[url]', 'спам', 'реклама', 'купить', 'продать'
-        ]):
-            return jsonify({'error': 'Сообщение содержит запрещенные элементы'}), 400
+        # Добавляем вопрос пользователя в чат
+        chat_manager.add_message(chat_id, 'user', sanitized_question)
         
         # Получаем ответ от AI
         start_time = time.time()
         response = ai_client.get_response(sanitized_question)
         processing_time = time.time() - start_time
         
-        # Форматируем ответ
+        # Добавляем ответ AI в чат
+        chat_manager.add_message(chat_id, 'assistant', response)
+        
+        # Форматируем ответ для отображения
         formatted_response = ResponseFormatter.format_ai_response(response)
-        
-        # Сохраняем в историю (ограниченный размер)
-        if 'chat_history' not in session:
-            session['chat_history'] = []
-        
-        chat_entry = {
-            'question': sanitized_question,
-            'response': response,
-            'timestamp': time.time(),
-            'processing_time': round(processing_time, 2)
-        }
-        
-        session['chat_history'].append(chat_entry)
-        
-        # Ограничиваем историю последними 20 сообщениями
-        if len(session['chat_history']) > 20:
-            session['chat_history'] = session['chat_history'][-20:]
         
         return jsonify({
             'response': formatted_response,
-            'processing_time': processing_time,
-            'complexity': SecurityUtils.detect_question_complexity(sanitized_question)
+            'processing_time': round(processing_time, 2),
+            'chat_id': chat_id
         })
         
     except Exception as e:
         print(f"❌ Ошибка в ask_question: {e}")
         return jsonify({'error': 'Внутренняя ошибка сервера'}), 500
-
-@ai_bp.route('/quick-questions')
-def quick_questions():
-    """Быстрые вопросы для новичков"""
-    questions = [
-        "Как создать надежный пароль?",
-        "Что такое двухфакторная аутентификация?",
-        "Как распознать фишинг-письмо?",
-        "Какие антивирусы самые надежные?",
-        "Как безопасно пользоваться публичным Wi-Fi?",
-        "Что делать если взломали аккаунт?",
-        "Как настроить VPN?",
-        "Что такое социальная инженерия?",
-        "Как защитить smartphone от взлома?",
-        "Какие привычки повышают кибербезопасность?"
-    ]
-    return jsonify({'questions': questions})
 
 @ai_bp.route('/usage-stats')
 def get_usage_stats():
@@ -115,31 +168,3 @@ def clear_cache():
         return jsonify({'success': True, 'message': 'Кэш очищен'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-@ai_bp.route('/history', methods=['GET'])
-def get_chat_history():
-    """Получить историю чата"""
-    try:
-        history = session.get('chat_history', [])
-        return jsonify({'history': history})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@ai_bp.route('/clear-history', methods=['POST'])
-def clear_history():
-    """Очистить историю чата"""
-    try:
-        session.pop('chat_history', None)
-        return jsonify({'success': True, 'message': 'История очищена'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@ai_bp.route('/demo-info')
-def demo_info():
-    """Информация о режиме работы"""
-    return jsonify({
-        'provider': 'GigaChat',
-        'optimized': True,
-        'caching_enabled': True,
-        'message': 'Используется оптимизированный GigaChat API с кэшированием'
-    })
