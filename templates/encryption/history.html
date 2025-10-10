@@ -2,12 +2,67 @@
 
 {% block title %}История шифрования - CyberGuardian{% endblock %}
 
+{% block extra_css %}
+<style>
+.history-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.back-btn {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.table-responsive {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.cyber-table th {
+    background: rgba(0, 255, 136, 0.1);
+    border-bottom: 2px solid var(--cyber-primary);
+}
+
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .back-btn {
+        position: static;
+        transform: none;
+        margin-bottom: 1rem;
+        display: block;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .history-header {
+        position: static;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <!-- Заголовок -->
-            <div class="text-center mb-5">
+            <!-- Заголовок с кнопкой назад -->
+            <div class="history-header">
+                <div class="back-btn">
+                    <a href="{{ url_for('encryption.encryption_tools') }}" class="btn btn-cyber-outline">
+                        <i class="bi bi-arrow-left me-2"></i>Назад
+                    </a>
+                </div>
+                
                 <h1 class="cyber-text glow-text mb-3">
                     <i class="bi bi-clock-history me-2"></i>История операций
                 </h1>
@@ -56,10 +111,10 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="text-center py-5">
+                <div class="empty-state">
                     <i class="bi bi-inbox display-1 text-muted"></i>
                     <p class="cyber-subtext mt-3">История операций пуста</p>
-                    <a href="{{ url_for('encryption.text_encryption') }}" class="btn btn-cyber mt-2">
+                    <a href="{{ url_for('encryption.file_encryption') }}" class="btn btn-cyber mt-2">
                         <i class="bi bi-lock me-2"></i>Начать шифрование
                     </a>
                 </div>

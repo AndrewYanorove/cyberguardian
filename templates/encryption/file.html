@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+
+{% block title %}Шифрование файлов - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.file-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.back-btn {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.upload-area {
+    border: 3px dashed var(--cyber-border);
+    border-radius: 15px;
+    padding: 3rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: rgba(20, 20, 20, 0.5);
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: var(--cyber-primary);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.upload-area.dragover {
+    border-color: var(--cyber-primary);
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.file-info {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-top: 1rem;
+    display: none;
+}
+
+.cyber-file {
+    background: rgba(20, 20, 20, 0.8);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.tab-content {
+    margin-top: 1rem;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .back-btn {
+        position: static;
+        transform: none;
+        margin-bottom: 1rem;
+        display: block;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .file-header {
+        position: static;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Заголовок с кнопкой назад -->
+            <div class="file-header">
+                <div class="back-btn">
+                    <a href="{{ url_for('encryption.encryption_tools') }}" class="btn btn-cyber-outline">
+                        <i class="bi bi-arrow-left me-2"></i>Назад
+                    </a>
+                </div>
+                
+                <h1 class="cyber-text glow-text mb-3">
+                    <i class="bi bi-file-lock me-2"></i>Шифрование файлов
+                </h1>
+                <p class="cyber-subtext">Шифруйте текст в файлы и расшифровывайте их обратно</p>
+            </div>
+
+            <!-- Навигация -->
+            <ul class="nav nav-cyber mb-4" id="fileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="encrypt-tab" data-bs-toggle="tab" 
+                            data-bs-target="#encrypt" type="button" role="tab">
+                        <i class="bi bi-lock me-2"></i>Зашифровать в файл
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="decrypt-tab" data-bs-toggle="tab" 
+                            data-bs-target="#decrypt" type="button" role="tab">
+                        <i class="bi bi-unlock me-2"></i>Расшифровать файл
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Контент вкладок -->
+            <div class="tab-content" id="fileTabsContent">
+                <!-- Вкладка шифрования -->
+                <div class="tab-pane fade show active" id="encrypt" role="tabpanel">
+                    <div class="cyber-file">
+                        <h4 class="cyber-text mb-4">
+                            <i class="bi bi-lock-fill me-2"></i>Создать зашифрованный файл
+                        </h4>
+                        
+                        <!-- Выбор алгоритма -->
+                        <div class="mb-4">
+                            <label class="form-label cyber-text">Алгоритм шифрования:</label>
+                            <select class="form-select cyber-input" id="encrypt-algorithm">
+                                <option value="aes">AES-256 (Надежный)</option>
+                                <option value="caesar">Caesar Cipher (Образовательный)</option>
+                                <option value="xor">XOR Cipher (Быстрый)</option>
+                            </select>
+                        </div>
+
+                        <!-- Опции для Caesar -->
+                        <div class="mb-3" id="caesar-options" style="display: none;">
+                            <label class="form-label cyber-text">Сдвиг:</label>
+                            <input type="number" class="form-control cyber-input" id="caesar-shift" value="3" min="1" max="25">
+                        </div>
+
+                        <!-- Имя файла -->
+                        <div class="mb-3">
+                            <label class="form-label cyber-text">Имя файла:</label>
+                            <input type="text" class="form-control cyber-input" id="filename" 
+                                   value="secret_message" placeholder="Введите имя файла">
+                        </div>
+
+                        <!-- Текст для шифрования -->
+                        <div class="mb-3">
+                            <label class="form-label cyber-text">Текст для шифрования:</label>
+                            <textarea class="form-control cyber-input" id="encrypt-text" 
+                                      rows="6" placeholder="Введите текст который хотите зашифровать..."></textarea>
+                        </div>
+
+                        <!-- Пароль -->
+                        <div class="mb-4">
+                            <label class="form-label cyber-text">Пароль:</label>
+                            <input type="password" class="form-control cyber-input" id="encrypt-password" 
+                                   placeholder="Введите пароль для шифрования">
+                        </div>
+
+                        <!-- Кнопка -->
+                        <button onclick="encryptAndDownload()" class="btn btn-cyber w-100">
+                            <i class="bi bi-download me-2"></i>Зашифровать и скачать
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Вкладка дешифрования -->
+                <div class="tab-pane fade" id="decrypt" role="tabpanel">
+                    <div class="cyber-file">
+                        <h4 class="cyber-text mb-4">
+                            <i class="bi bi-unlock-fill me-2"></i>Расшифровать файл
+                        </h4>
+                        
+                        <!-- Область загрузки -->
+                        <div class="upload-area" id="uploadArea">
+                            <i class="bi bi-cloud-arrow-up display-4 text-muted mb-3"></i>
+                            <h5 class="cyber-text">Перетащите файл сюда</h5>
+                            <p class="cyber-subtext">или нажмите для выбора</p>
+                            
+                            <!-- Скрытый input для выбора файла -->
+                            <input type="file" id="fileInput" accept=".txt,.text" style="display: none;">
+                            
+                            <button class="btn btn-cyber-outline mt-2" onclick="document.getElementById('fileInput').click()">
+                                <i class="bi bi-folder2-open me-2"></i>Выбрать файл
+                            </button>
+                        </div>
+
+                        <!-- Информация о файле -->
+                        <div class="file-info" id="fileInfo">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-file-text me-2"></i>
+                                    <span id="fileName"></span>
+                                </div>
+                                <button class="btn btn-sm btn-cyber-outline" onclick="clearFile()">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <small class="cyber-subtext" id="fileDetails"></small>
+                            </div>
+                        </div>
+
+                        <!-- Пароль для дешифровки -->
+                        <div class="mb-3">
+                            <label class="form-label cyber-text">Пароль для дешифровки:</label>
+                            <input type="password" class="form-control cyber-input" id="decrypt-password" 
+                                   placeholder="Введите пароль который использовался при шифровании">
+                        </div>
+
+                        <!-- Кнопка дешифровки -->
+                        <button onclick="decryptFile()" class="btn btn-cyber w-100" id="decryptBtn" disabled>
+                            <i class="bi bi-key me-2"></i>Расшифровать файл
+                        </button>
+
+                        <!-- Результат -->
+                        <div class="result-container mt-4" id="decryptResult" style="display: none;">
+                            <h5 class="cyber-text mb-3">
+                                <i class="bi bi-check-circle text-success me-2"></i>Файл расшифрован
+                            </h5>
+                            <div class="mb-3">
+                                <label class="form-label cyber-text">Исходный текст:</label>
+                                <div class="encrypted-text" id="decrypted-text"></div>
+                            </div>
+                            <button onclick="copyToClipboard('decrypted-text')" class="btn btn-cyber-outline">
+                                <i class="bi bi-clipboard me-2"></i>Копировать текст
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedFile = null;
+
+// Переключение алгоритмов
+document.getElementById('encrypt-algorithm').addEventListener('change', function() {
+    document.getElementById('caesar-options').style.display = 
+        this.value === 'caesar' ? 'block' : 'none';
+});
+
+// Drag & Drop функционал
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', function() {
+    uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFile(e.dataTransfer.files[0]);
+});
+
+fileInput.addEventListener('change', function(e) {
+    if (e.target.files[0]) {
+        handleFile(e.target.files[0]);
+    }
+});
+
+function handleFile(file) {
+    if (!file.name.endsWith('.cyber') && !file.name.endsWith('.json')) {
+        showNotification('Выберите файл с расширением .cyber или .json', 'warning');
+        return;
+    }
+
+    selectedFile = file;
+    
+    // Показываем информацию о файле
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileDetails').textContent = 
+        `Размер: ${(file.size / 1024).toFixed(2)} KB`;
+    document.getElementById('fileInfo').style.display = 'block';
+    document.getElementById('decryptBtn').disabled = false;
+    
+    showNotification(`Файл "${file.name}" загружен`, 'success');
+}
+
+function clearFile() {
+    selectedFile = null;
+    fileInput.value = '';
+    document.getElementById('fileInfo').style.display = 'none';
+    document.getElementById('decryptBtn').disabled = true;
+}
+
+async function encryptAndDownload() {
+    const text = document.getElementById('encrypt-text').value.trim();
+    const password = document.getElementById('encrypt-password').value.trim();
+    const algorithm = document.getElementById('encrypt-algorithm').value;
+    const filename = document.getElementById('filename').value.trim() || 'secret_message';
+    const shift = document.getElementById('caesar-shift').value;
+
+    if (!text) {
+        showNotification('Введите текст для шифрования', 'warning');
+        return;
+    }
+
+    if (!password) {
+        showNotification('Введите пароль для шифрования', 'warning');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('action', 'encrypt_and_download');
+    formData.append('text', text);
+    formData.append('password', password);
+    formData.append('algorithm', algorithm);
+    formData.append('filename', filename);
+    formData.append('shift', shift);
+
+    try {
+        const response = await fetch('/encryption/file', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `${filename}.cyber`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            showNotification('Файл успешно зашифрован и скачан!', 'success');
+        } else {
+            const error = await response.json();
+            showNotification(error.error || 'Ошибка шифрования', 'danger');
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showNotification('Ошибка при шифровании', 'danger');
+    }
+}
+
+async function decryptFile() {
+    if (!selectedFile) {
+        showNotification('Выберите файл для дешифровки', 'warning');
+        return;
+    }
+
+    const password = document.getElementById('decrypt-password').value.trim();
+    if (!password) {
+        showNotification('Введите пароль для дешифровки', 'warning');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('encrypted_file', selectedFile);
+    formData.append('password', password);
+
+    try {
+        const response = await fetch('/encryption/file', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            document.getElementById('decrypted-text').textContent = result.decrypted_text;
+            document.getElementById('decryptResult').style.display = 'block';
+            showNotification('Файл успешно расшифрован!', 'success');
+        } else {
+            showNotification(result.error || 'Ошибка дешифрования', 'danger');
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showNotification('Ошибка при дешифровании', 'danger');
+    }
+}
+
+function copyToClipboard(elementId) {
+    const text = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Текст скопирован в буфер обмена!', 'success');
+    });
+}
+
+function showNotification(message, type) {
+    // Используем существующую систему уведомлений
+    if (window.CyberGuardian && window.CyberGuardian.showNotification) {
+        window.CyberGuardian.showNotification(message, type);
+    } else {
+        alert(message);
+    }
+}
+</script>
+{% endblock %}
