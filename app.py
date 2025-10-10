@@ -109,6 +109,11 @@ def create_app():
     # Создаем таблицы при запуске
     with app.app_context():
         try:
+            # Импортируем все модели для создания таблиц
+            from auth.models import User
+            from education.models import UserProgress
+            from encryption.models import EncryptionHistory
+            
             db.create_all()
             print("✅ База данных инициализирована успешно!")
             print("🔄 Создаем демо-данные...")
@@ -138,6 +143,18 @@ def create_demo_data():
             db.session.add(demo_user)
             db.session.commit()
             print("👤 Демо-пользователь создан: demo / demo123")
+            
+            # Создаем демо-запись в истории шифрования
+            demo_history = EncryptionHistory(
+                user_id=demo_user.id,
+                operation_type='encrypt',
+                algorithm='AES',
+                original_text='Hello CyberGuardian!',
+                processed_text='U2FsdGVkX1+2w6L8JcKc6w=='
+            )
+            db.session.add(demo_history)
+            db.session.commit()
+            print("📝 Демо-запись истории шифрования создана")
             
     except Exception as e:
         print(f"⚠️ Ошибка создания демо-данных: {e}")

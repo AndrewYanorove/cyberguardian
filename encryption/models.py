@@ -1,5 +1,5 @@
 # encryption/models.py
-from database import db
+from database import db  # Импортируем из корня проекта
 from datetime import datetime
 
 class EncryptionHistory(db.Model):

@@ -1,18 +1,14 @@
 # encryption/routes.py
 from flask import Blueprint, render_template, request, jsonify
 from flask_login import login_required, current_user
-
-# Создаем blueprint здесь
-encryption_bp = Blueprint('encryption', __name__)
-
-# Импорты сервисов
+from database import db  # Импортируем из корня проекта
+from .models import EncryptionHistory
 from .services import EncryptionService
 
-# Функции для работы с БД (импортируем внутри функций чтобы избежать циклических импортов)
+# Импортируем blueprint из __init__.py
+from . import encryption_bp
+
 def add_to_history(user_id, operation_type, algorithm, original_text, processed_text):
-    from app import db
-    from .models import EncryptionHistory
-    
     record = EncryptionHistory(
         user_id=user_id,
         operation_type=operation_type,
@@ -25,12 +21,11 @@ def add_to_history(user_id, operation_type, algorithm, original_text, processed_
     return record
 
 def get_user_history(user_id):
-    from .models import EncryptionHistory
     return EncryptionHistory.query.filter_by(user_id=user_id).order_by(
         EncryptionHistory.timestamp.desc()
     ).all()
 
-# Роуты
+# Роуты (остальной код без изменений)
 @encryption_bp.route('/')
 def encryption_tools():
     return render_template('encryption/tools.html')
