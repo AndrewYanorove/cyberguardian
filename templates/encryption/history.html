@@ -17,19 +17,23 @@
     transform: translateY(-50%);
 }
 
-.table-responsive {
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.cyber-table th {
+.file-name {
+    font-family: 'Courier New', monospace;
     background: rgba(0, 255, 136, 0.1);
-    border-bottom: 2px solid var(--cyber-primary);
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--cyber-primary);
+    border: 1px solid var(--cyber-primary);
 }
 
-.empty-state {
-    padding: 4rem 2rem;
-    text-align: center;
+.security-badge {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    border: 1px solid #ffc107;
 }
 
 /* Адаптивность для мобильных */
@@ -66,7 +70,10 @@
                 <h1 class="cyber-text glow-text mb-3">
                     <i class="bi bi-clock-history me-2"></i>История операций
                 </h1>
-                <p class="cyber-subtext">Все ваши операции шифрования и дешифрования</p>
+                <p class="cyber-subtext">История файловых операций шифрования</p>
+                <span class="security-badge">
+                    <i class="bi bi-shield-check me-1"></i>Конфиденциальность защищена
+                </span>
             </div>
 
             <!-- История -->
@@ -79,7 +86,7 @@
                                 <th>Дата</th>
                                 <th>Операция</th>
                                 <th>Алгоритм</th>
-                                <th>Исходный текст</th>
+                                <th>Файл</th>
                                 <th>Результат</th>
                             </tr>
                         </thead>
@@ -94,15 +101,13 @@
                                 </td>
                                 <td>{{ record.algorithm }}</td>
                                 <td>
-                                    <span class="text-truncate" style="max-width: 150px;" 
-                                          title="{{ record.original_text }}">
-                                        {{ record.original_text[:50] }}{% if record.original_text|length > 50 %}...{% endif %}
+                                    <span class="file-name">
+                                        <i class="bi bi-file-earmark-lock me-1"></i>{{ record.original_text }}
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="text-truncate" style="max-width: 150px;" 
-                                          title="{{ record.processed_text }}">
-                                        {{ record.processed_text[:50] }}{% if record.processed_text|length > 50 %}...{% endif %}
+                                    <span class="file-name">
+                                        <i class="bi bi-file-earmark-check me-1"></i>{{ record.processed_text }}
                                     </span>
                                 </td>
                             </tr>
@@ -111,7 +116,7 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="empty-state">
+                <div class="text-center py-5">
                     <i class="bi bi-inbox display-1 text-muted"></i>
                     <p class="cyber-subtext mt-3">История операций пуста</p>
                     <a href="{{ url_for('encryption.file_encryption') }}" class="btn btn-cyber mt-2">

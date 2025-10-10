@@ -1,10 +1,9 @@
 # encryption/routes.py
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, send_file
 from flask_login import login_required, current_user
-from database import db  # Импортируем из корня проекта
+from database import db
 from .models import EncryptionHistory
 from .services import EncryptionService
-from flask import send_file
 from datetime import datetime
 import json
 from io import BytesIO
@@ -13,13 +12,18 @@ import re
 # Импортируем blueprint из __init__.py
 from . import encryption_bp
 
-def add_to_history(user_id, operation_type, algorithm, original_text, processed_text):
+def add_to_history(user_id, operation_type, algorithm, original_text, processed_text, filename="operation"):
+    # Генерируем имя файла на основе времени
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%H%M%S")
+    file_display_name = f"{filename}_{timestamp}.cyber"
+    
     record = EncryptionHistory(
         user_id=user_id,
         operation_type=operation_type,
         algorithm=algorithm,
-        original_text=original_text,
-        processed_text=processed_text
+        original_text=file_display_name,  # Сохраняем имя файла вместо текста
+        processed_text=file_display_name   # Сохраняем имя файла вместо текста
     )
     db.session.add(record)
     db.session.commit()
@@ -30,7 +34,7 @@ def get_user_history(user_id):
         EncryptionHistory.timestamp.desc()
     ).all()
 
-# Роуты (остальной код без изменений)
+# Роуты
 @encryption_bp.route('/')
 def encryption_tools():
     return render_template('encryption/tools.html')
@@ -53,7 +57,7 @@ def text_encryption():
                 salt = result['salt']
                 
                 if current_user.is_authenticated:
-                    add_to_history(current_user.id, 'encrypt', 'AES', text, encrypted_text)
+                    add_to_history(current_user.id, 'encrypt', 'AES', text, encrypted_text, "encrypted_file")
                 
                 return jsonify({
                     'success': True,
@@ -67,7 +71,7 @@ def text_encryption():
                 encrypted_text = EncryptionService.caesar_cipher(text, shift, True)
                 
                 if current_user.is_authenticated:
-                    add_to_history(current_user.id, 'encrypt', f'Caesar (shift {shift})', text, encrypted_text)
+                    add_to_history(current_user.id, 'encrypt', f'Caesar (shift {shift})', text, encrypted_text, "encrypted_file")
                 
                 return jsonify({
                     'success': True,
@@ -79,7 +83,7 @@ def text_encryption():
                 encrypted_text = EncryptionService.xor_cipher(text, password)
                 
                 if current_user.is_authenticated:
-                    add_to_history(current_user.id, 'encrypt', 'XOR', text, encrypted_text)
+                    add_to_history(current_user.id, 'encrypt', 'XOR', text, encrypted_text, "encrypted_file")
                 
                 return jsonify({
                     'success': True,
@@ -121,7 +125,7 @@ def decrypt_text():
             return jsonify({'error': 'Неизвестный алгоритм'}), 400
         
         if current_user.is_authenticated:
-            add_to_history(current_user.id, 'decrypt', algorithm, encrypted_text, decrypted_text)
+            add_to_history(current_user.id, 'decrypt', algorithm, encrypted_text, decrypted_text, "decrypted_file")
         
         return jsonify({
             'success': True,
@@ -132,19 +136,6 @@ def decrypt_text():
         return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': 'Ошибка дешифрования'}), 500
-
-@encryption_bp.route('/history')
-@login_required
-def encryption_history():
-    history = get_user_history(current_user.id)
-    return render_template('encryption/history.html', history=history)
-
-@encryption_bp.route('/api/history')
-@login_required
-def api_history():
-    history = get_user_history(current_user.id)
-    return jsonify({'history': [h.to_dict() for h in history]})
-
 
 @encryption_bp.route('/file', methods=['GET', 'POST'])
 def file_encryption():
@@ -167,7 +158,7 @@ def file_encryption():
                     print(f"🔍 Извлечено: код алгоритма={algorithm_code}")
                     
                 except Exception as e:
-                    return jsonify({'error': f'Неверный формат файла'}), 400
+                    return jsonify({'error': f'Неверный формат файла: {str(e)}'}), 400
                 
                 # ДЕШИФРУЕМ ПО КОДОВЫМ СЛОВАМ
                 try:
@@ -187,7 +178,7 @@ def file_encryption():
                     return jsonify({'error': f'Ошибка дешифрования: {str(e)}'}), 400
                 
                 if current_user.is_authenticated:
-                    add_to_history(current_user.id, 'decrypt', algorithm_name, encrypted_text, decrypted_text)
+                    add_to_history(current_user.id, 'decrypt', algorithm_name, encrypted_text, decrypted_text, "uploaded_file")
                 
                 return jsonify({
                     'success': True,
@@ -238,7 +229,7 @@ def file_encryption():
                 )
                 
                 if current_user.is_authenticated:
-                    add_to_history(current_user.id, 'encrypt', algorithm_name, text, encrypted_text)
+                    add_to_history(current_user.id, 'encrypt', algorithm_name, text, encrypted_text, filename)
                 
                 output = BytesIO()
                 output.write(file_content)
@@ -255,3 +246,15 @@ def file_encryption():
             return jsonify({'error': f'Ошибка: {str(e)}'}), 500
     
     return render_template('encryption/file.html')
+
+@encryption_bp.route('/history')
+@login_required
+def encryption_history():
+    history = get_user_history(current_user.id)
+    return render_template('encryption/history.html', history=history)
+
+@encryption_bp.route('/api/history')
+@login_required
+def api_history():
+    history = get_user_history(current_user.id)
+    return jsonify({'history': [h.to_dict() for h in history]})
