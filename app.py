@@ -1,4 +1,5 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
+from flask_compress import Compress
 from dotenv import load_dotenv
 import os
 from datetime import datetime
@@ -16,6 +17,12 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///cyberguardian.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SESSION_TYPE'] = 'filesystem'
+    
+    # Добавляем сжатие GZIP
+    app.config['COMPRESS_ALGORITHM'] = 'gzip'
+    app.config['COMPRESS_LEVEL'] = 6
+    app.config['COMPRESS_MIN_SIZE'] = 500
+    Compress(app)
     
     # Инициализация базы данных
     from database import db
@@ -106,6 +113,21 @@ def create_app():
     def internal_error(error):
         return render_template('500.html'), 500
     
+    # Добавляем кэширование для всех ответов
+    @app.after_request
+    def add_cache_headers(response):
+        # Используем request.path вместо response.request.path
+        if 'static' in request.path:
+            response.headers['Cache-Control'] = 'public, max-age=31536000'
+        # HTML страницы - кэш на 5 минут
+        elif response.content_type and 'text/html' in response.content_type:
+            response.headers['Cache-Control'] = 'public, max-age=300'
+        # API ответы - кэш на 30 секунд
+        elif response.content_type and 'application/json' in response.content_type:
+            response.headers['Cache-Control'] = 'public, max-age=30'
+        
+        return response
+    
     # Создаем таблицы при запуске
     with app.app_context():
         try:
@@ -166,6 +188,7 @@ app = create_app()
 if __name__ == '__main__':
     print("🚀 CyberGuardian 2.0 запускается...")
     print("🎯 Новые функции: Threat Monitor, Security Scanner, Cyber Games!")
+    print("⚡ ОПТИМИЗАЦИЯ: Включено GZIP сжатие и кэширование")
     print("📖 Документация: http://localhost:5000")
     print("🔧 Health check: http://localhost:5000/health")
     print("=" * 60)
