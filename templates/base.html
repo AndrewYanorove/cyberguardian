@@ -5,14 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CyberGuardian | Цифровая безопасность{% endblock %}</title>
     
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- КРИТИЧЕСКИЙ CSS - ВСТРАИВАЕМ В HEAD -->
+    <style>
+        :root {
+            --cyber-dark: #0a0a0a;
+            --cyber-darker: #050505; 
+            --cyber-primary: #02b9da;
+            --cyber-secondary: #00fcda;
+            --cyber-accent: #ff0088;
+            --cyber-text: #ffffff;
+            --cyber-subtext: #888888;
+            --cyber-border: #222222;
+        }
+        
+        body.cyber-bg {
+            background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
+            color: var(--cyber-text);
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .cyber-navbar {
+            background: rgba(10, 10, 10, 0.95) !important;
+            border-bottom: 1px solid var(--cyber-border);
+            padding: 1rem 0;
+        }
+        
+        .cyber-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--cyber-primary) !important;
+            text-decoration: none;
+        }
+        
+        .cyber-text {
+            color: var(--cyber-primary) !important;
+        }
+        
+        .cyber-subtext {
+            color: var(--cyber-subtext);
+        }
+        
+        .cyber-main {
+            min-height: calc(100vh - 200px);
+            padding: 2rem 0;
+        }
+        
+        .cyber-footer {
+            background: rgba(5, 5, 5, 0.95);
+            border-top: 1px solid var(--cyber-border);
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+        
+        /* Боковое меню - базовые стили */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 350px;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.98);
+            border-right: 2px solid var(--cyber-primary);
+            z-index: 10000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .navbar-toggler.cyber-toggler {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--cyber-primary);
+            padding: 0.5rem 0.75rem;
+            color: var(--cyber-text);
+        }
+        
+        /* Скрываем все до загрузки основных стилей */
+        .cyber-card, .btn, .alert {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .styles-loaded .cyber-card,
+        .styles-loaded .btn, 
+        .styles-loaded .alert {
+            opacity: 1;
+        }
+    </style>
+
+    <!-- Preload критических ресурсов -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="{{ url_for('static', filename='css/main.css') }}?v=2.1" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    
-    <!-- Наши стили -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=2.0">
+    <!-- Fallback для браузеров без JavaScript -->
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=2.1">
+    </noscript>
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -264,7 +380,7 @@
                     <p class="cyber-subtext">Ваш цифровой защитник в мире кибербезопасности</p>
                     <div class="cyber-subtext small">
                         <i class="bi bi-cpu me-1"></i>
-                        <span id="serverStats">Загрузка статистики...</span>
+                        <span id="serverStats">Система активна</span>
                     </div>
                 </div>
                 
@@ -297,28 +413,15 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Наши скрипты -->
-    <script src="{{ url_for('static', filename='js/main.js') }}?v=2.0"></script>
-    
-    {% block extra_js %}{% endblock %}
-
-    <!-- Скрипт для бокового меню -->
+    <!-- ОТЛОЖЕННАЯ загрузка скриптов -->
     <script>
+        // Минимальный функционал для работы меню
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
-            
-            // Блокируем прокрутку body когда меню открыто
-            if (sidebar.classList.contains('active')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
         }
 
         function closeSidebar() {
@@ -330,44 +433,40 @@
         }
 
         // Закрытие меню при клике на ссылку
-        document.querySelectorAll('.sidebar-item').forEach(item => {
-            item.addEventListener('click', () => {
-                closeSidebar();
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth < 992) closeSidebar();
+                });
+            });
+
+            // Закрытие меню при клике на оверлей
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+            // Закрытие меню при нажатии Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeSidebar();
             });
         });
 
-        // Закрытие меню при клике на оверлей
-        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+        // Загрузка тяжелых скриптов после рендера страницы
+        window.addEventListener('load', function() {
+            // Динамически загружаем Bootstrap JS
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js';
+            script.onload = function() {
+                // После загрузки Bootstrap загружаем наши скрипты
+                var mainScript = document.createElement('script');
+                mainScript.src = '{{ url_for("static", filename="js/main.js") }}?v=2.1';
+                document.head.appendChild(mainScript);
+            };
+            document.head.appendChild(script);
 
-        // Закрытие меню при нажатии Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeSidebar();
-            }
-        });
-
-        // Загрузка статистики сервера
-        async function loadServerStats() {
-            try {
-                const response = await fetch('/api/stats');
-                const data = await response.json();
-                
-                const statsElement = document.getElementById('serverStats');
-                statsElement.innerHTML = `
-                    ${data.users_online} онлайн | 
-                    ${data.lessons_today} уроков сегодня |
-                    ${data.active_threats} активных угроз
-                `;
-            } catch (error) {
-                console.error('Ошибка загрузки статистики:', error);
-            }
-        }
-
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            loadServerStats();
-            setInterval(loadServerStats, 60000); // Обновлять каждую минуту
+            // Добавляем класс когда стили загружены
+            document.body.classList.add('styles-loaded');
         });
     </script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

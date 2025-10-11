@@ -161,10 +161,7 @@ body.cyber-bg {
 /* Анимации */
 @keyframes cyber-glitch {
     0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
+    50% { transform: translate(-2px, 2px); }
     100% { transform: translate(0); }
 }
 
@@ -667,6 +664,7 @@ body.cyber-bg {
 }
 
 /* Анимации для появления элементов */
+
 .fade-in {
     opacity: 0;
     transform: translateY(30px);
@@ -687,7 +685,7 @@ body.cyber-bg {
     height: 100%;
     pointer-events: none;
     z-index: -1;
-    opacity: 0.1;
+    opacity: 0.05;
     background-image: 
         linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
