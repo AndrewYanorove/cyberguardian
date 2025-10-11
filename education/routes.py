@@ -1047,17 +1047,33 @@ def module_detail(course_id, module_id):
 
     course_data = COURSES_DATA[course_id]
     module_data = None
+    prev_module = None
+    next_module = None
 
-    for module in course_data["modules"]:
+    # Находим текущий модуль и соседние модули
+    for i, module in enumerate(course_data["modules"]):
         if module["id"] == module_id:
             module_data = module
+
+            # Предыдущий модуль
+            if i > 0:
+                prev_module = course_data["modules"][i - 1]
+
+            # Следующий модуль
+            if i < len(course_data["modules"]) - 1:
+                next_module = course_data["modules"][i + 1]
+
             break
 
     if not module_data:
         return "Страница не найдена", 404
 
     return render_template(
-        "education/module_detail.html", course=course_data, module=module_data
+        "education/module_detail.html",
+        course=course_data,
+        module=module_data,
+        prev_module=prev_module,
+        next_module=next_module,
     )
 
 

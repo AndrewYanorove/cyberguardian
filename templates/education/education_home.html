@@ -71,7 +71,7 @@
         }
 
         .btn-cyber {
-            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
+            background: linear-gradient(135deg, var(--cyber-primary), #00ccff);
             border: none;
             color: var(--cyber-darker);
             font-weight: 600;
@@ -519,315 +519,321 @@
                         <a href="#courses" class="btn btn-cyber btn-lg">
                             <i class="bi bi-play-circle me-2"></i>Начать обучение
                         </a>
-                        <a href="{{ url_for('education.all_courses') }}" class="btn btn-cyber-outline btn-lg">
-                            <i class="bi bi-compass me-2"></i>Все курсы
-                        </a>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="{{ url_for('index') }}" class="btn btn-cyber btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>На главную
+                            </a>
+                        </div>
+
                     </div>
-                </div>
-                <div class="col-lg-4 text-center">
-                    <div class="hero-graphic">
-                        <i class="bi bi-shield-lock"
-                            style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.8;"></i>
+                    <div class="col-lg-4 text-center">
+                        <div class="hero-graphic">
+                            <i class="bi bi-shield-lock"
+                                style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.8;"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="container">
-        <!-- Статистика обучения -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-number">3</span>
-                <span class="stat-label">Активных курса</span>
+        <div class="container">
+            <!-- Статистика обучения -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Активных курса</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">42%</span>
+                    <span class="stat-label">Общий прогресс</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">Завершенных уроков</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">Полученных сертификата</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-number">42%</span>
-                <span class="stat-label">Общий прогресс</span>
+
+            <!-- Быстрые действия -->
+            <div class="quick-actions">
+                <div class="quick-action-card" onclick="location.href='{{ url_for('education.certificates') }}'">
+                    <div class="quick-action-icon">
+                        <i class="bi bi-award"></i>
+                    </div>
+                    <h5 class="cyber-text">Мои сертификаты</h5>
+                    <p class="cyber-subtext small">Просмотр полученных сертификатов</p>
+                </div>
+                <div class="quick-action-card" onclick="location.href='{{ url_for('education.achievements') }}'">
+                    <div class="quick-action-icon">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+                    <h5 class="cyber-text">Достижения</h5>
+                    <p class="cyber-subtext small">Мои значки и награды</p>
+                </div>
+                <div class="quick-action-card" onclick="location.href='#recent-activity'">
+                    <div class="quick-action-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <h5 class="cyber-text">История обучения</h5>
+                    <p class="cyber-subtext small">Последняя активность</p>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-number">15</span>
-                <span class="stat-label">Завершенных уроков</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">2</span>
-                <span class="stat-label">Полученных сертификата</span>
-            </div>
+
+            <!-- Рекомендуемые курсы -->
+            <section class="featured-courses" id="courses">
+                <h2 class="section-title cyber-text">
+                    <i class="bi bi-stars me-2"></i>Рекомендуемые курсы
+                </h2>
+
+                <div class="course-grid">
+                    {% for course in featured_courses %}
+                    <div class="course-card">
+                        <div class="course-header">
+                            <div class="course-icon">
+                                <i
+                                    class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-fundamentals' else 'shield-exclamation' if course.id == 'ethical-hacking' else 'shield-fill' }}"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h4 class="cyber-text mb-2">{{ course.title }}</h4>
+                                <p class="cyber-subtext small">{{ course.description[:100] }}...</p>
+                            </div>
+                        </div>
+
+                        <div class="course-meta">
+                            <span class="difficulty-badge difficulty-{{ course.difficulty }}">
+                                <i
+                                    class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }}"></i>
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
+                                ==
+                                'intermediate' else 'Продвинутый' }}
+                            </span>
+                            <span class="cyber-badge bg-secondary">
+                                <i class="bi bi-clock"></i> {{ course.estimated_time }}
+                            </span>
+                            <span class="cyber-badge bg-info">
+                                <i class="bi bi-star-fill"></i> {{ course.rating }}
+                            </span>
+                        </div>
+
+                        <div class="progress-section">
+                            <div class="progress-info">
+                                <span class="progress-text">Прогресс курса</span>
+                                <span class="progress-percent">{{ course.progress }}%</span>
+                            </div>
+                            <div class="cyber-progress">
+                                <div class="cyber-progress-bar" style="width: {{ course.progress }}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-3">
+                            <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
+                                <i
+                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
+                                {{ 'Начать' if course.progress == 0 else 'Продолжить' }}
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Все курсы -->
+            <section id="all-courses">
+                <h2 class="section-title cyber-text">
+                    <i class="bi bi-collection me-2"></i>Все курсы
+                </h2>
+
+                <div class="course-grid">
+                    {% for course in courses %}
+                    <div class="course-card">
+                        <div class="course-header">
+                            <div class="course-icon">
+                                <i
+                                    class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-fundamentals' else 'shield-exclamation' if course.id == 'ethical-hacking' else 'shield-fill' }}"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h4 class="cyber-text mb-2">{{ course.title }}</h4>
+                                <p class="cyber-subtext small">{{ course.description[:120] }}...</p>
+                            </div>
+                        </div>
+
+                        <div class="course-meta">
+                            <span class="difficulty-badge difficulty-{{ course.difficulty }}">
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
+                                ==
+                                'intermediate' else 'Продвинутый' }}
+                            </span>
+                            <span class="cyber-badge bg-dark">
+                                <i class="bi bi-people"></i> {{ course.students_count }}
+                            </span>
+                        </div>
+
+                        <div class="progress-section">
+                            <div class="progress-info">
+                                <span class="progress-text">Прогресс</span>
+                                <span class="progress-percent">{{ course.progress }}%</span>
+                            </div>
+                            <div class="cyber-progress">
+                                <div class="cyber-progress-bar" style="width: {{ course.progress }}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-3">
+                            <a href="{{ url_for('education.course_page', course_id=course.id) }}"
+                                class="btn btn-cyber-outline">
+                                <i
+                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
+                                {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Пути обучения -->
+            <section class="learning-pathways" id="pathways">
+                <h2 class="section-title cyber-text">
+                    <i class="bi bi-signpost-2 me-2"></i>Пути обучения
+                </h2>
+
+                <div class="pathway-list">
+                    <div class="pathway-item">
+                        <div class="pathway-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div class="pathway-content">
+                            <h5 class="cyber-text mb-2">Начинающий специалист</h5>
+                            <p class="cyber-subtext small mb-0">
+                                Основы кибербезопасности для новичков. Идеально для начала карьеры в ИБ.
+                            </p>
+                        </div>
+                        <div class="pathway-progress">
+                            <div class="cyber-progress">
+                                <div class="cyber-progress-bar" style="width: 65%"></div>
+                            </div>
+                            <small class="cyber-subtext">65% завершено</small>
+                        </div>
+                    </div>
+
+                    <div class="pathway-item">
+                        <div class="pathway-icon">
+                            <i class="bi bi-bug"></i>
+                        </div>
+                        <div class="pathway-content">
+                            <h5 class="cyber-text mb-2">Этичный хакинг</h5>
+                            <p class="cyber-subtext small mb-0">
+                                Методы тестирования на проникновение и поиска уязвимостей.
+                            </p>
+                        </div>
+                        <div class="pathway-progress">
+                            <div class="cyber-progress">
+                                <div class="cyber-progress-bar" style="width: 30%"></div>
+                            </div>
+                            <small class="cyber-subtext">30% завершено</small>
+                        </div>
+                    </div>
+
+                    <div class="pathway-item">
+                        <div class="pathway-icon">
+                            <i class="bi bi-search"></i>
+                        </div>
+                        <div class="pathway-content">
+                            <h5 class="cyber-text mb-2">Цифровая криминалистика</h5>
+                            <p class="cyber-subtext small mb-0">
+                                Расследование киберинцидентов и сбор цифровых доказательств.
+                            </p>
+                        </div>
+                        <div class="pathway-progress">
+                            <div class="cyber-progress">
+                                <div class="cyber-progress-bar" style="width: 15%"></div>
+                            </div>
+                            <small class="cyber-subtext">15% завершено</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Недавняя активность -->
+            <section class="recent-activity" id="recent-activity">
+                <h2 class="section-title cyber-text">
+                    <i class="bi bi-activity me-2"></i>Недавняя активность
+                </h2>
+
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6 class="cyber-text mb-1">Завершен урок "Основы сетевой безопасности"</h6>
+                            <p class="cyber-subtext small mb-0">Курс: Основы кибербезопасности</p>
+                        </div>
+                        <div class="activity-time">
+                            2 часа назад
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-patch-question"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6 class="cyber-text mb-1">Пройден тест "Типы кибератак"</h6>
+                            <p class="cyber-subtext small mb-0">Результат: 85%</p>
+                        </div>
+                        <div class="activity-time">
+                            Вчера, 14:30
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-play-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h6 class="cyber-text mb-1">Начат модуль "Методы социальной инженерии"</h6>
+                            <p class="cyber-subtext small mb-0">Курс: Этичный хакинг</p>
+                        </div>
+                        <div class="activity-time">
+                            2 дня назад
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <!-- Быстрые действия -->
-        <div class="quick-actions">
-            <div class="quick-action-card" onclick="location.href='{{ url_for('education.certificates') }}'">
-                <div class="quick-action-icon">
-                    <i class="bi bi-award"></i>
-                </div>
-                <h5 class="cyber-text">Мои сертификаты</h5>
-                <p class="cyber-subtext small">Просмотр полученных сертификатов</p>
-            </div>
-            <div class="quick-action-card" onclick="location.href='{{ url_for('education.achievements') }}'">
-                <div class="quick-action-icon">
-                    <i class="bi bi-trophy"></i>
-                </div>
-                <h5 class="cyber-text">Достижения</h5>
-                <p class="cyber-subtext small">Мои значки и награды</p>
-            </div>
-            <div class="quick-action-card" onclick="location.href='#recent-activity'">
-                <div class="quick-action-icon">
-                    <i class="bi bi-clock-history"></i>
-                </div>
-                <h5 class="cyber-text">История обучения</h5>
-                <p class="cyber-subtext small">Последняя активность</p>
-            </div>
-        </div>
-
-        <!-- Рекомендуемые курсы -->
-        <section class="featured-courses" id="courses">
-            <h2 class="section-title cyber-text">
-                <i class="bi bi-stars me-2"></i>Рекомендуемые курсы
-            </h2>
-
-            <div class="course-grid">
-                {% for course in featured_courses %}
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-icon">
-                            <i
-                                class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-fundamentals' else 'shield-exclamation' if course.id == 'ethical-hacking' else 'shield-fill' }}"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h4 class="cyber-text mb-2">{{ course.title }}</h4>
-                            <p class="cyber-subtext small">{{ course.description[:100] }}...</p>
-                        </div>
-                    </div>
-
-                    <div class="course-meta">
-                        <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                            <i
-                                class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }}"></i>
-                            {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty ==
-                            'intermediate' else 'Продвинутый' }}
-                        </span>
-                        <span class="cyber-badge bg-secondary">
-                            <i class="bi bi-clock"></i> {{ course.estimated_time }}
-                        </span>
-                        <span class="cyber-badge bg-info">
-                            <i class="bi bi-star-fill"></i> {{ course.rating }}
-                        </span>
-                    </div>
-
-                    <div class="progress-section">
-                        <div class="progress-info">
-                            <span class="progress-text">Прогресс курса</span>
-                            <span class="progress-percent">{{ course.progress }}%</span>
-                        </div>
-                        <div class="cyber-progress">
-                            <div class="cyber-progress-bar" style="width: {{ course.progress }}%"></div>
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2 mt-3">
-                        <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
-                            <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
-                            {{ 'Начать' if course.progress == 0 else 'Продолжить' }}
-                        </a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-
-        <!-- Все курсы -->
-        <section id="all-courses">
-            <h2 class="section-title cyber-text">
-                <i class="bi bi-collection me-2"></i>Все курсы
-            </h2>
-
-            <div class="course-grid">
-                {% for course in courses %}
-                <div class="course-card">
-                    <div class="course-header">
-                        <div class="course-icon">
-                            <i
-                                class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-fundamentals' else 'shield-exclamation' if course.id == 'ethical-hacking' else 'shield-fill' }}"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h4 class="cyber-text mb-2">{{ course.title }}</h4>
-                            <p class="cyber-subtext small">{{ course.description[:120] }}...</p>
-                        </div>
-                    </div>
-
-                    <div class="course-meta">
-                        <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                            {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty ==
-                            'intermediate' else 'Продвинутый' }}
-                        </span>
-                        <span class="cyber-badge bg-dark">
-                            <i class="bi bi-people"></i> {{ course.students_count }}
-                        </span>
-                    </div>
-
-                    <div class="progress-section">
-                        <div class="progress-info">
-                            <span class="progress-text">Прогресс</span>
-                            <span class="progress-percent">{{ course.progress }}%</span>
-                        </div>
-                        <div class="cyber-progress">
-                            <div class="cyber-progress-bar" style="width: {{ course.progress }}%"></div>
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2 mt-3">
-                        <a href="{{ url_for('education.course_page', course_id=course.id) }}"
-                            class="btn btn-cyber-outline">
-                            <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
-                            {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
-                        </a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-
-        <!-- Пути обучения -->
-        <section class="learning-pathways" id="pathways">
-            <h2 class="section-title cyber-text">
-                <i class="bi bi-signpost-2 me-2"></i>Пути обучения
-            </h2>
-
-            <div class="pathway-list">
-                <div class="pathway-item">
-                    <div class="pathway-icon">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
-                    <div class="pathway-content">
-                        <h5 class="cyber-text mb-2">Начинающий специалист</h5>
-                        <p class="cyber-subtext small mb-0">
-                            Основы кибербезопасности для новичков. Идеально для начала карьеры в ИБ.
-                        </p>
-                    </div>
-                    <div class="pathway-progress">
-                        <div class="cyber-progress">
-                            <div class="cyber-progress-bar" style="width: 65%"></div>
-                        </div>
-                        <small class="cyber-subtext">65% завершено</small>
-                    </div>
-                </div>
-
-                <div class="pathway-item">
-                    <div class="pathway-icon">
-                        <i class="bi bi-bug"></i>
-                    </div>
-                    <div class="pathway-content">
-                        <h5 class="cyber-text mb-2">Этичный хакинг</h5>
-                        <p class="cyber-subtext small mb-0">
-                            Методы тестирования на проникновение и поиска уязвимостей.
-                        </p>
-                    </div>
-                    <div class="pathway-progress">
-                        <div class="cyber-progress">
-                            <div class="cyber-progress-bar" style="width: 30%"></div>
-                        </div>
-                        <small class="cyber-subtext">30% завершено</small>
-                    </div>
-                </div>
-
-                <div class="pathway-item">
-                    <div class="pathway-icon">
-                        <i class="bi bi-search"></i>
-                    </div>
-                    <div class="pathway-content">
-                        <h5 class="cyber-text mb-2">Цифровая криминалистика</h5>
-                        <p class="cyber-subtext small mb-0">
-                            Расследование киберинцидентов и сбор цифровых доказательств.
-                        </p>
-                    </div>
-                    <div class="pathway-progress">
-                        <div class="cyber-progress">
-                            <div class="cyber-progress-bar" style="width: 15%"></div>
-                        </div>
-                        <small class="cyber-subtext">15% завершено</small>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Недавняя активность -->
-        <section class="recent-activity" id="recent-activity">
-            <h2 class="section-title cyber-text">
-                <i class="bi bi-activity me-2"></i>Недавняя активность
-            </h2>
-
-            <div class="activity-list">
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="bi bi-check-circle"></i>
-                    </div>
-                    <div class="activity-content">
-                        <h6 class="cyber-text mb-1">Завершен урок "Основы сетевой безопасности"</h6>
-                        <p class="cyber-subtext small mb-0">Курс: Основы кибербезопасности</p>
-                    </div>
-                    <div class="activity-time">
-                        2 часа назад
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="bi bi-patch-question"></i>
-                    </div>
-                    <div class="activity-content">
-                        <h6 class="cyber-text mb-1">Пройден тест "Типы кибератак"</h6>
-                        <p class="cyber-subtext small mb-0">Результат: 85%</p>
-                    </div>
-                    <div class="activity-time">
-                        Вчера, 14:30
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="bi bi-play-circle"></i>
-                    </div>
-                    <div class="activity-content">
-                        <h6 class="cyber-text mb-1">Начат модуль "Методы социальной инженерии"</h6>
-                        <p class="cyber-subtext small mb-0">Курс: Этичный хакинг</p>
-                    </div>
-                    <div class="activity-time">
-                        2 дня назад
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Функция для показа уведомлений
-        function showCyberNotification(type, message) {
-            const notification = document.createElement('div');
-            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-            notification.innerHTML = `
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Функция для показа уведомлений
+            function showCyberNotification(type, message) {
+                const notification = document.createElement('div');
+                notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+                notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                notification.innerHTML = `
                 ${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
-            document.body.appendChild(notification);
+                document.body.appendChild(notification);
 
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 5000);
-        }
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 5000);
+            }
 
-        // Обработчики для быстрых действий
-        document.addEventListener('DOMContentLoaded', function () {
-            // Добавляем обработчики для карточек быстрых действий
-            document.querySelectorAll('.quick-action-card').forEach(card => {
-                card.style.cursor = 'pointer';
+            // Обработчики для быстрых действий
+            document.addEventListener('DOMContentLoaded', function () {
+                // Добавляем обработчики для карточек быстрых действий
+                document.querySelectorAll('.quick-action-card').forEach(card => {
+                    card.style.cursor = 'pointer';
+                });
             });
-        });
-    </script>
+        </script>
 </body>
 
 </html>
