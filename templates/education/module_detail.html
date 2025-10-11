@@ -4,30 +4,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ module.title }} - {{ course.title }}</title>
+    <title>{{ module.title }} - {{ course.title }} - CyberGuardian</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        /* Стили для страницы модуля */
+        :root {
+            --cyber-darker: #0a0a0f;
+            --cyber-dark: #111122;
+            --cyber-border: #1a1a2e;
+            --cyber-primary: #0375c2;
+            --cyber-secondary: #0088ff;
+            --cyber-subtext: #8899aa;
+            --cyber-text: #e0e0ff;
+        }
+
+        body {
+            background-color: var(--cyber-darker);
+            color: var(--cyber-text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .cyber-title {
+            color: var(--cyber-primary);
+            text-shadow: 0 0 10px rgba(11, 232, 248, 0.781);
+            font-weight: 700;
+        }
+
+        .cyber-text {
+            color: var(--cyber-text);
+        }
+
+        .cyber-subtext {
+            color: var(--cyber-subtext);
+        }
+
+        .cyber-border {
+            border-color: var(--cyber-border) !important;
+        }
+
+        .cyber-link {
+            color: var(--cyber-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-link:hover {
+            color: var(--cyber-secondary);
+            text-shadow: 0 0 8px rgba(18, 244, 252, 0.3);
+        }
+
         .module-hero {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
+            border-bottom: 2px solid var(--cyber-border);
             padding: 3rem 0;
-            border-bottom: 2px solid var(--cyber-primary);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff88' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
         .module-progress-ring {
             position: relative;
             width: 120px;
             height: 120px;
+            margin: 0 auto;
         }
 
         .module-progress-ring-circle {
             transform: rotate(-90deg);
+            transform-origin: 50% 50%;
         }
 
         .module-progress-ring-bg {
             fill: none;
-            stroke: #2d3748;
+            stroke: var(--cyber-border);
             stroke-width: 8;
         }
 
@@ -35,9 +94,10 @@
             fill: none;
             stroke: var(--cyber-primary);
             stroke-width: 8;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 1.5s ease;
             stroke-linecap: round;
-            stroke-dasharray: 377;
-            transition: stroke-dashoffset 0.5s ease;
         }
 
         .module-progress-text {
@@ -48,46 +108,86 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--cyber-primary);
+            text-shadow: 0 0 10px rgba(3, 173, 224, 0.5);
         }
 
         .lesson-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid var(--cyber-border);
+            border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 1rem;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .lesson-card:hover::before {
+            left: 100%;
         }
 
         .lesson-card:hover {
             border-color: var(--cyber-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.15);
         }
 
         .lesson-card.completed {
-            border-left: 4px solid var(--success-color);
+            border-color: var(--cyber-primary);
+            background: rgba(0, 255, 136, 0.08);
         }
 
         .lesson-card.current {
-            border-left: 4px solid var(--cyber-primary);
-            background: rgba(0, 123, 255, 0.05);
+            border-color: var(--cyber-primary);
+            background: rgba(0, 123, 255, 0.1);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+            }
         }
 
         .lesson-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--cyber-primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(0, 255, 136, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 1.2rem;
             margin-right: 1rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
 
-        .lesson-icon i {
-            color: white;
-            font-size: 1.2rem;
+        .lesson-card:hover .lesson-icon {
+            background: rgba(0, 255, 136, 0.2);
+            transform: scale(1.05);
+            border-color: var(--cyber-primary);
         }
 
         .lesson-content {
@@ -96,37 +196,44 @@
 
         .lesson-meta {
             display: flex;
+            align-items: center;
             gap: 1rem;
             margin-top: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .lesson-duration {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
+            color: var(--cyber-subtext);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
         .quiz-badge {
-            background: var(--warning-color);
-            color: black;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
+            background: rgba(0, 136, 255, 0.2);
+            color: var(--cyber-secondary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
             font-size: 0.75rem;
-            font-weight: 500;
+            border: 1px solid var(--cyber-secondary);
+            font-weight: 600;
         }
 
         .practice-badge {
-            background: var(--info-color);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
             font-size: 0.75rem;
-            font-weight: 500;
+            border: 1px solid var(--cyber-primary);
+            font-weight: 600;
         }
 
         .sublessons {
             margin-top: 1rem;
             padding-left: 1rem;
-            border-left: 2px solid var(--border-color);
+            border-left: 2px solid var(--cyber-border);
         }
 
         .sublesson-item {
@@ -134,55 +241,260 @@
             align-items: center;
             padding: 0.75rem;
             margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(40, 40, 40, 0.6);
+            border: 1px solid var(--cyber-border);
             border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sublesson-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            border-color: var(--cyber-primary);
         }
 
         .sublesson-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--success-color);
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: rgba(0, 136, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--cyber-secondary);
+            font-size: 0.8rem;
             margin-right: 0.75rem;
+            flex-shrink: 0;
         }
 
-        .sublesson-icon i {
-            color: white;
-            font-size: 0.75rem;
+        .sublesson-item.completed .sublesson-icon {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-primary);
         }
 
-        .sublesson-item:not(.completed) .sublesson-icon {
-            background: var(--text-secondary);
+        .sidebar-card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid var(--cyber-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .module-nav {
-            position: sticky;
-            top: 2rem;
-        }
-
-        .nav-item {
-            margin-bottom: 0.5rem;
+        .sidebar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
         }
 
         .nav-link {
-            color: var(--text-secondary);
+            color: var(--cyber-subtext);
             border-radius: 8px;
             padding: 0.75rem 1rem;
             transition: all 0.3s ease;
+            border: none;
+            background: transparent;
+            text-align: left;
+            width: 100%;
         }
 
         .nav-link:hover {
             color: var(--cyber-primary);
-            background: rgba(0, 123, 255, 0.1);
+            background: rgba(0, 255, 136, 0.1);
         }
 
         .nav-link.active {
             color: var(--cyber-primary);
-            background: rgba(0, 123, 255, 0.15);
+            background: rgba(0, 255, 136, 0.15);
             border-left: 3px solid var(--cyber-primary);
+        }
+
+        .cyber-badge {
+            background: rgba(30, 30, 45, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .bg-primary {
+            background: rgba(0, 136, 255, 0.15) !important;
+            border-color: var(--cyber-primary) !important;
+        }
+
+        .bg-success {
+            background: rgba(0, 255, 136, 0.15) !important;
+            border-color: var(--cyber-primary) !important;
+        }
+
+        .bg-secondary {
+            background: rgba(136, 136, 255, 0.15) !important;
+            border-color: #8888ff !important;
+        }
+
+        .difficulty-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-beginner {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--cyber-primary);
+            border: 1px solid var(--cyber-primary);
+        }
+
+        .difficulty-intermediate {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .difficulty-advanced {
+            background: rgba(255, 0, 68, 0.15);
+            color: #ff0044;
+            border: 1px solid #ff0044;
+        }
+
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
+            border: none;
+            color: var(--cyber-darker);
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-cyber:hover::before {
+            left: 100%;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-cyber-outline {
+            background: transparent;
+            border: 2px solid var(--cyber-primary);
+            color: var(--cyber-primary);
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cyber-outline:hover {
+            background: var(--cyber-primary);
+            color: var(--cyber-darker);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .achievement-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .achievement-item {
+            background: rgba(30, 30, 30, 0.7);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-item:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.1);
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--cyber-primary);
+        }
+
+        .achievement-locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .achievement-locked .achievement-icon {
+            color: var(--cyber-border);
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .cyber-progress {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--cyber-border);
+        }
+
+        .cyber-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-primary), #00cc88);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
     </style>
 </head>
@@ -353,23 +665,41 @@
 
                 <!-- Навигация между модулями -->
                 <div class="d-flex justify-content-between mt-5">
-                    {% if prev_module %}
+                    {% set prev_module = namespace(found=false) %}
+                    {% set next_module = namespace(found=false) %}
+                    {% set current_found = namespace(found=false) %}
+
+                    {% for mod in course.modules %}
+                    {% if mod.id == module.id %}
+                    {% set current_found.found = true %}
+                    {% elif not current_found.found %}
+                    {% set prev_module.found = true %}
+                    {% set prev_module = mod %}
+                    {% elif current_found.found and not next_module.found %}
+                    {% set next_module.found = true %}
+                    {% set next_module = mod %}
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if prev_module.found %}
                     <a href="{{ url_for('education.module_detail', course_id=course.id, module_id=prev_module.id) }}"
                         class="btn btn-cyber-outline">
                         <i class="bi bi-arrow-left me-2"></i>Предыдущий модуль
                     </a>
                     {% else %}
-                    <span></span>
+                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber-outline">
+                        <i class="bi bi-arrow-left me-2"></i>К содержанию курса
+                    </a>
                     {% endif %}
 
-                    {% if next_module %}
+                    {% if next_module.found %}
                     <a href="{{ url_for('education.module_detail', course_id=course.id, module_id=next_module.id) }}"
                         class="btn btn-cyber">
                         Следующий модуль <i class="bi bi-arrow-right ms-2"></i>
                     </a>
                     {% else %}
                     <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
-                        Вернуться к курсу <i class="bi bi-arrow-right ms-2"></i>
+                        Завершить модуль <i class="bi bi-check-lg ms-2"></i>
                     </a>
                     {% endif %}
                 </div>
@@ -377,70 +707,85 @@
 
             <!-- Боковая панель навигации -->
             <div class="col-lg-4">
-                <div class="module-nav">
-                    <div class="sidebar-card">
-                        <h5 class="cyber-text mb-3">
-                            <i class="bi bi-list-ol me-2"></i>Содержание модуля
-                        </h5>
-                        <nav class="nav flex-column">
-                            {% for lesson in module.lessons %}
-                            <a class="nav-link {% if loop.first and not lesson.completed %}active{% endif %}"
-                                href="#lesson-{{ loop.index }}">
-                                <div class="d-flex align-items-center">
-                                    {% if lesson.completed %}
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    {% else %}
-                                    <i
-                                        class="bi bi-{{ 'play-circle' if loop.first and not lesson.completed else 'circle' }} me-2"></i>
-                                    {% endif %}
-                                    <span>{{ lesson.title }}</span>
-                                </div>
-                            </a>
-                            {% endfor %}
-                        </nav>
-                    </div>
-
-                    <!-- Прогресс модуля -->
-                    <div class="sidebar-card">
-                        <h5 class="cyber-text mb-3">
-                            <i class="bi bi-graph-up me-2"></i>Прогресс модуля
-                        </h5>
-                        <div class="cyber-progress mb-2">
-                            <div class="cyber-progress-bar"
-                                style="width: {{ (module.completed_lessons / module.lessons|length * 100) if module.lessons|length > 0 else 0 }}%">
+                <div class="sidebar-card">
+                    <h5 class="cyber-text mb-3">
+                        <i class="bi bi-list-ol me-2"></i>Содержание модуля
+                    </h5>
+                    <nav class="nav flex-column">
+                        {% for lesson in module.lessons %}
+                        <a class="nav-link {% if loop.first and not lesson.completed %}active{% endif %}"
+                            href="#lesson-{{ loop.index }}">
+                            <div class="d-flex align-items-center">
+                                {% if lesson.completed %}
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                {% else %}
+                                <i
+                                    class="bi bi-{{ 'play-circle' if loop.first and not lesson.completed else 'circle' }} me-2"></i>
+                                {% endif %}
+                                <span>{{ lesson.title }}</span>
                             </div>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <small class="cyber-subtext">Общий прогресс</small>
-                            <small class="cyber-text">
-                                {{ (module.completed_lessons / module.lessons|length * 100)|round|int if
-                                module.lessons|length > 0 else 0 }}%
-                            </small>
+                        </a>
+                        {% endfor %}
+                    </nav>
+                </div>
+
+                <!-- Прогресс модуля -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text mb-3">
+                        <i class="bi bi-graph-up me-2"></i>Прогресс модуля
+                    </h5>
+                    <div class="cyber-progress mb-2">
+                        <div class="cyber-progress-bar"
+                            style="width: {{ (module.completed_lessons / module.lessons|length * 100) if module.lessons|length > 0 else 0 }}%">
                         </div>
                     </div>
+                    <div class="d-flex justify-content-between">
+                        <small class="cyber-subtext">Общий прогресс</small>
+                        <small class="cyber-text">
+                            {{ (module.completed_lessons / module.lessons|length * 100)|round|int if
+                            module.lessons|length > 0 else 0 }}%
+                        </small>
+                    </div>
+                </div>
 
-                    <!-- Достижения модуля -->
-                    <div class="sidebar-card">
-                        <h5 class="cyber-text mb-3">
-                            <i class="bi bi-award me-2"></i>Достижения модуля
-                        </h5>
-                        <div class="achievement-showcase">
-                            <div class="achievement-item {% if module.completed_lessons >= 1 %}pulse-glow{% endif %}">
-                                <div class="achievement-icon">
-                                    <i class="bi bi-1-circle"></i>
-                                </div>
-                                <h6 class="cyber-text">Первый урок</h6>
-                                <p class="cyber-subtext small">Завершите первый урок</p>
+                <!-- Достижения модуля -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text mb-3">
+                        <i class="bi bi-award me-2"></i>Достижения модуля
+                    </h5>
+                    <div class="achievement-showcase">
+                        <div class="achievement-item {% if module.completed_lessons >= 1 %}pulse-glow{% endif %}">
+                            <div class="achievement-icon">
+                                <i class="bi bi-1-circle"></i>
                             </div>
-                            <div
-                                class="achievement-item {% if module.completed_lessons == module.lessons|length %}pulse-glow{% else %}achievement-locked{% endif %}">
-                                <div class="achievement-icon">
-                                    <i class="bi bi-check-all"></i>
-                                </div>
-                                <h6 class="cyber-text">Мастер модуля</h6>
-                                <p class="cyber-subtext small">Завершите все уроки</p>
-                            </div>
+                            <h6 class="cyber-text">Первый урок</h6>
+                            <p class="cyber-subtext small">Завершите первый урок</p>
                         </div>
+                        <div
+                            class="achievement-item {% if module.completed_lessons == module.lessons|length %}pulse-glow{% else %}achievement-locked{% endif %}">
+                            <div class="achievement-icon">
+                                <i class="bi bi-check-all"></i>
+                            </div>
+                            <h6 class="cyber-text">Мастер модуля</h6>
+                            <p class="cyber-subtext small">Завершите все уроки</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Быстрые действия -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text mb-3">
+                        <i class="bi bi-lightning me-2"></i>Быстрые действия
+                    </h5>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}"
+                            class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i>Назад к курсу
+                        </a>
+                        <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=module.lessons[0].id) if module.lessons else '#' }}"
+                            class="btn btn-cyber btn-sm">
+                            <i class="bi bi-play-circle me-1"></i>Начать с первого урока
+                        </a>
                     </div>
                 </div>
             </div>
@@ -479,7 +824,10 @@
             notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
             notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
             notification.innerHTML = `
-                ${message}
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}-fill me-2"></i>
+                    <span>${message}</span>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
             document.body.appendChild(notification);
@@ -502,6 +850,12 @@
                         behavior: 'smooth',
                         block: 'start'
                     });
+
+                    // Обновляем активную ссылку
+                    document.querySelectorAll('.nav-link').forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    this.classList.add('active');
                 }
             });
         });
@@ -526,6 +880,18 @@
                     link.classList.add('active');
                 }
             });
+        });
+
+        // Инициализация прогресс-ринга
+        document.addEventListener('DOMContentLoaded', function () {
+            const progress = {{ (module.completed_lessons / module.lessons | length * 100) if module.lessons | length > 0 else 0
+        }};
+        const circle = document.querySelector('.module-progress-ring-fill');
+        if (circle) {
+            const circumference = 314;
+            const offset = circumference - (circumference * progress / 100);
+            circle.style.strokeDashoffset = offset;
+        }
         });
     </script>
 </body>
