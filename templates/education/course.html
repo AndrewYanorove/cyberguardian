@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Основы кибербезопасности - CyberGuardian</title>
+    <title>{{ course.title }} - CyberGuardian</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -11,7 +12,7 @@
             --cyber-darker: #0a0a0f;
             --cyber-dark: #111122;
             --cyber-border: #1a1a2e;
-            --cyber-primary: #00ff88;
+            --cyber-primary: #0375c2;
             --cyber-secondary: #0088ff;
             --cyber-subtext: #8899aa;
             --cyber-text: #e0e0ff;
@@ -25,7 +26,7 @@
 
         .cyber-title {
             color: var(--cyber-primary);
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 10px rgba(11, 232, 248, 0.781);
             font-weight: 700;
         }
 
@@ -49,7 +50,7 @@
 
         .cyber-link:hover {
             color: var(--cyber-secondary);
-            text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+            text-shadow: 0 0 8px rgba(18, 244, 252, 0.3);
         }
 
         .cyber-badge {
@@ -60,12 +61,35 @@
             font-size: 0.85rem;
         }
 
-        .bg-primary { background: rgba(0, 255, 136, 0.15) !important; border-color: var(--cyber-primary) !important; }
-        .bg-success { background: rgba(0, 136, 85, 0.15) !important; border-color: #008855 !important; }
-        .bg-info { background: rgba(0, 136, 255, 0.15) !important; border-color: var(--cyber-secondary) !important; }
-        .bg-secondary { background: rgba(136, 136, 255, 0.15) !important; border-color: #8888ff !important; }
-        .bg-dark { background: rgba(30, 30, 45, 0.8) !important; border-color: var(--cyber-border) !important; }
-        .bg-warning { background: rgba(255, 193, 7, 0.15) !important; border-color: #ffc107 !important; }
+        .bg-primary {
+            background: rgba(4, 168, 233, 0.15) !important;
+            border-color: var(--cyber-primary) !important;
+        }
+
+        .bg-success {
+            background: rgba(0, 136, 85, 0.15) !important;
+            border-color: #0a9dc2 !important;
+        }
+
+        .bg-info {
+            background: rgba(0, 136, 255, 0.15) !important;
+            border-color: var(--cyber-secondary) !important;
+        }
+
+        .bg-secondary {
+            background: rgba(136, 136, 255, 0.15) !important;
+            border-color: #8888ff !important;
+        }
+
+        .bg-dark {
+            background: rgba(30, 30, 45, 0.8) !important;
+            border-color: var(--cyber-border) !important;
+        }
+
+        .bg-warning {
+            background: rgba(255, 193, 7, 0.15) !important;
+            border-color: #ffc107 !important;
+        }
 
         .avatar-circle {
             width: 50px;
@@ -290,7 +314,7 @@
             font-size: 1.8rem;
             font-weight: bold;
             color: var(--cyber-primary);
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 10px rgba(3, 173, 224, 0.5);
         }
 
         .final-exam-card {
@@ -316,8 +340,13 @@
         }
 
         @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .requirements-list {
@@ -583,9 +612,17 @@
 
         /* Анимации */
         @keyframes pulse-glow {
-            0% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.6); }
-            100% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
+            0% {
+                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+            }
         }
 
         .pulse-glow {
@@ -597,25 +634,25 @@
             .course-hero {
                 padding: 2rem 0;
             }
-            
+
             .lesson-item {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1rem;
             }
-            
+
             .lesson-actions {
                 align-self: flex-end;
             }
-            
+
             .course-stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
+
             .path-item {
                 padding-left: 2rem;
             }
-            
+
             .path-dot {
                 left: 14px;
             }
@@ -651,8 +688,13 @@
         }
 
         @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
         }
 
         /* Улучшенные кнопки */
@@ -710,6 +752,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Hero Section -->
     <div class="course-hero">
@@ -719,49 +762,64 @@
                     <nav aria-label="breadcrumb" class="mb-3">
                         <ol class="breadcrumb cyber-border">
                             <li class="breadcrumb-item">
-                                <a href="/education" class="cyber-link">
+                                <a href="{{ url_for('education.education_home') }}" class="cyber-link">
                                     <i class="bi bi-book me-1"></i>Курсы
                                 </a>
                             </li>
-                            <li class="breadcrumb-item active cyber-text">Основы кибербезопасности</li>
+                            <li class="breadcrumb-item active cyber-text">{{ course.title }}</li>
                         </ol>
                     </nav>
 
-                    <h1 class="cyber-title glow-text mb-3">Основы кибербезопасности</h1>
-                    <p class="cyber-subtext lead mb-4">Изучите фундаментальные принципы кибербезопасности и научитесь защищать себя и свои данные в цифровом мире</p>
-                    
+                    <h1 class="cyber-title glow-text mb-3">{{ course.title }}</h1>
+                    <p class="cyber-subtext lead mb-4">{{ course.description }}</p>
+
                     <div class="d-flex gap-3 flex-wrap mb-4">
-                        <span class="difficulty-indicator difficulty-beginner">
+                        <span class="difficulty-indicator difficulty-{{ course.difficulty }}">
                             <i class="bi bi-shield-check me-1"></i>
-                            Beginner
+                            {% if course.difficulty == 'beginner' %}Начинающий
+                            {% elif course.difficulty == 'intermediate' %}Средний
+                            {% else %}Продвинутый{% endif %}
                         </span>
                         <span class="cyber-badge bg-primary">
-                            <i class="bi bi-clock me-1"></i> 8 часов
+                            <i class="bi bi-clock me-1"></i> {{ course.estimated_time }}
                         </span>
                         <span class="cyber-badge bg-success">
-                            <i class="bi bi-list-ul me-1"></i> 5 модулей
+                            <i class="bi bi-list-ul me-1"></i> {{ course.modules|length }} модулей
                         </span>
                         <span class="cyber-badge bg-info">
-                            <i class="bi bi-star me-1"></i> 4.8/5
+                            <i class="bi bi-star me-1"></i> {{ course.rating }}/5
                         </span>
                     </div>
 
                     <!-- Статистика курса -->
                     <div class="course-stats-grid">
+                        {% set total_lessons = namespace(count=0) %}
+                        {% for module in course.modules %}
+                        {% set total_lessons.count = total_lessons.count + module.lessons|length %}
+                        {% endfor %}
+
                         <div class="stat-item">
-                            <span class="stat-number">18</span>
+                            <span class="stat-number">{{ total_lessons.count }}</span>
                             <span class="stat-label">Уроков</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number">5</span>
+                            <span class="stat-number">
+                                {% set quiz_count = namespace(count=0) %}
+                                {% for module in course.modules %}
+                                {% for lesson in module.lessons %}
+                                {% if lesson.quiz %}{% set quiz_count.count = quiz_count.count + 1 %}{% endif %}
+                                {% endfor %}
+                                {% endfor %}
+                                {{ quiz_count.count }}
+                            </span>
                             <span class="stat-label">Тестов</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number">1</span>
+                            <span class="stat-number">{% if course.final_exam %}1{% else %}0{% endif %}</span>
                             <span class="stat-label">Экзаменов</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number">1247</span>
+                            <span class="stat-number">{{ course.students_count }}</span>
                             <span class="stat-label">Студентов</span>
                         </div>
                     </div>
@@ -770,17 +828,23 @@
                     <div class="course-progress-ring">
                         <svg class="course-progress-ring-circle" width="140" height="140">
                             <circle class="course-progress-ring-bg" cx="70" cy="70" r="60"></circle>
-                            <circle class="course-progress-ring-fill" cx="70" cy="70" r="60" 
-                                    style="stroke-dashoffset: 113.1"></circle>
+                            <circle class="course-progress-ring-fill" cx="70" cy="70" r="60"
+                                style="stroke-dashoffset: {{ 377 - (377 * progress.percentage / 100) }}"></circle>
                         </svg>
-                        <div class="course-progress-text">70%</div>
+                        <div class="course-progress-text">{{ progress.percentage }}%</div>
                     </div>
                     <h5 class="cyber-text mb-2">Прогресс курса</h5>
-                    <p class="cyber-subtext">12/18 уроков завершено</p>
-                    
-                    <button class="btn btn-cyber mt-3" onclick="completeCourse('cyber-basics')">
+                    <p class="cyber-subtext">{{ progress.completed }}/{{ progress.total }} уроков завершено</p>
+
+                    {% if course_completed %}
+                    <button class="btn btn-cyber mt-3" onclick="getCertificate('{{ course.id }}')">
                         <i class="bi bi-trophy me-2"></i>Получить сертификат
                     </button>
+                    {% else %}
+                    <button class="btn btn-cyber mt-3" onclick="startLearning('{{ course.id }}')">
+                        <i class="bi bi-play-circle me-2"></i>Начать обучение
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -793,189 +857,84 @@
                 <!-- Путь обучения -->
                 <div class="learning-path">
                     <div class="path-line"></div>
-                    
+
+                    {% for module in course.modules %}
                     <div class="path-item">
                         <div class="path-dot"></div>
                         <div class="path-content">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
                                     <span class="step-counter">
+                                        {% if module.completed_lessons == module.lessons|length %}
                                         <i class="bi bi-check-circle-fill me-1"></i>
-                                        Модуль 1
-                                    </span>
-                                    <h4 class="cyber-text mt-2 mb-2">
-                                        <i class="bi bi-shield-check me-2"></i>Введение в кибербезопасность
-                                    </h4>
-                                    <p class="cyber-subtext mb-3">Основные понятия и терминология кибербезопасности</p>
-                                </div>
-                                <span class="cyber-badge bg-dark">
-                                    4 уроков
-                                </span>
-                            </div>
-
-                            <!-- Прогресс модуля -->
-                            <div class="module-progress">
-                                <div class="module-progress-bar">
-                                    <div class="module-progress-fill" style="width: 100%"></div>
-                                </div>
-                                <small class="cyber-subtext">
-                                    4/4 завершено
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="path-item">
-                        <div class="path-dot"></div>
-                        <div class="path-content">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <span class="step-counter">
-                                        <i class="bi bi-check-circle-fill me-1"></i>
-                                        Модуль 2
-                                    </span>
-                                    <h4 class="cyber-text mt-2 mb-2">
-                                        <i class="bi bi-key me-2"></i>Защита паролей
-                                    </h4>
-                                    <p class="cyber-subtext mb-3">Создание и управление надежными паролями</p>
-                                </div>
-                                <span class="cyber-badge bg-dark">
-                                    3 уроков
-                                </span>
-                            </div>
-
-                            <!-- Прогресс модуля -->
-                            <div class="module-progress">
-                                <div class="module-progress-bar">
-                                    <div class="module-progress-fill" style="width: 100%"></div>
-                                </div>
-                                <small class="cyber-subtext">
-                                    3/3 завершено
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="path-item">
-                        <div class="path-dot"></div>
-                        <div class="path-content">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <span class="step-counter">
-                                        <i class="bi bi-check-circle-fill me-1"></i>
-                                        Модуль 3
-                                    </span>
-                                    <h4 class="cyber-text mt-2 mb-2">
-                                        <i class="bi bi-envelope me-2"></i>Безопасность email
-                                    </h4>
-                                    <p class="cyber-subtext mb-3">Защита от фишинга и спам-атак</p>
-                                </div>
-                                <span class="cyber-badge bg-dark">
-                                    4 уроков
-                                </span>
-                            </div>
-
-                            <!-- Прогресс модуля -->
-                            <div class="module-progress">
-                                <div class="module-progress-bar">
-                                    <div class="module-progress-fill" style="width: 75%"></div>
-                                </div>
-                                <small class="cyber-subtext">
-                                    3/4 завершено
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="path-item">
-                        <div class="path-dot"></div>
-                        <div class="path-content">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <span class="step-counter">
+                                        {% else %}
                                         <i class="bi bi-circle me-1"></i>
-                                        Модуль 4
+                                        {% endif %}
+                                        Модуль {{ loop.index }}
                                     </span>
                                     <h4 class="cyber-text mt-2 mb-2">
-                                        <i class="bi bi-wifi me-2"></i>Безопасные сети
+                                        <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
                                     </h4>
-                                    <p class="cyber-subtext mb-3">Защита в публичных и домашних сетях</p>
+                                    <p class="cyber-subtext mb-3">{{ module.description }}</p>
                                 </div>
                                 <span class="cyber-badge bg-dark">
-                                    4 уроков
+                                    {{ module.lessons|length }} уроков
                                 </span>
                             </div>
 
                             <!-- Прогресс модуля -->
                             <div class="module-progress">
                                 <div class="module-progress-bar">
-                                    <div class="module-progress-fill" style="width: 50%"></div>
+                                    <div class="module-progress-fill"
+                                        style="width: {{ (module.completed_lessons / module.lessons|length * 100) if module.lessons|length > 0 else 0 }}%">
+                                    </div>
                                 </div>
                                 <small class="cyber-subtext">
-                                    2/4 завершено
+                                    {{ module.completed_lessons }}/{{ module.lessons|length }} завершено
                                 </small>
+                            </div>
+
+                            <!-- Кнопка перехода к модулю -->
+                            <div class="mt-3">
+                                <a href="{{ url_for('education.module_detail', course_id=course.id, module_id=module.id) }}"
+                                    class="btn btn-cyber-outline btn-sm">
+                                    <i class="bi bi-arrow-right me-1"></i>Изучить модуль
+                                </a>
                             </div>
                         </div>
                     </div>
-
-                    <div class="path-item">
-                        <div class="path-dot"></div>
-                        <div class="path-content">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <span class="step-counter">
-                                        <i class="bi bi-circle me-1"></i>
-                                        Модуль 5
-                                    </span>
-                                    <h4 class="cyber-text mt-2 mb-2">
-                                        <i class="bi bi-phone me-2"></i>Мобильная безопасность
-                                    </h4>
-                                    <p class="cyber-subtext mb-3">Защита смартфонов и планшетов</p>
-                                </div>
-                                <span class="cyber-badge bg-dark">
-                                    3 уроков
-                                </span>
-                            </div>
-
-                            <!-- Прогресс модуля -->
-                            <div class="module-progress">
-                                <div class="module-progress-bar">
-                                    <div class="module-progress-fill" style="width: 0%"></div>
-                                </div>
-                                <small class="cyber-subtext">
-                                    0/3 завершено
-                                </small>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
 
                 <h3 class="cyber-text mb-4 mt-5">
                     <i class="bi bi-list-check me-2"></i>Детальное содержание курса
                 </h3>
 
-                <!-- Модуль 1 -->
-                <div class="module-card">
+                {% for module in course.modules %}
+                <!-- Модуль {{ loop.index }} -->
+                <div class="module-card" id="module-{{ loop.index }}">
                     <div class="d-flex justify-content-between align-items-start mb-4">
                         <div>
                             <h4 class="cyber-text mb-2">
-                                <i class="bi bi-shield-check me-2"></i>Введение в кибербезопасность
+                                <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
                             </h4>
-                            <p class="cyber-subtext mb-3">Основные понятия и терминология кибербезопасности</p>
+                            <p class="cyber-subtext mb-3">{{ module.description }}</p>
                             <div class="d-flex gap-2 flex-wrap">
-                                <span class="difficulty-indicator difficulty-beginner">
-                                    Beginner
+                                <span class="difficulty-indicator difficulty-{{ module.difficulty }}">
+                                    {% if module.difficulty == 'beginner' %}Начинающий
+                                    {% elif module.difficulty == 'intermediate' %}Средний
+                                    {% else %}Продвинутый{% endif %}
                                 </span>
                                 <span class="cyber-badge bg-secondary">
-                                    <i class="bi bi-clock me-1"></i> 2 часа
+                                    <i class="bi bi-clock me-1"></i> {{ module.estimated_time }}
                                 </span>
                             </div>
                         </div>
                         <div class="text-end">
-                            <span class="cyber-badge bg-dark">4 уроков</span>
+                            <span class="cyber-badge bg-dark">{{ module.lessons|length }} уроков</span>
                             <div class="mt-2">
                                 <small class="cyber-subtext">
-                                    4/4 завершено
+                                    {{ module.completed_lessons }}/{{ module.lessons|length }} завершено
                                 </small>
                             </div>
                         </div>
@@ -983,269 +942,124 @@
 
                     <!-- Уроки модуля -->
                     <div class="lesson-list">
-                        <div class="lesson-item completed">
+                        {% for lesson in module.lessons %}
+                        <div class="lesson-item {% if lesson.completed %}completed{% endif %}"
+                            data-lesson-id="{{ lesson.id }}" data-module-id="{{ module.id }}">
                             <div class="lesson-icon">
+                                {% if lesson.completed %}
                                 <i class="bi bi-check-circle-fill"></i>
+                                {% else %}
+                                <i class="bi bi-play-circle"></i>
+                                {% endif %}
                             </div>
-                            
-                            <div class="lesson-content">
-                                <h6 class="cyber-text mb-2">Что такое кибербезопасность?</h6>
-                                <p class="cyber-subtext mb-2">Основные понятия и важность кибербезопасности в современном мире</p>
-                                
-                                <div class="lesson-meta">
-                                    <span class="lesson-duration">
-                                        <i class="bi bi-clock"></i> 15 минут
-                                    </span>
-                                    <span class="cyber-badge bg-success">
-                                        <i class="bi bi-check-lg"></i> Завершено
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="lesson-actions">
-                                <a href="/education/course/cyber-basics/lesson/1" class="btn btn-cyber-outline btn-sm">
-                                    <i class="bi bi-eye me-1"></i> Повторить
-                                </a>
-                            </div>
-                        </div>
 
-                        <div class="lesson-item completed">
-                            <div class="lesson-icon">
-                                <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            
                             <div class="lesson-content">
-                                <h6 class="cyber-text mb-2">Основные угрозы</h6>
-                                <p class="cyber-subtext mb-2">Вирусы, трояны, фишинг и другие киберугрозы</p>
-                                
+                                <h6 class="cyber-text mb-2">{{ lesson.title }}</h6>
+                                <p class="cyber-subtext mb-2">{{ lesson.description }}</p>
+
                                 <div class="lesson-meta">
                                     <span class="lesson-duration">
-                                        <i class="bi bi-clock"></i> 20 минут
+                                        <i class="bi bi-clock"></i> {{ lesson.duration }} минут
                                     </span>
+                                    {% if lesson.quiz %}
                                     <span class="quiz-badge">
                                         <i class="bi bi-patch-question"></i> Тест
                                     </span>
-                                    <span class="cyber-badge bg-success">
-                                        <i class="bi bi-check-lg"></i> Завершено
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="lesson-actions">
-                                <a href="/education/course/cyber-basics/lesson/2" class="btn btn-cyber-outline btn-sm">
-                                    <i class="bi bi-eye me-1"></i> Повторить
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Модуль 2 -->
-                <div class="module-card">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div>
-                            <h4 class="cyber-text mb-2">
-                                <i class="bi bi-key me-2"></i>Защита паролей
-                            </h4>
-                            <p class="cyber-subtext mb-3">Создание и управление надежными паролями</p>
-                            <div class="d-flex gap-2 flex-wrap">
-                                <span class="difficulty-indicator difficulty-beginner">
-                                    Beginner
-                                </span>
-                                <span class="cyber-badge bg-secondary">
-                                    <i class="bi bi-clock me-1"></i> 1.5 часа
-                                </span>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <span class="cyber-badge bg-dark">3 уроков</span>
-                            <div class="mt-2">
-                                <small class="cyber-subtext">
-                                    3/3 завершено
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Уроки модуля -->
-                    <div class="lesson-list">
-                        <div class="lesson-item completed">
-                            <div class="lesson-icon">
-                                <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            
-                            <div class="lesson-content">
-                                <h6 class="cyber-text mb-2">Создание надежных паролей</h6>
-                                <p class="cyber-subtext mb-2">Правила создания паролей, которые сложно взломать</p>
-                                
-                                <div class="lesson-meta">
-                                    <span class="lesson-duration">
-                                        <i class="bi bi-clock"></i> 25 минут
-                                    </span>
+                                    {% endif %}
+                                    {% if lesson.practice %}
                                     <span class="practice-badge">
                                         <i class="bi bi-code-slash"></i> Практика
                                     </span>
+                                    {% endif %}
+                                    {% if lesson.completed %}
                                     <span class="cyber-badge bg-success">
                                         <i class="bi bi-check-lg"></i> Завершено
                                     </span>
+                                    {% endif %}
                                 </div>
 
                                 <!-- Подуроки -->
+                                {% if lesson.sublessons %}
                                 <div class="sublessons mt-3">
-                                    <div class="sublesson-item">
+                                    {% for sublesson in lesson.sublessons %}
+                                    <div class="sublesson-item" data-sublesson-id="{{ sublesson.id }}">
                                         <div class="sublesson-icon">
+                                            {% if sublesson.completed %}
                                             <i class="bi bi-check"></i>
+                                            {% else %}
+                                            <i class="bi bi-play"></i>
+                                            {% endif %}
                                         </div>
                                         <div class="flex-grow-1">
-                                            <small class="cyber-text">Длина и сложность пароля</small>
+                                            <small class="cyber-text">{{ sublesson.title }}</small>
                                             <div class="lesson-meta">
                                                 <span class="lesson-duration">
-                                                    <i class="bi bi-clock"></i> 10 мин
+                                                    <i class="bi bi-clock"></i> {{ sublesson.duration }} мин
                                                 </span>
                                             </div>
                                         </div>
+                                        {% if sublesson.completed %}
                                         <span class="cyber-badge bg-success btn-sm">
                                             <i class="bi bi-check"></i>
                                         </span>
+                                        {% else %}
+                                        <button class="btn btn-cyber-outline btn-sm"
+                                            onclick="startSublesson('{{ course.id }}', '{{ module.id }}', '{{ lesson.id }}', '{{ sublesson.id }}')">
+                                            <i class="bi bi-play"></i>
+                                        </button>
+                                        {% endif %}
                                     </div>
-                                    <div class="sublesson-item">
-                                        <div class="sublesson-icon">
-                                            <i class="bi bi-check"></i>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <small class="cyber-text">Использование символов</small>
-                                            <div class="lesson-meta">
-                                                <span class="lesson-duration">
-                                                    <i class="bi bi-clock"></i> 8 мин
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <span class="cyber-badge bg-success btn-sm">
-                                            <i class="bi bi-check"></i>
-                                        </span>
-                                    </div>
+                                    {% endfor %}
                                 </div>
+                                {% endif %}
                             </div>
-                            
+
                             <div class="lesson-actions">
-                                <a href="/education/course/cyber-basics/lesson/3" class="btn btn-cyber-outline btn-sm">
-                                    <i class="bi bi-eye me-1"></i> Повторить
+                                {% if lesson.quiz and not lesson.completed %}
+                                <a href="{{ url_for('education.lesson_quiz', course_id=course.id, lesson_id=lesson.id) }}"
+                                    class="btn btn-warning btn-sm me-2">
+                                    <i class="bi bi-patch-question me-1"></i>Тест
+                                </a>
+                                {% endif %}
+
+                                <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}"
+                                    class="btn {% if lesson.completed %}btn-cyber-outline{% else %}btn-cyber{% endif %} btn-sm">
+                                    <i
+                                        class="bi bi-{% if lesson.completed %}eye{% else %}play-circle{% endif %} me-1"></i>
+                                    {% if lesson.completed %}Повторить{% else %}Начать{% endif %}
                                 </a>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
-
-                <!-- Модуль 3 -->
-                <div class="module-card">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div>
-                            <h4 class="cyber-text mb-2">
-                                <i class="bi bi-envelope me-2"></i>Безопасность email
-                            </h4>
-                            <p class="cyber-subtext mb-3">Защита от фишинга и спам-атак</p>
-                            <div class="d-flex gap-2 flex-wrap">
-                                <span class="difficulty-indicator difficulty-intermediate">
-                                    Intermediate
-                                </span>
-                                <span class="cyber-badge bg-secondary">
-                                    <i class="bi bi-clock me-1"></i> 2 часа
-                                </span>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <span class="cyber-badge bg-dark">4 уроков</span>
-                            <div class="mt-2">
-                                <small class="cyber-subtext">
-                                    3/4 завершено
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Уроки модуля -->
-                    <div class="lesson-list">
-                        <div class="lesson-item completed">
-                            <div class="lesson-icon">
-                                <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            
-                            <div class="lesson-content">
-                                <h6 class="cyber-text mb-2">Распознавание фишинговых писем</h6>
-                                <p class="cyber-subtext mb-2">Как отличить легитимные письма от мошеннических</p>
-                                
-                                <div class="lesson-meta">
-                                    <span class="lesson-duration">
-                                        <i class="bi bi-clock"></i> 30 минут
-                                    </span>
-                                    <span class="quiz-badge">
-                                        <i class="bi bi-patch-question"></i> Тест
-                                    </span>
-                                    <span class="cyber-badge bg-success">
-                                        <i class="bi bi-check-lg"></i> Завершено
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="lesson-actions">
-                                <a href="/education/course/cyber-basics/lesson/4" class="btn btn-cyber-outline btn-sm">
-                                    <i class="bi bi-eye me-1"></i> Повторить
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="lesson-item">
-                            <div class="lesson-icon">
-                                <i class="bi bi-play-circle"></i>
-                            </div>
-                            
-                            <div class="lesson-content">
-                                <h6 class="cyber-text mb-2">Защита email аккаунта</h6>
-                                <p class="cyber-subtext mb-2">Двухфакторная аутентификация и настройки безопасности</p>
-                                
-                                <div class="lesson-meta">
-                                    <span class="lesson-duration">
-                                        <i class="bi bi-clock"></i> 25 минут
-                                    </span>
-                                    <span class="practice-badge">
-                                        <i class="bi bi-code-slash"></i> Практика
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="lesson-actions">
-                                <a href="/education/course/cyber-basics/lesson/5" class="btn btn-cyber btn-sm">
-                                    <i class="bi bi-play-circle me-1"></i> Начать
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
 
                 <!-- Достижения курса -->
                 <div class="achievement-showcase mt-5">
-                    <div class="achievement-item pulse-glow">
+                    <div class="achievement-item {% if progress.percentage >= 25 %}pulse-glow{% endif %}">
                         <div class="achievement-icon">
                             <i class="bi bi-rocket-takeoff"></i>
                         </div>
                         <h6 class="cyber-text">Начало пути</h6>
                         <p class="cyber-subtext small">Завершите 25% курса</p>
                     </div>
-                    <div class="achievement-item pulse-glow">
+                    <div class="achievement-item {% if progress.percentage >= 50 %}pulse-glow{% endif %}">
                         <div class="achievement-icon">
                             <i class="bi bi-bullseye"></i>
                         </div>
                         <h6 class="cyber-text">Полпути</h6>
                         <p class="cyber-subtext small">Завершите 50% курса</p>
                     </div>
-                    <div class="achievement-item">
+                    <div class="achievement-item {% if progress.percentage >= 75 %}pulse-glow{% endif %}">
                         <div class="achievement-icon">
                             <i class="bi bi-lightning-charge"></i>
                         </div>
                         <h6 class="cyber-text">Эксперт</h6>
                         <p class="cyber-subtext small">Завершите 75% курса</p>
                     </div>
-                    <div class="achievement-item achievement-locked">
+                    <div
+                        class="achievement-item {% if progress.percentage >= 100 %}pulse-glow{% else %}achievement-locked{% endif %}">
                         <div class="achievement-icon">
                             <i class="bi bi-trophy"></i>
                         </div>
@@ -1255,6 +1069,7 @@
                 </div>
 
                 <!-- Финальный экзамен -->
+                {% if course.final_exam %}
                 <div class="final-exam-card">
                     <h4 class="cyber-text mb-3">
                         <i class="bi bi-award me-2"></i>Финальный экзамен
@@ -1268,10 +1083,13 @@
                         <li>Минимальный балл: 70%</li>
                         <li>3 попытки на прохождение</li>
                     </div>
-                    <button class="btn btn-warning btn-lg" onclick="startFinalExam('cyber-basics')">
-                        <i class="bi bi-pencil-square me-2"></i>Начать экзамен
+                    <button class="btn btn-warning btn-lg" onclick="startFinalExam('{{ course.id }}')" {% if
+                        progress.percentage < 80 %}disabled{% endif %}>
+                        <i class="bi bi-pencil-square me-2"></i>
+                        {% if progress.percentage >= 80 %}Начать экзамен{% else %}Требуется 80% прогресса{% endif %}
                     </button>
                 </div>
+                {% endif %}
             </div>
 
             <!-- Боковая панель -->
@@ -1283,20 +1101,21 @@
                     </h5>
                     <div class="d-flex align-items-center mb-3">
                         <div class="avatar-circle bg-primary me-3">
-                            <i class="bi bi-shield-check"></i>
+                            <i
+                                class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-fundamentals' else 'shield-lock' if course.id == 'ethical-hacking' else 'search' }}"></i>
                         </div>
                         <div>
-                            <h6 class="cyber-text mb-1">Алексей Петров</h6>
-                            <p class="cyber-subtext small mb-0">Специалист по кибербезопасности</p>
+                            <h6 class="cyber-text mb-1">{{ course.instructor.name }}</h6>
+                            <p class="cyber-subtext small mb-0">{{ course.instructor.role }}</p>
                         </div>
                     </div>
-                    <p class="cyber-subtext small">Опыт работы в сфере информационной безопасности более 10 лет. Сертифицированный эксперт по защите данных.</p>
+                    <p class="cyber-subtext small">{{ course.instructor.bio }}</p>
                     <div class="d-flex gap-2">
                         <span class="cyber-badge bg-secondary">
-                            <i class="bi bi-star-fill me-1"></i> 4.9
+                            <i class="bi bi-star-fill me-1"></i> {{ course.instructor.rating }}
                         </span>
                         <span class="cyber-badge bg-info">
-                            <i class="bi bi-people me-1"></i> 5,247
+                            <i class="bi bi-people me-1"></i> {{ course.instructor.students }}
                         </span>
                     </div>
                 </div>
@@ -1307,10 +1126,9 @@
                         <i class="bi bi-list-check me-2"></i>Требования
                     </h5>
                     <ul class="requirements-list">
-                        <li>Базовые знания работы с компьютером</li>
-                        <li>Доступ к интернету</li>
-                        <li>Учетная запись электронной почты</li>
-                        <li>Готовность учиться новому</li>
+                        {% for requirement in course.requirements %}
+                        <li>{{ requirement }}</li>
+                        {% endfor %}
                     </ul>
                 </div>
 
@@ -1320,15 +1138,12 @@
                         <i class="bi bi-download me-2"></i>Ресурсы курса
                     </h5>
                     <div class="d-grid gap-2">
-                        <a href="#" class="btn btn-outline-secondary btn-sm text-start">
-                            <i class="bi bi-file-pdf me-2"></i>Пособие по кибербезопасности
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm text-start">
-                            <i class="bi bi-file-text me-2"></i>Шпаргалка по паролям
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm text-start">
-                            <i class="bi bi-file-earmark-check me-2"></i>Чек-лист безопасности
-                        </a>
+                        {% for resource in course.resources %}
+                        <button class="btn btn-outline-secondary btn-sm text-start"
+                            onclick="downloadResource('{{ resource.name }}')">
+                            <i class="bi bi-{{ resource.icon }} me-2"></i>{{ resource.name }}
+                        </button>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -1338,24 +1153,24 @@
                         <i class="bi bi-graph-up me-2"></i>Ваша статистика
                     </h5>
                     <div class="cyber-progress mb-2">
-                        <div class="cyber-progress-bar" style="width: 70%"></div>
+                        <div class="cyber-progress-bar" style="width: {{ progress.percentage }}%"></div>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <small class="cyber-subtext">Общий прогресс</small>
-                        <small class="cyber-text">70%</small>
+                        <small class="cyber-text">{{ progress.percentage }}%</small>
                     </div>
-                    
+
                     <div class="row text-center">
                         <div class="col-4">
-                            <div class="stat-number small">12</div>
+                            <div class="stat-number small">{{ progress.completed }}</div>
                             <div class="stat-label">Завершено</div>
                         </div>
                         <div class="col-4">
-                            <div class="stat-number small">2</div>
+                            <div class="stat-number small">{{ progress.in_progress }}</div>
                             <div class="stat-label">В процессе</div>
                         </div>
                         <div class="col-4">
-                            <div class="stat-number small">4</div>
+                            <div class="stat-number small">{{ progress.total - progress.completed }}</div>
                             <div class="stat-label">Осталось</div>
                         </div>
                     </div>
@@ -1367,21 +1182,11 @@
                         <i class="bi bi-compass me-2"></i>Быстрая навигация
                     </h5>
                     <div class="d-grid gap-2">
-                        <a href="#module-1" class="btn btn-outline-primary btn-sm text-start">
-                            <i class="bi bi-shield-check me-2"></i>Введение в кибербезопасность
+                        {% for module in course.modules %}
+                        <a href="#module-{{ loop.index }}" class="btn btn-outline-primary btn-sm text-start">
+                            <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
                         </a>
-                        <a href="#module-2" class="btn btn-outline-primary btn-sm text-start">
-                            <i class="bi bi-key me-2"></i>Защита паролей
-                        </a>
-                        <a href="#module-3" class="btn btn-outline-primary btn-sm text-start">
-                            <i class="bi bi-envelope me-2"></i>Безопасность email
-                        </a>
-                        <a href="#module-4" class="btn btn-outline-primary btn-sm text-start">
-                            <i class="bi bi-wifi me-2"></i>Безопасные сети
-                        </a>
-                        <a href="#module-5" class="btn btn-outline-primary btn-sm text-start">
-                            <i class="bi bi-phone me-2"></i>Мобильная безопасность
-                        </a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -1390,36 +1195,110 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function updateProgressRing(percentage) {
-            const circle = document.querySelector('.course-progress-ring-fill');
-            const circumference = 377;
-            const offset = circumference - (circumference * percentage / 100);
-            circle.style.strokeDashoffset = offset;
+        // Функции для работы с уроками
+        function startLearning(courseId) {
+            // Находим первый незавершенный урок
+            const firstLesson = document.querySelector('.lesson-item:not(.completed)');
+            if (firstLesson) {
+                const lessonId = firstLesson.dataset.lessonId;
+                window.location.href = `/education/course/${courseId}/lesson/${lessonId}`;
+            } else {
+                // Все уроки завершены, начинаем с первого
+                const firstLesson = document.querySelector('.lesson-item');
+                if (firstLesson) {
+                    const lessonId = firstLesson.dataset.lessonId;
+                    window.location.href = `/education/course/${courseId}/lesson/${lessonId}`;
+                }
+            }
         }
 
-        function startSublesson(courseId, lessonId, sublessonId) {
-            // Реализация начала подурока
-            console.log('Starting sublesson:', courseId, lessonId, sublessonId);
+        function startSublesson(courseId, moduleId, lessonId, sublessonId) {
+            // В реальном приложении здесь была бы загрузка подурока
+            showCyberNotification('info', `Запуск подурока: ${sublessonId}`);
+
+            // Симуляция загрузки контента подурока
+            setTimeout(() => {
+                showCyberNotification('success', 'Подурок завершен!');
+                // Обновляем интерфейс
+                const sublesson = document.querySelector(`[data-sublesson-id="${sublessonId}"]`);
+                if (sublesson) {
+                    const icon = sublesson.querySelector('.sublesson-icon i');
+                    icon.className = 'bi bi-check';
+
+                    const button = sublesson.querySelector('button');
+                    if (button) {
+                        button.className = 'btn btn-success btn-sm';
+                        button.innerHTML = '<i class="bi bi-check"></i>';
+                        button.disabled = true;
+                    }
+                }
+            }, 2000);
         }
 
         function startFinalExam(courseId) {
             if (confirm('Вы готовы начать финальный экзамен? У вас будет 60 минут на выполнение.')) {
-                window.location.href = `/education/course/${courseId}/exam`;
+                // Симуляция экзамена
+                showCyberNotification('warning', 'Экзамен начался! Удачи!');
+
+                // В реальном приложении здесь был бы переход на страницу экзамена
+                setTimeout(() => {
+                    // Симуляция завершения экзамена
+                    const score = Math.floor(Math.random() * 40) + 60; // 60-100
+                    const passed = score >= 70;
+
+                    if (passed) {
+                        showCyberNotification('success', `Поздравляем! Вы сдали экзамен с результатом ${score}%`);
+                        setTimeout(() => {
+                            getCertificate(courseId);
+                        }, 2000);
+                    } else {
+                        showCyberNotification('error', `Экзамен не сдан. Ваш результат: ${score}%. Попробуйте еще раз.`);
+                    }
+                }, 3000);
             }
         }
 
-        function completeCourse(courseId) {
-            if (confirm('Поздравляем! Вы завершили курс. Хотите получить сертификат?')) {
-                // Реализация получения сертификата
-                window.location.href = `/education/course/${courseId}/certificate`;
-            }
+        function getCertificate(courseId) {
+            window.location.href = `/education/course/${courseId}/certificate`;
         }
 
-        // Инициализация при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            const progress = 70;
-            updateProgressRing(progress);
+        function downloadResource(resourceName) {
+            showCyberNotification('info', `Скачивание ресурса: ${resourceName}`);
+            // В реальном приложении здесь была бы загрузка файла
+        }
+
+        function showCyberNotification(type, message) {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Плавная прокрутка к модулям
+        document.querySelectorAll('a[href^="#module-"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
     </script>
 </body>
+
 </html>
