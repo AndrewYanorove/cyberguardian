@@ -266,7 +266,7 @@ def calculate_crack_time(entropy):
     elif seconds < 3600:
         return f"{int(seconds/60)} минут"
     elif seconds < 86400:
-        return f"{int(seconds/3600)} часов"
+        return "Несколько часов"
     elif seconds < 31536000:
         return f"{int(seconds/86400)} дней"
     elif seconds < 315360000:
