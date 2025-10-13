@@ -4,12 +4,12 @@ import random
 import time
 import re
 import requests
-import dns.resolver
 import hashlib
 import socket
 from urllib.parse import urlparse
 import subprocess
 import platform
+import datetime
 
 scanner_bp = Blueprint('scanner', __name__)
 
@@ -192,7 +192,7 @@ class SecurityScanner:
     
     @staticmethod
     def scan_email_security(email):
-        """Реальная проверка безопасности email"""
+        """Проверка безопасности email (без внешних DNS запросов)"""
         if not email or '@' not in email:
             return {'error': 'Некорректный email'}
         
@@ -203,43 +203,12 @@ class SecurityScanner:
         try:
             domain = email.split('@')[-1]
             
-            # Проверка MX записей
-            try:
-                mx_records = dns.resolver.resolve(domain, 'MX')
-                if mx_records:
-                    recommendations.append("✅ MX записи настроены корректно")
-                else:
-                    issues.append("⚠️ Не найдены MX записи")
-                    score -= 20
-            except:
-                issues.append("❌ Проблемы с DNS домена")
-                score -= 30
-            
-            # Проверка SPF записей
-            try:
-                spf_records = dns.resolver.resolve(domain, 'TXT')
-                has_spf = any('v=spf1' in str(record) for record in spf_records)
-                if has_spf:
-                    recommendations.append("✅ SPF запись настроена")
-                else:
-                    issues.append("⚠️ Отсутствует SPF запись")
-                    score -= 15
-            except:
-                issues.append("❌ Не удалось проверить SPF")
-                score -= 10
-            
-            # Проверка DMARC
-            try:
-                dmarc_records = dns.resolver.resolve(f'_dmarc.{domain}', 'TXT')
-                has_dmarc = any('v=DMARC1' in str(record) for record in dmarc_records)
-                if has_dmarc:
-                    recommendations.append("✅ DMARC политика настроена")
-                else:
-                    issues.append("⚠️ Отсутствует DMARC политика")
-                    score -= 15
-            except:
-                issues.append("❌ Не удалось проверить DMARC")
-                score -= 10
+            # Упрощенная проверка без внешних DNS запросов
+            # Проверка формата email
+            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            if not re.match(email_pattern, email):
+                issues.append("❌ Некорректный формат email")
+                score -= 20
             
             # Проверка домена на известные провайдеры
             secure_providers = ['gmail.com', 'protonmail.com', 'tutanota.com', 'outlook.com', 'yahoo.com']
@@ -247,18 +216,27 @@ class SecurityScanner:
             
             if domain in secure_providers:
                 recommendations.append("✅ Надежный почтовый провайдер")
+                recommendations.append("✅ Вероятно настроены SPF/DKIM/DMARC")
             elif domain in medium_providers:
                 recommendations.append("⚠️ Стандартный почтовый провайдер")
+                recommendations.append("💡 Проверьте настройки SPF/DKIM/DMARC")
                 score -= 5
             else:
                 issues.append("💡 Проверьте надежность почтового провайдера")
+                recommendations.append("💡 Настройте SPF, DKIM и DMARC записи")
                 score -= 10
             
-            # Проверка на утечки (имитация через HIBP API)
-            # В реальном приложении можно использовать API Have I Been Pwned
+            # Базовые рекомендации для всех
+            recommendations.extend([
+                "Включите двухфакторную аутентификацию",
+                "Используйте надежный уникальный пароль",
+                "Регулярно проверяйте активность аккаунта"
+            ])
+            
+            # Проверка на утечки (имитация)
             leaked_domains = ['example.com', 'test.com', 'hacked-domain.com']
             if domain in leaked_domains:
-                issues.append("🚨 Домен присутствует в известных утечках")
+                issues.append("🚨 Домен присутствует в известных утечках (тест)")
                 score -= 25
                 recommendations.append("Немедленно смените пароль и включите 2FA")
             
@@ -278,7 +256,7 @@ class SecurityScanner:
     
     @staticmethod
     def network_scan(target):
-        """Реальное сканирование сети"""
+        """Сканирование сети с обработкой ошибок"""
         if not target:
             target = "127.0.0.1"
         
@@ -310,48 +288,66 @@ class SecurityScanner:
             (27017, 'MongoDB', 'high')
         ]
         
-        # Сканирование портов
+        # Сканирование портов с обработкой ошибок
         open_ports_count = 0
         for port, service, risk in common_ports:
-            is_open = SecurityScanner.check_port(target, port)
-            status = 'open' if is_open else 'closed'
-            
-            if is_open:
-                open_ports_count += 1
-                # Добавляем уязвимости для открытых портов
-                if risk == 'critical':
-                    vulnerabilities.append(f"Открыт критический порт {port} ({service})")
-                elif risk == 'high':
-                    vulnerabilities.append(f"Открыт высокорисковый порт {port} ({service})")
-            
-            ports.append({
-                'port': port,
-                'service': service,
-                'status': status,
-                'security': risk if is_open else 'low'
-            })
+            try:
+                is_open = SecurityScanner.check_port(target, port)
+                status = 'open' if is_open else 'closed'
+                
+                if is_open:
+                    open_ports_count += 1
+                    # Добавляем уязвимости для открытых портов
+                    if risk == 'critical':
+                        vulnerabilities.append(f"Открыт критический порт {port} ({service})")
+                    elif risk == 'high':
+                        vulnerabilities.append(f"Открыт высокорисковый порт {port} ({service})")
+                
+                ports.append({
+                    'port': port,
+                    'service': service,
+                    'status': status,
+                    'security': risk if is_open else 'low'
+                })
+            except Exception as e:
+                # Если сканирование порта не удалось, добавляем его как закрытый
+                ports.append({
+                    'port': port,
+                    'service': service,
+                    'status': 'unknown',
+                    'security': 'low'
+                })
         
         # Расчет общего score безопасности
         security_score = max(10, 100 - (open_ports_count * 5))
         
-        # Дополнительные проверки
-        if SecurityScanner.check_port(target, 3389):  # RDP
-            vulnerabilities.append("Открыт порт RDP (3389) - высокий риск")
-            security_score -= 20
-        
-        if SecurityScanner.check_port(target, 23):  # Telnet
-            vulnerabilities.append("Открыт порт Telnet (23) - критический риск")
-            security_score -= 25
-        
-        if SecurityScanner.check_port(target, 21):  # FTP
-            vulnerabilities.append("Открыт порт FTP (21) - данные передаются в открытом виде")
-            security_score -= 15
+        # Дополнительные проверки (с обработкой ошибок)
+        try:
+            if SecurityScanner.check_port(target, 3389):  # RDP
+                vulnerabilities.append("Открыт порт RDP (3389) - высокий риск")
+                security_score -= 20
+        except:
+            pass
+            
+        try:
+            if SecurityScanner.check_port(target, 23):  # Telnet
+                vulnerabilities.append("Открыт порт Telnet (23) - критический риск")
+                security_score -= 25
+        except:
+            pass
+            
+        try:
+            if SecurityScanner.check_port(target, 21):  # FTP
+                vulnerabilities.append("Открыт порт FTP (21) - данные передаются в открытом виде")
+                security_score -= 15
+        except:
+            pass
         
         # Рекомендации
         recommendations = []
         if open_ports_count > 10:
             recommendations.append("Слишком много открытых портов - закройте неиспользуемые")
-        if SecurityScanner.check_port(target, 80) and not SecurityScanner.check_port(target, 443):
+        if any(p['port'] == 80 and p['status'] == 'open' for p in ports) and not any(p['port'] == 443 and p['status'] == 'open' for p in ports):
             recommendations.append("HTTP доступен без HTTPS - настроить SSL")
         if vulnerabilities:
             recommendations.append("Обновите ПО и настройки безопасности")
@@ -373,63 +369,62 @@ class SecurityScanner:
     
     @staticmethod
     def check_port(host, port, timeout=2):
-        """Проверка доступности порта"""
+        """Проверка доступности порта с обработкой ошибок"""
         try:
+            # Пытаемся преобразовать host в IP адрес
+            try:
+                ip = socket.gethostbyname(host)
+            except socket.gaierror:
+                return False
+            
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 sock.settimeout(timeout)
-                result = sock.connect_ex((host, port))
+                result = sock.connect_ex((ip, port))
                 return result == 0
         except:
             return False
 
     @staticmethod
     def quick_system_scan():
-        """Быстрое сканирование системы"""
-        import psutil
-        import datetime
-        
+        """Быстрое сканирование системы (кроссплатформенное)"""
         security_issues = []
         recommendations = []
         
-        # Проверка обновлений системы
         try:
-            if platform.system() == "Windows":
-                # Проверка последнего обновления Windows
-                import winreg
-                key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\Results\Install")
-                last_update, _ = winreg.QueryValueEx(key, "LastSuccessTime")
-                last_update = datetime.datetime.fromtimestamp(last_update)
-                days_since_update = (datetime.datetime.now() - last_update).days
-                
-                if days_since_update > 30:
-                    security_issues.append(f"Последнее обновление было {days_since_update} дней назад")
-                    recommendations.append("Установите последние обновления Windows")
-        except:
-            pass
+            # Проверка операционной системы
+            system = platform.system()
+            recommendations.append(f"Обнаружена ОС: {system}")
+            
+            # Общие проверки для всех систем
+            try:
+                # Проверка использования памяти (индикатор подозрительной активности)
+                import psutil
+                memory_percent = psutil.virtual_memory().percent
+                if memory_percent > 90:
+                    security_issues.append(f"Высокая загрузка памяти: {memory_percent}%")
+            except ImportError:
+                # psutil не установлен - пропускаем эту проверку
+                pass
+            
+            # Проверка версии Python (устаревшие версии могут иметь уязвимости)
+            python_version = platform.python_version()
+            if tuple(map(int, python_version.split('.'))) < (3, 7):
+                security_issues.append(f"Используется устаревшая версия Python: {python_version}")
+                recommendations.append("Обновите Python до актуальной версии")
+            
+            # Проверка на наличие известных уязвимостей в зависимостях
+            # (здесь можно добавить проверку через safety или аналогичные инструменты)
+            
+        except Exception as e:
+            security_issues.append(f"Ошибка при сканировании системы: {str(e)}")
         
-        # Проверка антивируса (для Windows)
-        try:
-            if platform.system() == "Windows":
-                import wmi
-                c = wmi.WMI()
-                antivirus_products = c.Win32_Product(Name="%Antivirus%")
-                if not antivirus_products:
-                    security_issues.append("Антивирусное ПО не обнаружено")
-                    recommendations.append("Установите антивирусное ПО")
-        except:
-            pass
-        
-        # Проверка брандмауэра
-        try:
-            if platform.system() == "Windows":
-                import winreg
-                key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile")
-                enable_firewall, _ = winreg.QueryValueEx(key, "EnableFirewall")
-                if enable_firewall != 1:
-                    security_issues.append("Брандмауэр отключен")
-                    recommendations.append("Включите брандмауэр Windows")
-        except:
-            pass
+        # Универсальные рекомендации
+        recommendations.extend([
+            'Регулярно обновляйте операционную систему',
+            'Используйте антивирусное ПО',
+            'Включите брандмауэр',
+            'Делайте резервные копии важных данных'
+        ])
         
         # Расчет общего score
         base_score = 80
@@ -455,7 +450,7 @@ class SecurityScanner:
             ]
         }
 
-# Маршруты остаются такими же как в оригинальном файле
+# Маршруты
 @scanner_bp.route('/')
 @login_required
 def scanner_dashboard():
