@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Практика: {{ practice.title }} - {{ course.title }} - CyberGuardian</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --cyber-darker: #0a0a0f;
+            --cyber-dark: #111122;
+            --cyber-darker-blue: #0a1428;
+            --cyber-dark-blue: #1a1a2e;
+            --cyber-border: #2a2a3e;
+            --cyber-primary: #00a8ff;
+            --cyber-primary-glow: #00a8ff;
+            --cyber-secondary: #0097e6;
+            --cyber-accent: #00ff88;
+            --cyber-accent-glow: #00ff88;
+            --cyber-warning: #ff9f43;
+            --cyber-danger: #ff6b6b;
+            --cyber-success: #1dd1a1;
+            --cyber-info: #54a0ff;
+            --cyber-text: #e0e0ff;
+            --cyber-text-bright: #ffffff;
+            --cyber-subtext: #a0a0c0;
+            --cyber-subtext-dark: #8899aa;
+            --cyber-bg-card: rgba(20, 20, 30, 0.95);
+            --cyber-bg-card-light: rgba(30, 30, 45, 0.9);
+            --cyber-bg-card-dark: rgba(15, 15, 25, 0.98);
+            --cyber-bg-gradient: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark-blue) 50%, var(--cyber-darker-blue) 100%);
+            --cyber-glow-primary: 0 0 20px rgba(0, 168, 255, 0.5);
+            --cyber-glow-accent: 0 0 20px rgba(0, 255, 136, 0.5);
+            --cyber-glow-warning: 0 0 20px rgba(255, 159, 67, 0.5);
+            --cyber-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --cyber-shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --cyber-shadow-large: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--cyber-bg-gradient);
+            color: var(--cyber-text);
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        .cyber-title {
+            color: var(--cyber-text-bright);
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .cyber-title-primary {
+            color: var(--cyber-primary);
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cyber-subtitle {
+            color: var(--cyber-text);
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.4;
+        }
+
+        .cyber-text {
+            color: var(--cyber-text);
+            font-size: 1rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .cyber-text-bright {
+            color: var(--cyber-text-bright);
+            font-weight: 500;
+        }
+
+        .cyber-subtext {
+            color: var(--cyber-subtext);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .cyber-lead {
+            color: var(--cyber-text);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* ===== PRACTICE HERO ===== */
+        .practice-hero {
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 15, 0.95) 0%, 
+                rgba(26, 26, 46, 0.9) 50%, 
+                rgba(10, 20, 40, 0.85) 100%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300a8ff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border-bottom: 3px solid var(--cyber-border);
+            padding: 3rem 0 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .practice-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* ===== LAYOUT ===== */
+        .container-max {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== CARDS ===== */
+        .cyber-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--cyber-shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 168, 255, 0.1), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cyber-card:hover::before {
+            left: 100%;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-medium), 0 0 25px rgba(0, 168, 255, 0.15);
+        }
+
+        /* ===== TASK CARDS ===== */
+        .task-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 18px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .task-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .task-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-medium), 0 0 25px rgba(0, 168, 255, 0.15);
+        }
+
+        .task-card.completed {
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 255, 136, 0.05) 100%);
+        }
+
+        .task-card.active {
+            border-color: var(--cyber-primary);
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 168, 255, 0.08) 100%);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 168, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(0, 168, 255, 0.6); }
+        }
+
+        /* ===== TASK ICONS ===== */
+        .task-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(0, 255, 136, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .task-card:hover .task-icon {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.25), rgba(0, 255, 136, 0.2));
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);
+        }
+
+        .task-card.completed .task-icon {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 168, 255, 0.15));
+            color: var(--cyber-accent);
+        }
+
+        /* ===== PRACTICE EXAMPLES ===== */
+        .practice-example {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .practice-example:hover {
+            border-color: var(--cyber-primary);
+            transform: translateX(5px);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        .code-block {
+            background: rgba(10, 10, 15, 0.9);
+            border: 1px solid var(--cyber-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        /* ===== SOLUTIONS ===== */
+        .solution {
+            background: linear-gradient(135deg, var(--cyber-bg-card-light) 0%, rgba(0, 255, 136, 0.08) 100%);
+            border: 2px solid var(--cyber-accent);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .solution:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        /* ===== PROGRESS ===== */
+        .practice-progress-container {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .cyber-progress {
+            height: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--cyber-border);
+            position: relative;
+        }
+
+        .cyber-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 8px;
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* ===== BADGES ===== */
+        .cyber-badge {
+            background: rgba(40, 40, 55, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 25px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cyber-text);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-badge-primary {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.2), rgba(0, 168, 255, 0.1));
+            border-color: var(--cyber-primary);
+            color: var(--cyber-primary);
+        }
+
+        .cyber-badge-accent {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border-color: var(--cyber-accent);
+            color: var(--cyber-accent);
+        }
+
+        .cyber-badge-warning {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border-color: var(--cyber-warning);
+            color: var(--cyber-warning);
+        }
+
+        .cyber-badge-success {
+            background: linear-gradient(135deg, rgba(29, 209, 161, 0.2), rgba(29, 209, 161, 0.1));
+            border-color: var(--cyber-success);
+            color: var(--cyber-success);
+        }
+
+        .difficulty-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-beginner {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border: 2px solid var(--cyber-accent);
+            color: var(--cyber-accent);
+        }
+
+        .difficulty-intermediate {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border: 2px solid var(--cyber-warning);
+            color: var(--cyber-warning);
+        }
+
+        .difficulty-advanced {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
+            border: 2px solid var(--cyber-danger);
+            color: var(--cyber-danger);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-cyber:hover::before {
+            left: 100%;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4), 0 0 30px rgba(0, 255, 136, 0.3);
+            color: #000;
+        }
+
+        .btn-cyber-outline {
+            background: transparent;
+            border: 2px solid var(--cyber-primary);
+            color: var(--cyber-primary);
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cyber-outline:hover {
+            background: var(--cyber-primary);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+        }
+
+        .btn-cyber-success {
+            background: linear-gradient(135deg, var(--cyber-success), #17c97b);
+            border: none;
+            color: #000;
+            font-weight: 700;
+        }
+
+        /* ===== INTERACTIVE ELEMENTS ===== */
+        .interactive-terminal {
+            background: rgba(10, 10, 15, 0.95);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: rgba(20, 20, 30, 0.9);
+            border-bottom: 1px solid var(--cyber-border);
+            padding: 0.75rem 1rem;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #28ca42; }
+
+        .terminal-content {
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .terminal-prompt {
+            color: var(--cyber-accent);
+            font-weight: bold;
+        }
+
+        .terminal-command {
+            color: var(--cyber-text-bright);
+        }
+
+        .terminal-output {
+            color: var(--cyber-subtext);
+        }
+
+        /* ===== CHECKPOINTS ===== */
+        .checkpoint {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .checkpoint:hover {
+            border-color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .checkpoint.completed {
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card-light) 0%, rgba(0, 255, 136, 0.08) 100%);
+        }
+
+        .checkpoint-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(0, 168, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            margin-right: 1rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .checkpoint.completed .checkpoint-icon {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-accent);
+        }
+
+        /* ===== NAVIGATION ===== */
+        .practice-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--cyber-border);
+        }
+
+        .task-indicators {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .task-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--cyber-border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .task-indicator.active {
+            background: var(--cyber-primary);
+            transform: scale(1.2);
+        }
+
+        .task-indicator.completed {
+            background: var(--cyber-accent);
+        }
+
+        .task-indicator.current {
+            box-shadow: 0 0 10px var(--cyber-primary);
+        }
+
+        /* ===== BREADCRUMB ===== */
+        .cyber-breadcrumb {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb-item a {
+            color: var(--cyber-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--cyber-accent);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--cyber-text);
+        }
+
+        /* ===== COMPLETION SCREEN ===== */
+        .completion-screen {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-accent);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .completion-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+        }
+
+        .completion-icon {
+            font-size: 4rem;
+            color: var(--cyber-accent);
+            margin-bottom: 2rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .practice-hero {
+                padding: 2rem 0;
+            }
+            
+            .cyber-title {
+                font-size: 2rem;
+            }
+            
+            .task-card {
+                padding: 1.5rem;
+            }
+            
+            .task-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .practice-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .task-indicators {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container-max {
+                padding: 0 15px;
+            }
+            
+            .cyber-card {
+                padding: 1.5rem;
+            }
+            
+            .completion-screen {
+                padding: 2rem;
+            }
+            
+            .btn-cyber {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .focus-visible {
+            outline: 2px solid var(--cyber-primary);
+            outline-offset: 2px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cyber-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-accent);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Practice Hero Section -->
+    <div class="practice-hero">
+        <div class="container-max">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb cyber-breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('education.education_home') }}">
+                            <i class="bi bi-book me-2"></i>Все курсы
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}">
+                            {{ course.title }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}">
+                            {{ lesson.title }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ practice.title }}</li>
+                </ol>
+            </nav>
+
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="cyber-title display-4 mb-3">
+                        <i class="bi bi-code-slash me-3"></i>{{ practice.title }}
+                    </h1>
+                    <p class="cyber-lead mb-4">
+                        {{ practice.description }}
+                    </p>
+
+                    <!-- Practice Meta -->
+                    <div class="d-flex flex-wrap gap-3 mb-4">
+                        <span class="cyber-badge cyber-badge-accent">
+                            <i class="bi bi-list-task me-2"></i>{{ practice.tasks|length }} заданий
+                        </span>
+                        
+                        <span class="cyber-badge cyber-badge-primary">
+                            <i class="bi bi-clock me-2"></i>{{ practice.estimated_time if practice.estimated_time else 'Гибкое время' }}
+                        </span>
+                        
+                        <span class="difficulty-badge difficulty-{{ practice.difficulty if practice.difficulty else 'beginner' }}">
+                            <i class="bi bi-{{ 'shield-check' if practice.difficulty == 'beginner' else 'shield-exclamation' if practice.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
+                            {{ 'Начинающий' if practice.difficulty == 'beginner' else 'Средний' if practice.difficulty == 'intermediate' else 'Продвинутый' }}
+                        </span>
+                    </div>
+
+                    <!-- Practice Objectives -->
+                    <div class="cyber-card">
+                        <h4 class="cyber-text-bright mb-3">
+                            <i class="bi bi-bullseye me-2"></i>Цели практики
+                        </h4>
+                        <ul class="cyber-text">
+                            <li class="mb-2">Применить теоретические знания на практике</li>
+                            <li class="mb-2">Разработать реальные навыки кибербезопасности</li>
+                            <li class="mb-2">Научиться решать практические задачи</li>
+                            <li>Подготовиться к реальным сценариям работы</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 text-center">
+                    <!-- Practice Stats -->
+                    <div class="cyber-card">
+                        <h5 class="cyber-text-bright mb-4">
+                            <i class="bi bi-graph-up me-2"></i>Прогресс практики
+                        </h5>
+                        
+                        <div class="score-ring mb-4">
+                            <svg width="150" height="150" viewBox="0 0 150 150">
+                                <circle class="score-ring-bg" cx="75" cy="75" r="65"/>
+                                <circle class="score-ring-fill" cx="75" cy="75" r="65" 
+                                        stroke-dashoffset="408"/>
+                            </svg>
+                            <div class="score-text">0%</div>
+                        </div>
+
+                        <div class="row text-center mb-4">
+                            <div class="col-6">
+                                <div class="cyber-text-bright h5">0</div>
+                                <div class="cyber-subtext">Выполнено</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="cyber-text-bright h5">{{ practice.tasks|length }}</div>
+                                <div class="cyber-subtext">Всего</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button class="btn btn-cyber w-100 mb-2" onclick="startPractice()">
+                                <i class="bi bi-play-circle me-2"></i>Начать практику
+                            </button>
+                            <button class="btn btn-cyber-outline w-100" onclick="window.history.back()">
+                                <i class="bi bi-arrow-left me-2"></i>Вернуться к уроку
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-max">
+        <!-- Practice Progress -->
+        <div class="practice-progress-container" id="practiceProgress" style="display: none;">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="cyber-text-bright">Прогресс практики</span>
+                        <span class="cyber-text" id="progressText">Задание 1 из {{ practice.tasks|length }}</span>
+                    </div>
+                    <div class="cyber-progress">
+                        <div class="cyber-progress-bar" id="progressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="cyber-badge cyber-badge-accent" id="completionBadge">0% завершено</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Content -->
+        <div id="practiceContent">
+            <!-- Tasks will be dynamically loaded here -->
+        </div>
+
+        <!-- Practice Navigation -->
+        <div class="practice-navigation" id="practiceNavigation" style="display: none;">
+            <div>
+                <button class="btn btn-cyber-outline" id="prevBtn" onclick="previousTask()">
+                    <i class="bi bi-arrow-left me-2"></i>Предыдущее
+                </button>
+            </div>
+
+            <div class="task-indicators" id="taskIndicators">
+                <!-- Task indicators will be dynamically generated -->
+            </div>
+
+            <div>
+                <button class="btn btn-cyber-outline" id="nextBtn" onclick="nextTask()">
+                    Следующее<i class="bi bi-arrow-right ms-2"></i>
+                </button>
+                <button class="btn btn-cyber-success" id="completeBtn" onclick="completePractice()" style="display: none;">
+                    <i class="bi bi-check-circle me-2"></i>Завершить практику
+                </button>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="completionScreen" style="display: none;">
+            <!-- Completion content will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Practice data
+        const practiceData = {
+            id: "{{ practice.id }}",
+            title: "{{ practice.title }}",
+            description: "{{ practice.description }}",
+            tasks: {{ practice.tasks|tojson }},
+            estimatedTime: "{{ practice.estimated_time if practice.estimated_time else 'Гибкое время' }}"
+        };
+
+        // Practice state
+        let currentTaskIndex = 0;
+        let completedTasks = {};
+        let practiceStarted = false;
+
+        // DOM Elements
+        const practiceProgress = document.getElementById('practiceProgress');
+        const practiceContent = document.getElementById('practiceContent');
+        const practiceNavigation = document.getElementById('practiceNavigation');
+        const completionScreen = document.getElementById('completionScreen');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const completionBadge = document.getElementById('completionBadge');
+        const taskIndicators = document.getElementById('taskIndicators');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const completeBtn = document.getElementById('completeBtn');
+
+        // Start Practice
+        function startPractice() {
+            practiceStarted = true;
+            practiceProgress.style.display = 'block';
+            practiceNavigation.style.display = 'flex';
+            
+            // Initialize task indicators
+            initializeTaskIndicators();
+            
+            // Load first task
+            loadTask(currentTaskIndex);
+            
+            // Update progress
+            updateProgress();
+        }
+
+        // Initialize Task Indicators
+        function initializeTaskIndicators() {
+            taskIndicators.innerHTML = '';
+            practiceData.tasks.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.className = 'task-indicator';
+                if (index === 0) indicator.classList.add('current');
+                indicator.onclick = () => navigateToTask(index);
+                taskIndicators.appendChild(indicator);
+            });
+        }
+
+        // Update Task Indicators
+        function updateTaskIndicators() {
+            const indicators = taskIndicators.querySelectorAll('.task-indicator');
+            indicators.forEach((indicator, index) => {
+                indicator.classList.remove('active', 'completed', 'current');
+                if (completedTasks[index]) indicator.classList.add('completed');
+                if (index === currentTaskIndex) indicator.classList.add('current');
+            });
+        }
+
+        // Load Task
+        function loadTask(index) {
+            const task = practiceData.tasks[index];
+            const isCompleted = completedTasks[index];
+            
+            let taskHTML = `
+                <div class="task-card ${isCompleted ? 'completed' : 'active'}" id="task-${index}">
+                    <div class="task-icon">
+                        <i class="bi bi-${isCompleted ? 'check-circle' : 'code-square'}"></i>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h3 class="cyber-text-bright mb-2">${task.title}</h3>
+                            <p class="cyber-subtext">${task.description}</p>
+                        </div>
+                        <span class="cyber-badge ${isCompleted ? 'cyber-badge-success' : 'cyber-badge-primary'}">
+                            ${isCompleted ? 'Завершено' : 'В процессе'}
+                        </span>
+                    </div>
+                    
+                    <div class="task-content">
+                        ${task.instructions || task.content || ''}
+                    </div>
+                    
+                    <!-- Interactive Elements -->
+                    <div class="mt-4">
+            `;
+
+            // Add interactive elements based on task type
+            if (task.type === 'code') {
+                taskHTML += addCodeEditor(task);
+            } else if (task.type === 'terminal') {
+                taskHTML += addTerminal(task);
+            } else if (task.type === 'analysis') {
+                taskHTML += addAnalysisTools(task);
+            } else {
+                taskHTML += addDefaultInteractive(task);
+            }
+
+            taskHTML += `
+                    </div>
+                    
+                    <!-- Task Actions -->
+                    <div class="mt-4">
+                        <button class="btn btn-cyber me-3" onclick="markTaskComplete(${index})">
+                            <i class="bi bi-check-circle me-2"></i>Отметить как выполненное
+                        </button>
+                        <button class="btn btn-cyber-outline" onclick="showSolution(${index})">
+                            <i class="bi bi-lightbulb me-2"></i>Показать решение
+                        </button>
+                    </div>
+                    
+                    <!-- Solution Area -->
+                    <div id="solution-${index}" class="solution mt-3" style="display: none;">
+                        <h5 class="cyber-text-bright mb-3">
+                            <i class="bi bi-star me-2"></i>Решение задания
+                        </h5>
+                        ${task.solution || '<p class="cyber-text">Решение будет доступно после выполнения задания.</p>'}
+                    </div>
+                </div>
+            `;
+
+            practiceContent.innerHTML = taskHTML;
+            updateNavigationButtons();
+            updateTaskIndicators();
+        }
+
+        // Add Code Editor
+        function addCodeEditor(task) {
+            return `
+                <div class="interactive-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                        <span class="cyber-subtext ms-2">Редактор кода</span>
+                    </div>
+                    <div class="code-block">
+                        <pre><code class="language-python">${task.starter_code || '# Начните писать ваш код здесь...'}</code></pre>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-cyber-outline btn-sm" onclick="runCode()">
+                            <i class="bi bi-play me-1"></i>Запустить код
+                        </button>
+                        <button class="btn btn-cyber-outline btn-sm ms-2" onclick="resetCode()">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Сбросить
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add Terminal
+        function addTerminal(task) {
+            return `
+                <div class="interactive-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                        <span class="cyber-subtext ms-2">Терминал</span>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">user@cyberguardian:~$ </span>
+                            <span class="terminal-command">${task.initial_command || 'help'}</span>
+                        </div>
+                        <div class="terminal-line terminal-output">
+                            ${task.command_output || 'Добро пожаловать в практическую среду CyberGuardian!'}
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">user@cyberguardian:~$ </span>
+                            <span contenteditable="true" class="terminal-command" style="outline: none;"></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add Analysis Tools
+        function addAnalysisTools(task) {
+            return `
+                <div class="cyber-card">
+                    <h5 class="cyber-text-bright mb-3">
+                        <i class="bi bi-search me-2"></i>Инструменты анализа
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="checkpoint" onclick="toggleCheckpoint(this)">
+                                <div class="d-flex align-items-center">
+                                    <div class="checkpoint-icon">
+                                        <i class="bi bi-shield-check"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="cyber-text-bright mb-1">Анализ безопасности</h6>
+                                        <p class="cyber-subtext mb-0">Проверка системы на уязвимости</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="checkpoint" onclick="toggleCheckpoint(this)">
+                                <div class="d-flex align-items-center">
+                                    <div class="checkpoint-icon">
+                                        <i class="bi bi-graph-up"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="cyber-text-bright mb-1">Мониторинг сети</h6>
+                                        <p class="cyber-subtext mb-0">Отслеживание сетевой активности</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add Default Interactive
+        function addDefaultInteractive(task) {
+            return `
+                <div class="cyber-card">
+                    <h5 class="cyber-text-bright mb-3">
+                        <i class="bi bi-tools me-2"></i>Рабочая область
+                    </h5>
+                    <div class="practice-example">
+                        <p class="cyber-text">${task.instructions || 'Выполните задание согласно инструкциям выше.'}</p>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-cyber-outline" onclick="showHint()">
+                            <i class="bi bi-lightbulb me-2"></i>Подсказка
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Navigation Functions
+        function nextTask() {
+            if (currentTaskIndex < practiceData.tasks.length - 1) {
+                currentTaskIndex++;
+                loadTask(currentTaskIndex);
+                updateProgress();
+            }
+        }
+
+        function previousTask() {
+            if (currentTaskIndex > 0) {
+                currentTaskIndex--;
+                loadTask(currentTaskIndex);
+                updateProgress();
+            }
+        }
+
+        function navigateToTask(index) {
+            currentTaskIndex = index;
+            loadTask(currentTaskIndex);
+            updateProgress();
+        }
+
+        // Update Navigation Buttons
+        function updateNavigationButtons() {
+            prevBtn.style.display = currentTaskIndex > 0 ? 'inline-block' : 'none';
+            
+            if (currentTaskIndex === practiceData.tasks.length - 1) {
+                nextBtn.style.display = 'none';
+                completeBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                completeBtn.style.display = 'none';
+            }
+        }
+
+        // Update Progress
+        function updateProgress() {
+            const completedCount = Object.keys(completedTasks).length;
+            const progress = (completedCount / practiceData.tasks.length) * 100;
+            
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Задание ${currentTaskIndex + 1} из ${practiceData.tasks.length}`;
+            completionBadge.textContent = `${Math.round(progress)}% завершено`;
+            
+            // Update completion ring
+            const ringOffset = 408 - (progress / 100) * 408;
+            const ring = document.querySelector('.score-ring-fill');
+            if (ring) {
+                ring.style.strokeDashoffset = ringOffset;
+                document.querySelector('.score-text').textContent = `${Math.round(progress)}%`;
+            }
+        }
+
+        // Mark Task Complete
+        function markTaskComplete(index) {
+            completedTasks[index] = true;
+            
+            // Show success notification
+            showNotification('success', 'Задание выполнено!', 'Задание успешно отмечено как выполненное.');
+            
+            // Reload task to update UI
+            if (index === currentTaskIndex) {
+                loadTask(currentTaskIndex);
+            }
+            
+            updateTaskIndicators();
+            updateProgress();
+            
+            // Auto-advance to next task if available
+            if (index === currentTaskIndex && currentTaskIndex < practiceData.tasks.length - 1) {
+                setTimeout(() => {
+                    nextTask();
+                }, 1500);
+            }
+        }
+
+        // Show Solution
+        function showSolution(index) {
+            const solutionElement = document.getElementById(`solution-${index}`);
+            if (solutionElement) {
+                solutionElement.style.display = solutionElement.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Toggle Checkpoint
+        function toggleCheckpoint(element) {
+            element.classList.toggle('completed');
+        }
+
+        // Complete Practice
+        function completePractice() {
+            const completedCount = Object.keys(completedTasks).length;
+            const totalTasks = practiceData.tasks.length;
+            const completionRate = (completedCount / totalTasks) * 100;
+            
+            // Show completion screen
+            showCompletionScreen(completedCount, totalTasks, completionRate);
+        }
+
+        // Show Completion Screen
+        function showCompletionScreen(completed, total, rate) {
+            practiceProgress.style.display = 'none';
+            practiceContent.style.display = 'none';
+            practiceNavigation.style.display = 'none';
+            completionScreen.style.display = 'block';
+
+            let message = '';
+            let icon = 'bi-emoji-smile';
+            
+            if (rate >= 90) {
+                message = 'Отличная работа! Вы мастерски справились с практикой.';
+                icon = 'bi-emoji-laughing';
+            } else if (rate >= 70) {
+                message = 'Хорошая работа! Вы успешно завершили практику.';
+                icon = 'bi-emoji-smile';
+            } else if (rate >= 50) {
+                message = 'Неплохой результат! Продолжайте практиковаться.';
+                icon = 'bi-emoji-neutral';
+            } else {
+                message = 'Вы начали свой путь! Вернитесь и завершите оставшиеся задания.';
+                icon = 'bi-emoji-frown';
+            }
+
+            completionScreen.innerHTML = `
+                <div class="completion-screen">
+                    <div class="completion-icon">
+                        <i class="bi ${icon}"></i>
+                    </div>
+                    
+                    <h2 class="cyber-title mb-3">Практика завершена!</h2>
+                    
+                    <div class="cyber-lead mb-4">
+                        ${message}
+                    </div>
+                    
+                    <div class="row justify-content-center mb-4">
+                        <div class="col-md-8">
+                            <div class="cyber-card">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="cyber-text-bright h3">${completed}</div>
+                                        <div class="cyber-subtext">Выполнено</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="cyber-text-bright h3">${total}</div>
+                                        <div class="cyber-subtext">Всего заданий</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="cyber-text-bright h3">${Math.round(rate)}%</div>
+                                        <div class="cyber-subtext">Результат</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <button class="btn btn-cyber-success" onclick="retryPractice()">
+                            <i class="bi bi-arrow-repeat me-2"></i>Повторить практику
+                        </button>
+                        <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}" 
+                           class="btn btn-cyber">
+                            <i class="bi bi-book me-2"></i>Вернуться к уроку
+                        </a>
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
+                           class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-left me-2"></i>К содержанию курса
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            // Scroll to completion screen
+            completionScreen.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Retry Practice
+        function retryPractice() {
+            // Reset practice state
+            currentTaskIndex = 0;
+            completedTasks = {};
+            practiceStarted = false;
+            
+            // Reset UI
+            practiceProgress.style.display = 'none';
+            practiceContent.innerHTML = '';
+            practiceNavigation.style.display = 'none';
+            completionScreen.style.display = 'none';
+            
+            // Restart practice
+            startPractice();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Utility Functions
+        function showNotification(type, title, message) {
+            // Create and show notification
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-${type === 'success' ? 'check-circle' : 'info-circle'}-fill me-2"></i>
+                    <div>
+                        <h6 class="mb-1">${title}</h6>
+                        <p class="mb-0 small">${message}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        function runCode() {
+            showNotification('info', 'Код запущен', 'Выполнение кода в безопасной среде...');
+        }
+
+        function resetCode() {
+            showNotification('info', 'Код сброшен', 'Редактор возвращен в исходное состояние.');
+        }
+
+        function showHint() {
+            showNotification('warning', 'Подсказка', 'Внимательно изучите материалы урока и попробуйте разные подходы.');
+        }
+
+        // Initialize practice when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any initialization code here
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,85 +1,597 @@
+<!-- [file name]: education_home.html -->
 <!DOCTYPE html>
 <html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обучение - CyberGuardian</title>
+    <title>Центр обучения - CyberGuardian</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root {
             --cyber-darker: #0a0a0f;
             --cyber-dark: #111122;
-            --cyber-border: #1a1a2e;
-            --cyber-primary: #00ccff;
-            --cyber-secondary: #0088ff;
-            --cyber-subtext: #8899aa;
+            --cyber-darker-blue: #0a1428;
+            --cyber-dark-blue: #1a1a2e;
+            --cyber-border: #2a2a3e;
+            --cyber-primary: #00a8ff;
+            --cyber-primary-glow: #00a8ff;
+            --cyber-secondary: #0097e6;
+            --cyber-accent: #00ff88;
+            --cyber-accent-glow: #00ff88;
+            --cyber-warning: #ff9f43;
+            --cyber-danger: #ff6b6b;
+            --cyber-success: #1dd1a1;
+            --cyber-info: #54a0ff;
             --cyber-text: #e0e0ff;
+            --cyber-text-bright: #ffffff;
+            --cyber-subtext: #a0a0c0;
+            --cyber-subtext-dark: #8899aa;
+            --cyber-bg-card: rgba(20, 20, 30, 0.95);
+            --cyber-bg-card-light: rgba(30, 30, 45, 0.9);
+            --cyber-bg-card-dark: rgba(15, 15, 25, 0.98);
+            --cyber-bg-gradient: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark-blue) 50%, var(--cyber-darker-blue) 100%);
+            --cyber-glow-primary: 0 0 20px rgba(0, 168, 255, 0.5);
+            --cyber-glow-accent: 0 0 20px rgba(0, 255, 136, 0.5);
+            --cyber-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --cyber-shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --cyber-shadow-large: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--cyber-darker);
+            background: var(--cyber-bg-gradient);
             color: var(--cyber-text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
         }
 
+        /* ===== TYPOGRAPHY ===== */
         .cyber-title {
+            color: var(--cyber-text-bright);
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .cyber-title-primary {
             color: var(--cyber-primary);
-            text-shadow: 0 0 10px #00ccff;
-            font-weight: 700;
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cyber-subtitle {
+            color: var(--cyber-text);
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.4;
         }
 
         .cyber-text {
             color: var(--cyber-text);
+            font-size: 1rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .cyber-text-bright {
+            color: var(--cyber-text-bright);
+            font-weight: 500;
         }
 
         .cyber-subtext {
             color: var(--cyber-subtext);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
-        .cyber-border {
-            border-color: var(--cyber-border) !important;
+        .cyber-lead {
+            color: var(--cyber-text);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            font-weight: 400;
         }
 
-        .cyber-badge {
-            background: #1e1e2dcc;
-            border: 1px solid var(--cyber-border);
+        /* ===== HERO SECTION ===== */
+        .learning-hero {
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 15, 0.95) 0%, 
+                rgba(26, 26, 46, 0.9) 50%, 
+                rgba(10, 20, 40, 0.85) 100%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300a8ff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            padding: 5rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .learning-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-graphic {
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* ===== LAYOUT ===== */
+        .container-max {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-spacing {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 2px;
+        }
+
+        /* ===== CARDS ===== */
+        .cyber-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
             border-radius: 20px;
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--cyber-shadow-soft);
+            position: relative;
+            overflow: hidden;
         }
 
-        .bg-primary {
-            background: rgba(0, 255, 136, 0.15) !important;
-            border-color: var(--cyber-primary) !important;
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 168, 255, 0.1), 
+                transparent);
+            transition: left 0.6s ease;
         }
 
-        .bg-secondary {
-            background: rgba(136, 136, 255, 0.15) !important;
-            border-color: #8888ff !important;
+        .cyber-card:hover::before {
+            left: 100%;
         }
 
-        .bg-info {
-            background: rgba(0, 136, 255, 0.15) !important;
-            border-color: var(--cyber-secondary) !important;
+        .cyber-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-8px);
+            box-shadow: var(--cyber-shadow-large), 0 0 30px rgba(0, 168, 255, 0.2);
         }
 
-        .bg-dark {
-            background: rgba(30, 30, 45, 0.8) !important;
-            border-color: var(--cyber-border) !important;
+        /* ===== COURSE CARDS ===== */
+        .course-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 18px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
         }
 
-        .btn-cyber {
-            background: linear-gradient(135deg, var(--cyber-primary), #00ccff);
-            border: none;
-            color: var(--cyber-darker);
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
+        .course-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .course-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .course-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-8px);
+            box-shadow: var(--cyber-shadow-medium), 0 0 25px rgba(0, 168, 255, 0.15);
+        }
+
+        .course-card.featured {
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 255, 136, 0.05) 100%);
+        }
+
+        .course-card.featured::before {
+            content: '⭐ Рекомендуемый';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--cyber-accent), #00e676);
+            color: #000;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .course-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(0, 255, 136, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover .course-icon {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.25), rgba(0, 255, 136, 0.2));
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--cyber-primary);
+            display: block;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--cyber-subtext);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* ===== QUICK ACTIONS ===== */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .quick-action-card {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .quick-action-card:hover::before {
+            left: 100%;
+        }
+
+        .quick-action-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-medium);
+        }
+
+        .quick-action-icon {
+            font-size: 3rem;
+            color: var(--cyber-primary);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action-card:hover .quick-action-icon {
+            color: var(--cyber-accent);
+            transform: scale(1.1);
+        }
+
+        /* ===== LEARNING PATHWAYS ===== */
+        .pathway-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 18px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .pathway-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        .pathway-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .pathway-item:hover {
+            border-color: var(--cyber-primary);
+            background: rgba(0, 168, 255, 0.05);
+            transform: translateX(8px);
+        }
+
+        .pathway-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .pathway-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(0, 255, 136, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 1.5rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .pathway-item:hover .pathway-icon {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.25), rgba(0, 255, 136, 0.2));
+            transform: scale(1.05);
+        }
+
+        .pathway-progress {
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        /* ===== RECENT ACTIVITY ===== */
+        .activity-timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .activity-timeline::before {
+            content: '';
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 1px;
+        }
+
+        .activity-item {
+            position: relative;
+            padding: 1.5rem 0;
+            margin-bottom: 1rem;
+        }
+
+        .activity-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 2rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--cyber-primary);
+            border: 3px solid var(--cyber-darker);
+            z-index: 2;
+        }
+
+        .activity-content {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover .activity-content {
+            border-color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(0, 168, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* ===== BADGES ===== */
+        .cyber-badge {
+            background: rgba(40, 40, 55, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 25px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cyber-text);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-badge-primary {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.2), rgba(0, 168, 255, 0.1));
+            border-color: var(--cyber-primary);
+            color: var(--cyber-primary);
+        }
+
+        .cyber-badge-accent {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border-color: var(--cyber-accent);
+            color: var(--cyber-accent);
+        }
+
+        .cyber-badge-warning {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border-color: var(--cyber-warning);
+            color: var(--cyber-warning);
+        }
+
+        .difficulty-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-beginner {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border: 2px solid var(--cyber-accent);
+            color: var(--cyber-accent);
+        }
+
+        .difficulty-intermediate {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border: 2px solid var(--cyber-warning);
+            color: var(--cyber-warning);
+        }
+
+        .difficulty-advanced {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
+            border: 2px solid var(--cyber-danger);
+            color: var(--cyber-danger);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
         }
 
         .btn-cyber::before {
@@ -89,8 +601,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
         }
 
         .btn-cyber:hover::before {
@@ -98,8 +610,9 @@
         }
 
         .btn-cyber:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px #00ccff;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4), 0 0 30px rgba(0, 255, 136, 0.3);
+            color: #000;
         }
 
         .btn-cyber-outline {
@@ -107,31 +620,37 @@
             border: 2px solid var(--cyber-primary);
             color: var(--cyber-primary);
             font-weight: 600;
-            padding: 0.75rem 1.5rem;
+            padding: 0.875rem 1.75rem;
             border-radius: 10px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-cyber-outline:hover {
             background: var(--cyber-primary);
-            color: var(--cyber-darker);
+            color: #000;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
         }
 
+        /* ===== PROGRESS BARS ===== */
         .cyber-progress {
-            height: 8px;
+            height: 10px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
             border: 1px solid var(--cyber-border);
+            position: relative;
         }
 
         .cyber-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--cyber-primary), #00cc88);
-            border-radius: 4px;
-            transition: width 0.5s ease;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 8px;
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
         }
@@ -148,692 +667,929 @@
         }
 
         @keyframes shimmer {
-            0% {
-                left: -100%;
-            }
-
-            100% {
-                left: 100%;
-            }
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
-        .glow-text {
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-
-        .learning-hero {
-            background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
-            padding: 4rem 0;
-            border-bottom: 2px solid var(--cyber-border);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .learning-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff88' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
+        /* ===== COURSE GRID ===== */
         .course-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
             margin: 3rem 0;
-        }
-
-        .course-card {
-            background: rgba(20, 20, 20, 0.9);
-            border: 2px solid var(--cyber-border);
-            border-radius: 15px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .course-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .course-card:hover::before {
-            left: 100%;
-        }
-
-        .course-card:hover {
-            border-color: var(--cyber-primary);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.15);
-        }
-
-        .course-header {
-            display: flex;
-            justify-content: between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-        }
-
-        .course-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cyber-darker);
-            font-size: 1.5rem;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-
-        .course-meta {
-            display: flex;
-            gap: 1rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        .difficulty-badge {
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .difficulty-beginner {
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--cyber-primary);
-            border: 1px solid var(--cyber-primary);
-        }
-
-        .difficulty-intermediate {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-            border: 1px solid #ffc107;
-        }
-
-        .difficulty-advanced {
-            background: rgba(255, 0, 68, 0.15);
-            color: #ff0044;
-            border: 1px solid #ff0044;
-        }
-
-        .progress-section {
-            margin-top: 1.5rem;
-        }
-
-        .progress-info {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: var(--cyber-subtext);
-        }
-
-        .progress-percent {
-            font-weight: bold;
-            color: var(--cyber-primary);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 3rem 0;
-        }
-
-        .stat-card {
-            background: rgba(20, 20, 20, 0.9);
-            border: 2px solid var(--cyber-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            border-color: var(--cyber-primary);
-            transform: translateY(-3px);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--cyber-primary);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--cyber-subtext);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .featured-courses {
-            margin: 4rem 0;
-        }
-
-        .section-title {
-            position: relative;
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
-            border-radius: 2px;
-        }
-
-        .learning-pathways {
-            background: rgba(20, 20, 20, 0.6);
-            border: 2px solid var(--cyber-border);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 3rem 0;
-        }
-
-        .pathway-item {
-            display: flex;
-            align-items: center;
-            padding: 1.5rem;
-            border: 1px solid var(--cyber-border);
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .pathway-item:hover {
-            border-color: var(--cyber-primary);
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        .pathway-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .pathway-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            background: rgba(0, 255, 136, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cyber-primary);
-            font-size: 1.2rem;
-            margin-right: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .pathway-content {
-            flex-grow: 1;
-        }
-
-        .pathway-progress {
-            width: 120px;
-            flex-shrink: 0;
-        }
-
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .quick-action-card {
-            background: rgba(20, 20, 20, 0.9);
-            border: 2px solid var(--cyber-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .quick-action-card:hover {
-            border-color: var(--cyber-primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.1);
-        }
-
-        .quick-action-icon {
-            font-size: 2rem;
-            color: var(--cyber-primary);
-            margin-bottom: 1rem;
-        }
-
-        .recent-activity {
-            margin: 3rem 0;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid var(--cyber-border);
-            transition: all 0.3s ease;
-        }
-
-        .activity-item:hover {
-            background: rgba(0, 255, 136, 0.05);
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: rgba(0, 255, 136, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cyber-primary);
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-
-        .activity-content {
-            flex-grow: 1;
-        }
-
-        .activity-time {
-            color: var(--cyber-subtext);
-            font-size: 0.8rem;
         }
 
         @media (max-width: 768px) {
             .course-grid {
                 grid-template-columns: 1fr;
             }
+        }
 
-            .course-header {
-                flex-direction: column;
+        /* ===== FILTERS ===== */
+        .filters-section {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .filter-tag {
+            background: var(--cyber-bg-card-light);
+            border: 1px solid var(--cyber-border);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tag:hover,
+        .filter-tag.active {
+            background: var(--cyber-primary);
+            color: #000;
+            border-color: var(--cyber-primary);
+        }
+
+        /* ===== SEARCH ===== */
+        .search-box {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1rem 1rem 1rem 3rem;
+            color: var(--cyber-text);
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--cyber-primary);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cyber-subtext);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .learning-hero {
+                padding: 3rem 0;
             }
-
-            .course-icon {
-                margin-bottom: 1rem;
+            
+            .cyber-title {
+                font-size: 2.5rem;
             }
-
+            
+            .section-spacing {
+                padding: 2rem 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
             .pathway-item {
                 flex-direction: column;
                 text-align: center;
             }
-
+            
             .pathway-icon {
                 margin-right: 0;
                 margin-bottom: 1rem;
             }
-
+            
             .pathway-progress {
                 margin-top: 1rem;
+                width: 100%;
             }
+        }
+
+        @media (max-width: 576px) {
+            .container-max {
+                padding: 0 15px;
+            }
+            
+            .cyber-card {
+                padding: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .focus-visible {
+            outline: 2px solid var(--cyber-primary);
+            outline-offset: 2px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cyber-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-accent);
         }
     </style>
 </head>
 
 <body>
     <!-- Hero Section -->
-    <div class="learning-hero">
-        <div class="container">
+    <section class="learning-hero">
+        <div class="container-max">
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <h1 class="cyber-title glow-text mb-3">
-                        <i class="bi bi-book me-3"></i>Центр обучения
+                    <h1 class="cyber-title display-3 mb-4">
+                        <i class="bi bi-book me-3"></i>Центр обучения CyberGuardian
                     </h1>
-                    <p class="cyber-subtext lead mb-4">
-                        Освойте современные навыки кибербезопасности через практические курсы и реальные сценарии.
-                        Станьте востребованным специалистом в области информационной безопасности.
+                    <p class="cyber-lead mb-4">
+                        Освойте современные навыки кибербезопасности через практические курсы и реальные сценарии. 
+                        Станьте востребованным специалистом в области информационной безопасности под руководством экспертов индустрии.
                     </p>
-                    <div class="d-flex gap-3 flex-wrap">
-                        <a href="#courses" class="btn btn-cyber btn-lg">
+                    <div class="d-flex flex-wrap gap-3 mb-4">
+                        <a href="#featured-courses" class="btn btn-cyber btn-lg">
                             <i class="bi bi-play-circle me-2"></i>Начать обучение
                         </a>
-                        <div class="d-flex gap-3 flex-wrap">
-                            <a href="{{ url_for('index') }}" class="btn btn-cyber btn-lg">
-                                <i class="bi bi-arrow-left me-2"></i>На главную
-                            </a>
-                        </div>
-
+                        <a href="{{ url_for('index') }}" class="btn btn-cyber-outline btn-lg">
+                            <i class="bi bi-arrow-left me-2"></i>На главную
+                        </a>
+                        <a href="#learning-pathways" class="btn btn-cyber-outline btn-lg">
+                            <i class="bi bi-compass me-2"></i>Пути обучения
+                        </a>
                     </div>
-                    <div class="col-lg-4 text-center">
-                        <div class="hero-graphic">
-                            <i class="bi bi-shield-lock"
-                                style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.8;"></i>
+                    
+                    <!-- Quick Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">8</span>
+                            <span class="stat-label">Курсов доступно</span>
                         </div>
+                        <div class="stat-card">
+                            <span class="stat-number">156</span>
+                            <span class="stat-label">Уроков</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">42%</span>
+                            <span class="stat-label">Ваш прогресс</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">24k+</span>
+                            <span class="stat-label">Студентов</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 text-center">
+                    <div class="hero-graphic">
+                        <i class="bi bi-shield-lock" style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.9;"></i>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="container">
-            <!-- Статистика обучения -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-number">3</span>
-                    <span class="stat-label">Активных курса</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">42%</span>
-                    <span class="stat-label">Общий прогресс</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">15</span>
-                    <span class="stat-label">Завершенных уроков</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">2</span>
-                    <span class="stat-label">Полученных сертификата</span>
-                </div>
-            </div>
-
-            <!-- Быстрые действия -->
-            <div class="quick-actions">
+    <div class="container-max">
+        <!-- Quick Actions -->
+        <section class="section-spacing">
+            <h2 class="section-title cyber-title-primary">
+                <i class="bi bi-lightning me-2"></i>Быстрые действия
+            </h2>
+            
+            <div class="quick-actions-grid">
                 <div class="quick-action-card" onclick="location.href='{{ url_for('education.certificates') }}'">
                     <div class="quick-action-icon">
                         <i class="bi bi-award"></i>
                     </div>
-                    <h5 class="cyber-text">Мои сертификаты</h5>
-                    <p class="cyber-subtext small">Просмотр полученных сертификатов</p>
+                    <h4 class="cyber-text-bright mb-2">Мои сертификаты</h4>
+                    <p class="cyber-subtext">Просмотр полученных сертификатов и достижений</p>
+                    <div class="mt-3">
+                        <span class="cyber-badge cyber-badge-accent">3 сертификата</span>
+                    </div>
                 </div>
+                
                 <div class="quick-action-card" onclick="location.href='{{ url_for('education.achievements') }}'">
                     <div class="quick-action-icon">
                         <i class="bi bi-trophy"></i>
                     </div>
-                    <h5 class="cyber-text">Достижения</h5>
-                    <p class="cyber-subtext small">Мои значки и награды</p>
+                    <h4 class="cyber-text-bright mb-2">Достижения</h4>
+                    <p class="cyber-subtext">Мои значки, награды и прогресс обучения</p>
+                    <div class="mt-3">
+                        <span class="cyber-badge cyber-badge-warning">12 достижений</span>
+                    </div>
                 </div>
-                <div class="quick-action-card" onclick="location.href='#recent-activity'">
+                
+                <div class="quick-action-card" onclick="showRecentActivity()">
                     <div class="quick-action-icon">
                         <i class="bi bi-clock-history"></i>
                     </div>
-                    <h5 class="cyber-text">История обучения</h5>
-                    <p class="cyber-subtext small">Последняя активность</p>
+                    <h4 class="cyber-text-bright mb-2">История обучения</h4>
+                    <p class="cyber-subtext">Последняя активность и прогресс по курсам</p>
+                    <div class="mt-3">
+                        <span class="cyber-badge">15 активностей</span>
+                    </div>
+                </div>
+                
+                <div class="quick-action-card" onclick="showLearningStats()">
+                    <div class="quick-action-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h4 class="cyber-text-bright mb-2">Статистика</h4>
+                    <p class="cyber-subtext">Подробная аналитика вашего обучения</p>
+                    <div class="mt-3">
+                        <span class="cyber-badge cyber-badge-primary">42% прогресс</span>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Рекомендуемые курсы -->
-            <section class="featured-courses" id="courses">
-                <h2 class="section-title cyber-text">
+        <!-- Featured Courses -->
+        <section id="featured-courses" class="section-spacing">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title cyber-title-primary">
                     <i class="bi bi-stars me-2"></i>Рекомендуемые курсы
                 </h2>
+                <a href="#all-courses" class="btn btn-cyber-outline">
+                    <i class="bi bi-grid me-2"></i>Все курсы
+                </a>
+            </div>
 
-                <div class="course-grid">
-                    {% for course in featured_courses %}
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-icon">
-                                <i
-                                    class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-fundamentals' else 'shield-exclamation' if course.id == 'ethical-hacking' else 'shield-fill' }}"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h4 class="cyber-text mb-2">{{ course.title }}</h4>
-                                <p class="cyber-subtext small">{{ course.description[:100] }}...</p>
-                            </div>
-                        </div>
-
-                        <div class="course-meta">
-                            <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                <i
-                                    class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }}"></i>
-                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
-                                ==
-                                'intermediate' else 'Продвинутый' }}
-                            </span>
-                            <span class="cyber-badge bg-secondary">
-                                <i class="bi bi-clock"></i> {{ course.estimated_time }}
-                            </span>
-                            <span class="cyber-badge bg-info">
-                                <i class="bi bi-star-fill"></i> {{ course.rating }}
-                            </span>
-                        </div>
-
-                        <div class="progress-section">
-                            <div class="progress-info">
-                                <span class="progress-text">Прогресс курса</span>
-                                <span class="progress-percent">{{ course.progress }}%</span>
-                            </div>
-                            <div class="cyber-progress">
-                                <div class="cyber-progress-bar" style="width: {{ course.progress }}%"></div>
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2 mt-3">
-                            <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
-                                <i
-                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
-                                {{ 'Начать' if course.progress == 0 else 'Продолжить' }}
-                            </a>
-                        </div>
+            <div class="course-grid">
+                {% for course in featured_courses %}
+                <div class="course-card {% if loop.first %}featured{% endif %} fade-in-up" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                    <div class="course-icon">
+                        <i class="bi bi-{{ course.icon }}"></i>
                     </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Все курсы -->
-            <section id="all-courses">
-                <h2 class="section-title cyber-text">
-                    <i class="bi bi-collection me-2"></i>Все курсы
-                </h2>
-
-                <div class="course-grid">
-                    {% for course in courses %}
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-icon">
-                                <i
-                                    class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-fundamentals' else 'shield-exclamation' if course.id == 'ethical-hacking' else 'shield-fill' }}"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h4 class="cyber-text mb-2">{{ course.title }}</h4>
-                                <p class="cyber-subtext small">{{ course.description[:120] }}...</p>
-                            </div>
-                        </div>
-
-                        <div class="course-meta">
+                    
+                    <div class="course-content">
+                        <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
+                        <p class="cyber-text mb-4">{{ course.description }}</p>
+                        
+                        <div class="course-meta d-flex flex-wrap gap-2 mb-4">
                             <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
-                                ==
-                                'intermediate' else 'Продвинутый' }}
+                                <i class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty == 'intermediate' else 'Продвинутый' }}
                             </span>
-                            <span class="cyber-badge bg-dark">
-                                <i class="bi bi-people"></i> {{ course.students_count }}
+                            <span class="cyber-badge">
+                                <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
+                            </span>
+                            <span class="cyber-badge cyber-badge-primary">
+                                <i class="bi bi-star-fill me-1"></i>{{ course.rating }}
                             </span>
                         </div>
 
-                        <div class="progress-section">
-                            <div class="progress-info">
-                                <span class="progress-text">Прогресс</span>
-                                <span class="progress-percent">{{ course.progress }}%</span>
+                        <div class="progress-section mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="cyber-subtext">Прогресс курса</span>
+                                <span class="cyber-text-bright fw-bold">{{ course.progress }}%</span>
                             </div>
                             <div class="cyber-progress">
                                 <div class="cyber-progress-bar" style="width: {{ course.progress }}%"></div>
                             </div>
                         </div>
 
-                        <div class="d-grid gap-2 mt-3">
-                            <a href="{{ url_for('education.course_page', course_id=course.id) }}"
-                                class="btn btn-cyber-outline">
-                                <i
-                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
+                        <div class="d-grid">
+                            <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
+                                <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
                                 {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
                             </a>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-            </section>
+                {% endfor %}
+            </div>
+        </section>
 
-            <!-- Пути обучения -->
-            <section class="learning-pathways" id="pathways">
-                <h2 class="section-title cyber-text">
-                    <i class="bi bi-signpost-2 me-2"></i>Пути обучения
-                </h2>
-
+        <!-- Learning Pathways -->
+        <section id="learning-pathways" class="section-spacing">
+            <h2 class="section-title cyber-title-primary">
+                <i class="bi bi-signpost-2 me-2"></i>Пути обучения
+            </h2>
+            
+            <div class="pathway-card">
+                <p class="cyber-lead mb-4">
+                    Выберите специализацию и следуйте структурированному пути обучения для достижения ваших карьерных целей в кибербезопасности.
+                </p>
+                
                 <div class="pathway-list">
                     <div class="pathway-item">
                         <div class="pathway-icon">
                             <i class="bi bi-shield-check"></i>
                         </div>
-                        <div class="pathway-content">
-                            <h5 class="cyber-text mb-2">Начинающий специалист</h5>
-                            <p class="cyber-subtext small mb-0">
-                                Основы кибербезопасности для новичков. Идеально для начала карьеры в ИБ.
+                        <div class="pathway-content flex-grow-1">
+                            <h4 class="cyber-text-bright mb-2">Начинающий специалист</h4>
+                            <p class="cyber-subtext mb-0">
+                                Основы кибербезопасности для новичков. Идеально для начала карьеры в ИБ и понимания фундаментальных концепций.
                             </p>
                         </div>
                         <div class="pathway-progress">
-                            <div class="cyber-progress">
+                            <div class="cyber-progress mb-2">
                                 <div class="cyber-progress-bar" style="width: 65%"></div>
                             </div>
                             <small class="cyber-subtext">65% завершено</small>
                         </div>
                     </div>
-
+                    
                     <div class="pathway-item">
                         <div class="pathway-icon">
                             <i class="bi bi-bug"></i>
                         </div>
-                        <div class="pathway-content">
-                            <h5 class="cyber-text mb-2">Этичный хакинг</h5>
-                            <p class="cyber-subtext small mb-0">
-                                Методы тестирования на проникновение и поиска уязвимостей.
+                        <div class="pathway-content flex-grow-1">
+                            <h4 class="cyber-text-bright mb-2">Этичный хакинг</h4>
+                            <p class="cyber-subtext mb-0">
+                                Методы тестирования на проникновение и поиска уязвимостей. Станьте сертифицированным этичным хакером.
                             </p>
                         </div>
                         <div class="pathway-progress">
-                            <div class="cyber-progress">
+                            <div class="cyber-progress mb-2">
                                 <div class="cyber-progress-bar" style="width: 30%"></div>
                             </div>
                             <small class="cyber-subtext">30% завершено</small>
                         </div>
                     </div>
-
+                    
                     <div class="pathway-item">
                         <div class="pathway-icon">
                             <i class="bi bi-search"></i>
                         </div>
-                        <div class="pathway-content">
-                            <h5 class="cyber-text mb-2">Цифровая криминалистика</h5>
-                            <p class="cyber-subtext small mb-0">
-                                Расследование киберинцидентов и сбор цифровых доказательств.
+                        <div class="pathway-content flex-grow-1">
+                            <h4 class="cyber-text-bright mb-2">Цифровая криминалистика</h4>
+                            <p class="cyber-subtext mb-0">
+                                Расследование киберинцидентов и сбор цифровых доказательств. Освойте инструменты и методики расследований.
                             </p>
                         </div>
                         <div class="pathway-progress">
-                            <div class="cyber-progress">
+                            <div class="cyber-progress mb-2">
                                 <div class="cyber-progress-bar" style="width: 15%"></div>
                             </div>
                             <small class="cyber-subtext">15% завершено</small>
                         </div>
                     </div>
+                    
+                    <div class="pathway-item">
+                        <div class="pathway-icon">
+                            <i class="bi bi-cloud"></i>
+                        </div>
+                        <div class="pathway-content flex-grow-1">
+                            <h4 class="cyber-text-bright mb-2">Облачная безопасность</h4>
+                            <p class="cyber-subtext mb-0">
+                                Защита облачных инфраструктур и приложений. AWS, Azure, GCP security best practices.
+                            </p>
+                        </div>
+                        <div class="pathway-progress">
+                            <div class="cyber-progress mb-2">
+                                <div class="cyber-progress-bar" style="width: 5%"></div>
+                            </div>
+                            <small class="cyber-subtext">5% завершено</small>
+                        </div>
+                    </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Недавняя активность -->
-            <section class="recent-activity" id="recent-activity">
-                <h2 class="section-title cyber-text">
-                    <i class="bi bi-activity me-2"></i>Недавняя активность
+        <!-- All Courses -->
+        <section id="all-courses" class="section-spacing">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title cyber-title-primary">
+                    <i class="bi bi-collection me-2"></i>Все курсы
                 </h2>
+                
+                <!-- Search and Filters -->
+                <div class="d-flex gap-3 align-items-center">
+                    <div class="search-box">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Поиск курсов..." id="courseSearch">
+                    </div>
+                    <button class="btn btn-cyber-outline" onclick="toggleFilters()">
+                        <i class="bi bi-funnel me-2"></i>Фильтры
+                    </button>
+                </div>
+            </div>
 
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-check-circle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h6 class="cyber-text mb-1">Завершен урок "Основы сетевой безопасности"</h6>
-                            <p class="cyber-subtext small mb-0">Курс: Основы кибербезопасности</p>
-                        </div>
-                        <div class="activity-time">
-                            2 часа назад
+            <!-- Filters Section -->
+            <div class="filters-section" id="filtersSection" style="display: none;">
+                <h5 class="cyber-text-bright mb-3">Фильтры курсов</h5>
+                <div class="row">
+                    <div class="col-md-3">
+                        <h6 class="cyber-subtext mb-2">Сложность</h6>
+                        <div class="filter-tags">
+                            <span class="filter-tag active" data-filter="difficulty-all">Все</span>
+                            <span class="filter-tag" data-filter="difficulty-beginner">Начинающий</span>
+                            <span class="filter-tag" data-filter="difficulty-intermediate">Средний</span>
+                            <span class="filter-tag" data-filter="difficulty-advanced">Продвинутый</span>
                         </div>
                     </div>
-
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-patch-question"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h6 class="cyber-text mb-1">Пройден тест "Типы кибератак"</h6>
-                            <p class="cyber-subtext small mb-0">Результат: 85%</p>
-                        </div>
-                        <div class="activity-time">
-                            Вчера, 14:30
+                    <div class="col-md-3">
+                        <h6 class="cyber-subtext mb-2">Статус</h6>
+                        <div class="filter-tags">
+                            <span class="filter-tag active" data-filter="status-all">Все</span>
+                            <span class="filter-tag" data-filter="status-not-started">Не начат</span>
+                            <span class="filter-tag" data-filter="status-in-progress">В процессе</span>
+                            <span class="filter-tag" data-filter="status-completed">Завершен</span>
                         </div>
                     </div>
-
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <i class="bi bi-play-circle"></i>
+                    <div class="col-md-3">
+                        <h6 class="cyber-subtext mb-2">Тип</h6>
+                        <div class="filter-tags">
+                            <span class="filter-tag active" data-filter="type-all">Все</span>
+                            <span class="filter-tag" data-filter="type-fundamental">Фундаментальные</span>
+                            <span class="filter-tag" data-filter="type-practical">Практические</span>
+                            <span class="filter-tag" data-filter="type-certification">Подготовка к сертификации</span>
                         </div>
-                        <div class="activity-content">
-                            <h6 class="cyber-text mb-1">Начат модуль "Методы социальной инженерии"</h6>
-                            <p class="cyber-subtext small mb-0">Курс: Этичный хакинг</p>
-                        </div>
-                        <div class="activity-time">
-                            2 дня назад
+                    </div>
+                    <div class="col-md-3">
+                        <h6 class="cyber-subtext mb-2">Рейтинг</h6>
+                        <div class="filter-tags">
+                            <span class="filter-tag active" data-filter="rating-all">Все</span>
+                            <span class="filter-tag" data-filter="rating-4+">4.0+</span>
+                            <span class="filter-tag" data-filter="rating-4.5+">4.5+</span>
+                            <span class="filter-tag" data-filter="rating-5">5.0</span>
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Функция для показа уведомлений
-            function showCyberNotification(type, message) {
-                const notification = document.createElement('div');
-                notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-                notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-                notification.innerHTML = `
-                ${message}
+            <div class="course-grid" id="coursesContainer">
+                {% for course in courses %}
+                <div class="course-card fade-in-up" data-course-id="{{ course.id }}" 
+                     data-difficulty="{{ course.difficulty }}" 
+                     data-progress="{{ course.progress }}"
+                     data-rating="{{ course.rating }}">
+                    <div class="course-icon">
+                        <i class="bi bi-{{ course.icon }}"></i>
+                    </div>
+                    
+                    <div class="course-content">
+                        <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
+                        <p class="cyber-text mb-4">{{ course.description }}</p>
+                        
+                        <div class="course-meta d-flex flex-wrap gap-2 mb-4">
+                            <span class="difficulty-badge difficulty-{{ course.difficulty }}">
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty == 'intermediate' else 'Продвинутый' }}
+                            </span>
+                            <span class="cyber-badge">
+                                <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
+                            </span>
+                            <span class="cyber-badge">
+                                <i class="bi bi-people me-1"></i>{{ course.students_count }}
+                            </span>
+                        </div>
+
+                        <div class="progress-section mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="cyber-subtext">Прогресс</span>
+                                <span class="cyber-text-bright fw-bold">{{ course.progress }}%</span>
+                            </div>
+                            <div class="cyber-progress">
+                                <div class="cyber-progress-bar" style="width: {{ course.progress }}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
+                               class="btn {% if course.progress == 0 %}btn-cyber{% else %}btn-cyber-outline{% endif %}">
+                                <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
+                                {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="section-spacing">
+            <h2 class="section-title cyber-title-primary">
+                <i class="bi bi-activity me-2"></i>Недавняя активность
+            </h2>
+            
+            <div class="cyber-card">
+                <div class="activity-timeline">
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Завершен урок "Основы сетевой безопасности"</h5>
+                                    <p class="cyber-subtext mb-0">Курс: Основы кибербезопасности • Результат теста: 92%</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">2 часа назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-patch-question"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Пройден тест "Типы кибератак"</h5>
+                                    <p class="cyber-subtext mb-0">Курс: Основы кибербезопасности • Результат: 85%</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">Вчера, 14:30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-play-circle"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Начат модуль "Методы социальной инженерии"</h5>
+                                    <p class="cyber-subtext mb-0">Курс: Этичный хакинг • Прогресс: 15%</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">2 дня назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-award"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Получено достижение "Первые шаги"</h5>
+                                    <p class="cyber-subtext mb-0">Завершение 5 уроков в первом курсе</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">3 дня назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-file-text"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Загружен проект "Анализ фишинговой атаки"</h5>
+                                    <p class="cyber-subtext mb-0">Курс: Этичный хакинг • Оценка: 95%</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">4 дня назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-cyber-outline" onclick="loadMoreActivity()">
+                        <i class="bi bi-arrow-down me-2"></i>Загрузить еще
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Deadlines -->
+        <section class="section-spacing">
+            <h2 class="section-title cyber-title-primary">
+                <i class="bi bi-calendar-event me-2"></i>Предстоящие дедлайны
+            </h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="cyber-card">
+                        <h4 class="cyber-text-bright mb-3">
+                            <i class="bi bi-clock-history me-2 text-warning"></i>Ближайшие сроки
+                        </h4>
+                        <div class="deadline-list">
+                            <div class="deadline-item d-flex align-items-center justify-content-between p-3 border-bottom border-cyber">
+                                <div>
+                                    <h6 class="cyber-text-bright mb-1">Финальный экзамен</h6>
+                                    <p class="cyber-subtext mb-0">Основы кибербезопасности</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="cyber-badge cyber-badge-warning">3 дня</span>
+                                </div>
+                            </div>
+                            <div class="deadline-item d-flex align-items-center justify-content-between p-3 border-bottom border-cyber">
+                                <div>
+                                    <h6 class="cyber-text-bright mb-1">Практическое задание</h6>
+                                    <p class="cyber-subtext mb-0">Анализ сетевого трафика</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="cyber-badge">1 неделя</span>
+                                </div>
+                            </div>
+                            <div class="deadline-item d-flex align-items-center justify-content-between p-3">
+                                <div>
+                                    <h6 class="cyber-text-bright mb-1">Тест модуля 3</h6>
+                                    <p class="cyber-subtext mb-0">Этичный хакинг</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="cyber-badge">2 недели</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="cyber-card">
+                        <h4 class="cyber-text-bright mb-3">
+                            <i class="bi bi-graph-up me-2 text-success"></i>Статистика обучения
+                        </h4>
+                        <div class="learning-stats">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="stat-number" style="font-size: 1.8rem;">42%</div>
+                                    <div class="stat-label">Общий прогресс</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-number" style="font-size: 1.8rem;">15</div>
+                                    <div class="stat-label">Завершено уроков</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-number" style="font-size: 1.8rem;">87%</div>
+                                    <div class="stat-label">Средняя оценка</div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <h6 class="cyber-text-bright mb-3">Прогресс по курсам</h6>
+                                <div class="progress-item mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="cyber-subtext">Основы кибербезопасности</span>
+                                        <span class="cyber-text-bright">65%</span>
+                                    </div>
+                                    <div class="cyber-progress">
+                                        <div class="cyber-progress-bar" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-item mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="cyber-subtext">Этичный хакинг</span>
+                                        <span class="cyber-text-bright">30%</span>
+                                    </div>
+                                    <div class="cyber-progress">
+                                        <div class="cyber-progress-bar" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-item">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="cyber-subtext">Сетевая безопасность</span>
+                                        <span class="cyber-text-bright">15%</span>
+                                    </div>
+                                    <div class="cyber-progress">
+                                        <div class="cyber-progress-bar" style="width: 15%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Course filtering functionality
+        function toggleFilters() {
+            const filtersSection = document.getElementById('filtersSection');
+            filtersSection.style.display = filtersSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Filter tags functionality
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const filterType = this.getAttribute('data-filter').split('-')[0];
+                
+                // Remove active class from all tags of this type
+                document.querySelectorAll(`.filter-tag[data-filter^="${filterType}-"]`).forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // Add active class to clicked tag
+                this.classList.add('active');
+                
+                // Apply filters
+                applyFilters();
+            });
+        });
+
+        // Search functionality
+        document.getElementById('courseSearch').addEventListener('input', function(e) {
+            applyFilters();
+        });
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('courseSearch').value.toLowerCase();
+            const difficultyFilter = document.querySelector('.filter-tag[data-filter^="difficulty-"].active').getAttribute('data-filter').replace('difficulty-', '');
+            const statusFilter = document.querySelector('.filter-tag[data-filter^="status-"].active').getAttribute('data-filter').replace('status-', '');
+            
+            document.querySelectorAll('.course-card').forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                const difficulty = card.getAttribute('data-difficulty');
+                const progress = parseInt(card.getAttribute('data-progress'));
+                
+                let matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                let matchesDifficulty = difficultyFilter === 'all' || difficulty === difficultyFilter;
+                let matchesStatus = true;
+                
+                if (statusFilter === 'not-started') matchesStatus = progress === 0;
+                else if (statusFilter === 'in-progress') matchesStatus = progress > 0 && progress < 100;
+                else if (statusFilter === 'completed') matchesStatus = progress === 100;
+                
+                card.style.display = (matchesSearch && matchesDifficulty && matchesStatus) ? 'block' : 'none';
+            });
+        }
+
+        // Quick actions functionality
+        function showRecentActivity() {
+            showNotification('info', 'Загрузка истории активности...', 'info');
+            // In a real app, this would load more activity data
+            setTimeout(() => {
+                showNotification('success', 'История активности обновлена!', 'success');
+            }, 1000);
+        }
+
+        function showLearningStats() {
+            showNotification('info', 'Загрузка статистики обучения...', 'info');
+            // In a real app, this would show detailed statistics
+            setTimeout(() => {
+                showNotification('success', 'Статистика загружена!', 'success');
+            }, 1000);
+        }
+
+        function loadMoreActivity() {
+            showNotification('info', 'Загрузка дополнительной активности...', 'info');
+            // In a real app, this would load more activity items
+            setTimeout(() => {
+                showNotification('success', 'Дополнительная активность загружена!', 'success');
+            }, 1500);
+        }
+
+        // Notification system
+        function showNotification(title, message, type) {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}-fill me-2"></i>
+                    <div>
+                        <h6 class="mb-1">${title}</h6>
+                        <p class="mb-0 small">${message}</p>
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
-                document.body.appendChild(notification);
+            document.body.appendChild(notification);
 
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.remove();
-                    }
-                }, 5000);
-            }
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
 
-            // Обработчики для быстрых действий
-            document.addEventListener('DOMContentLoaded', function () {
-                // Добавляем обработчики для карточек быстрых действий
-                document.querySelectorAll('.quick-action-card').forEach(card => {
-                    card.style.cursor = 'pointer';
-                });
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
             });
-        </script>
-</body>
+        });
 
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add fade-in animation to course cards
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.course-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'k':
+                        e.preventDefault();
+                        document.getElementById('courseSearch').focus();
+                        break;
+                    case '/':
+                        e.preventDefault();
+                        toggleFilters();
+                        break;
+                }
+            }
+        });
+
+        // Performance optimization
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                // Recalculate any layout-dependent values
+                applyFilters();
+            }, 250);
+        });
+    </script>
+</body>
 </html>

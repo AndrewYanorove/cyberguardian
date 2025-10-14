@@ -1,3 +1,4 @@
+<!-- [file name]: course.html -->
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -11,102 +12,118 @@
         :root {
             --cyber-darker: #0a0a0f;
             --cyber-dark: #111122;
-            --cyber-border: #1a1a2e;
-            --cyber-primary: #0375c2;
-            --cyber-secondary: #0088ff;
-            --cyber-subtext: #8899aa;
+            --cyber-darker-blue: #0a1428;
+            --cyber-dark-blue: #1a1a2e;
+            --cyber-border: #2a2a3e;
+            --cyber-primary: #00a8ff;
+            --cyber-primary-glow: #00a8ff;
+            --cyber-secondary: #0097e6;
+            --cyber-accent: #00ff88;
+            --cyber-accent-glow: #00ff88;
+            --cyber-warning: #ff9f43;
+            --cyber-danger: #ff6b6b;
+            --cyber-success: #1dd1a1;
+            --cyber-info: #54a0ff;
             --cyber-text: #e0e0ff;
+            --cyber-text-bright: #ffffff;
+            --cyber-subtext: #a0a0c0;
+            --cyber-subtext-dark: #8899aa;
+            --cyber-bg-card: rgba(20, 20, 30, 0.95);
+            --cyber-bg-card-light: rgba(30, 30, 45, 0.9);
+            --cyber-bg-card-dark: rgba(15, 15, 25, 0.98);
+            --cyber-bg-gradient: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark-blue) 50%, var(--cyber-darker-blue) 100%);
+            --cyber-glow-primary: 0 0 20px rgba(0, 168, 255, 0.5);
+            --cyber-glow-accent: 0 0 20px rgba(0, 255, 136, 0.5);
+            --cyber-glow-warning: 0 0 20px rgba(255, 159, 67, 0.5);
+            --cyber-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --cyber-shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --cyber-shadow-large: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--cyber-darker);
+            background: var(--cyber-bg-gradient);
             color: var(--cyber-text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
         }
 
+        /* ===== TYPOGRAPHY ===== */
         .cyber-title {
+            color: var(--cyber-text-bright);
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .cyber-title-primary {
             color: var(--cyber-primary);
-            text-shadow: 0 0 10px rgba(11, 232, 248, 0.781);
-            font-weight: 700;
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cyber-subtitle {
+            color: var(--cyber-text);
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.4;
         }
 
         .cyber-text {
             color: var(--cyber-text);
+            font-size: 1rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .cyber-text-bright {
+            color: var(--cyber-text-bright);
+            font-weight: 500;
         }
 
         .cyber-subtext {
             color: var(--cyber-subtext);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
-        .cyber-border {
-            border-color: var(--cyber-border) !important;
+        .cyber-subtext-dark {
+            color: var(--cyber-subtext-dark);
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
-        .cyber-link {
-            color: var(--cyber-primary);
-            text-decoration: none;
-            transition: all 0.3s ease;
+        .cyber-lead {
+            color: var(--cyber-text);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            font-weight: 400;
         }
 
-        .cyber-link:hover {
-            color: var(--cyber-secondary);
-            text-shadow: 0 0 8px rgba(18, 244, 252, 0.3);
-        }
-
-        .cyber-badge {
-            background: rgba(30, 30, 45, 0.8);
-            border: 1px solid var(--cyber-border);
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-        }
-
-        .bg-primary {
-            background: rgba(4, 168, 233, 0.15) !important;
-            border-color: var(--cyber-primary) !important;
-        }
-
-        .bg-success {
-            background: rgba(0, 136, 85, 0.15) !important;
-            border-color: #0a9dc2 !important;
-        }
-
-        .bg-info {
-            background: rgba(0, 136, 255, 0.15) !important;
-            border-color: var(--cyber-secondary) !important;
-        }
-
-        .bg-secondary {
-            background: rgba(136, 136, 255, 0.15) !important;
-            border-color: #8888ff !important;
-        }
-
-        .bg-dark {
-            background: rgba(30, 30, 45, 0.8) !important;
-            border-color: var(--cyber-border) !important;
-        }
-
-        .bg-warning {
-            background: rgba(255, 193, 7, 0.15) !important;
-            border-color: #ffc107 !important;
-        }
-
-        .avatar-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: white;
-        }
-
+        /* ===== LAYOUT & CONTAINERS ===== */
         .course-hero {
-            background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
-            border-bottom: 2px solid var(--cyber-border);
-            padding: 3rem 0;
-            margin-bottom: 2rem;
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 15, 0.95) 0%, 
+                rgba(26, 26, 46, 0.9) 50%, 
+                rgba(10, 20, 40, 0.85) 100%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300a8ff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border-bottom: 3px solid var(--cyber-border);
+            padding: 4rem 0 3rem;
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
         }
@@ -118,52 +135,131 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300ff88' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
-            opacity: 0.3;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%);
+            pointer-events: none;
         }
 
-        .module-card {
-            background: rgba(20, 20, 20, 0.9);
+        .container-max {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== CARDS ===== */
+        .cyber-card {
+            background: var(--cyber-bg-card);
             border: 2px solid var(--cyber-border);
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 2rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--cyber-shadow-soft);
             position: relative;
             overflow: hidden;
         }
 
-        .module-card::before {
+        .cyber-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 168, 255, 0.1), 
+                transparent);
             transition: left 0.6s ease;
         }
 
-        .module-card:hover::before {
+        .cyber-card:hover::before {
             left: 100%;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-8px);
+            box-shadow: var(--cyber-shadow-large), 0 0 30px rgba(0, 168, 255, 0.2);
+        }
+
+        .cyber-card-primary {
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 168, 255, 0.1) 100%);
+            border-color: var(--cyber-primary);
+        }
+
+        .cyber-card-accent {
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 255, 136, 0.1) 100%);
+            border-color: var(--cyber-accent);
+        }
+
+        .cyber-card-warning {
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(255, 159, 67, 0.1) 100%);
+            border-color: var(--cyber-warning);
+        }
+
+        /* ===== MODULE CARDS ===== */
+        .module-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 18px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .module-card:hover::after {
+            transform: scaleX(1);
         }
 
         .module-card:hover {
             border-color: var(--cyber-primary);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.15);
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-medium), 0 0 25px rgba(0, 168, 255, 0.15);
         }
 
+        .module-card.completed {
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 255, 136, 0.05) 100%);
+        }
+
+        .module-card.current {
+            border-color: var(--cyber-primary);
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 168, 255, 0.08) 100%);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 168, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(0, 168, 255, 0.6); }
+        }
+
+        /* ===== LESSON ITEMS ===== */
         .lesson-item {
-            background: rgba(30, 30, 30, 0.7);
-            border: 1px solid var(--cyber-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
             transition: all 0.3s ease;
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            align-items: flex-start;
+            gap: 1.25rem;
             position: relative;
         }
 
@@ -187,491 +283,291 @@
         .lesson-item:hover {
             border-color: var(--cyber-primary);
             transform: translateX(8px);
-            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.1);
+            box-shadow: var(--cyber-shadow-soft);
         }
 
         .lesson-item.completed {
-            border-color: var(--cyber-primary);
-            background: rgba(0, 255, 136, 0.08);
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card-light) 0%, rgba(0, 255, 136, 0.08) 100%);
         }
 
         .lesson-item.completed::before {
-            background: var(--cyber-primary);
+            background: var(--cyber-accent);
         }
 
+        .lesson-item.current {
+            border-color: var(--cyber-primary);
+            background: linear-gradient(135deg, var(--cyber-bg-card-light) 0%, rgba(0, 168, 255, 0.1) 100%);
+            animation: subtle-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes subtle-pulse {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(4px); }
+        }
+
+        /* ===== LESSON ICONS ===== */
         .lesson-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: rgba(0, 255, 136, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(0, 255, 136, 0.1));
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--cyber-primary);
+            font-size: 1.5rem;
             flex-shrink: 0;
             transition: all 0.3s ease;
             border: 2px solid transparent;
-        }
-
-        .lesson-item:hover .lesson-icon {
-            background: rgba(0, 255, 136, 0.2);
-            transform: scale(1.05);
-            border-color: var(--cyber-primary);
-        }
-
-        .lesson-content {
-            flex-grow: 1;
-        }
-
-        .lesson-meta {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .lesson-duration {
-            color: var(--cyber-subtext);
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .lesson-actions {
-            flex-shrink: 0;
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .completion-badge {
-            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
-            color: var(--cyber-darker);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
-        }
-
-        .sidebar-card {
-            background: rgba(20, 20, 20, 0.9);
-            border: 2px solid var(--cyber-border);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
             position: relative;
             overflow: hidden;
         }
 
-        .sidebar-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
-        }
-
-        .course-progress-ring {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 1rem;
-        }
-
-        .course-progress-ring-circle {
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-
-        .course-progress-ring-bg {
-            fill: none;
-            stroke: var(--cyber-border);
-            stroke-width: 8;
-        }
-
-        .course-progress-ring-fill {
-            fill: none;
-            stroke: var(--cyber-primary);
-            stroke-width: 8;
-            stroke-dasharray: 377;
-            stroke-dashoffset: 377;
-            transition: stroke-dashoffset 1.5s ease;
-            stroke-linecap: round;
-        }
-
-        .course-progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--cyber-primary);
-            text-shadow: 0 0 10px rgba(3, 173, 224, 0.5);
-        }
-
-        .final-exam-card {
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.08));
-            border: 2px solid #ffc107;
-            border-radius: 15px;
-            padding: 2.5rem;
-            text-align: center;
-            margin-top: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .final-exam-card::before {
+        .lesson-icon::before {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255, 193, 7, 0.1) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
         }
 
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
+        .lesson-item:hover .lesson-icon::before {
+            left: 100%;
         }
 
-        .requirements-list {
-            list-style: none;
-            padding: 0;
+        .lesson-item:hover .lesson-icon {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.25), rgba(0, 255, 136, 0.2));
+            transform: scale(1.1) rotate(5deg);
+            border-color: var(--cyber-primary);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);
         }
 
-        .requirements-list li {
-            padding: 0.8rem 0;
-            border-bottom: 1px solid var(--cyber-border);
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
+        .lesson-item.completed .lesson-icon {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 168, 255, 0.15));
+            color: var(--cyber-accent);
         }
 
-        .requirements-list li:hover {
-            background: rgba(0, 255, 136, 0.05);
-            padding-left: 0.5rem;
-        }
-
-        .requirements-list li:last-child {
-            border-bottom: none;
-        }
-
-        .requirements-list li::before {
-            content: '✅';
-            margin-right: 0.8rem;
-            font-size: 1.1rem;
-        }
-
-        .quiz-badge {
-            background: rgba(0, 136, 255, 0.2);
-            color: var(--cyber-secondary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            border: 1px solid var(--cyber-secondary);
-            font-weight: 600;
-        }
-
-        .practice-badge {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--cyber-primary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            border: 1px solid var(--cyber-primary);
-            font-weight: 600;
+        /* ===== SUBLESSONS ===== */
+        .sublessons {
+            margin-top: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 3px solid var(--cyber-border);
         }
 
         .sublesson-item {
-            background: rgba(40, 40, 40, 0.6);
-            border: 1px solid var(--cyber-border);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-            margin: 0.5rem 0;
-            margin-left: 2rem;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: rgba(40, 40, 55, 0.6);
+            border: 1px solid var(--cyber-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            gap: 1rem;
         }
 
         .sublesson-item:hover {
-            background: rgba(0, 255, 136, 0.05);
-            border-color: var(--cyber-primary);
-        }
-
-        .sublesson-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            background: rgba(0, 136, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cyber-secondary);
-            font-size: 0.8rem;
-            flex-shrink: 0;
-        }
-
-        .module-progress {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .module-progress-bar {
-            flex-grow: 1;
-            height: 6px;
-            background: var(--cyber-border);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .module-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--cyber-primary), #00cc88);
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        .step-counter {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--cyber-primary);
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            color: var(--cyber-primary);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .course-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 1rem;
-            background: rgba(40, 40, 40, 0.6);
-            border-radius: 10px;
-            border: 1px solid var(--cyber-border);
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            border-color: var(--cyber-primary);
-            transform: translateY(-2px);
-        }
-
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--cyber-primary);
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--cyber-subtext);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .learning-path {
-            position: relative;
-            margin: 2rem 0;
-        }
-
-        .path-line {
-            position: absolute;
-            left: 30px;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(to bottom, var(--cyber-primary), var(--cyber-secondary));
-            border-radius: 2px;
-        }
-
-        .path-item {
-            position: relative;
-            padding-left: 4rem;
-            margin-bottom: 2rem;
-        }
-
-        .path-dot {
-            position: absolute;
-            left: 24px;
-            top: 0;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--cyber-primary);
-            border: 3px solid var(--cyber-darker);
-            z-index: 2;
-        }
-
-        .path-content {
-            background: rgba(30, 30, 30, 0.7);
-            border: 1px solid var(--cyber-border);
-            border-radius: 10px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .path-content:hover {
+            background: rgba(50, 50, 70, 0.8);
             border-color: var(--cyber-primary);
             transform: translateX(5px);
         }
 
-        .difficulty-indicator {
-            display: inline-flex;
+        .sublesson-item.completed {
+            background: rgba(0, 255, 136, 0.08);
+            border-color: var(--cyber-accent);
+        }
+
+        .sublesson-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(0, 168, 255, 0.15);
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .difficulty-beginner {
-            background: rgba(0, 255, 136, 0.15);
+            justify-content: center;
             color: var(--cyber-primary);
-            border: 1px solid var(--cyber-primary);
-        }
-
-        .difficulty-intermediate {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-            border: 1px solid #ffc107;
-        }
-
-        .difficulty-advanced {
-            background: rgba(255, 0, 68, 0.15);
-            color: #ff0044;
-            border: 1px solid #ff0044;
-        }
-
-        .achievement-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .achievement-item {
-            background: rgba(30, 30, 30, 0.7);
-            border: 2px solid var(--cyber-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
             transition: all 0.3s ease;
         }
 
-        .achievement-item:hover {
-            border-color: var(--cyber-primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.1);
+        .sublesson-item.completed .sublesson-icon {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-accent);
         }
 
-        .achievement-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        /* ===== BADGES & TAGS ===== */
+        .cyber-badge {
+            background: rgba(40, 40, 55, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 25px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cyber-text);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-badge-primary {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.2), rgba(0, 168, 255, 0.1));
+            border-color: var(--cyber-primary);
             color: var(--cyber-primary);
         }
 
-        .achievement-locked {
-            opacity: 0.5;
-            filter: grayscale(1);
+        .cyber-badge-accent {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border-color: var(--cyber-accent);
+            color: var(--cyber-accent);
         }
 
-        .achievement-locked .achievement-icon {
-            color: var(--cyber-border);
+        .cyber-badge-warning {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border-color: var(--cyber-warning);
+            color: var(--cyber-warning);
         }
 
-        /* Анимации */
-        @keyframes pulse-glow {
-            0% {
-                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
-            }
-
-            50% {
-                box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
-            }
-
-            100% {
-                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
-            }
+        .cyber-badge-success {
+            background: linear-gradient(135deg, rgba(29, 209, 161, 0.2), rgba(29, 209, 161, 0.1));
+            border-color: var(--cyber-success);
+            color: var(--cyber-success);
         }
 
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
+        .cyber-badge-info {
+            background: linear-gradient(135deg, rgba(84, 160, 255, 0.2), rgba(84, 160, 255, 0.1));
+            border-color: var(--cyber-info);
+            color: var(--cyber-info);
         }
 
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .course-hero {
-                padding: 2rem 0;
-            }
-
-            .lesson-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .lesson-actions {
-                align-self: flex-end;
-            }
-
-            .course-stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .path-item {
-                padding-left: 2rem;
-            }
-
-            .path-dot {
-                left: 14px;
-            }
+        .difficulty-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* Темная тема улучшения */
+        .difficulty-beginner {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border: 2px solid var(--cyber-accent);
+            color: var(--cyber-accent);
+        }
+
+        .difficulty-intermediate {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border: 2px solid var(--cyber-warning);
+            color: var(--cyber-warning);
+        }
+
+        .difficulty-advanced {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
+            border: 2px solid var(--cyber-danger);
+            color: var(--cyber-danger);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-cyber:hover::before {
+            left: 100%;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4), 0 0 30px rgba(0, 255, 136, 0.3);
+            color: #000;
+        }
+
+        .btn-cyber:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        .btn-cyber-outline {
+            background: transparent;
+            border: 2px solid var(--cyber-primary);
+            color: var(--cyber-primary);
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cyber-outline:hover {
+            background: var(--cyber-primary);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+        }
+
+        .btn-cyber-accent {
+            background: linear-gradient(135deg, var(--cyber-accent), #00e676);
+            border: none;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .btn-cyber-warning {
+            background: linear-gradient(135deg, var(--cyber-warning), #ff8c1a);
+            border: none;
+            color: #000;
+            font-weight: 700;
+        }
+
+        /* ===== PROGRESS BARS ===== */
         .cyber-progress {
-            height: 8px;
+            height: 10px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
             border: 1px solid var(--cyber-border);
+            position: relative;
         }
 
         .cyber-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--cyber-primary), #00cc88);
-            border-radius: 4px;
-            transition: width 0.5s ease;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 8px;
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
         }
@@ -688,512 +584,942 @@
         }
 
         @keyframes shimmer {
-            0% {
-                left: -100%;
-            }
-
-            100% {
-                left: 100%;
-            }
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
-        /* Улучшенные кнопки */
-        .btn-cyber {
-            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
-            border: none;
-            color: var(--cyber-darker);
+        /* ===== PROGRESS RINGS ===== */
+        .progress-ring {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+        }
+
+        .progress-ring-circle {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--cyber-border);
+            stroke-width: 8;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: url(#progressGradient);
+            stroke-width: 8;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 377;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            stroke-linecap: round;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--cyber-text-bright);
+            text-shadow: var(--cyber-glow-primary);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 18px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+        }
+
+        .instructor-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--cyber-primary);
+            display: block;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--cyber-subtext);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
+        }
+
+        /* ===== ACHIEVEMENTS ===== */
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .achievement-card {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .btn-cyber::before {
+        .achievement-card::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(0, 168, 255, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .btn-cyber:hover::before {
-            left: 100%;
+        .achievement-card:hover::before {
+            opacity: 1;
         }
 
-        .btn-cyber:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+        .achievement-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-medium);
         }
 
-        .btn-cyber-outline {
-            background: transparent;
-            border: 2px solid var(--cyber-primary);
+        .achievement-card.earned {
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card-light) 0%, rgba(0, 255, 136, 0.05) 100%);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
             color: var(--cyber-primary);
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
             transition: all 0.3s ease;
         }
 
-        .btn-cyber-outline:hover {
-            background: var(--cyber-primary);
-            color: var(--cyber-darker);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+        .achievement-card.earned .achievement-icon {
+            color: var(--cyber-accent);
+            animation: bounce 2s ease-in-out infinite;
         }
 
-        .glow-text {
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ===== FINAL EXAM CARD ===== */
+        .final-exam-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 159, 67, 0.15) 0%, 
+                rgba(255, 159, 67, 0.05) 100%);
+            border: 3px solid var(--cyber-warning);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-exam-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 159, 67, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== BREADCRUMB ===== */
+        .cyber-breadcrumb {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb-item a {
+            color: var(--cyber-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--cyber-accent);
             text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--cyber-text);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .course-hero {
+                padding: 2rem 0;
+            }
+            
+            .cyber-title {
+                font-size: 2rem;
+            }
+            
+            .module-card {
+                padding: 1.5rem;
+            }
+            
+            .lesson-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .lesson-icon {
+                align-self: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .achievement-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-cyber {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container-max {
+                padding: 0 15px;
+            }
+            
+            .cyber-card {
+                padding: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-ring {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .progress-text {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .focus-visible {
+            outline: 2px solid var(--cyber-primary);
+            outline-offset: 2px;
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .btn-cyber,
+            .btn-cyber-outline,
+            .module-card:hover,
+            .lesson-item:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            
+            .cyber-card {
+                border: 1px solid #000;
+                box-shadow: none;
+            }
+        }
+
+        /* ===== DARK MODE ENHANCEMENTS ===== */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --cyber-text: #f0f0ff;
+                --cyber-text-bright: #ffffff;
+                --cyber-subtext: #b0b0d0;
+            }
+        }
+
+        /* ===== HIGH CONTRAST MODE ===== */
+        @media (prefers-contrast: high) {
+            :root {
+                --cyber-primary: #00a8ff;
+                --cyber-accent: #00ff88;
+                --cyber-text: #ffffff;
+                --cyber-subtext: #e0e0e0;
+            }
+            
+            .cyber-card {
+                border-width: 3px;
+            }
+        }
+
+        /* ===== SMOOTH SCROLLING ===== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ===== SELECTION STYLES ===== */
+        ::selection {
+            background: rgba(0, 168, 255, 0.3);
+            color: var(--cyber-text-bright);
+        }
+
+        ::-moz-selection {
+            background: rgba(0, 168, 255, 0.3);
+            color: var(--cyber-text-bright);
+        }
+
+        /* ===== SCROLLBAR STYLING ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cyber-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-accent);
         }
     </style>
 </head>
 
-<!-- Кнопка На главную -->
-                <div class="home-btn">
-                    <a href="{{ url_for('index') }}" class="btn btn-cyber-outline">
-                        <i class="bi bi-arrow-left me-2"></i>На главную
-                    </a>
-                </div>
-
 <body>
+    <!-- SVG Gradients -->
+    <svg width="0" height="0">
+        <defs>
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00a8ff" />
+                <stop offset="100%" stop-color="#00ff88" />
+            </linearGradient>
+        </defs>
+    </svg>
+
     <!-- Hero Section -->
     <div class="course-hero">
-        <div class="container">
+        <div class="container-max">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb cyber-breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('education.education_home') }}">
+                            <i class="bi bi-book me-2"></i>Все курсы
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ course.title }}</li>
+                </ol>
+            </nav>
+
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <nav aria-label="breadcrumb" class="mb-3">
-                        <ol class="breadcrumb cyber-border">
-                            <li class="breadcrumb-item">
-                                <a href="{{ url_for('education.education_home') }}" class="cyber-link">
-                                    <i class="bi bi-book me-1"></i>Курсы
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item active cyber-text">{{ course.title }}</li>
-                        </ol>
-                    </nav>
+                    <h1 class="cyber-title display-3 mb-3">
+                        {{ course.title }}
+                    </h1>
+                    <p class="cyber-lead mb-4">
+                        {{ course.description }}
+                    </p>
 
-                    <h1 class="cyber-title glow-text mb-3">{{ course.title }}</h1>
-                    <p class="cyber-subtext lead mb-4">{{ course.description }}</p>
-
-                    <div class="d-flex gap-3 flex-wrap mb-4">
-                        <span class="difficulty-indicator difficulty-{{ course.difficulty }}">
-                            <i class="bi bi-shield-check me-1"></i>
+                    <!-- Course Meta -->
+                    <div class="d-flex flex-wrap gap-3 mb-4">
+                        <span class="difficulty-badge difficulty-{{ course.difficulty }}">
+                            <i class="bi bi-shield-check me-2"></i>
                             {% if course.difficulty == 'beginner' %}Начинающий
-                            {% elif course.difficulty == 'intermediate' %}Средний
+                            {% elif course.difficulty == 'intermediate' %}Средний уровень
                             {% else %}Продвинутый{% endif %}
                         </span>
-                        <span class="cyber-badge bg-primary">
-                            <i class="bi bi-clock me-1"></i> {{ course.estimated_time }}
+                        
+                        <span class="cyber-badge cyber-badge-primary">
+                            <i class="bi bi-clock me-2"></i>{{ course.estimated_time }}
                         </span>
-                        <span class="cyber-badge bg-success">
-                            <i class="bi bi-list-ul me-1"></i> {{ course.modules|length }} модулей
+                        
+                        <span class="cyber-badge cyber-badge-success">
+                            <i class="bi bi-list-ul me-2"></i>{{ course.modules|length }} модулей
                         </span>
-                        <span class="cyber-badge bg-info">
-                            <i class="bi bi-star me-1"></i> {{ course.rating }}/5
+                        
+                        <span class="cyber-badge cyber-badge-info">
+                            <i class="bi bi-star me-2"></i>{{ course.rating }}/5.0
                         </span>
                     </div>
 
-                    <!-- Статистика курса -->
-                    <div class="course-stats-grid">
+                    <!-- Course Stats -->
+                    <div class="stats-grid">
                         {% set total_lessons = namespace(count=0) %}
+                        {% set total_quizzes = namespace(count=0) %}
+                        {% set total_practices = namespace(count=0) %}
+                        
                         {% for module in course.modules %}
-                        {% set total_lessons.count = total_lessons.count + module.lessons|length %}
+                            {% set total_lessons.count = total_lessons.count + module.lessons|length %}
+                            {% for lesson in module.lessons %}
+                                {% if lesson.quiz %}{% set total_quizzes.count = total_quizzes.count + 1 %}{% endif %}
+                                {% if lesson.practice %}{% set total_practices.count = total_practices.count + 1 %}{% endif %}
+                            {% endfor %}
                         {% endfor %}
 
-                        <div class="stat-item">
+                        <div class="stat-card">
                             <span class="stat-number">{{ total_lessons.count }}</span>
                             <span class="stat-label">Уроков</span>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-number">
-                                {% set quiz_count = namespace(count=0) %}
-                                {% for module in course.modules %}
-                                {% for lesson in module.lessons %}
-                                {% if lesson.quiz %}{% set quiz_count.count = quiz_count.count + 1 %}{% endif %}
-                                {% endfor %}
-                                {% endfor %}
-                                {{ quiz_count.count }}
-                            </span>
+                        <div class="stat-card">
+                            <span class="stat-number">{{ total_quizzes.count }}</span>
                             <span class="stat-label">Тестов</span>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-number">{% if course.final_exam %}1{% else %}0{% endif %}</span>
-                            <span class="stat-label">Экзаменов</span>
+                        <div class="stat-card">
+                            <span class="stat-number">{{ total_practices.count }}</span>
+                            <span class="stat-label">Практик</span>
                         </div>
-                        <div class="stat-item">
+                        <div class="stat-card">
                             <span class="stat-number">{{ course.students_count }}</span>
                             <span class="stat-label">Студентов</span>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-4 text-center">
-                    <div class="course-progress-ring">
-                        <svg class="course-progress-ring-circle" width="140" height="140">
-                            <circle class="course-progress-ring-bg" cx="70" cy="70" r="60"></circle>
-                            <circle class="course-progress-ring-fill" cx="70" cy="70" r="60"
+                    <!-- Progress Ring -->
+                    <div class="progress-ring mb-4">
+                        <svg class="progress-ring-circle" width="140" height="140">
+                            <circle class="progress-ring-bg" cx="70" cy="70" r="60"></circle>
+                            <circle class="progress-ring-fill" cx="70" cy="70" r="60"
                                 style="stroke-dashoffset: {{ 377 - (377 * progress.percentage / 100) }}"></circle>
                         </svg>
-                        <div class="course-progress-text">{{ progress.percentage }}%</div>
+                        <div class="progress-text">{{ progress.percentage }}%</div>
                     </div>
-                    <h5 class="cyber-text mb-2">Прогресс курса</h5>
-                    <p class="cyber-subtext">{{ progress.completed }}/{{ progress.total }} уроков завершено</p>
+                    
+                    <h5 class="cyber-text-bright mb-2">Прогресс курса</h5>
+                    <p class="cyber-subtext mb-4">{{ progress.completed }}/{{ progress.total }} уроков завершено</p>
 
+                    <!-- Action Buttons -->
                     {% if course_completed %}
-                    <button class="btn btn-cyber mt-3" onclick="getCertificate('{{ course.id }}')">
-                        <i class="bi bi-trophy me-2"></i>Получить сертификат
-                    </button>
+                        <button class="btn btn-cyber btn-cyber-accent mb-3 w-100" onclick="getCertificate()">
+                            <i class="bi bi-trophy me-2"></i>Получить сертификат
+                        </button>
                     {% else %}
-                    <button class="btn btn-cyber mt-3" onclick="startLearning('{{ course.id }}')">
-                        <i class="bi bi-play-circle me-2"></i>Начать обучение
-                    </button>
+                        <button class="btn btn-cyber mb-3 w-100" onclick="startLearning()">
+                            <i class="bi bi-play-circle me-2"></i>
+                            {% if progress.percentage > 0 %}Продолжить обучение{% else %}Начать обучение{% endif %}
+                        </button>
                     {% endif %}
+                    
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-cyber-outline" onclick="addToFavorites()">
+                            <i class="bi bi-bookmark me-2"></i>В избранное
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container-max">
         <div class="row">
-            <!-- Основной контент -->
+            <!-- Main Content -->
             <div class="col-lg-8">
-                <!-- Путь обучения -->
-                <div class="learning-path">
-                    <div class="path-line"></div>
-
-                    {% for module in course.modules %}
-                    <div class="path-item">
-                        <div class="path-dot"></div>
-                        <div class="path-content">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <span class="step-counter">
+                <!-- Learning Path -->
+                <div class="cyber-card">
+                    <h2 class="cyber-title-primary mb-4">
+                        <i class="bi bi-signpost-split me-3"></i>Путь обучения
+                    </h2>
+                    
+                    <div class="learning-path">
+                        {% for module in course.modules %}
+                        <div class="module-card {% if module.completed_lessons == module.lessons|length %}completed{% endif %} {% if loop.first and module.completed_lessons < module.lessons|length %}current{% endif %}"
+                             id="module-{{ loop.index }}">
+                            <div class="row align-items-start">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <span class="cyber-badge cyber-badge-primary me-3">
+                                            Модуль {{ loop.index }}
+                                        </span>
                                         {% if module.completed_lessons == module.lessons|length %}
-                                        <i class="bi bi-check-circle-fill me-1"></i>
-                                        {% else %}
-                                        <i class="bi bi-circle me-1"></i>
+                                        <span class="cyber-badge cyber-badge-accent">
+                                            <i class="bi bi-check-lg me-1"></i>Завершен
+                                        </span>
                                         {% endif %}
-                                        Модуль {{ loop.index }}
-                                    </span>
-                                    <h4 class="cyber-text mt-2 mb-2">
+                                    </div>
+                                    
+                                    <h3 class="cyber-subtitle mb-3">
                                         <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
-                                    </h4>
-                                    <p class="cyber-subtext mb-3">{{ module.description }}</p>
-                                </div>
-                                <span class="cyber-badge bg-dark">
-                                    {{ module.lessons|length }} уроков
-                                </span>
-                            </div>
-
-                            <!-- Прогресс модуля -->
-                            <div class="module-progress">
-                                <div class="module-progress-bar">
-                                    <div class="module-progress-fill"
-                                        style="width: {{ (module.completed_lessons / module.lessons|length * 100) if module.lessons|length > 0 else 0 }}%">
+                                    </h3>
+                                    
+                                    <p class="cyber-text mb-4">{{ module.description }}</p>
+                                    
+                                    <div class="d-flex flex-wrap gap-3 mb-3">
+                                        <span class="difficulty-badge difficulty-{{ module.difficulty }}">
+                                            {{ module.difficulty|title }}
+                                        </span>
+                                        <span class="cyber-badge">
+                                            <i class="bi bi-clock me-1"></i>{{ module.estimated_time }}
+                                        </span>
+                                        <span class="cyber-badge">
+                                            {{ module.lessons|length }} уроков
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Module Progress -->
+                                    <div class="module-progress">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="cyber-subtext">Прогресс модуля</span>
+                                            <span class="cyber-text-bright fw-bold">
+                                                {{ module.completed_lessons }}/{{ module.lessons|length }} ({{ (module.completed_lessons / module.lessons|length * 100)|round|int }}%)
+                                            </span>
+                                        </div>
+                                        <div class="cyber-progress">
+                                            <div class="cyber-progress-bar" 
+                                                 style="width: {{ (module.completed_lessons / module.lessons|length * 100) if module.lessons|length > 0 else 0 }}%">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <small class="cyber-subtext">
-                                    {{ module.completed_lessons }}/{{ module.lessons|length }} завершено
-                                </small>
+                                
+                                <div class="col-md-4 text-end">
+                                    <a href="{{ url_for('education.module_detail', course_id=course.id, module_id=module.id) }}"
+                                       class="btn btn-cyber-outline">
+                                        <i class="bi bi-arrow-right me-2"></i>Изучить модуль
+                                    </a>
+                                </div>
                             </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
 
-                            <!-- Кнопка перехода к модулю -->
-                            <div class="mt-3">
-                                <a href="{{ url_for('education.module_detail', course_id=course.id, module_id=module.id) }}"
-                                    class="btn btn-cyber-outline btn-sm">
-                                    <i class="bi bi-arrow-right me-1"></i>Изучить модуль
-                                </a>
+                <!-- Detailed Curriculum -->
+                <div class="cyber-card">
+                    <h2 class="cyber-title-primary mb-4">
+                        <i class="bi bi-journal-text me-3"></i>Детальная программа курса
+                    </h2>
+                    
+                    {% for module in course.modules %}
+                    <div class="module-detailed mb-5" id="module-detailed-{{ loop.index }}">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div>
+                                <h3 class="cyber-subtitle mb-2">
+                                    <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
+                                </h3>
+                                <p class="cyber-subtext">{{ module.description }}</p>
                             </div>
+                            <div class="text-end">
+                                <span class="cyber-badge">{{ module.lessons|length }} уроков</span>
+                            </div>
+                        </div>
+
+                        <!-- Lessons List -->
+                        <div class="lessons-list">
+                            {% for lesson in module.lessons %}
+                            <div class="lesson-item {% if lesson.completed %}completed{% endif %} {% if loop.first and not lesson.completed %}current{% endif %}"
+                                 data-lesson-id="{{ lesson.id }}">
+                                <div class="lesson-icon">
+                                    {% if lesson.completed %}
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    {% else %}
+                                    <i class="bi bi-{{ 'play-circle' if loop.first and not lesson.completed else 'file-text' }}"></i>
+                                    {% endif %}
+                                </div>
+
+                                <div class="lesson-content flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="cyber-text-bright mb-0">{{ lesson.title }}</h5>
+                                        {% if lesson.completed %}
+                                        <span class="cyber-badge cyber-badge-accent">
+                                            <i class="bi bi-check-lg me-1"></i>Завершено
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <p class="cyber-text mb-3">{{ lesson.description }}</p>
+
+                                    <div class="lesson-meta d-flex flex-wrap gap-3 align-items-center">
+                                        <span class="cyber-subtext">
+                                            <i class="bi bi-clock me-1"></i>{{ lesson.duration }} минут
+                                        </span>
+                                        
+                                        {% if lesson.quiz %}
+                                        <span class="cyber-badge cyber-badge-warning">
+                                            <i class="bi bi-patch-question me-1"></i>Тест
+                                        </span>
+                                        {% endif %}
+                                        
+                                        {% if lesson.practice %}
+                                        <span class="cyber-badge cyber-badge-info">
+                                            <i class="bi bi-code-slash me-1"></i>Практика
+                                        </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Sublessons -->
+                                    {% if lesson.sublessons %}
+                                    <div class="sublessons mt-3">
+                                        {% for sublesson in lesson.sublessons %}
+                                        <div class="sublesson-item {% if sublesson.completed %}completed{% endif %}"
+                                             data-sublesson-id="{{ sublesson.id }}">
+                                            <div class="sublesson-icon">
+                                                {% if sublesson.completed %}
+                                                <i class="bi bi-check"></i>
+                                                {% else %}
+                                                <i class="bi bi-play"></i>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            <div class="flex-grow-1">
+                                                <h6 class="cyber-text-bright mb-1">{{ sublesson.title }}</h6>
+                                                <p class="cyber-subtext-dark mb-0">{{ sublesson.description }}</p>
+                                            </div>
+                                            
+                                            <div class="sublesson-meta">
+                                                <span class="cyber-subtext-dark me-3">
+                                                    <i class="bi bi-clock me-1"></i>{{ sublesson.duration }} мин
+                                                </span>
+                                                
+                                                {% if sublesson.completed %}
+                                                <span class="cyber-badge cyber-badge-accent btn-sm">
+                                                    <i class="bi bi-check"></i>
+                                                </span>
+                                                {% else %}
+                                                <button class="btn btn-cyber-outline btn-sm"
+                                                        onclick="startSublesson('{{ course.id }}', '{{ module.id }}', '{{ lesson.id }}', '{{ sublesson.id }}')">
+                                                    <i class="bi bi-play"></i>
+                                                </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="lesson-actions">
+                                    {% if lesson.quiz and not lesson.completed %}
+                                    <a href="{{ url_for('education.lesson_quiz', course_id=course.id, lesson_id=lesson.id) }}"
+                                       class="btn btn-cyber-warning btn-sm me-2 mb-2">
+                                        <i class="bi bi-patch-question me-1"></i>Тест
+                                    </a>
+                                    {% endif %}
+
+                                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}"
+                                       class="btn {% if lesson.completed %}btn-cyber-outline{% else %}btn-cyber{% endif %}">
+                                        <i class="bi bi-{% if lesson.completed %}eye{% else %}play-circle{% endif %} me-1"></i>
+                                        {% if lesson.completed %}Повторить{% else %}Начать{% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                     {% endfor %}
                 </div>
 
-                <h3 class="cyber-text mb-4 mt-5">
-                    <i class="bi bi-list-check me-2"></i>Детальное содержание курса
-                </h3>
-
-                {% for module in course.modules %}
-                <!-- Модуль {{ loop.index }} -->
-                <div class="module-card" id="module-{{ loop.index }}">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div>
-                            <h4 class="cyber-text mb-2">
-                                <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
-                            </h4>
-                            <p class="cyber-subtext mb-3">{{ module.description }}</p>
-                            <div class="d-flex gap-2 flex-wrap">
-                                <span class="difficulty-indicator difficulty-{{ module.difficulty }}">
-                                    {% if module.difficulty == 'beginner' %}Начинающий
-                                    {% elif module.difficulty == 'intermediate' %}Средний
-                                    {% else %}Продвинутый{% endif %}
-                                </span>
-                                <span class="cyber-badge bg-secondary">
-                                    <i class="bi bi-clock me-1"></i> {{ module.estimated_time }}
-                                </span>
+                <!-- Achievements -->
+                <div class="cyber-card">
+                    <h2 class="cyber-title-primary mb-4">
+                        <i class="bi bi-trophy me-3"></i>Достижения курса
+                    </h2>
+                    
+                    <div class="achievement-grid">
+                        <div class="achievement-card {% if progress.percentage >= 25 %}earned{% endif %}">
+                            <div class="achievement-icon">
+                                <i class="bi bi-rocket-takeoff"></i>
                             </div>
+                            <h5 class="cyber-text-bright mb-2">Начало пути</h5>
+                            <p class="cyber-subtext">Завершите 25% курса</p>
+                            {% if progress.percentage >= 25 %}
+                            <span class="cyber-badge cyber-badge-accent mt-2">Получено!</span>
+                            {% endif %}
                         </div>
-                        <div class="text-end">
-                            <span class="cyber-badge bg-dark">{{ module.lessons|length }} уроков</span>
-                            <div class="mt-2">
-                                <small class="cyber-subtext">
-                                    {{ module.completed_lessons }}/{{ module.lessons|length }} завершено
-                                </small>
+                        
+                        <div class="achievement-card {% if progress.percentage >= 50 %}earned{% endif %}">
+                            <div class="achievement-icon">
+                                <i class="bi bi-bullseye"></i>
                             </div>
+                            <h5 class="cyber-text-bright mb-2">Полпути</h5>
+                            <p class="cyber-subtext">Завершите 50% курса</p>
+                            {% if progress.percentage >= 50 %}
+                            <span class="cyber-badge cyber-badge-accent mt-2">Получено!</span>
+                            {% endif %}
                         </div>
-                    </div>
-
-                    <!-- Уроки модуля -->
-                    <div class="lesson-list">
-                        {% for lesson in module.lessons %}
-                        <div class="lesson-item {% if lesson.completed %}completed{% endif %}"
-                            data-lesson-id="{{ lesson.id }}" data-module-id="{{ module.id }}">
-                            <div class="lesson-icon">
-                                {% if lesson.completed %}
-                                <i class="bi bi-check-circle-fill"></i>
-                                {% else %}
-                                <i class="bi bi-play-circle"></i>
-                                {% endif %}
+                        
+                        <div class="achievement-card {% if progress.percentage >= 75 %}earned{% endif %}">
+                            <div class="achievement-icon">
+                                <i class="bi bi-lightning-charge"></i>
                             </div>
-
-                            <div class="lesson-content">
-                                <h6 class="cyber-text mb-2">{{ lesson.title }}</h6>
-                                <p class="cyber-subtext mb-2">{{ lesson.description }}</p>
-
-                                <div class="lesson-meta">
-                                    <span class="lesson-duration">
-                                        <i class="bi bi-clock"></i> {{ lesson.duration }} минут
-                                    </span>
-                                    {% if lesson.quiz %}
-                                    <span class="quiz-badge">
-                                        <i class="bi bi-patch-question"></i> Тест
-                                    </span>
-                                    {% endif %}
-                                    {% if lesson.practice %}
-                                    <span class="practice-badge">
-                                        <i class="bi bi-code-slash"></i> Практика
-                                    </span>
-                                    {% endif %}
-                                    {% if lesson.completed %}
-                                    <span class="cyber-badge bg-success">
-                                        <i class="bi bi-check-lg"></i> Завершено
-                                    </span>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Подуроки -->
-                                {% if lesson.sublessons %}
-                                <div class="sublessons mt-3">
-                                    {% for sublesson in lesson.sublessons %}
-                                    <div class="sublesson-item" data-sublesson-id="{{ sublesson.id }}">
-                                        <div class="sublesson-icon">
-                                            {% if sublesson.completed %}
-                                            <i class="bi bi-check"></i>
-                                            {% else %}
-                                            <i class="bi bi-play"></i>
-                                            {% endif %}
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <small class="cyber-text">{{ sublesson.title }}</small>
-                                            <div class="lesson-meta">
-                                                <span class="lesson-duration">
-                                                    <i class="bi bi-clock"></i> {{ sublesson.duration }} мин
-                                                </span>
-                                            </div>
-                                        </div>
-                                        {% if sublesson.completed %}
-                                        <span class="cyber-badge bg-success btn-sm">
-                                            <i class="bi bi-check"></i>
-                                        </span>
-                                        {% else %}
-                                        <button class="btn btn-cyber-outline btn-sm"
-                                            onclick="startSublesson('{{ course.id }}', '{{ module.id }}', '{{ lesson.id }}', '{{ sublesson.id }}')">
-                                            <i class="bi bi-play"></i>
-                                        </button>
-                                        {% endif %}
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
+                            <h5 class="cyber-text-bright mb-2">Эксперт</h5>
+                            <p class="cyber-subtext">Завершите 75% курса</p>
+                            {% if progress.percentage >= 75 %}
+                            <span class="cyber-badge cyber-badge-accent mt-2">Получено!</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="achievement-card {% if progress.percentage >= 100 %}earned{% endif %}">
+                            <div class="achievement-icon">
+                                <i class="bi bi-award"></i>
                             </div>
-
-                            <div class="lesson-actions">
-                                {% if lesson.quiz and not lesson.completed %}
-                                <a href="{{ url_for('education.lesson_quiz', course_id=course.id, lesson_id=lesson.id) }}"
-                                    class="btn btn-warning btn-sm me-2">
-                                    <i class="bi bi-patch-question me-1"></i>Тест
-                                </a>
-                                {% endif %}
-
-                                <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}"
-                                    class="btn {% if lesson.completed %}btn-cyber-outline{% else %}btn-cyber{% endif %} btn-sm">
-                                    <i
-                                        class="bi bi-{% if lesson.completed %}eye{% else %}play-circle{% endif %} me-1"></i>
-                                    {% if lesson.completed %}Повторить{% else %}Начать{% endif %}
-                                </a>
-                            </div>
+                            <h5 class="cyber-text-bright mb-2">Мастер</h5>
+                            <p class="cyber-subtext">Завершите 100% курса</p>
+                            {% if progress.percentage >= 100 %}
+                            <span class="cyber-badge cyber-badge-accent mt-2">Получено!</span>
+                            {% endif %}
                         </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endfor %}
-
-                <!-- Достижения курса -->
-                <div class="achievement-showcase mt-5">
-                    <div class="achievement-item {% if progress.percentage >= 25 %}pulse-glow{% endif %}">
-                        <div class="achievement-icon">
-                            <i class="bi bi-rocket-takeoff"></i>
-                        </div>
-                        <h6 class="cyber-text">Начало пути</h6>
-                        <p class="cyber-subtext small">Завершите 25% курса</p>
-                    </div>
-                    <div class="achievement-item {% if progress.percentage >= 50 %}pulse-glow{% endif %}">
-                        <div class="achievement-icon">
-                            <i class="bi bi-bullseye"></i>
-                        </div>
-                        <h6 class="cyber-text">Полпути</h6>
-                        <p class="cyber-subtext small">Завершите 50% курса</p>
-                    </div>
-                    <div class="achievement-item {% if progress.percentage >= 75 %}pulse-glow{% endif %}">
-                        <div class="achievement-icon">
-                            <i class="bi bi-lightning-charge"></i>
-                        </div>
-                        <h6 class="cyber-text">Эксперт</h6>
-                        <p class="cyber-subtext small">Завершите 75% курса</p>
-                    </div>
-                    <div
-                        class="achievement-item {% if progress.percentage >= 100 %}pulse-glow{% else %}achievement-locked{% endif %}">
-                        <div class="achievement-icon">
-                            <i class="bi bi-trophy"></i>
-                        </div>
-                        <h6 class="cyber-text">Мастер</h6>
-                        <p class="cyber-subtext small">Завершите 100% курса</p>
                     </div>
                 </div>
 
-                <!-- Финальный экзамен -->
+                <!-- Final Exam -->
                 {% if course.final_exam %}
                 <div class="final-exam-card">
-                    <h4 class="cyber-text mb-3">
-                        <i class="bi bi-award me-2"></i>Финальный экзамен
-                    </h4>
-                    <p class="cyber-subtext mb-4">
-                        Проверьте свои знания по всему курсу и получите сертификат
-                    </p>
-                    <div class="requirements-list mb-4">
-                        <li>Минимум 80% прогресса курса</li>
-                        <li>Время выполнения: 60 минут</li>
-                        <li>Минимальный балл: 70%</li>
-                        <li>3 попытки на прохождение</li>
+                    <div class="position-relative z-1">
+                        <h3 class="cyber-text-bright mb-3">
+                            <i class="bi bi-patch-check me-2"></i>Финальный экзамен
+                        </h3>
+                        <p class="cyber-lead mb-4">
+                            Проверьте свои знания по всему курсу и получите сертификат об окончании
+                        </p>
+                        
+                        <div class="requirements-list mb-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="cyber-text">
+                                        <li class="mb-2">Минимум 80% прогресса курса</li>
+                                        <li class="mb-2">Время выполнения: 60 минут</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="cyber-text">
+                                        <li class="mb-2">Минимальный балл: 70%</li>
+                                        <li class="mb-2">3 попытки на прохождение</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-cyber-warning btn-lg" 
+                                onclick="startFinalExam()" 
+                                {% if progress.percentage < 80 %}disabled{% endif %}>
+                            <i class="bi bi-pencil-square me-2"></i>
+                            {% if progress.percentage >= 80 %}
+                                Начать финальный экзамен
+                            {% else %}
+                                Требуется 80% прогресса
+                            {% endif %}
+                        </button>
+                        
+                        {% if progress.percentage < 80 %}
+                        <p class="cyber-subtext mt-3">
+                            Ваш прогресс: {{ progress.percentage }}%. Для доступа к экзамену необходимо достичь 80% прогресса.
+                        </p>
+                        {% endif %}
                     </div>
-                    <button class="btn btn-warning btn-lg" onclick="startFinalExam('{{ course.id }}')" {% if
-                        progress.percentage < 80 %}disabled{% endif %}>
-                        <i class="bi bi-pencil-square me-2"></i>
-                        {% if progress.percentage >= 80 %}Начать экзамен{% else %}Требуется 80% прогресса{% endif %}
-                    </button>
                 </div>
                 {% endif %}
             </div>
 
-            <!-- Боковая панель -->
+            <!-- Sidebar -->
             <div class="col-lg-4">
-                <!-- Инструктор -->
+                <!-- Instructor Card -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
-                        <i class="bi bi-person-gear me-2"></i>Инструктор
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-person-gear me-2"></i>Инструктор курса
                     </h5>
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="avatar-circle bg-primary me-3">
-                            <i
-                                class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-fundamentals' else 'shield-lock' if course.id == 'ethical-hacking' else 'search' }}"></i>
+                    
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="instructor-avatar">
+                            {{ course.instructor.name.split(' ')[0][0] }}{{ course.instructor.name.split(' ')[1][0] }}
                         </div>
                         <div>
-                            <h6 class="cyber-text mb-1">{{ course.instructor.name }}</h6>
-                            <p class="cyber-subtext small mb-0">{{ course.instructor.role }}</p>
+                            <h6 class="cyber-text-bright mb-1">{{ course.instructor.name }}</h6>
+                            <p class="cyber-subtext mb-2">{{ course.instructor.role }}</p>
+                            <div class="d-flex gap-2">
+                                <span class="cyber-badge cyber-badge-info">
+                                    <i class="bi bi-star-fill me-1"></i>{{ course.instructor.rating }}
+                                </span>
+                                <span class="cyber-badge">
+                                    <i class="bi bi-people me-1"></i>{{ course.instructor.students }}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <p class="cyber-subtext small">{{ course.instructor.bio }}</p>
-                    <div class="d-flex gap-2">
-                        <span class="cyber-badge bg-secondary">
-                            <i class="bi bi-star-fill me-1"></i> {{ course.instructor.rating }}
-                        </span>
-                        <span class="cyber-badge bg-info">
-                            <i class="bi bi-people me-1"></i> {{ course.instructor.students }}
-                        </span>
-                    </div>
+                    
+                    <p class="cyber-text">{{ course.instructor.bio }}</p>
                 </div>
 
-                <!-- Требования -->
+                <!-- Requirements -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
-                        <i class="bi bi-list-check me-2"></i>Требования
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-list-check me-2"></i>Требования к курсу
                     </h5>
+                    
                     <ul class="requirements-list">
                         {% for requirement in course.requirements %}
-                        <li>{{ requirement }}</li>
+                        <li class="d-flex align-items-start mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                            <span class="cyber-text">{{ requirement }}</span>
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
 
-                <!-- Ресурсы -->
+                <!-- Course Resources -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
-                        <i class="bi bi-download me-2"></i>Ресурсы курса
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-collection me-2"></i>Ресурсы курса
                     </h5>
+                    
                     <div class="d-grid gap-2">
                         {% for resource in course.resources %}
-                        <button class="btn btn-outline-secondary btn-sm text-start"
-                            onclick="downloadResource('{{ resource.name }}')">
+                        <button class="btn btn-cyber-outline text-start" onclick="downloadResource('{{ resource.name }}')">
                             <i class="bi bi-{{ resource.icon }} me-2"></i>{{ resource.name }}
                         </button>
                         {% endfor %}
                     </div>
                 </div>
 
-                <!-- Статистика обучения -->
+                <!-- Learning Statistics -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
-                        <i class="bi bi-graph-up me-2"></i>Ваша статистика
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-graph-up-arrow me-2"></i>Ваша статистика
                     </h5>
-                    <div class="cyber-progress mb-2">
-                        <div class="cyber-progress-bar" style="width: {{ progress.percentage }}%"></div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="cyber-subtext">Общий прогресс</span>
+                            <span class="cyber-text-bright fw-bold">{{ progress.percentage }}%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: {{ progress.percentage }}%"></div>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <small class="cyber-subtext">Общий прогресс</small>
-                        <small class="cyber-text">{{ progress.percentage }}%</small>
-                    </div>
-
+                    
                     <div class="row text-center">
                         <div class="col-4">
-                            <div class="stat-number small">{{ progress.completed }}</div>
+                            <div class="stat-number" style="font-size: 1.5rem;">{{ progress.completed }}</div>
                             <div class="stat-label">Завершено</div>
                         </div>
                         <div class="col-4">
-                            <div class="stat-number small">{{ progress.in_progress }}</div>
+                            <div class="stat-number" style="font-size: 1.5rem;">{{ progress.in_progress }}</div>
                             <div class="stat-label">В процессе</div>
                         </div>
                         <div class="col-4">
-                            <div class="stat-number small">{{ progress.total - progress.completed }}</div>
+                            <div class="stat-number" style="font-size: 1.5rem;">{{ progress.total - progress.completed }}</div>
                             <div class="stat-label">Осталось</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Быстрая навигация -->
+                <!-- Quick Navigation -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
+                    <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-compass me-2"></i>Быстрая навигация
                     </h5>
+                    
                     <div class="d-grid gap-2">
                         {% for module in course.modules %}
-                        <a href="#module-{{ loop.index }}" class="btn btn-outline-primary btn-sm text-start">
+                        <a href="#module-detailed-{{ loop.index }}" class="btn btn-cyber-outline text-start">
                             <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
                         </a>
                         {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Course Actions -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-lightning me-2"></i>Быстрые действия
+                    </h5>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-left me-2"></i>Все курсы
+                        </a>
+                        <button class="btn btn-cyber-outline" onclick="shareCourse()">
+                            <i class="bi bi-share me-2"></i>Поделиться курсом
+                        </button>
+                        <button class="btn btn-cyber-outline" onclick="downloadSyllabus()">
+                            <i class="bi bi-download me-2"></i>Скачать программу
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1202,36 +1528,36 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Функции для работы с уроками
-        function startLearning(courseId) {
-            // Находим первый незавершенный урок
-            const firstLesson = document.querySelector('.lesson-item:not(.completed)');
-            if (firstLesson) {
-                const lessonId = firstLesson.dataset.lessonId;
-                window.location.href = `/education/course/${courseId}/lesson/${lessonId}`;
+        // Course functionality
+        function startLearning() {
+            const firstUncompletedLesson = document.querySelector('.lesson-item:not(.completed)');
+            if (firstUncompletedLesson) {
+                const lessonId = firstUncompletedLesson.dataset.lessonId;
+                window.location.href = `/education/course/{{ course.id }}/lesson/${lessonId}`;
             } else {
-                // Все уроки завершены, начинаем с первого
+                // Start from the first lesson if all are completed
                 const firstLesson = document.querySelector('.lesson-item');
                 if (firstLesson) {
                     const lessonId = firstLesson.dataset.lessonId;
-                    window.location.href = `/education/course/${courseId}/lesson/${lessonId}`;
+                    window.location.href = `/education/course/{{ course.id }}/lesson/${lessonId}`;
                 }
             }
         }
 
         function startSublesson(courseId, moduleId, lessonId, sublessonId) {
-            // В реальном приложении здесь была бы загрузка подурока
-            showCyberNotification('info', `Запуск подурока: ${sublessonId}`);
-
-            // Симуляция загрузки контента подурока
+            showNotification('info', `Запуск подурока: ${sublessonId}`, 'info');
+            
+            // Simulate sublesson loading
             setTimeout(() => {
-                showCyberNotification('success', 'Подурок завершен!');
-                // Обновляем интерфейс
+                showNotification('success', 'Подурок успешно завершен!', 'success');
+                
+                // Update UI
                 const sublesson = document.querySelector(`[data-sublesson-id="${sublessonId}"]`);
                 if (sublesson) {
+                    sublesson.classList.add('completed');
                     const icon = sublesson.querySelector('.sublesson-icon i');
                     icon.className = 'bi bi-check';
-
+                    
                     const button = sublesson.querySelector('button');
                     if (button) {
                         button.className = 'btn btn-success btn-sm';
@@ -1242,44 +1568,68 @@
             }, 2000);
         }
 
-        function startFinalExam(courseId) {
+        function startFinalExam() {
             if (confirm('Вы готовы начать финальный экзамен? У вас будет 60 минут на выполнение.')) {
-                // Симуляция экзамена
-                showCyberNotification('warning', 'Экзамен начался! Удачи!');
-
-                // В реальном приложении здесь был бы переход на страницу экзамена
+                showNotification('warning', 'Экзамен начался! Удачи!', 'warning');
+                
+                // Simulate exam
                 setTimeout(() => {
-                    // Симуляция завершения экзамена
-                    const score = Math.floor(Math.random() * 40) + 60; // 60-100
+                    const score = Math.floor(Math.random() * 40) + 60;
                     const passed = score >= 70;
-
+                    
                     if (passed) {
-                        showCyberNotification('success', `Поздравляем! Вы сдали экзамен с результатом ${score}%`);
+                        showNotification('success', `Поздравляем! Вы сдали экзамен с результатом ${score}%`, 'success');
                         setTimeout(() => {
-                            getCertificate(courseId);
+                            getCertificate();
                         }, 2000);
                     } else {
-                        showCyberNotification('error', `Экзамен не сдан. Ваш результат: ${score}%. Попробуйте еще раз.`);
+                        showNotification('error', `Экзамен не сдан. Ваш результат: ${score}%. Попробуйте еще раз.`, 'danger');
                     }
                 }, 3000);
             }
         }
 
-        function getCertificate(courseId) {
-            window.location.href = `/education/course/${courseId}/certificate`;
+        function getCertificate() {
+            window.location.href = `/education/course/{{ course.id }}/certificate`;
+        }
+
+        function addToFavorites() {
+            showNotification('success', 'Курс добавлен в избранное!', 'success');
+        }
+
+        function shareCourse() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ course.title }}',
+                    text: '{{ course.description }}',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showNotification('info', 'Ссылка на курс скопирована в буфер обмена!', 'info');
+            }
         }
 
         function downloadResource(resourceName) {
-            showCyberNotification('info', `Скачивание ресурса: ${resourceName}`);
-            // В реальном приложении здесь была бы загрузка файла
+            showNotification('info', `Скачивание ресурса: ${resourceName}`, 'info');
         }
 
-        function showCyberNotification(type, message) {
+        function downloadSyllabus() {
+            showNotification('info', 'Программа курса готовится к скачиванию...', 'info');
+        }
+
+        function showNotification(title, message, type) {
             const notification = document.createElement('div');
             notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
             notification.innerHTML = `
-                ${message}
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}-fill me-2"></i>
+                    <div>
+                        <h6 class="mb-1">${title}</h6>
+                        <p class="mb-0 small">${message}</p>
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
             document.body.appendChild(notification);
@@ -1291,8 +1641,8 @@
             }, 5000);
         }
 
-        // Плавная прокрутка к модулям
-        document.querySelectorAll('a[href^="#module-"]').forEach(link => {
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
@@ -1305,7 +1655,57 @@
                 }
             });
         });
+
+        // Progress ring animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const progress = {{ progress.percentage }};
+            const circle = document.querySelector('.progress-ring-fill');
+            if (circle) {
+                const circumference = 377;
+                const offset = circumference - (circumference * progress / 100);
+                circle.style.strokeDashoffset = offset;
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        const prevLesson = document.querySelector('.lesson-item.current');
+                        if (prevLesson) {
+                            const prevLink = prevLesson.previousElementSibling?.querySelector('a[href*="/lesson/"]');
+                            if (prevLink) prevLink.click();
+                        }
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        const nextLesson = document.querySelector('.lesson-item.current');
+                        if (nextLesson) {
+                            const nextLink = nextLesson.nextElementSibling?.querySelector('a[href*="/lesson/"]');
+                            if (nextLink) nextLink.click();
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Intersection Observer for current lesson highlighting
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.lesson-item.current').forEach(item => {
+                        item.classList.remove('current');
+                    });
+                    entry.target.classList.add('current');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.lesson-item').forEach(item => {
+            observer.observe(item);
+        });
     </script>
 </body>
-
 </html>

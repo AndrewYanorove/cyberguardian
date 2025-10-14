@@ -11,53 +11,112 @@
         :root {
             --cyber-darker: #0a0a0f;
             --cyber-dark: #111122;
-            --cyber-border: #1a1a2e;
-            --cyber-primary: #0375c2;
-            --cyber-secondary: #0088ff;
-            --cyber-subtext: #8899aa;
+            --cyber-darker-blue: #0a1428;
+            --cyber-dark-blue: #1a1a2e;
+            --cyber-border: #2a2a3e;
+            --cyber-primary: #00a8ff;
+            --cyber-primary-glow: #00a8ff;
+            --cyber-secondary: #0097e6;
+            --cyber-accent: #00ff88;
+            --cyber-accent-glow: #00ff88;
+            --cyber-warning: #ff9f43;
+            --cyber-danger: #ff6b6b;
+            --cyber-success: #1dd1a1;
+            --cyber-info: #54a0ff;
             --cyber-text: #e0e0ff;
+            --cyber-text-bright: #ffffff;
+            --cyber-subtext: #a0a0c0;
+            --cyber-subtext-dark: #8899aa;
+            --cyber-bg-card: rgba(20, 20, 30, 0.95);
+            --cyber-bg-card-light: rgba(30, 30, 45, 0.9);
+            --cyber-bg-card-dark: rgba(15, 15, 25, 0.98);
+            --cyber-bg-gradient: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark-blue) 50%, var(--cyber-darker-blue) 100%);
+            --cyber-glow-primary: 0 0 20px rgba(0, 168, 255, 0.5);
+            --cyber-glow-accent: 0 0 20px rgba(0, 255, 136, 0.5);
+            --cyber-glow-warning: 0 0 20px rgba(255, 159, 67, 0.5);
+            --cyber-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --cyber-shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --cyber-shadow-large: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--cyber-darker);
+            background: var(--cyber-bg-gradient);
             color: var(--cyber-text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
         }
 
+        /* ===== TYPOGRAPHY ===== */
         .cyber-title {
+            color: var(--cyber-text-bright);
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .cyber-title-primary {
             color: var(--cyber-primary);
-            text-shadow: 0 0 10px rgba(11, 232, 248, 0.781);
-            font-weight: 700;
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cyber-subtitle {
+            color: var(--cyber-text);
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.4;
         }
 
         .cyber-text {
             color: var(--cyber-text);
+            font-size: 1rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .cyber-text-bright {
+            color: var(--cyber-text-bright);
+            font-weight: 500;
         }
 
         .cyber-subtext {
             color: var(--cyber-subtext);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
-        .cyber-border {
-            border-color: var(--cyber-border) !important;
+        .cyber-lead {
+            color: var(--cyber-text);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            font-weight: 400;
         }
 
-        .cyber-link {
-            color: var(--cyber-primary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .cyber-link:hover {
-            color: var(--cyber-secondary);
-            text-shadow: 0 0 8px rgba(18, 244, 252, 0.3);
-        }
-
+        /* ===== MODULE HERO ===== */
         .module-hero {
-            background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
-            border-bottom: 2px solid var(--cyber-border);
-            padding: 3rem 0;
-            margin-bottom: 2rem;
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 15, 0.95) 0%, 
+                rgba(26, 26, 46, 0.9) 50%, 
+                rgba(10, 20, 40, 0.85) 100%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300a8ff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border-bottom: 3px solid var(--cyber-border);
+            padding: 4rem 0 3rem;
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
         }
@@ -69,13 +128,207 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300ff88' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%);
+            pointer-events: none;
         }
 
+        /* ===== LAYOUT ===== */
+        .container-max {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ===== CARDS ===== */
+        .cyber-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--cyber-shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 168, 255, 0.1), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cyber-card:hover::before {
+            left: 100%;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-8px);
+            box-shadow: var(--cyber-shadow-large), 0 0 30px rgba(0, 168, 255, 0.2);
+        }
+
+        /* ===== LESSON CARDS ===== */
+        .lesson-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 18px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .lesson-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .lesson-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-8px);
+            box-shadow: var(--cyber-shadow-medium), 0 0 25px rgba(0, 168, 255, 0.15);
+        }
+
+        .lesson-card.completed {
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 255, 136, 0.05) 100%);
+        }
+
+        .lesson-card.current {
+            border-color: var(--cyber-primary);
+            background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(0, 168, 255, 0.08) 100%);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 168, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(0, 168, 255, 0.6); }
+        }
+
+        /* ===== LESSON ICONS ===== */
+        .lesson-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(0, 255, 136, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 2rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .lesson-card:hover .lesson-icon::before {
+            left: 100%;
+        }
+
+        .lesson-card:hover .lesson-icon {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.25), rgba(0, 255, 136, 0.2));
+            transform: scale(1.1) rotate(5deg);
+            border-color: var(--cyber-primary);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);
+        }
+
+        .lesson-card.completed .lesson-icon {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 168, 255, 0.15));
+            color: var(--cyber-accent);
+        }
+
+        /* ===== SUBLESSONS ===== */
+        .sublessons {
+            margin-top: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 3px solid var(--cyber-border);
+        }
+
+        .sublesson-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: rgba(40, 40, 55, 0.6);
+            border: 1px solid var(--cyber-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            gap: 1rem;
+        }
+
+        .sublesson-item:hover {
+            background: rgba(50, 50, 70, 0.8);
+            border-color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .sublesson-item.completed {
+            background: rgba(0, 255, 136, 0.08);
+            border-color: var(--cyber-accent);
+        }
+
+        .sublesson-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(0, 168, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sublesson-item.completed .sublesson-icon {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-accent);
+        }
+
+        /* ===== PROGRESS RINGS ===== */
         .module-progress-ring {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 160px;
+            height: 160px;
             margin: 0 auto;
         }
 
@@ -87,16 +340,16 @@
         .module-progress-ring-bg {
             fill: none;
             stroke: var(--cyber-border);
-            stroke-width: 8;
+            stroke-width: 10;
         }
 
         .module-progress-ring-fill {
             fill: none;
-            stroke: var(--cyber-primary);
-            stroke-width: 8;
-            stroke-dasharray: 314;
-            stroke-dashoffset: 314;
-            transition: stroke-dashoffset 1.5s ease;
+            stroke: url(#progressGradient);
+            stroke-width: 10;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             stroke-linecap: round;
         }
 
@@ -105,178 +358,19 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--cyber-primary);
-            text-shadow: 0 0 10px rgba(3, 173, 224, 0.5);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--cyber-text-bright);
+            text-shadow: var(--cyber-glow-primary);
         }
 
-        .lesson-card {
-            background: rgba(20, 20, 20, 0.9);
-            border: 2px solid var(--cyber-border);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .lesson-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .lesson-card:hover::before {
-            left: 100%;
-        }
-
-        .lesson-card:hover {
-            border-color: var(--cyber-primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.15);
-        }
-
-        .lesson-card.completed {
-            border-color: var(--cyber-primary);
-            background: rgba(0, 255, 136, 0.08);
-        }
-
-        .lesson-card.current {
-            border-color: var(--cyber-primary);
-            background: rgba(0, 123, 255, 0.1);
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-glow {
-            0% {
-                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
-            }
-
-            50% {
-                box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
-            }
-
-            100% {
-                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
-            }
-        }
-
-        .lesson-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: rgba(0, 255, 136, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cyber-primary);
-            font-size: 1.2rem;
-            margin-right: 1rem;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .lesson-card:hover .lesson-icon {
-            background: rgba(0, 255, 136, 0.2);
-            transform: scale(1.05);
-            border-color: var(--cyber-primary);
-        }
-
-        .lesson-content {
-            flex: 1;
-        }
-
-        .lesson-meta {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .lesson-duration {
-            color: var(--cyber-subtext);
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .quiz-badge {
-            background: rgba(0, 136, 255, 0.2);
-            color: var(--cyber-secondary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            border: 1px solid var(--cyber-secondary);
-            font-weight: 600;
-        }
-
-        .practice-badge {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--cyber-primary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            border: 1px solid var(--cyber-primary);
-            font-weight: 600;
-        }
-
-        .sublessons {
-            margin-top: 1rem;
-            padding-left: 1rem;
-            border-left: 2px solid var(--cyber-border);
-        }
-
-        .sublesson-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            background: rgba(40, 40, 40, 0.6);
-            border: 1px solid var(--cyber-border);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .sublesson-item:hover {
-            background: rgba(0, 255, 136, 0.05);
-            border-color: var(--cyber-primary);
-        }
-
-        .sublesson-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: rgba(0, 136, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cyber-secondary);
-            font-size: 0.8rem;
-            margin-right: 0.75rem;
-            flex-shrink: 0;
-        }
-
-        .sublesson-item.completed .sublesson-icon {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--cyber-primary);
-        }
-
+        /* ===== SIDEBAR CARDS ===== */
         .sidebar-card {
-            background: rgba(20, 20, 20, 0.9);
+            background: var(--cyber-bg-card);
             border: 2px solid var(--cyber-border);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            border-radius: 18px;
+            padding: 2rem;
+            margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
         }
@@ -287,94 +381,94 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
         }
 
-        .nav-link {
-            color: var(--cyber-subtext);
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
-            border: none;
-            background: transparent;
-            text-align: left;
-            width: 100%;
-        }
-
-        .nav-link:hover {
-            color: var(--cyber-primary);
-            background: rgba(0, 255, 136, 0.1);
-        }
-
-        .nav-link.active {
-            color: var(--cyber-primary);
-            background: rgba(0, 255, 136, 0.15);
-            border-left: 3px solid var(--cyber-primary);
-        }
-
+        /* ===== BADGES & TAGS ===== */
         .cyber-badge {
-            background: rgba(30, 30, 45, 0.8);
+            background: rgba(40, 40, 55, 0.8);
             border: 1px solid var(--cyber-border);
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            padding: 0.6rem 1.2rem;
             font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cyber-text);
+            transition: all 0.3s ease;
         }
 
-        .bg-primary {
-            background: rgba(0, 136, 255, 0.15) !important;
-            border-color: var(--cyber-primary) !important;
+        .cyber-badge-primary {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.2), rgba(0, 168, 255, 0.1));
+            border-color: var(--cyber-primary);
+            color: var(--cyber-primary);
         }
 
-        .bg-success {
-            background: rgba(0, 255, 136, 0.15) !important;
-            border-color: var(--cyber-primary) !important;
+        .cyber-badge-accent {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border-color: var(--cyber-accent);
+            color: var(--cyber-accent);
         }
 
-        .bg-secondary {
-            background: rgba(136, 136, 255, 0.15) !important;
-            border-color: #8888ff !important;
+        .cyber-badge-warning {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border-color: var(--cyber-warning);
+            color: var(--cyber-warning);
         }
 
-        .difficulty-indicator {
+        .cyber-badge-success {
+            background: linear-gradient(135deg, rgba(29, 209, 161, 0.2), rgba(29, 209, 161, 0.1));
+            border-color: var(--cyber-success);
+            color: var(--cyber-success);
+        }
+
+        .difficulty-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .difficulty-beginner {
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--cyber-primary);
-            border: 1px solid var(--cyber-primary);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border: 2px solid var(--cyber-accent);
+            color: var(--cyber-accent);
         }
 
         .difficulty-intermediate {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-            border: 1px solid #ffc107;
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border: 2px solid var(--cyber-warning);
+            color: var(--cyber-warning);
         }
 
         .difficulty-advanced {
-            background: rgba(255, 0, 68, 0.15);
-            color: #ff0044;
-            border: 1px solid #ff0044;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
+            border: 2px solid var(--cyber-danger);
+            color: var(--cyber-danger);
         }
 
+        /* ===== BUTTONS ===== */
         .btn-cyber {
-            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
             border: none;
-            color: var(--cyber-darker);
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            color: #000;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
         }
 
         .btn-cyber::before {
@@ -384,8 +478,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
         }
 
         .btn-cyber:hover::before {
@@ -393,8 +487,9 @@
         }
 
         .btn-cyber:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4), 0 0 30px rgba(0, 255, 136, 0.3);
+            color: #000;
         }
 
         .btn-cyber-outline {
@@ -402,72 +497,37 @@
             border: 2px solid var(--cyber-primary);
             color: var(--cyber-primary);
             font-weight: 600;
-            padding: 0.75rem 1.5rem;
+            padding: 0.875rem 1.75rem;
             border-radius: 10px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-cyber-outline:hover {
             background: var(--cyber-primary);
-            color: var(--cyber-darker);
+            color: #000;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
         }
 
-        .achievement-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .achievement-item {
-            background: rgba(30, 30, 30, 0.7);
-            border: 2px solid var(--cyber-border);
-            border-radius: 12px;
-            padding: 1rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .achievement-item:hover {
-            border-color: var(--cyber-primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.1);
-        }
-
-        .achievement-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--cyber-primary);
-        }
-
-        .achievement-locked {
-            opacity: 0.5;
-            filter: grayscale(1);
-        }
-
-        .achievement-locked .achievement-icon {
-            color: var(--cyber-border);
-        }
-
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-
+        /* ===== PROGRESS BARS ===== */
         .cyber-progress {
-            height: 8px;
+            height: 10px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
             border: 1px solid var(--cyber-border);
+            position: relative;
         }
 
         .cyber-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--cyber-primary), #00cc88);
-            border-radius: 4px;
-            transition: width 0.5s ease;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 8px;
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
         }
@@ -484,69 +544,318 @@
         }
 
         @keyframes shimmer {
-            0% {
-                left: -100%;
-            }
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
 
-            100% {
-                left: 100%;
+        /* ===== ACHIEVEMENTS ===== */
+        .achievement-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .achievement-item {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(0, 168, 255, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .achievement-item:hover::before {
+            opacity: 1;
+        }
+
+        .achievement-item:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-medium);
+        }
+
+        .achievement-item.earned {
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card-light) 0%, rgba(0, 255, 136, 0.05) 100%);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--cyber-primary);
+            transition: all 0.3s ease;
+        }
+
+        .achievement-item.earned .achievement-icon {
+            color: var(--cyber-accent);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .achievement-locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .achievement-locked .achievement-icon {
+            color: var(--cyber-border);
+        }
+
+        /* ===== BREADCRUMB ===== */
+        .cyber-breadcrumb {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb-item a {
+            color: var(--cyber-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--cyber-accent);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--cyber-text);
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav-link {
+            color: var(--cyber-subtext);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            transition: all 0.3s ease;
+            border: none;
+            background: transparent;
+            text-align: left;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: var(--cyber-primary);
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            color: var(--cyber-primary);
+            background: rgba(0, 255, 136, 0.15);
+            border-left: 3px solid var(--cyber-primary);
+            font-weight: 600;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .module-hero {
+                padding: 2rem 0;
+            }
+            
+            .cyber-title {
+                font-size: 2rem;
+            }
+            
+            .lesson-card {
+                padding: 1.5rem;
+            }
+            
+            .lesson-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                margin-right: 1rem;
+            }
+            
+            .module-progress-ring {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .module-progress-text {
+                font-size: 1.5rem;
             }
         }
 
-        .glow-text {
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        @media (max-width: 576px) {
+            .container-max {
+                padding: 0 15px;
+            }
+            
+            .cyber-card {
+                padding: 1.5rem;
+            }
+            
+            .sidebar-card {
+                padding: 1.5rem;
+            }
+            
+            .achievement-showcase {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-cyber {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .focus-visible {
+            outline: 2px solid var(--cyber-primary);
+            outline-offset: 2px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cyber-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-accent);
         }
     </style>
 </head>
 
 <body>
+    <!-- SVG Gradients -->
+    <svg width="0" height="0">
+        <defs>
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00a8ff" />
+                <stop offset="100%" stop-color="#00ff88" />
+            </linearGradient>
+        </defs>
+    </svg>
+
     <!-- Hero Section -->
     <div class="module-hero">
-        <div class="container">
-            <nav aria-label="breadcrumb" class="mb-3">
-                <ol class="breadcrumb cyber-border">
+        <div class="container-max">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb cyber-breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ url_for('education.education_home') }}" class="cyber-link">
-                            <i class="bi bi-book me-1"></i>Курсы
+                        <a href="{{ url_for('education.education_home') }}">
+                            <i class="bi bi-book me-2"></i>Все курсы
                         </a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="cyber-link">
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}">
                             {{ course.title }}
                         </a>
                     </li>
-                    <li class="breadcrumb-item active cyber-text">{{ module.title }}</li>
+                    <li class="breadcrumb-item active">{{ module.title }}</li>
                 </ol>
             </nav>
 
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <h1 class="cyber-title glow-text mb-3">
-                        <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
+                    <h1 class="cyber-title display-3 mb-3">
+                        <i class="bi bi-{{ module.icon }} me-3"></i>{{ module.title }}
                     </h1>
-                    <p class="cyber-subtext lead mb-4">{{ module.description }}</p>
+                    <p class="cyber-lead mb-4">{{ module.description }}</p>
 
                     <div class="d-flex gap-3 flex-wrap mb-4">
-                        <span class="difficulty-indicator difficulty-{{ module.difficulty }}">
-                            <i class="bi bi-shield-check me-1"></i>
+                        <span class="difficulty-badge difficulty-{{ module.difficulty }}">
+                            <i class="bi bi-shield-check me-2"></i>
                             {% if module.difficulty == 'beginner' %}Начинающий
-                            {% elif module.difficulty == 'intermediate' %}Средний
+                            {% elif module.difficulty == 'intermediate' %}Средний уровень
                             {% else %}Продвинутый{% endif %}
                         </span>
-                        <span class="cyber-badge bg-primary">
-                            <i class="bi bi-clock me-1"></i> {{ module.estimated_time }}
+                        <span class="cyber-badge cyber-badge-primary">
+                            <i class="bi bi-clock me-2"></i> {{ module.estimated_time }}
                         </span>
-                        <span class="cyber-badge bg-success">
-                            <i class="bi bi-list-ul me-1"></i> {{ module.lessons|length }} уроков
+                        <span class="cyber-badge cyber-badge-success">
+                            <i class="bi bi-list-ul me-2"></i> {{ module.lessons|length }} уроков
                         </span>
                     </div>
+
+                    <!-- Module Stats -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="cyber-card">
+                                <h5 class="cyber-text-bright mb-3">
+                                    <i class="bi bi-graph-up me-2"></i>Статистика модуля
+                                </h5>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <div class="cyber-text-bright h4">{{ module.completed_lessons }}</div>
+                                        <div class="cyber-subtext">Завершено</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="cyber-text-bright h4">{{ module.lessons|length }}</div>
+                                        <div class="cyber-subtext">Всего уроков</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cyber-card">
+                                <h5 class="cyber-text-bright mb-3">
+                                    <i class="bi bi-award me-2"></i>Достижения
+                                </h5>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <div class="cyber-text-bright h4">2</div>
+                                        <div class="cyber-subtext">Доступно</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="cyber-text-bright h4">{{ 1 if module.completed_lessons >= 1 else 0 }}</div>
+                                        <div class="cyber-subtext">Получено</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="col-lg-4 text-center">
                     <div class="module-progress-ring">
-                        <svg class="module-progress-ring-circle" width="120" height="120">
-                            <circle class="module-progress-ring-bg" cx="60" cy="60" r="50"></circle>
-                            <circle class="module-progress-ring-fill" cx="60" cy="60" r="50"
-                                style="stroke-dashoffset: {{ 314 - (314 * (module.completed_lessons / module.lessons|length * 100) / 100) }}">
+                        <svg class="module-progress-ring-circle" width="160" height="160">
+                            <circle class="module-progress-ring-bg" cx="80" cy="80" r="70"></circle>
+                            <circle class="module-progress-ring-fill" cx="80" cy="80" r="70"
+                                style="stroke-dashoffset: {{ 440 - (440 * (module.completed_lessons / module.lessons|length * 100) / 100) }}">
                             </circle>
                         </svg>
                         <div class="module-progress-text">
@@ -554,114 +863,140 @@
                             module.lessons|length > 0 else 0 }}%
                         </div>
                     </div>
-                    <h5 class="cyber-text mb-2">Прогресс модуля</h5>
-                    <p class="cyber-subtext">{{ module.completed_lessons }}/{{ module.lessons|length }} уроков завершено
-                    </p>
+                    <h5 class="cyber-text-bright mb-2">Прогресс модуля</h5>
+                    <p class="cyber-subtext">{{ module.completed_lessons }}/{{ module.lessons|length }} уроков завершено</p>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=module.lessons[0].id) if module.lessons else '#' }}"
+                           class="btn btn-cyber">
+                            <i class="bi bi-play-circle me-2"></i>
+                            {% if module.completed_lessons > 0 %}Продолжить обучение{% else %}Начать обучение{% endif %}
+                        </a>
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}"
+                           class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-left me-2"></i>К содержанию курса
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container mt-4">
+    <div class="container-max">
         <div class="row">
             <!-- Основной контент -->
             <div class="col-lg-8">
                 <!-- Уроки модуля -->
-                {% for lesson in module.lessons %}
-                <div class="lesson-card {% if lesson.completed %}completed{% endif %} {% if loop.first and not lesson.completed %}current{% endif %}"
-                    id="lesson-{{ loop.index }}">
-                    <div class="d-flex align-items-start">
-                        <div class="lesson-icon">
-                            {% if lesson.completed %}
-                            <i class="bi bi-check-lg"></i>
-                            {% else %}
-                            <i
-                                class="bi bi-{{ 'play-fill' if loop.first and not lesson.completed else 'file-text' }}"></i>
-                            {% endif %}
-                        </div>
-
-                        <div class="lesson-content">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="cyber-text mb-0">{{ lesson.title }}</h5>
+                <div class="cyber-card">
+                    <h2 class="cyber-title-primary mb-4">
+                        <i class="bi bi-journals me-3"></i>Уроки модуля
+                    </h2>
+                    
+                    {% for lesson in module.lessons %}
+                    <div class="lesson-card {% if lesson.completed %}completed{% endif %} {% if loop.first and not lesson.completed %}current{% endif %}"
+                         id="lesson-{{ loop.index }}">
+                        <div class="d-flex align-items-start">
+                            <div class="lesson-icon">
                                 {% if lesson.completed %}
-                                <span class="cyber-badge bg-success">
-                                    <i class="bi bi-check-lg me-1"></i> Завершено
-                                </span>
+                                <i class="bi bi-check-circle-fill"></i>
+                                {% else %}
+                                <i class="bi bi-{{ 'play-circle' if loop.first and not lesson.completed else 'file-text' }}"></i>
                                 {% endif %}
                             </div>
 
-                            <p class="cyber-subtext mb-3">{{ lesson.description }}</p>
-
-                            <div class="lesson-meta">
-                                <span class="lesson-duration">
-                                    <i class="bi bi-clock"></i> {{ lesson.duration }} минут
-                                </span>
-                                {% if lesson.quiz %}
-                                <span class="quiz-badge">
-                                    <i class="bi bi-patch-question"></i> Тест
-                                </span>
-                                {% endif %}
-                                {% if lesson.practice %}
-                                <span class="practice-badge">
-                                    <i class="bi bi-code-slash"></i> Практика
-                                </span>
-                                {% endif %}
-                            </div>
-
-                            <!-- Подуроки -->
-                            {% if lesson.sublessons %}
-                            <div class="sublessons mt-3">
-                                {% for sublesson in lesson.sublessons %}
-                                <div class="sublesson-item {% if sublesson.completed %}completed{% endif %}"
-                                    data-sublesson-id="{{ sublesson.id }}">
-                                    <div class="sublesson-icon">
-                                        {% if sublesson.completed %}
-                                        <i class="bi bi-check"></i>
-                                        {% else %}
-                                        <i class="bi bi-play"></i>
-                                        {% endif %}
+                            <div class="lesson-content flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h3 class="cyber-text-bright mb-2">{{ lesson.title }}</h3>
+                                        <p class="cyber-subtext mb-0">{{ lesson.description }}</p>
                                     </div>
-                                    <div class="flex-grow-1">
-                                        <small class="cyber-text">{{ sublesson.title }}</small>
-                                        <div class="lesson-meta">
-                                            <span class="lesson-duration">
-                                                <i class="bi bi-clock"></i> {{ sublesson.duration }} мин
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {% if sublesson.completed %}
-                                    <span class="cyber-badge bg-success btn-sm">
-                                        <i class="bi bi-check"></i>
+                                    {% if lesson.completed %}
+                                    <span class="cyber-badge cyber-badge-success">
+                                        <i class="bi bi-check-lg me-1"></i>Завершено
                                     </span>
-                                    {% else %}
-                                    <button class="btn btn-cyber-outline btn-sm"
-                                        onclick="startSublesson('{{ course.id }}', '{{ module.id }}', '{{ lesson.id }}', '{{ sublesson.id }}')">
-                                        <i class="bi bi-play"></i>
-                                    </button>
                                     {% endif %}
                                 </div>
-                                {% endfor %}
+
+                                <div class="lesson-meta d-flex flex-wrap gap-3 align-items-center mb-3">
+                                    <span class="cyber-subtext">
+                                        <i class="bi bi-clock me-1"></i>{{ lesson.duration }} минут
+                                    </span>
+                                    
+                                    {% if lesson.quiz %}
+                                    <span class="cyber-badge cyber-badge-warning">
+                                        <i class="bi bi-patch-question me-1"></i>Тест
+                                    </span>
+                                    {% endif %}
+                                    
+                                    {% if lesson.practice %}
+                                    <span class="cyber-badge cyber-badge-info">
+                                        <i class="bi bi-code-slash me-1"></i>Практика
+                                    </span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Подуроки -->
+                                {% if lesson.sublessons %}
+                                <div class="sublessons">
+                                    <h6 class="cyber-text-bright mb-3">
+                                        <i class="bi bi-list-nested me-2"></i>Содержание урока:
+                                    </h6>
+                                    {% for sublesson in lesson.sublessons %}
+                                    <div class="sublesson-item {% if sublesson.completed %}completed{% endif %}"
+                                         data-sublesson-id="{{ sublesson.id }}">
+                                        <div class="sublesson-icon">
+                                            {% if sublesson.completed %}
+                                            <i class="bi bi-check"></i>
+                                            {% else %}
+                                            <i class="bi bi-play"></i>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="flex-grow-1">
+                                            <h6 class="cyber-text-bright mb-1">{{ sublesson.title }}</h6>
+                                            <p class="cyber-subtext-dark mb-0">{{ sublesson.description }}</p>
+                                        </div>
+                                        
+                                        <div class="sublesson-meta d-flex align-items-center gap-2">
+                                            <span class="cyber-subtext-dark">
+                                                <i class="bi bi-clock me-1"></i>{{ sublesson.duration }} мин
+                                            </span>
+                                            
+                                            {% if sublesson.completed %}
+                                            <span class="cyber-badge cyber-badge-success btn-sm">
+                                                <i class="bi bi-check"></i>
+                                            </span>
+                                            {% else %}
+                                            <button class="btn btn-cyber-outline btn-sm"
+                                                    onclick="startSublesson('{{ course.id }}', '{{ module.id }}', '{{ lesson.id }}', '{{ sublesson.id }}')">
+                                                <i class="bi bi-play"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                             </div>
-                            {% endif %}
-                        </div>
 
-                        <div class="lesson-actions ms-3">
-                            {% if lesson.quiz and not lesson.completed %}
-                            <a href="{{ url_for('education.lesson_quiz', course_id=course.id, lesson_id=lesson.id) }}"
-                                class="btn btn-warning btn-sm me-2 mb-2">
-                                <i class="bi bi-patch-question me-1"></i>Тест
-                            </a>
-                            {% endif %}
+                            <div class="lesson-actions ms-3">
+                                {% if lesson.quiz and not lesson.completed %}
+                                <a href="{{ url_for('education.lesson_quiz', course_id=course.id, lesson_id=lesson.id) }}"
+                                   class="btn btn-cyber-warning btn-sm me-2 mb-2">
+                                    <i class="bi bi-patch-question me-1"></i>Тест
+                                </a>
+                                {% endif %}
 
-                            <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}"
-                                class="btn {% if lesson.completed %}btn-cyber-outline{% else %}btn-cyber{% endif %} btn-sm">
-                                <i class="bi bi-{% if lesson.completed %}eye{% else %}play-circle{% endif %} me-1"></i>
-                                {% if lesson.completed %}Повторить{% else %}Начать{% endif %}
-                            </a>
+                                <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=lesson.id) }}"
+                                   class="btn {% if lesson.completed %}btn-cyber-outline{% else %}btn-cyber{% endif %}">
+                                    <i class="bi bi-{% if lesson.completed %}eye{% else %}play-circle{% endif %} me-1"></i>
+                                    {% if lesson.completed %}Повторить{% else %}Начать{% endif %}
+                                </a>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
 
                 <!-- Навигация между модулями -->
                 <div class="d-flex justify-content-between mt-5">
@@ -683,7 +1018,7 @@
 
                     {% if prev_module.found %}
                     <a href="{{ url_for('education.module_detail', course_id=course.id, module_id=prev_module.id) }}"
-                        class="btn btn-cyber-outline">
+                       class="btn btn-cyber-outline">
                         <i class="bi bi-arrow-left me-2"></i>Предыдущий модуль
                     </a>
                     {% else %}
@@ -694,12 +1029,12 @@
 
                     {% if next_module.found %}
                     <a href="{{ url_for('education.module_detail', course_id=course.id, module_id=next_module.id) }}"
-                        class="btn btn-cyber">
+                       class="btn btn-cyber">
                         Следующий модуль <i class="bi bi-arrow-right ms-2"></i>
                     </a>
                     {% else %}
-                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
-                        Завершить модуль <i class="bi bi-check-lg ms-2"></i>
+                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber-success">
+                        Завершить курс <i class="bi bi-trophy ms-2"></i>
                     </a>
                     {% endif %}
                 </div>
@@ -707,22 +1042,25 @@
 
             <!-- Боковая панель навигации -->
             <div class="col-lg-4">
+                <!-- Навигация по урокам -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
-                        <i class="bi bi-list-ol me-2"></i>Содержание модуля
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-list-ol me-2"></i>Навигация по урокам
                     </h5>
                     <nav class="nav flex-column">
                         {% for lesson in module.lessons %}
                         <a class="nav-link {% if loop.first and not lesson.completed %}active{% endif %}"
-                            href="#lesson-{{ loop.index }}">
+                           href="#lesson-{{ loop.index }}">
                             <div class="d-flex align-items-center">
                                 {% if lesson.completed %}
                                 <i class="bi bi-check-circle-fill text-success me-2"></i>
                                 {% else %}
-                                <i
-                                    class="bi bi-{{ 'play-circle' if loop.first and not lesson.completed else 'circle' }} me-2"></i>
+                                <i class="bi bi-{{ 'play-circle' if loop.first and not lesson.completed else 'circle' }} me-2"></i>
                                 {% endif %}
-                                <span>{{ lesson.title }}</span>
+                                <div>
+                                    <div class="cyber-text">{{ lesson.title }}</div>
+                                    <small class="cyber-subtext">{{ lesson.duration }} мин</small>
+                                </div>
                             </div>
                         </a>
                         {% endfor %}
@@ -731,61 +1069,106 @@
 
                 <!-- Прогресс модуля -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
+                    <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-graph-up me-2"></i>Прогресс модуля
                     </h5>
-                    <div class="cyber-progress mb-2">
-                        <div class="cyber-progress-bar"
-                            style="width: {{ (module.completed_lessons / module.lessons|length * 100) if module.lessons|length > 0 else 0 }}%">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="cyber-subtext">Общий прогресс</span>
+                            <span class="cyber-text-bright fw-bold">
+                                {{ (module.completed_lessons / module.lessons|length * 100)|round|int if
+                                module.lessons|length > 0 else 0 }}%
+                            </span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar"
+                                 style="width: {{ (module.completed_lessons / module.lessons|length * 100) if module.lessons|length > 0 else 0 }}%">
+                            </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <small class="cyber-subtext">Общий прогресс</small>
-                        <small class="cyber-text">
-                            {{ (module.completed_lessons / module.lessons|length * 100)|round|int if
-                            module.lessons|length > 0 else 0 }}%
-                        </small>
+                    
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="cyber-text-bright h5">{{ module.completed_lessons }}</div>
+                            <div class="cyber-subtext">Завершено</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="cyber-text-bright h5">{{ module.lessons|length - module.completed_lessons }}</div>
+                            <div class="cyber-subtext">Осталось</div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Достижения модуля -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
+                    <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-award me-2"></i>Достижения модуля
                     </h5>
                     <div class="achievement-showcase">
-                        <div class="achievement-item {% if module.completed_lessons >= 1 %}pulse-glow{% endif %}">
+                        <div class="achievement-item {% if module.completed_lessons >= 1 %}earned{% endif %}">
                             <div class="achievement-icon">
                                 <i class="bi bi-1-circle"></i>
                             </div>
-                            <h6 class="cyber-text">Первый урок</h6>
-                            <p class="cyber-subtext small">Завершите первый урок</p>
+                            <h6 class="cyber-text-bright mb-2">Первый урок</h6>
+                            <p class="cyber-subtext small">Завершите первый урок модуля</p>
+                            {% if module.completed_lessons >= 1 %}
+                            <span class="cyber-badge cyber-badge-accent mt-2">Получено!</span>
+                            {% endif %}
                         </div>
-                        <div
-                            class="achievement-item {% if module.completed_lessons == module.lessons|length %}pulse-glow{% else %}achievement-locked{% endif %}">
+                        
+                        <div class="achievement-item {% if module.completed_lessons == module.lessons|length %}earned{% else %}achievement-locked{% endif %}">
                             <div class="achievement-icon">
                                 <i class="bi bi-check-all"></i>
                             </div>
-                            <h6 class="cyber-text">Мастер модуля</h6>
-                            <p class="cyber-subtext small">Завершите все уроки</p>
+                            <h6 class="cyber-text-bright mb-2">Мастер модуля</h6>
+                            <p class="cyber-subtext small">Завершите все уроки модуля</p>
+                            {% if module.completed_lessons == module.lessons|length %}
+                            <span class="cyber-badge cyber-badge-accent mt-2">Получено!</span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
 
                 <!-- Быстрые действия -->
                 <div class="sidebar-card">
-                    <h5 class="cyber-text mb-3">
+                    <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-lightning me-2"></i>Быстрые действия
                     </h5>
                     <div class="d-grid gap-2">
                         <a href="{{ url_for('education.course_page', course_id=course.id) }}"
-                            class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-arrow-left me-1"></i>Назад к курсу
+                           class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-left me-2"></i>Назад к курсу
                         </a>
                         <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=module.lessons[0].id) if module.lessons else '#' }}"
-                            class="btn btn-cyber btn-sm">
-                            <i class="bi bi-play-circle me-1"></i>Начать с первого урока
+                           class="btn btn-cyber">
+                            <i class="bi bi-play-circle me-2"></i>Начать с первого урока
                         </a>
+                        <button class="btn btn-cyber-outline" onclick="downloadModuleMaterials()">
+                            <i class="bi bi-download me-2"></i>Скачать материалы
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Временные метки -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-clock-history me-2"></i>Временные метки
+                    </h5>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <small class="cyber-subtext">Начало обучения</small>
+                                <div class="cyber-text-bright">Сегодня</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <small class="cyber-subtext">Ожидаемое завершение</small>
+                                <div class="cyber-text-bright">Через 3 дня</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -796,11 +1179,11 @@
     <script>
         // Функции для работы с уроками
         function startSublesson(courseId, moduleId, lessonId, sublessonId) {
-            showCyberNotification('info', `Запуск подурока: ${sublessonId}`);
+            showCyberNotification('info', `Запуск подурока...`, 'info');
 
             // Симуляция загрузки контента подурока
             setTimeout(() => {
-                showCyberNotification('success', 'Подурок завершен!');
+                showCyberNotification('success', 'Подурок завершен!', 'success');
 
                 // Обновляем интерфейс
                 const sublesson = document.querySelector(`[data-sublesson-id="${sublessonId}"]`);
@@ -819,14 +1202,24 @@
             }, 2000);
         }
 
-        function showCyberNotification(type, message) {
+        function downloadModuleMaterials() {
+            showCyberNotification('info', 'Подготовка материалов для скачивания...', 'info');
+            setTimeout(() => {
+                showCyberNotification('success', 'Материалы готовы к скачиванию!', 'success');
+            }, 1500);
+        }
+
+        function showCyberNotification(title, message, type) {
             const notification = document.createElement('div');
             notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
             notification.innerHTML = `
                 <div class="d-flex align-items-center">
                     <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}-fill me-2"></i>
-                    <span>${message}</span>
+                    <div>
+                        <h6 class="mb-1">${title}</h6>
+                        <p class="mb-0 small">${message}</p>
+                    </div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
@@ -884,15 +1277,91 @@
 
         // Инициализация прогресс-ринга
         document.addEventListener('DOMContentLoaded', function () {
-            const progress = {{ (module.completed_lessons / module.lessons | length * 100) if module.lessons | length > 0 else 0
-        }};
-        const circle = document.querySelector('.module-progress-ring-fill');
-        if (circle) {
-            const circumference = 314;
-            const offset = circumference - (circumference * progress / 100);
-            circle.style.strokeDashoffset = offset;
-        }
+            const progress = {{ (module.completed_lessons / module.lessons | length * 100) if module.lessons | length > 0 else 0 }};
+            const circle = document.querySelector('.module-progress-ring-fill');
+            if (circle) {
+                const circumference = 440;
+                const offset = circumference - (circumference * progress / 100);
+                circle.style.strokeDashoffset = offset;
+            }
+
+            // Анимация появления элементов
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.lesson-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
         });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        const prevBtn = document.querySelector('.btn-cyber-outline');
+                        if (prevBtn) prevBtn.click();
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        const nextBtn = document.querySelector('.btn-cyber');
+                        if (nextBtn) nextBtn.click();
+                        break;
+                }
+            }
+        });
+
+        // Timeline styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .timeline {
+                position: relative;
+                padding-left: 2rem;
+            }
+            .timeline::before {
+                content: '';
+                position: absolute;
+                left: 0.7rem;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: linear-gradient(to bottom, var(--cyber-primary), var(--cyber-accent));
+                border-radius: 1px;
+            }
+            .timeline-item {
+                position: relative;
+                margin-bottom: 1.5rem;
+            }
+            .timeline-marker {
+                position: absolute;
+                left: -2rem;
+                top: 0.5rem;
+                width: 0.8rem;
+                height: 0.8rem;
+                border-radius: 50%;
+                background: var(--cyber-primary);
+                border: 2px solid var(--cyber-darker);
+            }
+            .timeline-content {
+                padding-left: 0.5rem;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 

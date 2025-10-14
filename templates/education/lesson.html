@@ -1,98 +1,634 @@
+<!-- [file name]: lesson.html -->
 <!DOCTYPE html>
 <html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Урок - Основы кибербезопасности - CyberGuardian</title>
+    <title>{{ lesson.title }} - {{ course.title }} - CyberGuardian</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root {
             --cyber-darker: #0a0a0f;
             --cyber-dark: #111122;
-            --cyber-border: #1a1a2e;
-            --cyber-primary: #0375c2;
-            --cyber-secondary: #0088ff;
-            --cyber-subtext: #8899aa;
+            --cyber-darker-blue: #0a1428;
+            --cyber-dark-blue: #1a1a2e;
+            --cyber-border: #2a2a3e;
+            --cyber-primary: #00a8ff;
+            --cyber-primary-glow: #00a8ff;
+            --cyber-secondary: #0097e6;
+            --cyber-accent: #00ff88;
+            --cyber-accent-glow: #00ff88;
+            --cyber-warning: #ff9f43;
+            --cyber-danger: #ff6b6b;
+            --cyber-success: #1dd1a1;
+            --cyber-info: #54a0ff;
             --cyber-text: #e0e0ff;
+            --cyber-text-bright: #ffffff;
+            --cyber-subtext: #a0a0c0;
+            --cyber-subtext-dark: #8899aa;
+            --cyber-bg-card: rgba(20, 20, 30, 0.95);
+            --cyber-bg-card-light: rgba(30, 30, 45, 0.9);
+            --cyber-bg-card-dark: rgba(15, 15, 25, 0.98);
+            --cyber-bg-gradient: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark-blue) 50%, var(--cyber-darker-blue) 100%);
+            --cyber-glow-primary: 0 0 20px rgba(0, 168, 255, 0.5);
+            --cyber-glow-accent: 0 0 20px rgba(0, 255, 136, 0.5);
+            --cyber-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --cyber-shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --cyber-shadow-large: 0 15px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--cyber-darker);
+            background: var(--cyber-bg-gradient);
             color: var(--cyber-text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
         }
 
+        /* ===== TYPOGRAPHY ===== */
         .cyber-title {
+            color: var(--cyber-text-bright);
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .cyber-title-primary {
             color: var(--cyber-primary);
-            text-shadow: 0 0 10px rgba(11, 232, 248, 0.781);
-            font-weight: 700;
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cyber-subtitle {
+            color: var(--cyber-text);
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.4;
         }
 
         .cyber-text {
             color: var(--cyber-text);
+            font-size: 1rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .cyber-text-bright {
+            color: var(--cyber-text-bright);
+            font-weight: 500;
         }
 
         .cyber-subtext {
             color: var(--cyber-subtext);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
-        .cyber-border {
-            border-color: var(--cyber-border) !important;
+        .cyber-lead {
+            color: var(--cyber-text);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            font-weight: 400;
         }
 
+        /* ===== LAYOUT ===== */
         .lesson-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        .video-container {
-            background: rgba(20, 20, 20, 0.9);
+        @media (max-width: 768px) {
+            .lesson-container {
+                padding: 1rem;
+            }
+        }
+
+        /* ===== BREADCRUMB ===== */
+        .cyber-breadcrumb {
+            background: var(--cyber-bg-card);
             border: 2px solid var(--cyber-border);
-            border-radius: 15px;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb-item a {
+            color: var(--cyber-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--cyber-accent);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--cyber-text);
+        }
+
+        /* ===== LESSON HEADER ===== */
+        .lesson-header {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+        }
+
+        .completion-badge {
+            background: linear-gradient(135deg, var(--cyber-accent), #00e676);
+            color: #000;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        /* ===== VIDEO PLAYER ===== */
+        .video-container {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 20px;
             padding: 0;
             margin-bottom: 2rem;
             overflow: hidden;
+            position: relative;
+            box-shadow: var(--cyber-shadow-medium);
         }
 
         .video-player {
             width: 100%;
             height: 500px;
             background: #000;
+            position: relative;
+            overflow: hidden;
         }
 
-        .lesson-content {
-            background: rgba(20, 20, 20, 0.9);
-            border: 2px solid var(--cyber-border);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .lesson-navigation {
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--cyber-border);
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: var(--cyber-text);
         }
 
-        .btn-cyber {
-            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
-            border: none;
-            color: var(--cyber-darker);
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-container:hover .video-controls {
+            opacity: 1;
+        }
+
+        .video-progress {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-progress-filled {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .video-time {
+            color: var(--cyber-text-bright);
+            font-size: 0.9rem;
             font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--cyber-text-bright);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+            background: var(--cyber-primary);
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        /* ===== CONTENT SECTIONS ===== */
+        .content-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
             transition: all 0.3s ease;
         }
 
+        .content-card:hover {
+            border-color: var(--cyber-primary);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 2px;
+        }
+
+        /* ===== SUBLESSONS ===== */
+        .sublessons-container {
+            margin-top: 2rem;
+        }
+
+        .sublesson-item {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sublesson-item:hover {
+            border-color: var(--cyber-primary);
+            transform: translateX(8px);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        .sublesson-item.active {
+            border-color: var(--cyber-accent);
+            background: linear-gradient(135deg, var(--cyber-bg-card-light) 0%, rgba(0, 255, 136, 0.05) 100%);
+        }
+
+        .sublesson-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 1rem;
+        }
+
+        .sublesson-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(0, 168, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 1.1rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .sublesson-item.active .sublesson-icon {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--cyber-accent);
+        }
+
+        .sublesson-content {
+            display: none;
+            padding-top: 1rem;
+            border-top: 1px solid var(--cyber-border);
+        }
+
+        .sublesson-item.active .sublesson-content {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== INTERACTIVE ELEMENTS ===== */
+        .interactive-element {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            border-color: var(--cyber-primary);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '📋';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .code-block:hover::before {
+            opacity: 1;
+        }
+
+        .quiz-preview {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.1), rgba(255, 159, 67, 0.05));
+            border: 2px solid var(--cyber-warning);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .practice-preview {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.1), rgba(0, 168, 255, 0.05));
+            border: 2px solid var(--cyber-primary);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 18px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+        }
+
+        .progress-ring-circle {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--cyber-border);
+            stroke-width: 8;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: url(#progressGradient);
+            stroke-width: 8;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 1.5s ease;
+            stroke-linecap: round;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--cyber-text-bright);
+        }
+
+        /* ===== RESOURCES ===== */
+        .resources-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--cyber-border);
+            transition: all 0.3s ease;
+        }
+
+        .resource-item:hover {
+            background: rgba(0, 168, 255, 0.05);
+            padding-left: 1.5rem;
+        }
+
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(0, 168, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* ===== UPLOAD AREA ===== */
+        .upload-area {
+            border: 3px dashed var(--cyber-border);
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--cyber-primary);
+            background: rgba(0, 168, 255, 0.05);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--cyber-accent);
+            background: rgba(0, 255, 136, 0.05);
+            transform: scale(1.02);
+        }
+
+        /* ===== VIDEO LIBRARY ===== */
+        .video-library {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .video-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--cyber-border);
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover {
+            border-color: var(--cyber-primary);
+            background: rgba(0, 168, 255, 0.05);
+        }
+
+        .video-item.active {
+            border-color: var(--cyber-accent);
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .video-thumbnail {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            background: var(--cyber-border);
+            margin-right: 1rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-cyber:hover::before {
+            left: 100%;
+        }
+
         .btn-cyber:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4), 0 0 30px rgba(0, 255, 136, 0.3);
+            color: #000;
         }
 
         .btn-cyber-outline {
@@ -100,209 +636,603 @@
             border: 2px solid var(--cyber-primary);
             color: var(--cyber-primary);
             font-weight: 600;
-            padding: 0.75rem 1.5rem;
+            padding: 0.875rem 1.75rem;
             border-radius: 10px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-cyber-outline:hover {
             background: var(--cyber-primary);
-            color: var(--cyber-darker);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
         }
 
-        .completion-badge {
-            background: linear-gradient(135deg, var(--cyber-primary), #00cc88);
-            color: var(--cyber-darker);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
+        .btn-cyber-warning {
+            background: linear-gradient(135deg, var(--cyber-warning), #ff8c1a);
+            border: none;
+            color: #000;
+            font-weight: 700;
         }
 
-        .resources-list {
-            list-style: none;
-            padding: 0;
+        .btn-cyber-success {
+            background: linear-gradient(135deg, var(--cyber-success), #10ac84);
+            border: none;
+            color: #000;
+            font-weight: 700;
         }
 
-        .resources-list li {
-            padding: 0.8rem 0;
-            border-bottom: 1px solid var(--cyber-border);
+        /* ===== NAVIGATION ===== */
+        .lesson-navigation {
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--cyber-border);
+        }
+
+        /* ===== BADGES ===== */
+        .cyber-badge {
+            background: rgba(40, 40, 55, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 25px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cyber-text);
             transition: all 0.3s ease;
         }
 
-        .resources-list li:hover {
-            background: rgba(0, 255, 136, 0.05);
-            padding-left: 0.5rem;
+        .cyber-badge-primary {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.2), rgba(0, 168, 255, 0.1));
+            border-color: var(--cyber-primary);
+            color: var(--cyber-primary);
         }
 
-        .resources-list li:last-child {
-            border-bottom: none;
+        .cyber-badge-accent {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border-color: var(--cyber-accent);
+            color: var(--cyber-accent);
+        }
+
+        .cyber-badge-warning {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.2), rgba(255, 159, 67, 0.1));
+            border-color: var(--cyber-warning);
+            color: var(--cyber-warning);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .lesson-header {
+                padding: 1.5rem;
+            }
+            
+            .video-player {
+                height: 300px;
+            }
+            
+            .content-card {
+                padding: 1.5rem;
+            }
+            
+            .lesson-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .lesson-navigation .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .focus-visible {
+            outline: 2px solid var(--cyber-primary);
+            outline-offset: 2px;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cyber-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-accent);
         }
     </style>
 </head>
 
 <body>
-    <div class="lesson-container">
-        <!-- Заголовок урока -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <nav aria-label="breadcrumb" class="mb-3">
-                    <ol class="breadcrumb cyber-border">
-                        <li class="breadcrumb-item">
-                            <a href="/education" class="text-decoration-none cyber-text">
-                                <i class="bi bi-book me-1"></i>Курсы
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a href="/education/course/cyber-basics" class="text-decoration-none cyber-text">
-                                Основы кибербезопасности
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item active cyber-text" id="lesson-title-breadcrumb">
-                            Название урока
-                        </li>
-                    </ol>
-                </nav>
+    <!-- SVG Gradients -->
+    <svg width="0" height="0">
+        <defs>
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00a8ff" />
+                <stop offset="100%" stop-color="#00ff88" />
+            </linearGradient>
+        </defs>
+    </svg>
 
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h1 class="cyber-title mb-2" id="lesson-title">Название урока</h1>
-                        <p class="cyber-subtext lead" id="lesson-description">Описание урока</p>
-                    </div>
-                    <div class="text-end">
-                        <span class="completion-badge" id="completion-status">
-                            <i class="bi bi-circle me-1"></i>В процессе
-                        </span>
-                        <div class="mt-2">
-                            <small class="cyber-subtext" id="lesson-duration">
-                                <i class="bi bi-clock me-1"></i>0 минут
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="lesson-container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="cyber-breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('education.education_home') }}">
+                        <i class="bi bi-book me-2"></i>Обучение
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('education.course_page', course_id=course.id) }}">
+                        {{ course.title }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">{{ lesson.title }}</li>
+            </ol>
+        </nav>
 
         <div class="row">
-            <!-- Основной контент -->
+            <!-- Main Content -->
             <div class="col-lg-8">
-                <!-- Видеоплеер -->
-                <div class="video-container">
-                    <div class="video-player" id="video-player">
-                        <div class="d-flex justify-content-center align-items-center h-100">
-                            <div class="text-center">
-                                <i class="bi bi-play-circle-fill"
-                                    style="font-size: 4rem; color: var(--cyber-primary);"></i>
-                                <p class="cyber-subtext mt-3">Видео будет загружено здесь</p>
+                <!-- Lesson Header -->
+                <div class="lesson-header">
+                    <div class="row align-items-start">
+                        <div class="col-md-8">
+                            <h1 class="cyber-title mb-3">{{ lesson.title }}</h1>
+                            <p class="cyber-lead mb-4">{{ lesson.description }}</p>
+                            
+                            <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+                                <span class="cyber-badge">
+                                    <i class="bi bi-clock me-2"></i>{{ lesson.duration }} минут
+                                </span>
+                                <span class="cyber-badge cyber-badge-primary">
+                                    <i class="bi bi-{{ module.icon }} me-2"></i>{{ module.title }}
+                                </span>
+                                {% if lesson.quiz %}
+                                <span class="cyber-badge cyber-badge-warning">
+                                    <i class="bi bi-patch-question me-2"></i>С тестом
+                                </span>
+                                {% endif %}
+                                {% if lesson.practice %}
+                                <span class="cyber-badge cyber-badge-accent">
+                                    <i class="bi bi-code-slash me-2"></i>С практикой
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="completion-badge" id="completionStatus">
+                                <i class="bi bi-circle me-2"></i>В процессе
+                            </div>
+                            <div class="mt-3">
+                                <small class="cyber-subtext">
+                                    <i class="bi bi-clock me-1"></i>Обновлено сегодня
+                                </small>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Контент урока -->
-                <div class="lesson-content">
-                    <h4 class="cyber-text mb-3">
-                        <i class="bi bi-journal-text me-2"></i>Содержание урока
-                    </h4>
-                    <div id="lesson-content-text">
-                        <p class="cyber-text">Контент урока загружается...</p>
-                    </div>
-
-                    <!-- Практическое задание -->
-                    <div class="mt-4" id="practice-section" style="display: none;">
-                        <h5 class="cyber-text mb-3">
-                            <i class="bi bi-code-slash me-2"></i>Практическое задание
-                        </h5>
-                        <div class="alert alert-info cyber-border">
-                            <p class="cyber-text mb-0" id="practice-task">Практическое задание будет отображено здесь
+                <!-- Video Player -->
+                <div class="video-container">
+                    <div class="video-player" id="videoPlayer">
+                        <div class="video-placeholder">
+                            <i class="bi bi-play-circle-fill" style="font-size: 4rem; color: var(--cyber-primary); margin-bottom: 1rem;"></i>
+                            <h4 class="cyber-text-bright mb-2">Видео материал урока</h4>
+                            <p class="cyber-subtext text-center px-4">
+                                Загрузите видеофайл или используйте ссылку для просмотра обучающего материала
                             </p>
+                            <div class="mt-3">
+                                <button class="btn btn-cyber-outline me-2" onclick="document.getElementById('videoFileInput').click()">
+                                    <i class="bi bi-upload me-2"></i>Загрузить видео
+                                </button>
+                                <button class="btn btn-cyber-outline" onclick="showVideoUrlModal()">
+                                    <i class="bi bi-link-45deg me-2"></i>Использовать ссылку
+                                </button>
+                            </div>
                         </div>
-                        <button class="btn btn-cyber mt-3" id="complete-practice-btn">
-                            <i class="bi bi-check-circle me-2"></i>Завершить задание
-                        </button>
                     </div>
-
-                    <!-- Тест -->
-                    <div class="mt-4" id="quiz-section" style="display: none;">
-                        <h5 class="cyber-text mb-3">
-                            <i class="bi bi-patch-question me-2"></i>Проверка знаний
-                        </h5>
-                        <div class="alert alert-warning cyber-border">
-                            <p class="cyber-text mb-0" id="quiz-info">Тест будет доступен после просмотра видео</p>
+                    
+                    <div class="video-controls">
+                        <button class="control-btn" id="playPauseBtn">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+                        <div class="video-progress" id="videoProgress">
+                            <div class="video-progress-filled" id="videoProgressFilled"></div>
                         </div>
-                        <button class="btn btn-cyber mt-3" id="start-quiz-btn" disabled>
-                            <i class="bi bi-play-circle me-2"></i>Начать тест
+                        <div class="video-time" id="videoTime">0:00 / 0:00</div>
+                        <button class="control-btn" id="volumeBtn">
+                            <i class="bi bi-volume-up-fill"></i>
+                        </button>
+                        <button class="control-btn" id="fullscreenBtn">
+                            <i class="bi bi-arrows-fullscreen"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Навигация -->
-                <div class="lesson-navigation">
-                    <button class="btn btn-cyber-outline" id="prev-lesson-btn">
-                        <i class="bi bi-arrow-left me-2"></i>Предыдущий урок
-                    </button>
+                <!-- Lesson Content -->
+                <div class="content-card">
+                    <h2 class="section-title cyber-text-bright">
+                        <i class="bi bi-journal-text me-2"></i>Содержание урока
+                    </h2>
+                    
+                    <div class="lesson-content">
+                        {% if lesson.sublessons %}
+                            <div class="sublessons-container">
+                                {% for sublesson in lesson.sublessons %}
+                                <div class="sublesson-item {% if loop.first %}active{% endif %}" data-sublesson-id="{{ sublesson.id }}">
+                                    <div class="sublesson-header">
+                                        <div class="d-flex align-items-center">
+                                            <div class="sublesson-icon">
+                                                <i class="bi bi-{% if sublesson.completed %}check-circle-fill{% else %}play-circle{% endif %}"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="cyber-text-bright mb-1">{{ sublesson.title }}</h5>
+                                                <p class="cyber-subtext mb-0">{{ sublesson.description }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="sublesson-meta">
+                                            <span class="cyber-badge me-3">
+                                                <i class="bi bi-clock me-1"></i>{{ sublesson.duration }} мин
+                                            </span>
+                                            <button class="btn btn-cyber-outline btn-sm toggle-sublesson">
+                                                <i class="bi bi-chevron-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="sublesson-content">
+                                        {{ sublesson.content|safe }}
+                                        
+                                        <!-- Interactive Elements for Sublesson -->
+                                        {% if loop.index == 1 %}
+                                        <div class="interactive-element mt-4">
+                                            <h6 class="cyber-text-bright mb-3">
+                                                <i class="bi bi-lightbulb me-2 text-warning"></i>Практическое упражнение
+                                            </h6>
+                                            <p class="cyber-text mb-3">
+                                                Попробуйте применить полученные знания на практике. Проанализируйте предложенный сценарий и определите, какие принципы кибербезопасности были нарушены.
+                                            </p>
+                                            <div class="code-block">
+                                                <pre class="cyber-text mb-0"><code>// Пример уязвимого кода
+function processUserData(userData) {
+    // Нарушение конфиденциальности - данные не шифруются
+    localStorage.setItem('user_data', JSON.stringify(userData));
+    
+    // Нарушение целостности - нет проверки данных
+    updateUserProfile(userData);
+    
+    // Нарушение доступности - нет обработки ошибок
+    sendToServer(userData);
+}</code></pre>
+                                            </div>
+                                            <button class="btn btn-cyber-outline mt-3" onclick="analyzeCode()">
+                                                <i class="bi bi-search me-2"></i>Проанализировать код
+                                            </button>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="bi bi-journal-x" style="font-size: 3rem; color: var(--cyber-subtext); margin-bottom: 1rem;"></i>
+                                <h4 class="cyber-text mb-3">Контент урока готовится</h4>
+                                <p class="cyber-subtext">
+                                    Материалы для этого урока находятся в разработке. Скоро здесь появится полезный и интересный контент.
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
 
-                    <button class="btn btn-cyber" id="complete-lesson-btn">
+                <!-- Practice Section -->
+                {% if lesson.practice %}
+                <div class="practice-preview">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="cyber-text-bright mb-2">
+                                <i class="bi bi-code-slash me-2"></i>Практическое задание
+                            </h4>
+                            <p class="cyber-text mb-0">
+                                Это урок содержит практическое задание для закрепления материала. Примените полученные знания на практике.
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <a href="{{ url_for('education.lesson_practice', course_id=course.id, lesson_id=lesson.id) }}" 
+                               class="btn btn-cyber">
+                                <i class="bi bi-arrow-right me-2"></i>Перейти к практике
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Quiz Section -->
+                {% if lesson.quiz %}
+                <div class="quiz-preview">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="cyber-text-bright mb-2">
+                                <i class="bi bi-patch-question me-2"></i>Проверка знаний
+                            </h4>
+                            <p class="cyber-text mb-0">
+                                Пройдите тест, чтобы проверить свои знания по теме урока и закрепить изученный материал.
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <a href="{{ url_for('education.lesson_quiz', course_id=course.id, lesson_id=lesson.id) }}" 
+                               class="btn btn-cyber-warning" id="startQuizBtn">
+                                <i class="bi bi-play-circle me-2"></i>Начать тест
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Lesson Navigation -->
+                <div class="lesson-navigation">
+                    {% if prev_lesson %}
+                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=prev_lesson.id) }}" 
+                       class="btn btn-cyber-outline">
+                        <i class="bi bi-arrow-left me-2"></i>Предыдущий урок
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
+                       class="btn btn-cyber-outline">
+                        <i class="bi bi-arrow-left me-2"></i>К содержанию курса
+                    </a>
+                    {% endif %}
+
+                    <button class="btn btn-cyber-success" id="completeLessonBtn">
                         <i class="bi bi-check-circle me-2"></i>Завершить урок
                     </button>
 
-                    <button class="btn btn-cyber-outline" id="next-lesson-btn">
-                        Следующий урок<i class="bi bi-arrow-right ms-2"></i>
-                    </button>
+                    {% if next_lesson %}
+                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=next_lesson.id) }}" 
+                       class="btn btn-cyber">
+                        Следующий урок <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
+                       class="btn btn-cyber">
+                        Завершить курс <i class="bi bi-check-lg ms-2"></i>
+                    </a>
+                    {% endif %}
                 </div>
             </div>
 
-            <!-- Боковая панель -->
+            <!-- Sidebar -->
             <div class="col-lg-4">
-                <!-- Прогресс -->
-                <div class="lesson-content">
-                    <h5 class="cyber-text mb-3">
+                <!-- Progress Tracking -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-graph-up me-2"></i>Прогресс урока
                     </h5>
-                    <div class="progress cyber-border mb-3" style="height: 8px;">
-                        <div class="progress-bar" role="progressbar"
-                            style="width: 0%; background: var(--cyber-primary);" id="lesson-progress-bar"></div>
+                    
+                    <div class="progress-ring mb-3">
+                        <svg class="progress-ring-circle" width="120" height="120">
+                            <circle class="progress-ring-bg" cx="60" cy="60" r="50"></circle>
+                            <circle class="progress-ring-fill" cx="60" cy="60" r="50" id="lessonProgressFill"></circle>
+                        </svg>
+                        <div class="progress-text" id="lessonProgressText">0%</div>
+                    </div>
+                    
+                    <div class="cyber-progress mb-2">
+                        <div class="cyber-progress-bar" id="lessonProgressBar" style="width: 0%"></div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <small class="cyber-subtext">Прогресс</small>
-                        <small class="cyber-text" id="progress-text">0%</small>
+                        <small class="cyber-subtext">Прогресс просмотра</small>
+                        <small class="cyber-text-bright fw-bold" id="progressPercentage">0%</small>
                     </div>
                 </div>
 
-                <!-- Ресурсы -->
-                <div class="lesson-content">
-                    <h5 class="cyber-text mb-3">
+                <!-- Video Upload -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-cloud-upload me-2"></i>Загрузка видео
+                    </h5>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <i class="bi bi-cloud-upload" style="font-size: 2.5rem; color: var(--cyber-primary); margin-bottom: 1rem;"></i>
+                        <h6 class="cyber-text-bright mb-2">Перетащите видео файл сюда</h6>
+                        <p class="cyber-subtext mb-3">или</p>
+                        <input type="file" class="d-none" id="videoFileInput" accept="video/*">
+                        <button class="btn btn-cyber-outline btn-sm" onclick="document.getElementById('videoFileInput').click()">
+                            Выберите файл
+                        </button>
+                        <p class="cyber-subtext mt-3 mb-0">
+                            <small>MP4, WebM, MOV до 500MB</small>
+                        </p>
+                    </div>
+
+                    <div class="mt-3">
+                        <input type="text" class="form-control mb-2" id="videoUrl" 
+                               placeholder="Или вставьте ссылку на видео" 
+                               style="background: var(--cyber-bg-card-light); border-color: var(--cyber-border); color: var(--cyber-text);">
+                        <button class="btn btn-cyber w-100" id="loadVideoBtn">
+                            <i class="bi bi-link-45deg me-2"></i>Загрузить по ссылке
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Video Library -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-collection-play me-2"></i>Библиотека видео
+                    </h5>
+                    
+                    <div class="video-library">
+                        <div class="video-item active" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4">
+                            <div class="video-thumbnail">
+                                <i class="bi bi-play-circle-fill"></i>
+                            </div>
+                            <div>
+                                <div class="cyber-text-bright small">Основы кибербезопасности</div>
+                                <div class="cyber-subtext smaller">Введение в триаду CIA</div>
+                            </div>
+                        </div>
+                        <div class="video-item" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4">
+                            <div class="video-thumbnail">
+                                <i class="bi bi-play-circle-fill"></i>
+                            </div>
+                            <div>
+                                <div class="cyber-text-bright small">Типы киберугроз</div>
+                                <div class="cyber-subtext smaller">Вирусы, трояны, ransomware</div>
+                            </div>
+                        </div>
+                        <div class="video-item" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4">
+                            <div class="video-thumbnail">
+                                <i class="bi bi-play-circle-fill"></i>
+                            </div>
+                            <div>
+                                <div class="cyber-text-bright small">Методы защиты</div>
+                                <div class="cyber-subtext smaller">Шифрование и аутентификация</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson Resources -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-download me-2"></i>Ресурсы урока
                     </h5>
-                    <ul class="resources-list" id="lesson-resources">
-                        <li>
-                            <i class="bi bi-file-pdf me-2" style="color: var(--cyber-primary);"></i>
-                            <a href="#" class="cyber-text text-decoration-none">Презентация урока</a>
+                    
+                    <ul class="resources-list">
+                        <li class="resource-item">
+                            <div class="resource-icon">
+                                <i class="bi bi-file-pdf"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="cyber-text-bright mb-1">Презентация урока</h6>
+                                <p class="cyber-subtext mb-0">PDF • 2.4 MB</p>
+                            </div>
+                            <button class="btn btn-cyber-outline btn-sm" onclick="downloadResource('presentation')">
+                                <i class="bi bi-download"></i>
+                            </button>
                         </li>
-                        <li>
-                            <i class="bi bi-file-text me-2" style="color: var(--cyber-primary);"></i>
-                            <a href="#" class="cyber-text text-decoration-none">Конспект</a>
+                        <li class="resource-item">
+                            <div class="resource-icon">
+                                <i class="bi bi-file-text"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="cyber-text-bright mb-1">Конспект урока</h6>
+                                <p class="cyber-subtext mb-0">DOCX • 1.1 MB</p>
+                            </div>
+                            <button class="btn btn-cyber-outline btn-sm" onclick="downloadResource('notes')">
+                                <i class="bi bi-download"></i>
+                            </button>
+                        </li>
+                        <li class="resource-item">
+                            <div class="resource-icon">
+                                <i class="bi bi-file-code"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="cyber-text-bright mb-1">Примеры кода</h6>
+                                <p class="cyber-subtext mb-0">ZIP • 3.2 MB</p>
+                            </div>
+                            <button class="btn btn-cyber-outline btn-sm" onclick="downloadResource('code')">
+                                <i class="bi bi-download"></i>
+                            </button>
+                        </li>
+                        <li class="resource-item">
+                            <div class="resource-icon">
+                                <i class="bi bi-link-45deg"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="cyber-text-bright mb-1">Дополнительные материалы</h6>
+                                <p class="cyber-subtext mb-0">Ссылки и ресурсы</p>
+                            </div>
+                            <button class="btn btn-cyber-outline btn-sm" onclick="showAdditionalResources()">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </button>
                         </li>
                     </ul>
                 </div>
 
-                <!-- Добавить видео -->
-                <div class="lesson-content">
-                    <h5 class="cyber-text mb-3">
-                        <i class="bi bi-cloud-upload me-2"></i>Добавить видео
+                <!-- Quick Actions -->
+                <div class="sidebar-card">
+                    <h5 class="cyber-text-bright mb-4">
+                        <i class="bi bi-lightning me-2"></i>Быстрые действия
                     </h5>
-                    <div class="mb-3">
-                        <input type="file" class="form-control cyber-border" id="video-upload" accept="video/*">
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber-outline text-start">
+                            <i class="bi bi-arrow-left me-2"></i>Назад к курсу
+                        </a>
+                        <button class="btn btn-cyber-outline text-start" onclick="addBookmark()">
+                            <i class="bi bi-bookmark me-2"></i>Добавить в закладки
+                        </button>
+                        <button class="btn btn-cyber-outline text-start" onclick="shareLesson()">
+                            <i class="bi bi-share me-2"></i>Поделиться уроком
+                        </button>
+                        <button class="btn btn-cyber-outline text-start" onclick="printLesson()">
+                            <i class="bi bi-printer me-2"></i>Распечатать материал
+                        </button>
                     </div>
-                    <div class="mb-3">
-                        <input type="text" class="form-control cyber-border" id="video-url"
-                            placeholder="Или вставьте ссылку на видео">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video URL Modal -->
+    <div class="modal fade" id="videoUrlModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background: var(--cyber-bg-card); border: 2px solid var(--cyber-border);">
+                <div class="modal-header">
+                    <h5 class="modal-title cyber-text-bright">
+                        <i class="bi bi-link-45deg me-2"></i>Загрузка видео по ссылке
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="cyber-text mb-3">Введите ссылку на видео (YouTube, Vimeo или прямой URL):</p>
+                    <input type="url" class="form-control mb-3" id="modalVideoUrl" 
+                           placeholder="https://www.youtube.com/watch?v=..." 
+                           style="background: var(--cyber-bg-card-light); border-color: var(--cyber-border); color: var(--cyber-text);">
+                    <div class="form-text cyber-subtext">
+                        Поддерживаются: YouTube, Vimeo, MP4, WebM, MOV ссылки
                     </div>
-                    <button class="btn btn-cyber w-100" id="add-video-btn">
-                        <i class="bi bi-plus-circle me-2"></i>Добавить видео
-                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cyber-outline" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-cyber" onclick="loadVideoFromModal()">Загрузить</button>
                 </div>
             </div>
         </div>
@@ -310,240 +1240,491 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Данные уроков
-        const lessonsData = {
-            1: {
-                title: "Что такое кибербезопасность?",
-                description: "Основные понятия и важность кибербезопасности в современном мире",
-                duration: "15 минут",
-                content: `
-                    <h5>Основные понятия кибербезопасности</h5>
-                    <p>Кибербезопасность — это практика защиты систем, сетей и программ от цифровых атак.</p>
-                    
-                    <h6>Ключевые аспекты:</h6>
-                    <ul>
-                        <li>Конфиденциальность данных</li>
-                        <li>Целостность информации</li>
-                        <li>Доступность систем</li>
-                    </ul>
-                    
-                    <h6>Важность кибербезопасности:</h6>
-                    <p>В современном цифровом мире защита информации стала критически важной для:</p>
-                    <ul>
-                        <li>Бизнеса и корпораций</li>
-                        <li>Государственных учреждений</li>
-                        <li>Частных лиц</li>
-                    </ul>
-                `,
-                videoUrl: "",
-                hasPractice: false,
-                hasQuiz: true
-            },
-            2: {
-                title: "Основные угрозы",
-                description: "Вирусы, трояны, фишинг и другие киберугрозы",
-                duration: "20 минут",
-                content: `
-                    <h5>Типы киберугроз</h5>
-                    <p>Существует множество видов киберугроз, которые могут навредить вашим данным и устройствам.</p>
-                    
-                    <h6>Распространенные угрозы:</h6>
-                    <ul>
-                        <li><strong>Вирусы</strong> - вредоносные программы, которые распространяются и заражают файлы</li>
-                        <li><strong>Трояны</strong> - программы, маскирующиеся под легитимное ПО</li>
-                        <li><strong>Фишинг</strong> - мошеннические попытки получить конфиденциальную информацию</li>
-                        <li><strong>Ransomware</strong> - программы-вымогатели, блокирующие доступ к данным</li>
-                    </ul>
-                `,
-                videoUrl: "",
-                hasPractice: true,
-                hasQuiz: true,
-                practiceTask: "Проанализируйте предоставленное фишинговое письмо и определите признаки мошенничества."
-            },
-            3: {
-                title: "Создание надежных паролей",
-                description: "Правила создания паролей, которые сложно взломать",
-                duration: "25 минут",
-                content: `
-                    <h5>Искусство создания надежных паролей</h5>
-                    <p>Надежный пароль — ваша первая линия защиты в цифровом мире.</p>
-                    
-                    <h6>Правила создания паролей:</h6>
-                    <ul>
-                        <li>Используйте не менее 12 символов</li>
-                        <li>Комбинируйте буквы (заглавные и строчные), цифры и специальные символы</li>
-                        <li>Избегайте личной информации (имена, даты рождения)</li>
-                        <li>Не используйте один пароль для нескольких аккаунтов</li>
-                    </ul>
-                    
-                    <h6>Примеры надежных паролей:</h6>
-                    <p>Вместо простого пароля используйте фразы: <code>К0т-Люб1т-П0рыбачить#2024!</code></p>
-                `,
-                videoUrl: "",
-                hasPractice: true,
-                hasQuiz: false,
-                practiceTask: "Создайте 3 надежных пароля по всем правилам и проверьте их надежность."
-            }
-        };
+        // Global variables
+        let currentVideo = null;
+        let isVideoPlaying = false;
+        let isVideoLoaded = false;
+        let videoProgress = 0;
+        let videoDuration = 0;
+        let currentSublesson = 0;
 
-        // Текущий урок
-        let currentLessonId = 1;
-        let isVideoAdded = false;
-        let isVideoWatched = false;
+        // DOM Elements
+        const videoPlayer = document.getElementById('videoPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const videoProgressBar = document.getElementById('videoProgress');
+        const videoProgressFilled = document.getElementById('videoProgressFilled');
+        const videoTime = document.getElementById('videoTime');
+        const volumeBtn = document.getElementById('volumeBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const lessonProgressBar = document.getElementById('lessonProgressBar');
+        const lessonProgressText = document.getElementById('lessonProgressText');
+        const lessonProgressFill = document.getElementById('lessonProgressFill');
+        const progressPercentage = document.getElementById('progressPercentage');
+        const completionStatus = document.getElementById('completionStatus');
+        const completeLessonBtn = document.getElementById('completeLessonBtn');
 
-        // Функция загрузки урока
-        function loadLesson(lessonId) {
-            const lesson = lessonsData[lessonId];
-            if (!lesson) return;
-
-            // Обновляем заголовки
-            document.getElementById('lesson-title').textContent = lesson.title;
-            document.getElementById('lesson-title-breadcrumb').textContent = lesson.title;
-            document.getElementById('lesson-description').textContent = lesson.description;
-            document.getElementById('lesson-duration').innerHTML = `<i class="bi bi-clock me-1"></i>${lesson.duration}`;
-
-            // Обновляем контент
-            document.getElementById('lesson-content-text').innerHTML = lesson.content;
-
-            // Показываем/скрываем разделы
-            const practiceSection = document.getElementById('practice-section');
-            const quizSection = document.getElementById('quiz-section');
-
-            practiceSection.style.display = lesson.hasPractice ? 'block' : 'none';
-            quizSection.style.display = lesson.hasQuiz ? 'block' : 'none';
-
-            if (lesson.hasPractice) {
-                document.getElementById('practice-task').textContent = lesson.practiceTask;
-            }
-
-            // Обновляем статус завершения
-            updateCompletionStatus();
-
-            // Обновляем кнопки навигации
-            updateNavigationButtons(lessonId);
+        // Initialize lesson
+        function initLesson() {
+            setupVideoPlayer();
+            setupSublessons();
+            setupEventListeners();
+            updateProgressRing(0);
         }
 
-        // Функция обновления статуса завершения
-        function updateCompletionStatus() {
-            const completionBadge = document.getElementById('completion-status');
-            const progressBar = document.getElementById('lesson-progress-bar');
-            const progressText = document.getElementById('progress-text');
+        // Video Player functionality
+        function setupVideoPlayer() {
+            // Initialize with first video from library
+            const firstVideo = document.querySelector('.video-item');
+            if (firstVideo) {
+                loadVideo(firstVideo.getAttribute('data-video-url'));
+            }
+        }
 
-            if (isVideoWatched) {
-                completionBadge.innerHTML = '<i class="bi bi-check-circle me-1"></i>Завершено';
-                completionBadge.style.background = 'linear-gradient(135deg, var(--cyber-primary), #00cc88)';
-                progressBar.style.width = '100%';
-                progressText.textContent = '100%';
+        function loadVideo(videoUrl) {
+            // Clear current video
+            videoPlayer.innerHTML = '';
+            
+            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                loadYouTubeVideo(videoUrl);
+            } else if (videoUrl.includes('vimeo.com')) {
+                loadVimeoVideo(videoUrl);
             } else {
-                completionBadge.innerHTML = '<i class="bi bi-circle me-1"></i>В процессе';
-                completionBadge.style.background = 'var(--cyber-border)';
-                progressBar.style.width = '0%';
-                progressText.textContent = '0%';
+                loadDirectVideo(videoUrl);
+            }
+            
+            isVideoLoaded = true;
+            showNotification('success', 'Видео загружено и готово к просмотру!', 'success');
+        }
+
+        function loadDirectVideo(videoUrl) {
+            const video = document.createElement('video');
+            video.src = videoUrl;
+            video.controls = false;
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'contain';
+            
+            setupVideoEvents(video);
+            videoPlayer.appendChild(video);
+            currentVideo = video;
+        }
+
+        function loadYouTubeVideo(videoUrl) {
+            const videoId = extractYouTubeId(videoUrl);
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0`;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            
+            videoPlayer.appendChild(iframe);
+            currentVideo = iframe;
+            document.querySelector('.video-controls').style.display = 'none';
+        }
+
+        function loadVimeoVideo(videoUrl) {
+            const videoId = videoUrl.split('vimeo.com/')[1]?.split('?')[0];
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://player.vimeo.com/video/${videoId}`;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+            iframe.allowFullscreen = true;
+            
+            videoPlayer.appendChild(iframe);
+            currentVideo = iframe;
+            document.querySelector('.video-controls').style.display = 'none';
+        }
+
+        function extractYouTubeId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length === 11) ? match[7] : null;
+        }
+
+        function setupVideoEvents(video) {
+            video.addEventListener('loadedmetadata', function() {
+                videoDuration = video.duration;
+                updateVideoTime(0, videoDuration);
+            });
+            
+            video.addEventListener('timeupdate', function() {
+                if (videoDuration > 0) {
+                    videoProgress = (video.currentTime / video.duration) * 100;
+                    videoProgressFilled.style.width = videoProgress + '%';
+                    updateVideoTime(video.currentTime, video.duration);
+                    updateLessonProgress(videoProgress);
+                    
+                    if (videoProgress >= 95 && !isLessonCompleted) {
+                        markVideoAsCompleted();
+                    }
+                }
+            });
+            
+            video.addEventListener('ended', function() {
+                playPauseBtn.innerHTML = '<i class="bi bi-play-fill"></i>';
+                isVideoPlaying = false;
+                markVideoAsCompleted();
+            });
+        }
+
+        // Video controls
+        function togglePlayPause() {
+            if (!currentVideo) return;
+            
+            if (currentVideo.tagName === 'VIDEO') {
+                if (isVideoPlaying) {
+                    currentVideo.pause();
+                    playPauseBtn.innerHTML = '<i class="bi bi-play-fill"></i>';
+                } else {
+                    currentVideo.play();
+                    playPauseBtn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+                }
+                isVideoPlaying = !isVideoPlaying;
             }
         }
 
-        // Функция обновления кнопок навигации
-        function updateNavigationButtons(lessonId) {
-            const prevBtn = document.getElementById('prev-lesson-btn');
-            const nextBtn = document.getElementById('next-lesson-btn');
-
-            prevBtn.disabled = lessonId === 1;
-            nextBtn.disabled = lessonId === Object.keys(lessonsData).length;
+        function seekVideo(event) {
+            if (!currentVideo || currentVideo.tagName !== 'VIDEO') return;
+            
+            const progressRect = videoProgressBar.getBoundingClientRect();
+            const clickX = event.clientX - progressRect.left;
+            const progressWidth = progressRect.width;
+            const seekTime = (clickX / progressWidth) * currentVideo.duration;
+            
+            currentVideo.currentTime = seekTime;
         }
 
-        // Функция добавления видео
-        function addVideo(videoSource) {
-            const videoPlayer = document.getElementById('video-player');
-            videoPlayer.innerHTML = `
-                <video controls class="w-100 h-100">
-                    <source src="${videoSource}" type="video/mp4">
-                    Ваш браузер не поддерживает видео тег.
-                </video>
-            `;
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                videoPlayer.requestFullscreen().catch(err => {
+                    console.log(`Ошибка полноэкранного режима: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
 
-            const video = videoPlayer.querySelector('video');
-            video.addEventListener('ended', function () {
-                isVideoWatched = true;
-                updateCompletionStatus();
-                document.getElementById('start-quiz-btn').disabled = false;
+        function updateVideoTime(current, duration) {
+            const currentMinutes = Math.floor(current / 60);
+            const currentSeconds = Math.floor(current % 60);
+            const durationMinutes = Math.floor(duration / 60);
+            const durationSeconds = Math.floor(duration % 60);
+            
+            videoTime.textContent = 
+                `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')} / ${durationMinutes}:${durationSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Lesson progress tracking
+        let isLessonCompleted = false;
+
+        function updateLessonProgress(progress) {
+            const percentage = Math.min(100, Math.max(0, progress));
+            lessonProgressBar.style.width = percentage + '%';
+            progressPercentage.textContent = Math.round(percentage) + '%';
+            updateProgressRing(percentage);
+        }
+
+        function updateProgressRing(percentage) {
+            const circumference = 314;
+            const offset = circumference - (circumference * percentage / 100);
+            lessonProgressFill.style.strokeDashoffset = offset;
+            lessonProgressText.textContent = Math.round(percentage) + '%';
+        }
+
+        function markVideoAsCompleted() {
+            if (!isLessonCompleted) {
+                isLessonCompleted = true;
+                completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
+                completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
+                showNotification('success', 'Видео просмотрено! Урок завершен.', 'success');
+            }
+        }
+
+        // Sublessons functionality
+        function setupSublessons() {
+            document.querySelectorAll('.sublesson-item').forEach((item, index) => {
+                item.addEventListener('click', function(e) {
+                    if (!e.target.closest('.toggle-sublesson') && !e.target.closest('button')) {
+                        toggleSublesson(this);
+                    }
+                });
+                
+                const toggleBtn = item.querySelector('.toggle-sublesson');
+                if (toggleBtn) {
+                    toggleBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        toggleSublesson(item);
+                    });
+                }
+            });
+        }
+
+        function toggleSublesson(sublessonItem) {
+            const isActive = sublessonItem.classList.contains('active');
+            
+            // Close all sublessons
+            document.querySelectorAll('.sublesson-item').forEach(item => {
+                item.classList.remove('active');
+                const toggleBtn = item.querySelector('.toggle-sublesson');
+                if (toggleBtn) {
+                    toggleBtn.innerHTML = '<i class="bi bi-chevron-down"></i>';
+                }
+            });
+            
+            // Open clicked sublesson if it wasn't active
+            if (!isActive) {
+                sublessonItem.classList.add('active');
+                const toggleBtn = sublessonItem.querySelector('.toggle-sublesson');
+                if (toggleBtn) {
+                    toggleBtn.innerHTML = '<i class="bi bi-chevron-up"></i>';
+                }
+                
+                // Mark as completed
+                const sublessonIcon = sublessonItem.querySelector('.sublesson-icon i');
+                sublessonIcon.className = 'bi bi-check-circle-fill';
+                
+                showNotification('info', `Подурок "${sublessonItem.querySelector('h5').textContent}" завершен!`, 'info');
+            }
+        }
+
+        // File upload functionality
+        function setupEventListeners() {
+            // File upload
+            document.getElementById('videoFileInput').addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
             });
 
-            isVideoAdded = true;
+            // URL upload
+            document.getElementById('loadVideoBtn').addEventListener('click', function() {
+                const url = document.getElementById('videoUrl').value;
+                if (url) {
+                    loadVideo(url);
+                } else {
+                    showNotification('error', 'Пожалуйста, введите ссылку на видео', 'danger');
+                }
+            });
+
+            // Video library
+            document.querySelectorAll('.video-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.video-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    const videoUrl = this.getAttribute('data-video-url');
+                    loadVideo(videoUrl);
+                });
+            });
+
+            // Drag and drop
+            const uploadArea = document.getElementById('uploadArea');
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileUpload(files[0]);
+                }
+            });
+
+            // Video controls
+            playPauseBtn.addEventListener('click', togglePlayPause);
+            videoProgressBar.addEventListener('click', seekVideo);
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+            // Lesson completion
+            completeLessonBtn.addEventListener('click', completeLesson);
         }
 
-        // Обработчики событий
-        document.getElementById('add-video-btn').addEventListener('click', function () {
-            const videoUpload = document.getElementById('video-upload');
-            const videoUrl = document.getElementById('video-url').value;
-
-            if (videoUpload.files.length > 0) {
-                const file = videoUpload.files[0];
-                const videoSource = URL.createObjectURL(file);
-                addVideo(videoSource);
-            } else if (videoUrl) {
-                addVideo(videoUrl);
+        function handleFileUpload(file) {
+            if (file && file.type.startsWith('video/')) {
+                if (file.size > 500 * 1024 * 1024) {
+                    showNotification('error', 'Файл слишком большой. Максимальный размер: 500MB', 'danger');
+                    return;
+                }
+                
+                const videoUrl = URL.createObjectURL(file);
+                loadVideo(videoUrl);
+                showNotification('success', `Видео "${file.name}" успешно загружено!`, 'success');
             } else {
-                alert('Пожалуйста, выберите файл или введите ссылку на видео');
+                showNotification('error', 'Пожалуйста, выберите видео файл', 'danger');
             }
-        });
+        }
 
-        document.getElementById('complete-lesson-btn').addEventListener('click', function () {
-            if (!isVideoWatched && isVideoAdded) {
-                alert('Пожалуйста, посмотрите видео до конца перед завершением урока');
+        // Modal functionality
+        function showVideoUrlModal() {
+            const modal = new bootstrap.Modal(document.getElementById('videoUrlModal'));
+            modal.show();
+        }
+
+        function loadVideoFromModal() {
+            const url = document.getElementById('modalVideoUrl').value;
+            if (url) {
+                loadVideo(url);
+                const modal = bootstrap.Modal.getInstance(document.getElementById('videoUrlModal'));
+                modal.hide();
+            } else {
+                showNotification('error', 'Пожалуйста, введите ссылку на видео', 'danger');
+            }
+        }
+
+        // Interactive elements
+        function analyzeCode() {
+            showNotification('info', 'Анализ кода...', 'info');
+            
+            setTimeout(() => {
+                const analysisResult = `
+                    <div class="alert alert-success mt-3">
+                        <h6><i class="bi bi-check-circle me-2"></i>Результаты анализа:</h6>
+                        <ul class="mb-0">
+                            <li><strong>Конфиденциальность:</strong> Нарушена - данные сохраняются без шифрования</li>
+                            <li><strong>Целостность:</strong> Нарушена - отсутствует проверка входных данных</li>
+                            <li><strong>Доступность:</strong> Нарушена - нет обработки ошибок</li>
+                        </ul>
+                    </div>
+                `;
+                
+                document.querySelector('.interactive-element').insertAdjacentHTML('beforeend', analysisResult);
+                showNotification('success', 'Анализ завершен! Найдены уязвимости безопасности.', 'success');
+            }, 2000);
+        }
+
+        function downloadResource(type) {
+            const resources = {
+                'presentation': 'Презентация урока',
+                'notes': 'Конспект урока', 
+                'code': 'Примеры кода'
+            };
+            
+            showNotification('info', `Скачивание: ${resources[type]}`, 'info');
+            // In real app, this would trigger actual download
+            setTimeout(() => {
+                showNotification('success', `${resources[type]} успешно скачан!`, 'success');
+            }, 1500);
+        }
+
+        function showAdditionalResources() {
+            showNotification('info', 'Загрузка дополнительных материалов...', 'info');
+            // In real app, this would show a modal with resources
+            setTimeout(() => {
+                showNotification('success', 'Дополнительные материалы загружены!', 'success');
+            }, 1000);
+        }
+
+        // Lesson actions
+        function completeLesson() {
+            if (!isVideoLoaded) {
+                showNotification('warning', 'Пожалуйста, посмотрите видео перед завершением урока', 'warning');
                 return;
             }
 
             if (confirm('Вы уверены, что хотите отметить урок как завершенный?')) {
-                isVideoWatched = true;
-                updateCompletionStatus();
-                alert('Урок завершен!');
+                isLessonCompleted = true;
+                completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
+                completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
+                updateLessonProgress(100);
+                
+                showNotification('success', 'Урок завершен! Переходите к следующему.', 'success');
+                
+                // Enable next lesson button if it exists
+                const nextLessonBtn = document.querySelector('a[href*="/lesson/"]');
+                if (nextLessonBtn) {
+                    nextLessonBtn.classList.add('pulse');
+                }
             }
-        });
-
-        document.getElementById('complete-practice-btn').addEventListener('click', function () {
-            alert('Практическое задание завершено!');
-        });
-
-        document.getElementById('start-quiz-btn').addEventListener('click', function () {
-            alert('Тест начат!');
-        });
-
-        document.getElementById('prev-lesson-btn').addEventListener('click', function () {
-            if (currentLessonId > 1) {
-                currentLessonId--;
-                loadLesson(currentLessonId);
-                resetLessonState();
-            }
-        });
-
-        document.getElementById('next-lesson-btn').addEventListener('click', function () {
-            if (currentLessonId < Object.keys(lessonsData).length) {
-                currentLessonId++;
-                loadLesson(currentLessonId);
-                resetLessonState();
-            }
-        });
-
-        // Функция сброса состояния урока
-        function resetLessonState() {
-            isVideoAdded = false;
-            isVideoWatched = false;
-            document.getElementById('video-upload').value = '';
-            document.getElementById('video-url').value = '';
-            document.getElementById('start-quiz-btn').disabled = true;
-            updateCompletionStatus();
         }
 
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', function () {
-            // Получаем ID урока из URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const lessonId = urlParams.get('id') || 1;
-            currentLessonId = parseInt(lessonId);
+        function addBookmark() {
+            showNotification('success', 'Урок добавлен в закладки!', 'success');
+        }
 
-            loadLesson(currentLessonId);
+        function shareLesson() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ lesson.title }}',
+                    text: '{{ lesson.description }}',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showNotification('info', 'Ссылка на урок скопирована в буфер обмена!', 'info');
+            }
+        }
+
+        function printLesson() {
+            window.print();
+        }
+
+        // Notification system
+        function showNotification(title, message, type) {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}-fill me-2"></i>
+                    <div>
+                        <h6 class="mb-1">${title}</h6>
+                        <p class="mb-0 small">${message}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (!currentVideo) return;
+            
+            switch(e.key) {
+                case ' ':
+                    e.preventDefault();
+                    togglePlayPause();
+                    break;
+                case 'f':
+                    toggleFullscreen();
+                    break;
+                case 'ArrowLeft':
+                    if (currentVideo.tagName === 'VIDEO') {
+                        currentVideo.currentTime = Math.max(0, currentVideo.currentTime - 10);
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (currentVideo.tagName === 'VIDEO') {
+                        currentVideo.currentTime = Math.min(currentVideo.duration, currentVideo.currentTime + 10);
+                    }
+                    break;
+                case 'm':
+                    if (currentVideo.tagName === 'VIDEO') {
+                        currentVideo.muted = !currentVideo.muted;
+                        volumeBtn.innerHTML = currentVideo.muted ? 
+                            '<i class="bi bi-volume-mute-fill"></i>' : 
+                            '<i class="bi bi-volume-up-fill"></i>';
+                    }
+                    break;
+            }
         });
+
+        // Initialize lesson when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initLesson);
     </script>
 </body>
-
 </html>
