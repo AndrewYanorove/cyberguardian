@@ -1,0 +1,671 @@
+{% extends "base.html" %}
+
+{% block title %}Шифровальный вызов - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.challenge-card {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+    min-height: 500px;
+}
+
+.challenge-header {
+    border-bottom: 1px solid var(--cyber-border);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.challenge-type {
+    background: var(--cyber-primary);
+    color: black;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.text-area {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    min-height: 120px;
+    resize: vertical;
+    color: white;
+    width: 100%;
+}
+
+.encryption-controls {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.method-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.method-btn {
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.method-btn.active {
+    background: var(--cyber-primary);
+    border-color: var(--cyber-primary);
+    color: black;
+}
+
+.result-section {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.result-correct {
+    border-left: 4px solid #28a745;
+}
+
+.result-incorrect {
+    border-left: 4px solid #dc3545;
+}
+
+.progress-container {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.cypher-info {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.info-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.shift-control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.shift-value {
+    min-width: 40px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.history-item {
+    padding: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.encoded-text {
+    color: var(--cyber-primary);
+    font-weight: bold;
+}
+
+.decoded-text {
+    color: #28a745;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-file-lock2 me-2"></i>Шифровальный вызов
+            </h1>
+            <p class="cyber-subtext lead">
+                Освойте основы криптографии и научитесь шифровать сообщения!
+            </p>
+        </div>
+    </div>
+
+    <!-- Прогресс и счет -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="progress-container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="cyber-text mb-1">Текущее задание</h4>
+                        <div class="cyber-subtext" id="challengeInfo">Загрузка...</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="cyber-subtext">Счет</div>
+                        <div class="score-display text-cyber-primary" id="currentScore">0</div>
+                    </div>
+                    <div class="text-end">
+                        <h4 class="cyber-text mb-1">Пройдено</h4>
+                        <div class="cyber-subtext" id="completedChallenges">0/0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Игровая зона -->
+        <div class="col-lg-8">
+            <div class="challenge-card">
+                <div id="gameSection">
+                    <div class="challenge-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="cyber-text mb-0" id="challengeName">Загрузка...</h3>
+                            <span class="challenge-type" id="challengeType">ШИФР ЦЕЗАРЯ</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="cyber-subtext" id="challengeDescription">
+                            Описание загружается...
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="cyber-text mb-2">Исходный текст:</label>
+                        <div class="text-area" id="plainText">
+                            Загрузка...
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="cyber-text mb-2">Ваш ответ (зашифрованный текст):</label>
+                        <textarea class="text-area" id="userAnswer" 
+                                  placeholder="Введите зашифрованный текст здесь..."></textarea>
+                    </div>
+                    
+                    <!-- Контроли для шифра Цезаря -->
+                    <div class="encryption-controls" id="caesarControls" style="display: none;">
+                        <label class="cyber-text mb-2">Сдвиг алфавита:</label>
+                        <div class="shift-control">
+                            <button class="btn btn-outline-cyber" onclick="changeShift(-1)">-</button>
+                            <span class="shift-value cyber-text" id="shiftValue">3</span>
+                            <button class="btn btn-outline-cyber" onclick="changeShift(1)">+</button>
+                            <span class="cyber-subtext ms-2">(A → D, B → E, ...)</span>
+                        </div>
+                        <button class="btn btn-cyber" onclick="encodeWithCaesar()">
+                            <i class="bi bi-arrow-down me-2"></i>Применить шифр
+                        </button>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="btn btn-cyber btn-lg" onclick="checkAnswer()" id="checkButton">
+                            <i class="bi bi-check-circle me-2"></i>Проверить ответ
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="resultSection" style="display: none;">
+                    <div class="result-section" id="resultContent">
+                        <!-- Результат будет здесь -->
+                    </div>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-cyber" onclick="nextChallenge()" id="nextButton">
+                            <i class="bi bi-arrow-right me-2"></i>Следующее задание
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Инструменты шифрования -->
+        <div class="col-lg-4">
+            <div class="cypher-info">
+                <h4 class="cyber-text mb-3">
+                    <i class="bi bi-tools me-2"></i>Инструменты шифрования
+                </h4>
+                
+                <div class="mb-4">
+                    <label class="cyber-text mb-2">Текст для кодирования:</label>
+                    <textarea class="text-area" id="encodeText" 
+                              placeholder="Введите текст для кодирования..." rows="3"></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="cyber-text mb-2">Метод кодирования:</label>
+                    <div class="method-buttons">
+                        <div class="method-btn active" onclick="selectMethod('caesar')">Цезарь</div>
+                        <div class="method-btn" onclick="selectMethod('base64')">Base64</div>
+                        <div class="method-btn" onclick="selectMethod('hash')">SHA-256</div>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-3">
+                    <button class="btn btn-cyber" onclick="encodeText()">
+                        <i class="bi bi-lock me-2"></i>Закодировать
+                    </button>
+                </div>
+                
+                <div>
+                    <label class="cyber-text mb-2">Результат:</label>
+                    <div class="text-area" id="encodeResult">
+                        Результат появится здесь...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- История шифрования -->
+            <div class="cypher-info mt-4">
+                <h5 class="cyber-text mb-3">
+                    <i class="bi bi-clock-history me-2"></i>История
+                </h5>
+                <div id="encodingHistory">
+                    <div class="history-item">
+                        <div class="cyber-subtext">Начните кодировать текст</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Информация о шифрах -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="cyber-text mb-4 text-center">
+                <i class="bi bi-info-circle me-2"></i>Методы шифрования
+            </h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h5 class="cyber-text text-cyber-primary">
+                        <i class="bi bi-arrow-right-circle me-2"></i>Шифр Цезаря
+                    </h5>
+                    <p class="cyber-subtext">
+                        Простой шифр подстановки, где каждая буква смещается на фиксированное число позиций в алфавите.
+                    </p>
+                    <div class="cyber-subtext small">
+                        Пример: Сдвиг 3: A→D, B→E, HELLO→KHOOR
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h5 class="cyber-text text-cyber-primary">
+                        <i class="bi bi-code-slash me-2"></i>Base64
+                    </h5>
+                    <p class="cyber-subtext">
+                        Кодирование двоичных данных в текстовый формат ASCII. Используется для передачи данных.
+                    </p>
+                    <div class="cyber-subtext small">
+                        Пример: "Hello" → "SGVsbG8="
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h5 class="cyber-text text-cyber-primary">
+                        <i class="bi bi-hash me-2"></i>SHA-256
+                    </h5>
+                    <p class="cyber-subtext">
+                        Криптографическая хеш-функция, создающая уникальный 256-битный хеш для любых данных.
+                    </p>
+                    <div class="cyber-subtext small">
+                        Используется в блокчейне и цифровых подписях
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentChallenges = [];
+let currentChallengeIndex = 0;
+let totalScore = 0;
+let completedChallenges = 0;
+let currentMethod = 'caesar';
+let currentShift = 3;
+let encodingHistory = [];
+
+// Загрузка заданий
+async function loadChallenges() {
+    try {
+        const response = await fetch('/games/api/games/encryption/challenges');
+        const data = await response.json();
+        currentChallenges = data.challenges;
+        currentChallengeIndex = 0;
+        displayCurrentChallenge();
+        updateProgress();
+    } catch (error) {
+        console.error('Ошибка загрузки заданий:', error);
+        showError('Не удалось загрузить задания');
+    }
+}
+
+// Отображение текущего задания
+function displayCurrentChallenge() {
+    if (currentChallengeIndex >= currentChallenges.length) {
+        endGame();
+        return;
+    }
+    
+    const challenge = currentChallenges[currentChallengeIndex];
+    
+    document.getElementById('challengeName').textContent = challenge.name;
+    document.getElementById('challengeType').textContent = challenge.type.toUpperCase();
+    document.getElementById('challengeDescription').textContent = challenge.description;
+    document.getElementById('plainText').textContent = challenge.plain_text;
+    document.getElementById('userAnswer').value = '';
+    
+    // Показываем/скрываем контролы для шифра Цезаря
+    if (challenge.type === 'caesar') {
+        document.getElementById('caesarControls').style.display = 'block';
+        currentShift = challenge.shift || 3;
+        document.getElementById('shiftValue').textContent = currentShift;
+    } else {
+        document.getElementById('caesarControls').style.display = 'none';
+    }
+    
+    // Показываем игровую секцию, скрываем результат
+    document.getElementById('gameSection').style.display = 'block';
+    document.getElementById('resultSection').style.display = 'none';
+    
+    updateProgress();
+}
+
+// Проверить ответ
+async function checkAnswer() {
+    const challenge = currentChallenges[currentChallengeIndex];
+    const userAnswer = document.getElementById('userAnswer').value.trim();
+    
+    if (!userAnswer) {
+        showAlert('Введите ваш ответ!', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/games/api/games/encryption/check', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                challenge_id: challenge.id,
+                answer: userAnswer
+            })
+        });
+        
+        const result = await response.json();
+        showResult(result, challenge);
+        
+        // Обновляем счет
+        if (result.correct) {
+            totalScore += result.score;
+            completedChallenges++;
+        }
+        
+        updateScore();
+        
+    } catch (error) {
+        console.error('Ошибка проверки:', error);
+        showError('Ошибка проверки ответа');
+    }
+}
+
+// Показать результат
+function showResult(result, challenge) {
+    const resultContent = document.getElementById('resultContent');
+    
+    if (result.correct) {
+        resultContent.className = 'result-section result-correct';
+        resultContent.innerHTML = `
+            <h5 class="text-success mb-3">
+                <i class="bi bi-check-circle me-2"></i>Правильно!
+            </h5>
+            <p class="cyber-text">Вы заработали <strong>${result.score} очков</strong>!</p>
+            <p class="cyber-subtext">Ваш ответ совпадает с ожидаемым результатом.</p>
+        `;
+    } else {
+        resultContent.className = 'result-section result-incorrect';
+        resultContent.innerHTML = `
+            <h5 class="text-danger mb-3">
+                <i class="bi bi-x-circle me-2"></i>Неправильно
+            </h5>
+            <div class="mb-3">
+                <strong>Ваш ответ:</strong><br>
+                <div class="text-area">${result.user_answer}</div>
+            </div>
+            <div class="mb-3">
+                <strong>Ожидаемый ответ:</strong><br>
+                <div class="text-area">${result.expected}</div>
+            </div>
+            <p class="cyber-subtext">Попробуйте еще раз в следующем раунде!</p>
+        `;
+    }
+    
+    document.getElementById('gameSection').style.display = 'none';
+    document.getElementById('resultSection').style.display = 'block';
+}
+
+// Следующее задание
+function nextChallenge() {
+    currentChallengeIndex++;
+    displayCurrentChallenge();
+}
+
+// Обновить прогресс
+function updateProgress() {
+    document.getElementById('challengeInfo').textContent = 
+        `Задание ${currentChallengeIndex + 1} из ${currentChallenges.length}`;
+    document.getElementById('completedChallenges').textContent = 
+        `${completedChallenges}/${currentChallenges.length}`;
+}
+
+// Обновить счет
+function updateScore() {
+    document.getElementById('currentScore').textContent = totalScore;
+}
+
+// Завершить игру
+function endGame() {
+    document.getElementById('gameSection').innerHTML = `
+        <div class="text-center">
+            <i class="bi bi-trophy display-1 text-warning mb-3"></i>
+            <h3 class="cyber-text mb-3">Все задания завершены!</h3>
+            <p class="cyber-subtext lead">Ваш результат: ${totalScore} очков</p>
+            <p class="cyber-subtext">Пройдено заданий: ${completedChallenges} из ${currentChallenges.length}</p>
+            <div class="mt-4">
+                <button class="btn btn-cyber me-3" onclick="loadChallenges()">
+                    <i class="bi bi-arrow-repeat me-2"></i>Играть снова
+                </button>
+                <a href="{{ url_for('games.games_dashboard') }}" class="btn btn-outline-cyber">
+                    <i class="bi bi-house me-2"></i>На главную
+                </a>
+            </div>
+        </div>
+    `;
+    document.getElementById('resultSection').style.display = 'none';
+}
+
+// Инструменты шифрования
+function selectMethod(method) {
+    currentMethod = method;
+    
+    // Обновляем активные кнопки
+    document.querySelectorAll('.method-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+
+// Кодировать текст
+async function encodeText() {
+    const text = document.getElementById('encodeText').value.trim();
+    
+    if (!text) {
+        showAlert('Введите текст для кодирования!', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/games/api/games/encryption/encode', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                text: text,
+                method: currentMethod
+            })
+        });
+        
+        const result = await response.json();
+        document.getElementById('encodeResult').textContent = result.encoded;
+        
+        // Добавляем в историю
+        addToHistory(text, result.encoded, currentMethod);
+        
+    } catch (error) {
+        console.error('Ошибка кодирования:', error);
+        showAlert('Ошибка кодирования текста', 'danger');
+    }
+}
+
+// Добавить в историю
+function addToHistory(original, encoded, method) {
+    const methodNames = {
+        'caesar': 'Цезарь',
+        'base64': 'Base64',
+        'hash': 'SHA-256'
+    };
+    
+    encodingHistory.unshift({
+        original: original,
+        encoded: encoded,
+        method: methodNames[method],
+        timestamp: new Date().toLocaleTimeString()
+    });
+    
+    // Ограничиваем историю 10 записями
+    if (encodingHistory.length > 10) {
+        encodingHistory = encodingHistory.slice(0, 10);
+    }
+    
+    updateHistory();
+}
+
+// Обновить историю
+function updateHistory() {
+    const historyContainer = document.getElementById('encodingHistory');
+    
+    if (encodingHistory.length === 0) {
+        historyContainer.innerHTML = `
+            <div class="history-item">
+                <div class="cyber-subtext">Начните кодировать текст</div>
+            </div>
+        `;
+        return;
+    }
+    
+    historyContainer.innerHTML = encodingHistory.map(item => `
+        <div class="history-item">
+            <div class="cyber-subtext small">${item.timestamp} • ${item.method}</div>
+            <div class="decoded-text">${item.original}</div>
+            <div class="encoded-text">${item.encoded}</div>
+        </div>
+    `).join('');
+}
+
+// Шифр Цезаря - изменить сдвиг
+function changeShift(delta) {
+    currentShift = Math.max(1, Math.min(25, currentShift + delta));
+    document.getElementById('shiftValue').textContent = currentShift;
+}
+
+// Применить шифр Цезаря
+function encodeWithCaesar() {
+    const text = document.getElementById('encodeText').value.trim();
+    
+    if (!text) {
+        showAlert('Введите текст для шифрования!', 'warning');
+        return;
+    }
+    
+    let result = "";
+    for (let char of text.toUpperCase()) {
+        if (char >= 'A' && char <= 'Z') {
+            const shifted = String.fromCharCode(
+                ((char.charCodeAt(0) - 65 + currentShift) % 26) + 65
+            );
+            result += shifted;
+        } else {
+            result += char;
+        }
+    }
+    
+    document.getElementById('encodeResult').textContent = result;
+    addToHistory(text, result, 'caesar');
+}
+
+// Показать ошибку
+function showError(message) {
+    document.getElementById('gameSection').innerHTML = `
+        <div class="text-center text-danger">
+            <i class="bi bi-exclamation-triangle display-4"></i>
+            <p class="mt-3">${message}</p>
+            <button class="btn btn-cyber mt-2" onclick="loadChallenges()">
+                <i class="bi bi-arrow-repeat me-2"></i>Попробовать снова
+            </button>
+        </div>
+    `;
+}
+
+// Показать алерт
+function showAlert(message, type) {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.querySelector('.challenge-card').prepend(alert);
+}
+
+// Запуск при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    loadChallenges();
+    updateHistory();
+});
+</script>
+{% endblock %}

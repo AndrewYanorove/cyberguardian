@@ -1,0 +1,822 @@
+{% extends "base.html" %}
+
+{% block title %}Кибер-квиз - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.quiz-container {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.quiz-header {
+    border-bottom: 1px solid var(--cyber-border);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.question-counter {
+    background: var(--cyber-primary);
+    color: black;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.question-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.option-item {
+    background: rgba(40, 40, 40, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-item:hover {
+    background: rgba(60, 60, 60, 0.8);
+    border-color: var(--cyber-primary);
+}
+
+.option-item.selected {
+    background: rgba(var(--cyber-primary-rgb), 0.2);
+    border-color: var(--cyber-primary);
+}
+
+.option-item.correct {
+    background: rgba(40, 167, 69, 0.2);
+    border-color: #28a745;
+}
+
+.option-item.incorrect {
+    background: rgba(220, 53, 69, 0.2);
+    border-color: #dc3545;
+}
+
+.option-label {
+    font-weight: bold;
+    margin-right: 1rem;
+    min-width: 30px;
+}
+
+.progress-bar {
+    height: 10px;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--cyber-primary);
+    transition: width 0.3s ease;
+}
+
+.results-container {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.score-display {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.score-excellent {
+    color: #28a745;
+}
+
+.score-good {
+    color: #20c997;
+}
+
+.score-average {
+    color: #ffc107;
+}
+
+.score-poor {
+    color: #fd7e14;
+}
+
+.score-bad {
+    color: #dc3545;
+}
+
+.result-item {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background: rgba(40, 40, 40, 0.6);
+}
+
+.result-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.result-correct {
+    border-left: 4px solid #28a745;
+}
+
+.result-incorrect {
+    border-left: 4px solid #dc3545;
+}
+
+.explanation {
+    background: rgba(50, 50, 50, 0.8);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    border-left: 3px solid var(--cyber-primary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--cyber-subtext);
+}
+
+.timer-container {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    margin: 1rem 0;
+    border: 1px solid var(--cyber-border);
+}
+
+.timer {
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+}
+
+.quiz-rules {
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border: 1px solid var(--cyber-border);
+}
+
+.rule-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.rule-item:last-child {
+    border-bottom: none;
+}
+
+.quiz-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cyber-border);
+}
+
+.answer-feedback {
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.feedback-correct {
+    background: rgba(40, 167, 69, 0.2);
+    border: 1px solid #28a745;
+    color: #28a745;
+}
+
+.feedback-incorrect {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.quick-stats {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.quick-stat {
+    background: rgba(40, 40, 40, 0.8);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: 1px solid var(--cyber-border);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-patch-question me-2"></i>Кибер-квиз
+            </h1>
+            <p class="cyber-subtext lead">
+                Проверьте свои знания по кибербезопасности! 10 вопросов, 5 минут.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="quiz-container">
+                <!-- Прогресс -->
+                <div class="progress-container mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="cyber-text">Прогресс</div>
+                        <div class="cyber-subtext" id="progressText">Готов к началу</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Таймер -->
+                <div class="timer-container" id="timerSection" style="display: none;">
+                    <div class="cyber-subtext mb-2">Оставшееся время</div>
+                    <div class="timer text-cyber-primary" id="quizTimer">05:00</div>
+                </div>
+
+                <!-- Быстрая статистика -->
+                <div class="quick-stats" id="quickStats" style="display: none;">
+                    <div class="quick-stat">
+                        <i class="bi bi-check-lg text-success me-1"></i>
+                        <span id="correctCount">0</span> правильных
+                    </div>
+                    <div class="quick-stat">
+                        <i class="bi bi-x-lg text-danger me-1"></i>
+                        <span id="incorrectCount">0</span> ошибок
+                    </div>
+                    <div class="quick-stat">
+                        <i class="bi bi-clock text-warning me-1"></i>
+                        <span id="remainingCount">10</span> осталось
+                    </div>
+                </div>
+
+                <!-- Стартовый экран -->
+                <div id="startSection">
+                    <div class="text-center">
+                        <i class="bi bi-patch-question display-1 text-cyber-primary mb-3"></i>
+                        <h3 class="cyber-text mb-3">Готовы проверить свои знания?</h3>
+                        <p class="cyber-subtext mb-4">
+                            Вам предстоит ответить на 10 вопросов по кибербезопасности.<br>
+                            На выполнение дается 5 минут. Удачи!
+                        </p>
+                        <button class="btn btn-cyber btn-lg" onclick="startQuiz()" id="startButton">
+                            <i class="bi bi-play-circle me-2"></i>Начать квиз
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Вопросы -->
+                <div id="quizSection" style="display: none;">
+                    <!-- Вопросы будут загружаться динамически -->
+                </div>
+
+                <!-- Результаты -->
+                <div id="resultsSection" style="display: none;">
+                    <div class="results-container">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-award display-1 text-warning mb-3"></i>
+                            <h3 class="cyber-text mb-3">Квиз завершен!</h3>
+                            <div class="score-display" id="finalScore">0</div>
+                            <p class="cyber-subtext lead" id="scoreMessage">Ваш результат</p>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="correctAnswers">0</div>
+                                <div class="stat-label">Правильных ответов</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalQuestions">0</div>
+                                <div class="stat-label">Всего вопросов</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="successRate">0%</div>
+                                <div class="stat-label">Успешность</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="timeSpent">0:00</div>
+                                <div class="stat-label">Затраченное время</div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-cyber me-3" onclick="startQuiz()">
+                                <i class="bi bi-arrow-repeat me-2"></i>Пройти снова
+                            </button>
+                            <a href="{{ url_for('games.games_dashboard') }}" class="btn btn-outline-cyber">
+                                <i class="bi bi-house me-2"></i>На главную
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Детальные результаты -->
+                    <div class="results-container mt-4">
+                        <h4 class="cyber-text mb-3">
+                            <i class="bi bi-list-check me-2"></i>Детальные результаты
+                        </h4>
+                        <div id="detailedResults">
+                            <!-- Результаты по вопросам будут здесь -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Информация и правила -->
+        <div class="col-lg-4">
+            <!-- Статистика -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalQuizzes">0</div>
+                    <div class="stat-label">Пройдено квизов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="bestScore">0</div>
+                    <div class="stat-label">Лучший результат</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="averageScore">0%</div>
+                    <div class="stat-label">Средний балл</div>
+                </div>
+            </div>
+
+            <!-- Правила квиза -->
+            <div class="quiz-rules">
+                <h5 class="cyber-text mb-3">
+                    <i class="bi bi-info-circle me-2"></i>Правила квиза
+                </h5>
+                <div class="rule-item">
+                    <i class="bi bi-1-circle me-2 text-cyber-primary"></i>
+                    <span>10 случайных вопросов</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-2-circle me-2 text-cyber-primary"></i>
+                    <span>Один правильный ответ на вопрос</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-3-circle me-2 text-cyber-primary"></i>
+                    <span>Максимум 1000 очков</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-4-circle me-2 text-cyber-primary"></i>
+                    <span>Лимит времени: 5 минут</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-5-circle me-2 text-cyber-primary"></i>
+                    <span>Назад вернуться нельзя</span>
+                </div>
+            </div>
+
+            <!-- Советы -->
+            <div class="quiz-rules mt-4">
+                <h5 class="cyber-text mb-3">
+                    <i class="bi bi-lightbulb me-2"></i>Советы
+                </h5>
+                <div class="rule-item">
+                    <i class="bi bi-check-lg me-2 text-success"></i>
+                    <span>Внимательно читайте вопросы</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-check-lg me-2 text-success"></i>
+                    <span>Исключайте неверные варианты</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-check-lg me-2 text-success"></i>
+                    <span>Следите за временем</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-check-lg me-2 text-success"></i>
+                    <span>Не задерживайтесь на одном вопросе</span>
+                </div>
+            </div>
+
+            <!-- Категории вопросов -->
+            <div class="quiz-rules mt-4">
+                <h5 class="cyber-text mb-3">
+                    <i class="bi bi-tags me-2"></i>Темы вопросов
+                </h5>
+                <div class="rule-item">
+                    <i class="bi bi-shield-check me-2 text-info"></i>
+                    <span>Фишинг и социальная инженерия</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-key me-2 text-info"></i>
+                    <span>Пароли и аутентификация</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-file-lock2 me-2 text-info"></i>
+                    <span>Шифрование и безопасность данных</span>
+                </div>
+                <div class="rule-item">
+                    <i class="bi bi-wifi me-2 text-info"></i>
+                    <span>Сетевая безопасность</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let quizQuestions = [];
+let currentQuestionIndex = 0;
+let userAnswers = {};
+let quizScore = 0;
+let quizTimer = null;
+let timeRemaining = 300; // 5 минут в секундах
+let startTime = null;
+let correctAnswersCount = 0;
+let incorrectAnswersCount = 0;
+let quizStats = {
+    totalQuizzes: 0,
+    bestScore: 0,
+    totalScore: 0
+};
+
+// Загрузка вопросов
+async function loadQuestions() {
+    try {
+        showLoading('Загрузка вопросов...');
+        const response = await fetch('/games/api/games/quiz/questions');
+        const data = await response.json();
+        quizQuestions = data.questions;
+        updateStats();
+        hideLoading();
+    } catch (error) {
+        console.error('Ошибка загрузки вопросов:', error);
+        showError('Не удалось загрузить вопросы. Проверьте соединение.');
+    }
+}
+
+// Начать квиз
+function startQuiz() {
+    if (quizQuestions.length === 0) {
+        showError('Вопросы не загружены');
+        return;
+    }
+    
+    // Сброс переменных
+    currentQuestionIndex = 0;
+    userAnswers = {};
+    quizScore = 0;
+    timeRemaining = 300;
+    correctAnswersCount = 0;
+    incorrectAnswersCount = 0;
+    startTime = new Date();
+    
+    // Показать игровые элементы
+    document.getElementById('startSection').style.display = 'none';
+    document.getElementById('quizSection').style.display = 'block';
+    document.getElementById('resultsSection').style.display = 'none';
+    document.getElementById('timerSection').style.display = 'block';
+    document.getElementById('quickStats').style.display = 'flex';
+    
+    displayCurrentQuestion();
+    startTimer();
+    updateProgress();
+    updateQuickStats();
+}
+
+// Отображение текущего вопроса
+function displayCurrentQuestion() {
+    if (currentQuestionIndex >= quizQuestions.length) {
+        finishQuiz();
+        return;
+    }
+    
+    const question = quizQuestions[currentQuestionIndex];
+    const quizSection = document.getElementById('quizSection');
+    
+    quizSection.innerHTML = `
+        <div class="quiz-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="cyber-text mb-0">Вопрос ${currentQuestionIndex + 1}</h3>
+                <span class="question-counter">${currentQuestionIndex + 1}/${quizQuestions.length}</span>
+            </div>
+        </div>
+        
+        <div class="question-card">
+            <h4 class="cyber-text mb-4">${question.question}</h4>
+            
+            <div class="options-container">
+                ${question.options.map((option, index) => `
+                    <div class="option-item" onclick="selectOption(${index})" id="option-${index}">
+                        <div class="d-flex align-items-center">
+                            <span class="option-label">${String.fromCharCode(65 + index)}</span>
+                            <span>${option}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        
+        <div class="quiz-controls">
+            <div class="cyber-subtext">
+                Выберите один вариант ответа
+            </div>
+            <button class="btn btn-cyber" onclick="nextQuestion()" id="nextButton" disabled>
+                ${currentQuestionIndex === quizQuestions.length - 1 ? 'Завершить квиз' : 'Следующий вопрос'}
+                <i class="bi bi-arrow-right ms-2"></i>
+            </button>
+        </div>
+    `;
+    
+    updateProgress();
+}
+
+// Выбор варианта ответа
+function selectOption(optionIndex) {
+    // Сбрасываем предыдущий выбор
+    document.querySelectorAll('.option-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    // Выделяем выбранный вариант
+    const selectedOption = document.getElementById(`option-${optionIndex}`);
+    selectedOption.classList.add('selected');
+    
+    // Сохраняем ответ
+    userAnswers[quizQuestions[currentQuestionIndex].id] = optionIndex;
+    
+    // Активируем кнопку "Далее"
+    document.getElementById('nextButton').disabled = false;
+}
+
+// Следующий вопрос
+function nextQuestion() {
+    if (currentQuestionIndex < quizQuestions.length - 1) {
+        currentQuestionIndex++;
+        displayCurrentQuestion();
+    } else {
+        finishQuiz();
+    }
+}
+
+// Завершить квиз
+async function finishQuiz() {
+    clearInterval(quizTimer);
+    
+    try {
+        showLoading('Проверка результатов...');
+        const response = await fetch('/games/api/games/quiz/check', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                answers: userAnswers
+            })
+        });
+        
+        const result = await response.json();
+        hideLoading();
+        showResults(result);
+        
+        // Обновляем статистику
+        quizStats.totalQuizzes++;
+        quizStats.totalScore += result.total_score;
+        quizStats.bestScore = Math.max(quizStats.bestScore, result.total_score);
+        updateStats();
+        
+    } catch (error) {
+        console.error('Ошибка проверки:', error);
+        showError('Ошибка при проверке результатов');
+    }
+}
+
+// Показать результаты
+function showResults(result) {
+    document.getElementById('quizSection').style.display = 'none';
+    document.getElementById('resultsSection').style.display = 'block';
+    document.getElementById('timerSection').style.display = 'none';
+    document.getElementById('quickStats').style.display = 'none';
+    
+    // Основные результаты
+    const finalScore = document.getElementById('finalScore');
+    finalScore.textContent = result.total_score;
+    finalScore.className = `score-display ${getScoreClass(result.percentage)}`;
+    document.getElementById('scoreMessage').textContent = getScoreMessage(result.percentage);
+    
+    // Статистика
+    const correctCount = Object.values(result.results).filter(r => r.correct).length;
+    document.getElementById('correctAnswers').textContent = correctCount;
+    document.getElementById('totalQuestions').textContent = Object.keys(result.results).length;
+    document.getElementById('successRate').textContent = result.percentage + '%';
+    
+    const timeSpent = Math.floor((new Date() - startTime) / 1000);
+    document.getElementById('timeSpent').textContent = formatTime(timeSpent);
+    
+    // Детальные результаты
+    const detailedResults = document.getElementById('detailedResults');
+    detailedResults.innerHTML = '';
+    
+    quizQuestions.forEach(question => {
+        const questionResult = result.results[question.id];
+        if (questionResult) {
+            const userAnswer = question.options[questionResult.user_answer];
+            const correctAnswer = question.options[question.correct];
+            const isCorrect = questionResult.correct;
+            
+            detailedResults.innerHTML += `
+                <div class="result-item ${isCorrect ? 'result-correct' : 'result-incorrect'}">
+                    <div class="cyber-text mb-2">
+                        <i class="bi ${isCorrect ? 'bi-check-circle text-success' : 'bi-x-circle text-danger'} me-2"></i>
+                        ${question.question}
+                    </div>
+                    <div class="mb-2">
+                        <strong>Ваш ответ:</strong> 
+                        <span class="${isCorrect ? 'text-success' : 'text-danger'}">
+                            ${userAnswer}
+                        </span>
+                        ${!isCorrect ? `
+                            <br><strong>Правильный ответ:</strong> 
+                            <span class="text-success">${correctAnswer}</span>
+                        ` : ''}
+                    </div>
+                    <div class="explanation">
+                        <strong>Объяснение:</strong> ${questionResult.explanation}
+                    </div>
+                </div>
+            `;
+        }
+    });
+}
+
+// Таймер
+function startTimer() {
+    updateTimerDisplay();
+    
+    quizTimer = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        
+        if (timeRemaining <= 0) {
+            clearInterval(quizTimer);
+            finishQuiz();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    const timerElement = document.getElementById('quizTimer');
+    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    // Меняем цвет при малом времени
+    if (timeRemaining <= 30) {
+        timerElement.className = 'timer text-danger';
+    } else if (timeRemaining <= 60) {
+        timerElement.className = 'timer text-warning';
+    } else {
+        timerElement.className = 'timer text-cyber-primary';
+    }
+}
+
+// Обновить прогресс
+function updateProgress() {
+    const progress = (currentQuestionIndex / quizQuestions.length) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('progressText').textContent = 
+        `Вопрос ${currentQuestionIndex + 1} из ${quizQuestions.length}`;
+}
+
+// Обновить быструю статистику
+function updateQuickStats() {
+    // Эта функция будет обновляться после каждого ответа
+    const correctFromAnswers = Object.values(userAnswers).filter((answer, index) => {
+        const question = quizQuestions[index];
+        return question && answer === question.correct;
+    }).length;
+    
+    document.getElementById('correctCount').textContent = correctFromAnswers;
+    document.getElementById('incorrectCount').textContent = Object.keys(userAnswers).length - correctFromAnswers;
+    document.getElementById('remainingCount').textContent = quizQuestions.length - Object.keys(userAnswers).length;
+}
+
+// Обновить статистику
+function updateStats() {
+    document.getElementById('totalQuizzes').textContent = quizStats.totalQuizzes;
+    document.getElementById('bestScore').textContent = quizStats.bestScore;
+    document.getElementById('averageScore').textContent = quizStats.totalQuizzes > 0 ? 
+        Math.round(quizStats.totalScore / quizStats.totalQuizzes / 10) + '%' : '0%';
+}
+
+// Вспомогательные функции
+function getScoreClass(percentage) {
+    if (percentage >= 90) return 'score-excellent';
+    if (percentage >= 75) return 'score-good';
+    if (percentage >= 60) return 'score-average';
+    if (percentage >= 40) return 'score-poor';
+    return 'score-bad';
+}
+
+function getScoreMessage(percentage) {
+    if (percentage >= 90) return 'Отличный результат! Вы настоящий эксперт по кибербезопасности!';
+    if (percentage >= 75) return 'Хороший результат! Отличные знания!';
+    if (percentage >= 60) return 'Неплохой результат! Есть куда расти!';
+    if (percentage >= 40) return 'Стоит повторить материал по кибербезопасности!';
+    return 'Рекомендуем изучить основы кибербезопасности!';
+}
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
+function showLoading(message = 'Загрузка...') {
+    // Можно добавить красивый лоадер
+    console.log(message);
+}
+
+function hideLoading() {
+    // Скрыть лоадер
+}
+
+function showError(message) {
+    const quizSection = document.getElementById('quizSection');
+    quizSection.innerHTML = `
+        <div class="text-center text-danger">
+            <i class="bi bi-exclamation-triangle display-4"></i>
+            <h4 class="mt-3">Ошибка</h4>
+            <p class="cyber-subtext">${message}</p>
+            <button class="btn btn-cyber mt-2" onclick="location.reload()">
+                <i class="bi bi-arrow-repeat me-2"></i>Обновить страницу
+            </button>
+        </div>
+    `;
+}
+
+// Запуск при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    loadQuestions();
+    updateStats();
+});
+
+// Обработка закрытия страницы
+window.addEventListener('beforeunload', function(e) {
+    if (quizTimer && timeRemaining > 0) {
+        e.preventDefault();
+        e.returnValue = 'Вы уверены, что хотите покинуть страницу? Прогресс квиза будет потерян.';
+    }
+});
+</script>
+{% endblock %}

@@ -1,3 +1,4 @@
+from datetime import datetime
 PHISHING_GAME_EMAILS = [
     {
         'id': 1,

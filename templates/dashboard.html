@@ -1,531 +1,399 @@
 {% extends "base.html" %}
 
-{% block title %}Сканер безопасности - CyberGuardian{% endblock %}
+{% block title %}Cyber Games - CyberGuardian{% endblock %}
 
 {% block extra_css %}
 <style>
-.scanner-card {
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.game-card {
+    background: rgba(20, 20, 20, 0.9);
     border: 2px solid var(--cyber-border);
     border-radius: 15px;
     padding: 2rem;
-    margin-bottom: 2rem;
+    text-align: center;
     transition: all 0.3s ease;
-    background: rgba(20, 20, 20, 0.8);
-    backdrop-filter: blur(10px);
-}
-
-.scanner-card:hover {
-    border-color: var(--cyber-primary);
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
-}
-
-.scan-result {
-    background: rgba(30, 30, 30, 0.9);
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin-top: 1.5rem;
-    border-left: 4px solid var(--cyber-primary);
-}
-
-.security-meter {
-    height: 20px;
-    background: rgba(30, 30, 30, 0.8);
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 1rem 0;
-    position: relative;
-    border: 1px solid var(--cyber-border);
-}
-
-.meter-fill {
-    height: 100%;
-    border-radius: 10px;
-    transition: width 1s ease-in-out;
     position: relative;
     overflow: hidden;
 }
 
-.meter-fill::after {
+.game-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: meterShine 2s infinite;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
 }
 
-@keyframes meterShine {
-    0% { left: -100%; }
-    100% { left: 100%; }
-}
-
-.scan-animation {
-    display: none;
-    text-align: center;
-    padding: 2rem;
-}
-
-.scan-progress {
-    width: 100%;
-    height: 6px;
-    background: rgba(30, 30, 30, 0.8);
-    border-radius: 3px;
-    overflow: hidden;
-    margin: 1.5rem 0;
-    border: 1px solid var(--cyber-border);
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
-    border-radius: 3px;
-    transition: width 0.3s ease;
-    position: relative;
-}
-
-.security-level {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin: 1rem 0;
-    text-shadow: 0 0 10px currentColor;
-}
-
-.level-excellent { color: #20c997; }
-.level-good { color: #0dcaf0; }
-.level-fair { color: #ffc107; }
-.level-poor { color: #fd7e14; }
-.level-critical { color: #dc3545; }
-
-.quick-scan-btn {
-    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary));
-    border: none;
-    color: black;
-    padding: 1.2rem 2.5rem;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.quick-scan-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
-}
-
-.quick-scan-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-}
-
-.quick-scan-btn:hover::before {
+.game-card:hover::before {
     left: 100%;
 }
 
-.scanner-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
+.game-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--cyber-primary);
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+}
+
+.game-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--cyber-primary);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.game-description {
+    color: var(--cyber-subtext);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.stats-container {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
     margin: 2rem 0;
 }
 
-.security-details {
-    background: rgba(40, 40, 40, 0.7);
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin: 1rem 0;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-.detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    transition: background 0.3s ease;
-}
-
-.detail-item:hover {
-    background: rgba(255,255,255,0.05);
-    border-radius: 5px;
-    padding: 0.8rem;
-}
-
-.detail-item:last-child {
-    border-bottom: none;
-}
-
-.stat-grid {
+.stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
+    border: 1px solid var(--cyber-border);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--cyber-primary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--cyber-subtext);
+    font-size: 0.9rem;
+}
+
+.leaderboard {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
     margin: 2rem 0;
 }
 
-.stat-card {
-    background: rgba(40, 40, 40, 0.6);
-    border-radius: 10px;
-    padding: 1.5rem;
+.leader-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.3s ease;
+}
+
+.leader-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.leader-item:last-child {
+    border-bottom: none;
+}
+
+.leader-rank {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--cyber-primary);
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.leader-avatar {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.leader-info {
+    flex: 1;
+}
+
+.leader-name {
+    font-weight: bold;
+    color: white;
+}
+
+.leader-stats {
+    color: var(--cyber-subtext);
+    font-size: 0.9rem;
+}
+
+.leader-score {
+    font-weight: bold;
+    color: var(--cyber-primary);
+}
+
+.featured-game {
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+    border: 2px solid var(--cyber-primary);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
     text-align: center;
+}
+
+.featured-badge {
+    background: var(--cyber-primary);
+    color: black;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.achievements {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.achievement-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(30, 30, 30, 0.8);
+    border-radius: 10px;
     border: 1px solid var(--cyber-border);
     transition: all 0.3s ease;
 }
 
-.stat-card:hover {
-    border-color: var(--cyber-primary);
-    transform: translateY(-3px);
+.achievement-item.locked {
+    opacity: 0.5;
 }
 
-.stat-number {
-    font-size: 2.5rem;
+.achievement-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.achievement-name {
+    font-size: 0.9rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
 
-.stat-excellent { color: #20c997; }
-.stat-good { color: #0dcaf0; }
-.stat-warning { color: #ffc107; }
-.stat-danger { color: #dc3545; }
-
-.scanner-feature {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    background: rgba(40, 40, 40, 0.5);
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-    border-left: 4px solid var(--cyber-primary);
-}
-
-.scanner-feature:hover {
-    background: rgba(40, 40, 40, 0.8);
-    transform: translateX(5px);
-}
-
-.feature-icon {
-    font-size: 2rem;
-    margin-right: 1rem;
-    width: 60px;
-    text-align: center;
-}
-
-.threat-indicator {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
+.achievement-desc {
     font-size: 0.8rem;
-    font-weight: bold;
-    margin: 0.2rem;
-}
-
-.threat-low { background: rgba(32, 201, 151, 0.2); color: #20c997; border: 1px solid #20c997; }
-.threat-medium { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
-.threat-high { background: rgba(253, 126, 20, 0.2); color: #fd7e14; border: 1px solid #fd7e14; }
-.threat-critical { background: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid #dc3545; }
-
-.real-time-indicator {
-    display: inline-flex;
-    align-items: center;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.7; }
-    100% { opacity: 1; }
-}
-
-.cyber-loader {
-    width: 60px;
-    height: 60px;
-    border: 3px solid transparent;
-    border-top: 3px solid var(--cyber-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.security-timeline {
-    position: relative;
-    padding-left: 2rem;
-}
-
-.security-timeline::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--cyber-primary);
-}
-
-.timeline-item {
-    position: relative;
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: rgba(40, 40, 40, 0.5);
-    border-radius: 8px;
-    border-left: 3px solid var(--cyber-primary);
-}
-
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -2.3rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--cyber-primary);
+    color: var(--cyber-subtext);
 }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <!-- Главный заголовок -->
-    <div class="row mb-5">
+    <!-- Заголовок -->
+    <div class="row mb-4">
         <div class="col-12 text-center">
             <h1 class="cyber-text glow-text mb-3">
-                <i class="bi bi-shield-check me-2"></i>Реальный Сканер Безопасности
+                <i class="bi bi-joystick me-2"></i>Cyber Games
             </h1>
             <p class="cyber-subtext lead">
-                Комплексный анализ вашей цифровой безопасности в реальном времени
+                Изучайте кибербезопасность через увлекательные игры и challenges!
             </p>
-            <div class="real-time-indicator">
-                <i class="bi bi-circle-fill text-success me-2"></i>
-                <small class="cyber-subtext">СИСТЕМА АКТИВНА - РЕАЛЬНОЕ СКАНИРОВАНИЕ</small>
-            </div>
         </div>
     </div>
 
-    <!-- Быстрое сканирование системы -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="scanner-card text-center">
-                <i class="bi bi-speedometer2 display-1 text-cyber-primary mb-3"></i>
-                <h3 class="cyber-text mb-3">Мгновенная диагностика системы</h3>
-                <p class="cyber-subtext mb-4">
-                    Запустите комплексную проверку безопасности вашей системы. 
-                    Анализ в реальном времени с детальными рекомендациями.
-                </p>
-                
-                <button class="quick-scan-btn" onclick="runQuickScan()">
-                    <i class="bi bi-radar me-2"></i>ЗАПУСТИТЬ РЕАЛЬНОЕ СКАНИРОВАНИЕ
-                </button>
-                
-                <!-- Анимация сканирования -->
-                <div class="scan-animation" id="quickScanAnimation">
-                    <div class="cyber-loader"></div>
-                    <p class="cyber-text mb-2">ВЫПОЛНЯЕТСЯ РЕАЛЬНОЕ СКАНИРОВАНИЕ...</p>
-                    <p class="cyber-subtext small mb-3">
-                        Проверка системы • Анализ сети • Диагностика безопасности
-                    </p>
-                    <div class="scan-progress">
-                        <div class="progress-bar" id="scanProgress" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <!-- Результаты сканирования -->
-                <div class="scan-result" id="quickScanResult" style="display: none;">
-                    <!-- Динамически заполняется через JavaScript -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Статистика безопасности -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="scanner-card">
-                <h3 class="cyber-text mb-4">
-                    <i class="bi bi-graph-up me-2"></i>Статистика безопасности
-                </h3>
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <div class="stat-number stat-excellent" id="systemScore">--%</div>
-                        <p class="cyber-subtext">Безопасность системы</p>
-                        <small class="cyber-subtext">Общая оценка защиты</small>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number stat-good" id="networkScore">--%</div>
-                        <p class="cyber-subtext">Сетевая безопасность</p>
-                        <small class="cyber-subtext">Защита от внешних угроз</small>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number stat-warning" id="passwordScore">--%</div>
-                        <p class="cyber-subtext">Безопасность паролей</p>
-                        <small class="cyber-subtext">Надежность учетных данных</small>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number stat-danger" id="threatsCount">--</div>
-                        <p class="cyber-subtext">Обнаружено угроз</p>
-                        <small class="cyber-subtext">Активные проблемы</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Инструменты сканирования -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="scanner-card">
-                <h3 class="cyber-text mb-4">
-                    <i class="bi bi-tools me-2"></i>Специализированные инструменты
-                </h3>
-                <div class="scanner-grid">
-                    <!-- Сканер паролей -->
-                    <div class="scanner-feature">
-                        <div class="feature-icon text-cyber-primary">
-                            <i class="bi bi-shield-lock"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="cyber-text mb-2">Анализатор паролей</h5>
-                            <p class="cyber-subtext small mb-2">
-                                Проверка надежности и стойкости паролей к взлому
-                            </p>
-                            <div class="threat-indicator threat-low">Реальный анализ</div>
-                        </div>
-                        <a href="{{ url_for('scanner.password_scanner') }}" class="btn btn-cyber">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-
-                    <!-- Сканер email -->
-                    <div class="scanner-feature">
-                        <div class="feature-icon text-cyber-secondary">
-                            <i class="bi bi-envelope-check"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="cyber-text mb-2">Защита Email</h5>
-                            <p class="cyber-subtext small mb-2">
-                                Проверка безопасности почтового аккаунта и DNS записей
-                            </p>
-                            <div class="threat-indicator threat-medium">DNS анализ</div>
-                        </div>
-                        <a href="{{ url_for('scanner.email_scanner') }}" class="btn btn-cyber">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-
-                    <!-- Сканер сети -->
-                    <div class="scanner-feature">
-                        <div class="feature-icon text-cyber-accent">
-                            <i class="bi bi-hdd-network"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="cyber-text mb-2">Сканирование сети</h5>
-                            <p class="cyber-subtext small mb-2">
-                                Анализ открытых портов и сетевых уязвимостей
-                            </p>
-                            <div class="threat-indicator threat-high">Порт-сканер</div>
-                        </div>
-                        <a href="{{ url_for('scanner.network_scanner') }}" class="btn btn-cyber">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-
-                    <!-- Сканер уязвимостей -->
-                    <div class="scanner-feature">
-                        <div class="feature-icon text-danger">
-                            <i class="bi bi-bug"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h5 class="cyber-text mb-2">Поиск уязвимостей</h5>
-                            <p class="cyber-subtext small mb-2">
-                                Обнаружение критических уязвимостей системы
-                            </p>
-                            <div class="threat-indicator threat-critical">Глубокий анализ</div>
-                        </div>
-                        <a href="{{ url_for('scanner.vulnerability_scanner') }}" class="btn btn-cyber">
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Рекомендации по безопасности -->
+    <!-- Избранная игра -->
     <div class="row">
         <div class="col-12">
-            <div class="scanner-card">
-                <h3 class="cyber-text mb-4">
-                    <i class="bi bi-lightbulb me-2"></i>Проактивная защита
-                </h3>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="security-timeline">
-                            <div class="timeline-item">
-                                <h6 class="cyber-text mb-2">
-                                    <i class="bi bi-shield-check text-success me-2"></i>
-                                    Менеджер паролей
-                                </h6>
-                                <p class="cyber-subtext small mb-0">
-                                    Используйте надежный менеджер паролей для хранения уникальных сложных паролей
-                                </p>
-                            </div>
-                            <div class="timeline-item">
-                                <h6 class="cyber-text mb-2">
-                                    <i class="bi bi-phone text-info me-2"></i>
-                                    Двухфакторная аутентификация
-                                </h6>
-                                <p class="cyber-subtext small mb-0">
-                                    Включите 2FA для всех важных аккаунтов и сервисов
-                                </p>
-                            </div>
-                        </div>
+            <div class="featured-game">
+                <span class="featured-badge">ИГРА НЕДЕЛИ</span>
+                <h2 class="cyber-text mb-3">Охотник за фишингом</h2>
+                <p class="cyber-subtext mb-4">
+                    Научитесь распознавать мошеннические письма и защитите себя от фишинговых атак. 
+                    Проверьте свою бдительность в этой увлекательной игре!
+                </p>
+                <a href="{{ url_for('games.phishing_hunter') }}" class="btn btn-cyber btn-lg">
+                    <i class="bi bi-play-circle me-2"></i>Играть сейчас
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Все игры -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="cyber-text mb-4 text-center">Доступные игры</h2>
+            <div class="games-grid">
+                <!-- Охотник за фишингом -->
+                <div class="game-card">
+                    <div class="game-icon">
+                        <i class="bi bi-envelope-exclamation"></i>
                     </div>
-                    <div class="col-md-6">
-                        <div class="security-timeline">
-                            <div class="timeline-item">
-                                <h6 class="cyber-text mb-2">
-                                    <i class="bi bi-cloud-arrow-down text-warning me-2"></i>
-                                    Регулярные обновления
-                                </h6>
-                                <p class="cyber-subtext small mb-0">
-                                    Своевременно устанавливайте обновления безопасности ОС и приложений
-                                </p>
-                            </div>
-                            <div class="timeline-item">
-                                <h6 class="cyber-text mb-2">
-                                    <i class="bi bi-archive text-primary me-2"></i>
-                                    Резервные копии
-                                </h6>
-                                <p class="cyber-subtext small mb-0">
-                                    Регулярно создавайте резервные копии важных данных
-                                </p>
-                            </div>
-                        </div>
+                    <div class="game-title">Охотник за фишингом</div>
+                    <div class="game-description">
+                        Научитесь распознавать мошеннические письма. Анализируйте emails и определяйте, какие из них представляют угрозу.
+                    </div>
+                    <a href="{{ url_for('games.phishing_hunter') }}" class="btn btn-cyber">
+                        <i class="bi bi-play-circle me-2"></i>Играть
+                    </a>
+                </div>
+
+                <!-- Мастер паролей -->
+                <div class="game-card">
+                    <div class="game-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <div class="game-title">Мастер паролей</div>
+                    <div class="game-description">
+                        Оценивайте надежность паролей и создавайте собственные. Узнайте, как создать действительно безопасный пароль.
+                    </div>
+                    <a href="{{ url_for('games.password_master') }}" class="btn btn-cyber">
+                        <i class="bi bi-play-circle me-2"></i>Играть
+                    </a>
+                </div>
+
+                <!-- Шифровальный вызов -->
+                <div class="game-card">
+                    <div class="game-icon">
+                        <i class="bi bi-file-lock2"></i>
+                    </div>
+                    <div class="game-title">Шифровальный вызов</div>
+                    <div class="game-description">
+                        Освойте основы криптографии. Шифруйте сообщения с помощью различных методов и разгадывайте шифры.
+                    </div>
+                    <a href="{{ url_for('games.encryption_challenge') }}" class="btn btn-cyber">
+                        <i class="bi bi-play-circle me-2"></i>Играть
+                    </a>
+                </div>
+
+                <!-- Кибер-квиз -->
+                <div class="game-card">
+                    <div class="game-icon">
+                        <i class="bi bi-patch-question"></i>
+                    </div>
+                    <div class="game-title">Кибер-квиз</div>
+                    <div class="game-description">
+                        Проверьте свои знания по кибербезопасности. Ответьте на вопросы и узнайте, насколько вы осведомлены в цифровой безопасности.
+                    </div>
+                    <a href="{{ url_for('games.cyber_quiz') }}" class="btn btn-cyber">
+                        <i class="bi bi-play-circle me-2"></i>Играть
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row">
+        <div class="col-12">
+            <div class="stats-container">
+                <h3 class="cyber-text mb-4 text-center">
+                    <i class="bi bi-graph-up me-2"></i>Ваша статистика
+                </h3>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Сыграно игр</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Общий счет</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0%</div>
+                        <div class="stat-label">Процент побед</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Достижения</div>
                     </div>
                 </div>
-                
-                <div class="text-center mt-4">
-                    <div class="alert alert-cyber">
-                        <i class="bi bi-info-circle me-2"></i>
-                        <strong>Реальный мониторинг:</strong> Система постоянно анализирует вашу безопасность и предоставляет актуальные рекомендации
+                <div class="text-center mt-3">
+                    <button class="btn btn-outline-cyber" onclick="resetStats()">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Сбросить статистику
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Таблица лидеров -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="leaderboard">
+                <h3 class="cyber-text mb-4">
+                    <i class="bi bi-trophy me-2"></i>Таблица лидеров
+                </h3>
+                <div id="leaderboardList">
+                    <div class="text-center cyber-subtext">
+                        <i class="bi bi-hourglass-split"></i>
+                        <p class="mt-2">Загрузка рейтинга...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Достижения -->
+        <div class="col-lg-4">
+            <div class="achievements">
+                <h3 class="cyber-text mb-4">
+                    <i class="bi bi-award me-2"></i>Достижения
+                </h3>
+                <div class="achievement-grid">
+                    <div class="achievement-item locked">
+                        <div class="achievement-icon">🎣</div>
+                        <div class="achievement-name">Охотник</div>
+                        <div class="achievement-desc">Определите 10 фишинговых писем</div>
+                    </div>
+                    <div class="achievement-item locked">
+                        <div class="achievement-icon">🔐</div>
+                        <div class="achievement-name">Мастер ключей</div>
+                        <div class="achievement-desc">Создайте пароль силой 100%</div>
+                    </div>
+                    <div class="achievement-item locked">
+                        <div class="achievement-icon">🧩</div>
+                        <div class="achievement-name">Криптограф</div>
+                        <div class="achievement-desc">Решите все шифровальные задания</div>
+                    </div>
+                    <div class="achievement-item locked">
+                        <div class="achievement-icon">🧠</div>
+                        <div class="achievement-name">Эксперт</div>
+                        <div class="achievement-desc">Наберите 100% в квизе</div>
                     </div>
                 </div>
             </div>
@@ -536,239 +404,106 @@
 
 {% block extra_js %}
 <script>
-// Функция реального сканирования системы
-async function runQuickScan() {
-    const animation = document.getElementById('quickScanAnimation');
-    const result = document.getElementById('quickScanResult');
-    const progress = document.getElementById('scanProgress');
-    const button = document.querySelector('.quick-scan-btn');
+// Загрузка статистики
+async function loadStats() {
+    try {
+        const response = await fetch('/games/api/games/stats');
+        const data = await response.json();
+        updateStatsDisplay(data);
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+}
+
+// Обновление отображения статистики
+function updateStatsDisplay(stats) {
+    const overall = stats.overall || {};
     
-    // Скрываем кнопку и показываем анимацию
-    button.style.display = 'none';
-    animation.style.display = 'block';
+    document.querySelector('#statsGrid .stat-item:nth-child(1) .stat-value').textContent = 
+        overall.total_games || 0;
+    document.querySelector('#statsGrid .stat-item:nth-child(2) .stat-value').textContent = 
+        overall.total_score || 0;
+    document.querySelector('#statsGrid .stat-item:nth-child(3) .stat-value').textContent = 
+        overall.win_rate ? overall.win_rate + '%' : '0%';
     
-    // Анимация прогресса с реалистичными этапами
-    const stages = [
-        { percent: 20, text: "Анализ системных файлов..." },
-        { percent: 40, text: "Проверка сетевой безопасности..." },
-        { percent: 60, text: "Сканирование процессов..." },
-        { percent: 80, text: "Проверка обновлений..." },
-        { percent: 100, text: "Формирование отчета..." }
-    ];
+    // Подсчет достижений (простая логика)
+    let achievements = 0;
+    if (overall.total_games > 10) achievements++;
+    if (overall.total_score > 1000) achievements++;
+    if (overall.win_rate > 80) achievements++;
     
-    let currentStage = 0;
+    document.querySelector('#statsGrid .stat-item:nth-child(4) .stat-value').textContent = 
+        achievements;
+}
+
+// Загрузка таблицы лидеров
+async function loadLeaderboard() {
+    try {
+        const response = await fetch('/games/api/games/leaderboard');
+        const data = await response.json();
+        updateLeaderboardDisplay(data.leaders);
+    } catch (error) {
+        console.error('Ошибка загрузки лидерборда:', error);
+    }
+}
+
+// Обновление таблицы лидеров
+function updateLeaderboardDisplay(leaders) {
+    const leaderboardList = document.getElementById('leaderboardList');
     
-    const progressInterval = setInterval(() => {
-        if (currentStage < stages.length) {
-            const stage = stages[currentStage];
-            progress.style.width = stage.percent + '%';
-            animation.querySelector('p').textContent = stage.text;
-            currentStage++;
-        } else {
-            clearInterval(progressInterval);
-        }
-    }, 800);
+    leaderboardList.innerHTML = leaders.map((leader, index) => `
+        <div class="leader-item">
+            <div class="leader-rank">${index + 1}</div>
+            <div class="leader-avatar">${leader.avatar}</div>
+            <div class="leader-info">
+                <div class="leader-name">${leader.username}</div>
+                <div class="leader-stats">Сыграно игр: ${leader.games_played}</div>
+            </div>
+            <div class="leader-score">${leader.score}</div>
+        </div>
+    `).join('');
+}
+
+// Сброс статистики
+async function resetStats() {
+    if (!confirm('Вы уверены, что хотите сбросить всю статистику игр?')) {
+        return;
+    }
     
     try {
-        // Выполняем реальный запрос к API
-        const response = await fetch('/scanner/api/scan/quick');
-        const data = await response.json();
+        const response = await fetch('/games/api/games/reset', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
         
-        // Останавливаем анимацию
-        clearInterval(progressInterval);
-        animation.style.display = 'none';
-        result.style.display = 'block';
-        
-        // Обновляем статистику на дашборде
-        updateDashboardStats(data);
-        
-        // Формируем детальный результат
-        result.innerHTML = generateScanResultHTML(data);
-        
+        const result = await response.json();
+        if (result.success) {
+            showAlert('Статистика успешно сброшена!', 'success');
+            loadStats();
+        }
     } catch (error) {
-        console.error('Ошибка сканирования:', error);
-        clearInterval(progressInterval);
-        animation.style.display = 'none';
-        result.style.display = 'block';
-        result.innerHTML = `
-            <div class="alert alert-danger">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                <strong>Ошибка сканирования:</strong> ${error.message}
-            </div>
-            <div class="text-center mt-3">
-                <button class="btn btn-cyber" onclick="runQuickScan()">
-                    <i class="bi bi-arrow-repeat me-2"></i>Попробовать снова
-                </button>
-            </div>
-        `;
+        console.error('Ошибка сброса статистики:', error);
+        showAlert('Ошибка при сбросе статистики', 'danger');
     }
 }
 
-// Обновление статистики на дашборде
-function updateDashboardStats(data) {
-    document.getElementById('systemScore').textContent = data.system_security + '%';
-    document.getElementById('networkScore').textContent = data.network_security + '%';
-    document.getElementById('passwordScore').textContent = data.password_security + '%';
-    document.getElementById('threatsCount').textContent = data.threats_found;
-    
-    // Обновляем цвета статистики
-    updateStatColor('systemScore', data.system_security);
-    updateStatColor('networkScore', data.network_security);
-    updateStatColor('passwordScore', data.password_security);
-    updateStatColor('threatsCount', data.threats_found, true);
-}
-
-// Обновление цвета статистики
-function updateStatColor(elementId, value, isThreat = false) {
-    const element = document.getElementById(elementId);
-    element.className = 'stat-number ';
-    
-    if (isThreat) {
-        if (value === 0) {
-            element.classList.add('stat-excellent');
-        } else if (value <= 2) {
-            element.classList.add('stat-warning');
-        } else {
-            element.classList.add('stat-danger');
-        }
-    } else {
-        if (value >= 80) {
-            element.classList.add('stat-excellent');
-        } else if (value >= 60) {
-            element.classList.add('stat-good');
-        } else if (value >= 40) {
-            element.classList.add('stat-warning');
-        } else {
-            element.classList.add('stat-danger');
-        }
-    }
-}
-
-// Генерация HTML для результатов сканирования
-function generateScanResultHTML(data) {
-    const securityLevel = getSecurityLevel(data.system_security);
-    const securityColor = getSecurityColor(data.system_security);
-    
-    return `
-        <h4 class="cyber-text mb-3">
-            <i class="bi bi-${securityLevel === 'excellent' ? 'check-circle' : 
-                              securityLevel === 'good' ? 'shield-check' : 
-                              securityLevel === 'fair' ? 'exclamation-triangle' : 
-                              'exclamation-circle'} 
-                text-${securityLevel === 'excellent' ? 'success' : 
-                       securityLevel === 'good' ? 'info' : 
-                       securityLevel === 'fair' ? 'warning' : 'danger'} me-2"></i>
-            Реальное сканирование завершено
-        </h4>
-        
-        <div class="row text-center mb-4">
-            <div class="col-md-3">
-                <div class="security-level level-${securityLevel}">
-                    ${data.system_security}%
-                </div>
-                <p class="cyber-subtext">Общая безопасность</p>
-            </div>
-            <div class="col-md-3">
-                <div class="security-level level-${getSecurityLevel(data.network_security)}">
-                    ${data.network_security}%
-                </div>
-                <p class="cyber-subtext">Сетевая защита</p>
-            </div>
-            <div class="col-md-3">
-                <div class="security-level level-${getSecurityLevel(data.password_security)}">
-                    ${data.password_security}%
-                </div>
-                <p class="cyber-subtext">Пароли</p>
-            </div>
-            <div class="col-md-3">
-                <div class="security-level level-${data.threats_found > 0 ? 'critical' : 'excellent'}">
-                    ${data.threats_found}
-                </div>
-                <p class="cyber-subtext">Обнаружено угроз</p>
-            </div>
-        </div>
-        
-        <div class="security-meter mb-4">
-            <div class="meter-fill" style="width: ${data.system_security}%; background: ${securityColor};"></div>
-        </div>
-        
-        ${data.security_issues && data.security_issues.length > 0 ? `
-            <div class="security-details mb-4">
-                <h5 class="cyber-text text-warning mb-3">
-                    <i class="bi bi-exclamation-triangle me-2"></i>Обнаруженные проблемы
-                </h5>
-                ${data.security_issues.map(issue => `
-                    <div class="detail-item">
-                        <span class="cyber-subtext">${issue}</span>
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                    </div>
-                `).join('')}
-            </div>
-        ` : `
-            <div class="alert alert-success">
-                <i class="bi bi-check-circle me-2"></i>
-                <strong>Отличный результат!</strong> Критических проблем не обнаружено
-            </div>
-        `}
-        
-        <div class="security-details">
-            <h5 class="cyber-text text-success mb-3">
-                <i class="bi bi-lightbulb me-2"></i>Рекомендации по безопасности
-            </h5>
-            ${data.recommendations.map(rec => `
-                <div class="detail-item">
-                    <span class="cyber-subtext">${rec}</span>
-                    <i class="bi bi-arrow-right text-cyber-primary"></i>
-                </div>
-            `).join('')}
-        </div>
-        
-        <div class="text-center mt-4">
-            <button class="btn btn-cyber me-3" onclick="runQuickScan()">
-                <i class="bi bi-arrow-repeat me-2"></i>Повторить сканирование
-            </button>
-            <button class="btn btn-cyber-outline" onclick="exportScanResults()">
-                <i class="bi bi-download me-2"></i>Экспорт отчета
-            </button>
-        </div>
+// Показать алерт
+function showAlert(message, type) {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
+    document.querySelector('.container').prepend(alert);
 }
 
-// Определение уровня безопасности
-function getSecurityLevel(score) {
-    if (score >= 80) return 'excellent';
-    if (score >= 65) return 'good';
-    if (score >= 50) return 'fair';
-    if (score >= 30) return 'poor';
-    return 'critical';
-}
-
-// Получение цвета для уровня безопасности
-function getSecurityColor(score) {
-    if (score >= 80) return '#20c997';
-    if (score >= 65) return '#0dcaf0';
-    if (score >= 50) return '#ffc107';
-    if (score >= 30) return '#fd7e14';
-    return '#dc3545';
-}
-
-// Экспорт результатов (заглушка)
-function exportScanResults() {
-    alert('Функция экспорта отчета будет реализована в следующем обновлении');
-}
-
-// Автоматическое сканирование при загрузке страницы
+// Запуск при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
-    // Авто-сканирование можно включить по желанию
-    // runQuickScan();
-    
-    // Инициализация placeholder значений
-    updateDashboardStats({
-        system_security: 0,
-        network_security: 0,
-        password_security: 0,
-        threats_found: 0
-    });
+    loadStats();
+    loadLeaderboard();
 });
 </script>
 {% endblock %}
