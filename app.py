@@ -96,6 +96,10 @@ def create_app():
     def about():
         return render_template('about.html')
     
+    @app.route('/sitemap.xml')
+    def sitemap():
+        return app.send_static_file('sitemap.xml')
+    
     @app.route('/contact')
     def contact():
         return render_template('contact.html')
