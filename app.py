@@ -72,7 +72,7 @@ def create_app():
     def index():
         return render_template('index.html')
     
-    @app.route('/yandex_e8719664d2590c4e.html')
+    @app.route('/yandex_e87f9664d2590c4e.html')
     def yandex_verify():
         return """
         <html>
