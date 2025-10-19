@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 from flask_compress import Compress
 from dotenv import load_dotenv
+from flask import send_from_directory
 import os
 from datetime import datetime
 import json
@@ -70,6 +71,10 @@ def create_app():
     @app.route('/')
     def index():
         return render_template('index.html')
+    
+    @app.route('/yandex_e8719664d2590c4e.html')
+    def yandex_verify():
+        return send_from_directory('static', 'yandex_e8719664d2590c4e.html')
     
     @app.route('/health')
     def health_check():
