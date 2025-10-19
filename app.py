@@ -74,7 +74,14 @@ def create_app():
     
     @app.route('/yandex_e8719664d2590c4e.html')
     def yandex_verify():
-        return send_from_directory('static', 'yandex_e8719664d2590c4e.html')
+        return """
+        <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        </head>
+        <body>Verification: e87f9664d2590c4e</body>
+        </html>
+        """
     
     @app.route('/health')
     def health_check():
