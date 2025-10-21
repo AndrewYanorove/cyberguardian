@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request , redirect, url_for , session
 from flask_compress import Compress
 from dotenv import load_dotenv
 from flask import send_from_directory
@@ -108,6 +108,84 @@ def create_app():
     def dashboard():
         return render_template('dashboard.html')
     
+    @app.route('/admin', methods=['GET', 'POST'])
+    def admin_panel():
+        """Админ-панель с паролем в коде"""
+        
+        # Пароль прямо здесь - легко поменять!
+        ADMIN_PASSWORD = "16795"  # 🔑 Ваш пароль
+        
+        # Выход из системы
+        if request.args.get('logout'):
+            session.pop('admin_authenticated', None)
+            return redirect('/admin')
+        
+        # Проверка аутентификации
+        authenticated = session.get('admin_authenticated', False)
+        
+        # Обработка формы входа
+        if request.method == 'POST':
+            password = request.form.get('admin_password', '')
+            if password == ADMIN_PASSWORD:
+                session['admin_authenticated'] = True
+                session['admin_login_time'] = datetime.now().isoformat()
+                authenticated = True
+            else:
+                return render_template('admin_panel.html', 
+                                    authenticated=False, 
+                                    error=True)
+        
+        # Если не аутентифицирован, показать форму входа
+        if not authenticated:
+            return render_template('admin_panel.html', 
+                                authenticated=False, 
+                                error=False)
+        
+        # Получение данных для админ-панели (остальной код тот же)
+        try:
+            from auth.models import User
+            from education.models import UserProgress
+            from encryption.models import EncryptionHistory
+            
+            users = User.query.all()
+            
+            # Подготовка данных пользователей
+            users_data = []
+            for user in users:
+                lessons_completed = UserProgress.query.filter_by(
+                    user_id=user.id, 
+                    completed=True
+                ).count()
+                
+                encryption_count = EncryptionHistory.query.filter_by(
+                    user_id=user.id
+                ).count()
+                
+                users_data.append({
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'created_at': user.created_at,
+                    'lessons_completed': lessons_completed,
+                    'encryption_count': encryption_count
+                })
+            
+            # Общая статистика
+            stats = {
+                'total_users': len(users),
+                'total_lessons': UserProgress.query.filter_by(completed=True).count(),
+                'total_encryptions': EncryptionHistory.query.count(),
+                'active_users': len([u for u in users_data if u['encryption_count'] > 0 or u['lessons_completed'] > 0])
+            }
+            
+            return render_template('admin_panel.html',
+                                authenticated=True,
+                                users=users_data,
+                                stats=stats)
+            
+        except Exception as e:
+            return f"Ошибка загрузки данных: {str(e)}", 500
+
     # API для статистики
     @app.route('/api/stats')
     def get_stats():

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - CyberGuardian</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .admin-header .subtitle {
+            opacity: 0.8;
+            font-size: 1.1em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .users-section {
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .users-table th {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .users-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .users-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .login-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        
+        .login-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 15px;
+            padding: 10px;
+            background: #fadbd8;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    {% if not authenticated %}
+    <!-- Форма входа -->
+    <div class="login-section">
+        <div class="login-title">🔐 Admin Panel</div>
+        <form method="POST">
+            <input type="password" name="admin_password" class="password-input" placeholder="Введите пароль администратора" required>
+            <button type="submit" class="login-btn">Войти</button>
+        </form>
+        <div class="error-message" id="errorMessage">
+            Неверный пароль
+        </div>
+        
+        <script>
+            // Показать ошибку если есть
+            {% if error %}
+            document.getElementById('errorMessage').style.display = 'block';
+            {% endif %}
+        </script>
+    </div>
+    
+    {% else %}
+    <!-- Админ-панель -->
+    <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
+    
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>🛡️ CyberGuardian Admin</h1>
+            <div class="subtitle">Панель управления пользователями и статистикой</div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.total_users }}</div>
+                <div class="stat-label">👥 Всего пользователей</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.total_lessons }}</div>
+                <div class="stat-label">📚 Завершено уроков</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.total_encryptions }}</div>
+                <div class="stat-label">🔐 Операций шифрования</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.active_users }}</div>
+                <div class="stat-label">🎯 Активных пользователей</div>
+            </div>
+        </div>
+        
+        <div class="users-section">
+            <h2 class="section-title">📊 Зарегистрированные пользователи</h2>
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Пользователь</th>
+                        <th>Email</th>
+                        <th>Дата регистрации</th>
+                        <th>Прогресс</th>
+                        <th>Активность</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">{{ user.username[0]|upper }}</div>
+                                <div>
+                                    <strong>{{ user.username }}</strong><br>
+                                    <small>ID: {{ user.id }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {{ user.email[:3] }}***{{ user.email.split('@')[1] }}
+                            <br><small class="timestamp">{{ user.email }}</small>
+                        </td>
+                        <td>
+                            {% if user.created_at %}
+                            {{ user.created_at.strftime('%d.%m.%Y %H:%M') }}
+                            {% else %}
+                            <em>Не указана</em>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge badge-success">
+                                {{ user.lessons_completed }} уроков
+                            </span>
+                        </td>
+                        <td>
+                            {{ user.encryption_count }} операций
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        function logout() {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                window.location.href = '/admin?logout=true';
+            }
+        }
+        
+        // Авто-обновление каждые 30 секунд
+        setTimeout(() => {
+            window.location.reload();
+        }, 30000);
+    </script>
+    {% endif %}
+</body>
+</html>
