@@ -10,68 +10,543 @@
     <!-- КРИТИЧЕСКИЙ CSS - ВСТРАИВАЕМ В HEAD -->
     <style>
         :root {
-            --cyber-dark: #0a0a0a;
-            --cyber-darker: #050505; 
-            --cyber-primary: #02b9da;
-            --cyber-secondary: #00fcda;
-            --cyber-accent: #ff0088;
-            --cyber-text: #ffffff;
-            --cyber-subtext: #888888;
-            --cyber-border: #222222;
+            --cyber-darker: #0a0a0f;
+            --cyber-dark: #111122;
+            --cyber-darker-blue: #0a1428;
+            --cyber-dark-blue: #1a1a2e;
+            --cyber-border: #2a2a3e;
+            --cyber-primary: #00a8ff;
+            --cyber-primary-glow: #00a8ff;
+            --cyber-secondary: #0097e6;
+            --cyber-accent: #00ff88;
+            --cyber-accent-glow: #00ff88;
+            --cyber-warning: #ff9f43;
+            --cyber-danger: #ff6b6b;
+            --cyber-success: #1dd1a1;
+            --cyber-info: #54a0ff;
+            --cyber-text: #e0e0ff;
+            --cyber-text-bright: #ffffff;
+            --cyber-subtext: #a0a0c0;
+            --cyber-subtext-dark: #8899aa;
+            --cyber-bg-card: rgba(20, 20, 30, 0.95);
+            --cyber-bg-card-light: rgba(30, 30, 45, 0.9);
+            --cyber-bg-card-dark: rgba(15, 15, 25, 0.98);
+            --cyber-bg-gradient: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark-blue) 50%, var(--cyber-darker-blue) 100%);
+            --cyber-glow-primary: 0 0 20px rgba(0, 168, 255, 0.5);
+            --cyber-glow-accent: 0 0 20px rgba(0, 255, 136, 0.5);
+            --cyber-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --cyber-shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --cyber-shadow-large: 0 15px 50px rgba(0, 0, 0, 0.5);
         }
-        
-        body.cyber-bg {
-            background: linear-gradient(135deg, var(--cyber-darker) 0%, var(--cyber-dark) 100%);
-            color: var(--cyber-text);
-            min-height: 100vh;
-            font-family: 'Courier New', monospace;
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        
-        .cyber-navbar {
-            background: rgba(10, 10, 10, 0.95) !important;
-            border-bottom: 1px solid var(--cyber-border);
-            padding: 1rem 0;
+
+        body {
+            background: var(--cyber-bg-gradient);
+            color: var(--cyber-text);
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            min-height: 100vh;
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
         }
-        
-        .cyber-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--cyber-primary) !important;
-            text-decoration: none;
+
+        /* ===== TYPOGRAPHY ===== */
+        .cyber-title {
+            color: var(--cyber-text-bright);
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
         }
-        
+
+        .cyber-title-primary {
+            color: var(--cyber-primary);
+            font-weight: 800;
+            text-shadow: var(--cyber-glow-primary);
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cyber-subtitle {
+            color: var(--cyber-text);
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 1.4;
+        }
+
         .cyber-text {
-            color: var(--cyber-primary) !important;
+            color: var(--cyber-text);
+            font-size: 1rem;
+            line-height: 1.7;
+            font-weight: 400;
         }
-        
+
+        .cyber-text-bright {
+            color: var(--cyber-text-bright);
+            font-weight: 500;
+        }
+
         .cyber-subtext {
             color: var(--cyber-subtext);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 400;
         }
-        
-        .cyber-main {
-            min-height: calc(100vh - 200px);
-            padding: 2rem 0;
+
+        .cyber-lead {
+            color: var(--cyber-text);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            font-weight: 400;
         }
-        
+
+        /* ===== LAYOUT ===== */
+        .container-max {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-spacing {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            border-radius: 2px;
+        }
+
+        /* ===== HEADER ===== */
+        .cyber-header {
+            background: rgba(10, 10, 15, 0.95);
+            border-bottom: 2px solid var(--cyber-border);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cyber-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--cyber-text-bright);
+            text-decoration: none;
+        }
+
+        .cyber-brand-icon {
+            color: var(--cyber-primary);
+            font-size: 1.75rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-cyber:hover::before {
+            left: 100%;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4), 0 0 30px rgba(0, 255, 136, 0.3);
+            color: #000;
+        }
+
+        .btn-cyber-outline {
+            background: transparent;
+            border: 2px solid var(--cyber-primary);
+            color: var(--cyber-primary);
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .btn-cyber-outline:hover {
+            background: var(--cyber-primary);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+        }
+
+        .btn-cyber-danger {
+            background: transparent;
+            border: 2px solid var(--cyber-danger);
+            color: var(--cyber-danger);
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .btn-cyber-danger:hover {
+            background: var(--cyber-danger);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        /* ===== CARDS ===== */
+        .cyber-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--cyber-shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 168, 255, 0.1), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cyber-card:hover::before {
+            left: 100%;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-8px);
+            box-shadow: var(--cyber-shadow-large), 0 0 30px rgba(0, 168, 255, 0.2);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .cyber-hero {
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 15, 0.95) 0%, 
+                rgba(26, 26, 46, 0.9) 50%, 
+                rgba(10, 20, 40, 0.85) 100%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300a8ff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            padding: 8rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* ===== FEATURE CARDS ===== */
+        .feature-card {
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 18px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            text-align: center;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-8px);
+            box-shadow: var(--cyber-shadow-medium), 0 0 25px rgba(0, 168, 255, 0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(0, 255, 136, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-primary);
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.25), rgba(0, 255, 136, 0.2));
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--cyber-bg-card-light);
+            border: 2px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--cyber-shadow-soft);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--cyber-primary);
+            display: block;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--cyber-subtext);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* ===== BADGES ===== */
+        .cyber-badge {
+            background: rgba(40, 40, 55, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 25px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cyber-text);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-badge-primary {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.2), rgba(0, 168, 255, 0.1));
+            border-color: var(--cyber-primary);
+            color: var(--cyber-primary);
+        }
+
+        .cyber-badge-accent {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border-color: var(--cyber-accent);
+            color: var(--cyber-accent);
+        }
+
+        .cyber-badge-danger {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
+            border-color: var(--cyber-danger);
+            color: var(--cyber-danger);
+        }
+
+        /* ===== FOOTER ===== */
         .cyber-footer {
-            background: rgba(5, 5, 5, 0.95);
-            border-top: 1px solid var(--cyber-border);
-            padding: 2rem 0;
-            margin-top: auto;
+            background: rgba(5, 5, 10, 0.95);
+            border-top: 2px solid var(--cyber-border);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
         }
-        
-        /* Боковое меню - базовые стили */
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--cyber-text-bright);
+        }
+
+        .footer-description {
+            color: var(--cyber-subtext);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .footer-links h5 {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: var(--cyber-text-bright);
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--cyber-subtext);
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--cyber-bg-card);
+            color: var(--cyber-subtext);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--cyber-primary);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--cyber-border);
+            color: var(--cyber-subtext);
+        }
+
+        /* ===== БОКОВОЕ МЕНЮ ===== */
         .sidebar {
             position: fixed;
             top: 0;
             left: -350px;
             width: 350px;
             height: 100vh;
-            background: rgba(10, 10, 10, 0.98);
+            background: rgba(10, 10, 15, 0.98);
             border-right: 2px solid var(--cyber-primary);
             z-index: 10000;
             transition: left 0.3s ease;
@@ -99,66 +574,195 @@
             opacity: 1;
             visibility: visible;
         }
-        
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--cyber-border);
+            background: rgba(15, 15, 25, 0.95);
+        }
+
+        .sidebar-menu {
+            padding: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: var(--cyber-text);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 168, 255, 0.1);
+            border-color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .sidebar-item i {
+            width: 20px;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--cyber-border);
+            margin: 1rem 0;
+        }
+
+        .sidebar-category {
+            color: var(--cyber-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .navbar-toggler.cyber-toggler {
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 168, 255, 0.1);
             border: 1px solid var(--cyber-primary);
             padding: 0.5rem 0.75rem;
             color: var(--cyber-text);
+            border-radius: 8px;
+            cursor: pointer;
         }
-        
-        /* Скрываем все до загрузки основных стилей */
-        .cyber-card, .btn, .alert {
-            opacity: 0;
-            transition: opacity 0.3s ease;
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
-        .styles-loaded .cyber-card,
-        .styles-loaded .btn, 
-        .styles-loaded .alert {
-            opacity: 1;
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .cyber-hero {
+                padding: 6rem 0 3rem;
+            }
+            
+            .cyber-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-spacing {
+                padding: 2rem 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .feature-card {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container-max {
+                padding: 0 15px;
+            }
+            
+            .cyber-card {
+                padding: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cyber-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-accent);
         }
     </style>
 
     <!-- Preload критических ресурсов -->
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="{{ url_for('static', filename='css/main.css') }}?v=2.1" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- Fallback для браузеров без JavaScript -->
     <noscript>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=2.1">
     </noscript>
     
     {% block extra_css %}{% endblock %}
 </head>
-<body class="cyber-bg">
+<body>
     <!-- Боковое меню -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="d-flex align-items-center">
-                <i class="bi bi-shield-shaded display-6 text-cyber-primary me-3"></i>
-                <div>
-                    <h5 class="cyber-text mb-0">CyberGuardian</h5>
-                    <small class="cyber-subtext"></small>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-shaded cyber-brand-icon me-3"></i>
+                    <div>
+                        <h5 class="cyber-text-bright mb-0">CyberGuardian</h5>
+                        <small class="cyber-subtext">Цифровая безопасность</small>
+                    </div>
                 </div>
+                <button class="sidebar-close" onclick="closeSidebar()" style="background: none; border: none; color: var(--cyber-text); font-size: 1.2rem;">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
-            <button class="sidebar-close" onclick="closeSidebar()">
-                <i class="bi bi-x-lg"></i>
-            </button>
         </div>
         
         <div class="sidebar-menu">
             <!-- Основная навигация -->
             <a href="{{ url_for('index') }}" class="sidebar-item">
-                <i class="bi bi-house me-3"></i>
+                <i class="bi bi-house"></i>
                 <span>Главная</span>
             </a>
             
             <a href="{{ url_for('dashboard') }}" class="sidebar-item">
-                <i class="bi bi-speedometer2 me-3"></i>
+                <i class="bi bi-speedometer2"></i>
                 <span>Дашборд</span>
             </a>
             
@@ -166,22 +770,22 @@
             
             <!-- Основные модули -->
             <a href="{{ url_for('education.education_home') }}" class="sidebar-item">
-                <i class="bi bi-book me-3"></i>
+                <i class="bi bi-book"></i>
                 <span>Обучение</span>
             </a>
             
             <a href="{{ url_for('passwords.password_generator') }}" class="sidebar-item">
-                <i class="bi bi-key me-3"></i>
+                <i class="bi bi-key"></i>
                 <span>Пароли</span>
             </a>
             
             <a href="{{ url_for('encryption.encryption_tools') }}" class="sidebar-item">
-                <i class="bi bi-lock me-3"></i>
+                <i class="bi bi-lock"></i>
                 <span>Шифрование</span>
             </a>
 
             <a href="{{ url_for('ai.ai_chat') }}" class="sidebar-item">
-                <i class="bi bi-robot me-3"></i>
+                <i class="bi bi-robot"></i>
                 <span>ИИ-помощник</span>
             </a>
             
@@ -191,40 +795,40 @@
             <div class="sidebar-category">Экспертные инструменты</div>
             
             <a href="{{ url_for('threats.threat_dashboard') }}" class="sidebar-item">
-                <i class="bi bi-shield-exclamation me-3"></i>
+                <i class="bi bi-shield-exclamation"></i>
                 <span>Мониторинг угроз</span>
-                <span class="cyber-badge ms-auto" style="font-size: 0.6rem;">NEW</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
             </a>
             
             <a href="{{ url_for('scanner.scanner_dashboard') }}" class="sidebar-item">
-                <i class="bi bi-shield-check me-3"></i>
+                <i class="bi bi-shield-check"></i>
                 <span>Сканер безопасности</span>
-                <span class="cyber-badge ms-auto" style="font-size: 0.6rem;">NEW</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
             </a>
             
             <a href="{{ url_for('games.games_dashboard') }}" class="sidebar-item">
-                <i class="bi bi-joystick me-3"></i>
+                <i class="bi bi-joystick"></i>
                 <span>Кибер-игры</span>
-                <span class="cyber-badge ms-auto" style="font-size: 0.6rem;">NEW</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
             </a>
 
             <!-- DDoS Simulator -->
             <a href="{{ url_for('ddos.ddos_simulator') }}" class="sidebar-item">
-                <i class="bi bi-lightning-charge me-3"></i>
+                <i class="bi bi-lightning-charge"></i>
                 <span>DDoS Simulator</span>
-                <span class="cyber-badge bg-danger ms-auto" style="font-size: 0.6rem;">HOT</span>
+                <span class="cyber-badge cyber-badge-danger ms-auto" style="font-size: 0.6rem;">HOT</span>
             </a>
             
             <div class="sidebar-divider"></div>
             
             <!-- Информационные страницы -->
             <a href="{{ url_for('about') }}" class="sidebar-item">
-                <i class="bi bi-info-circle me-3"></i>
+                <i class="bi bi-info-circle"></i>
                 <span>О проекте</span>
             </a>
             
             <a href="{{ url_for('contact') }}" class="sidebar-item">
-                <i class="bi bi-envelope me-3"></i>
+                <i class="bi bi-envelope"></i>
                 <span>Контакты</span>
             </a>
             
@@ -232,44 +836,46 @@
             
             <!-- Авторизация -->
             {% if current_user.is_authenticated %}
-            <div class="sidebar-user-info">
-                <div class="user-avatar-sidebar">
-                    <i class="bi bi-person"></i>
-                </div>
-                <div class="user-details">
-                    <div class="username">{{ current_user.username }}</div>
-                    <div class="user-email cyber-subtext">{{ current_user.email if current_user.email else 'Пользователь' }}</div>
+            <div class="sidebar-user-info p-3 mb-3" style="background: var(--cyber-bg-card); border-radius: 10px;">
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar-sidebar" style="width: 40px; height: 40px; border-radius: 50%; background: var(--cyber-primary); display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="bi bi-person" style="color: white;"></i>
+                    </div>
+                    <div>
+                        <div class="username" style="color: var(--cyber-text-bright); font-weight: 600;">{{ current_user.username }}</div>
+                        <div class="user-email" style="color: var(--cyber-subtext); font-size: 0.8rem;">{{ current_user.email if current_user.email else 'Пользователь' }}</div>
+                    </div>
                 </div>
             </div>
             <a href="{{ url_for('auth.profile') }}" class="sidebar-item">
-                <i class="bi bi-person me-3"></i>
+                <i class="bi bi-person"></i>
                 <span>Профиль</span>
             </a>
-            <a href="{{ url_for('auth.logout') }}" class="sidebar-item text-danger">
-                <i class="bi bi-box-arrow-right me-3"></i>
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-item" style="color: var(--cyber-danger);">
+                <i class="bi bi-box-arrow-right"></i>
                 <span>Выйти</span>
             </a>
             {% else %}
             <a href="{{ url_for('auth.login') }}" class="sidebar-item">
-                <i class="bi bi-box-arrow-in-right me-3"></i>
+                <i class="bi bi-box-arrow-in-right"></i>
                 <span>Войти</span>
             </a>
             <a href="{{ url_for('auth.register') }}" class="sidebar-item">
-                <i class="bi bi-person-plus me-3"></i>
+                <i class="bi bi-person-plus"></i>
                 <span>Регистрация</span>
             </a>
             {% endif %}
         </div>
         
-        <div class="sidebar-footer">
-            <div class="cyber-social">
-                <a href="https://t.me/cyberguardian_support" class="cyber-social-link" target="_blank">
+        <div class="sidebar-footer p-3" style="border-top: 1px solid var(--cyber-border);">
+            <div class="social-links justify-content-center">
+                <a href="https://t.me/cyberguardian_support" class="social-link" target="_blank">
                     <i class="bi bi-telegram"></i>
                 </a>
-                <a href="https://github.com" class="cyber-social-link" target="_blank">
+                <a href="https://github.com" class="social-link" target="_blank">
                     <i class="bi bi-github"></i>
                 </a>
-                <a href="mailto:support@cyberguardian.ru" class="cyber-social-link">
+                <a href="mailto:support@cyberguardian.ru" class="social-link">
                     <i class="bi bi-envelope"></i>
                 </a>
             </div>
@@ -280,86 +886,88 @@
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
     <!-- Верхняя навигация -->
-    <nav class="navbar navbar-expand-lg navbar-dark cyber-navbar">
-        <div class="container">
-            <!-- Кнопка меню - ВИДНА НА ВСЕХ УСТРОЙСТВАХ -->
-            <button class="navbar-toggler cyber-toggler me-3" type="button" onclick="toggleSidebar()">
-                <i class="bi bi-list"></i>
-                <span class="menu-text d-none d-sm-inline ms-2">Меню</span>
-            </button>
-            
-            <!-- Лого -->
-            <a class="navbar-brand cyber-brand" href="{{ url_for('index') }}">
-                <i class="bi bi-shield-shaded me-2"></i>
-                <span class="cyber-text">CyberGuardian</span>
-                <small class="cyber-subtext ms-2"></small>
-            </a>
+    <header class="cyber-header">
+        <div class="container-max">
+            <div class="header-container">
+                <!-- Кнопка меню -->
+                <button class="navbar-toggler cyber-toggler me-3" type="button" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                    <span class="menu-text ms-2">Меню</span>
+                </button>
+                
+                <!-- Лого -->
+                <a class="cyber-brand" href="{{ url_for('index') }}">
+                    <i class="bi bi-shield-shaded cyber-brand-icon"></i>
+                    CyberGuardian
+                </a>
 
-            <!-- Правая часть с пользователем -->
-            <div class="ms-auto d-flex align-items-center">
-                {% if current_user.is_authenticated %}
-                <div class="dropdown user-dropdown">
-                    <button class="btn user-dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <div class="user-avatar-nav">
-                            <i class="bi bi-person"></i>
-                        </div>
-                        <span class="user-name-nav d-none d-md-inline">{{ current_user.username }}</span>
-                        <i class="bi bi-chevron-down ms-1 d-none d-md-inline"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+                <!-- Правая часть с пользователем -->
+                <div class="header-actions">
+                    {% if current_user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn-cyber-outline" type="button" style="position: relative;">
+                            <i class="bi bi-person me-2"></i>
+                            {{ current_user.username }}
+                        </button>
+                        <div class="dropdown-menu" style="position: absolute; background: var(--cyber-bg-card); border: 2px solid var(--cyber-border); border-radius: 12px; padding: 1rem; min-width: 200px; z-index: 1000; display: none; margin-top: 0.5rem;">
+                            <a class="sidebar-item mb-2" href="{{ url_for('auth.profile') }}">
                                 <i class="bi bi-person me-2"></i>Профиль
                             </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                            <a class="sidebar-item mb-2" href="{{ url_for('dashboard') }}">
                                 <i class="bi bi-speedometer2 me-2"></i>Дашборд
                             </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">
+                            <div class="sidebar-divider my-2"></div>
+                            <a class="sidebar-item" href="{{ url_for('auth.logout') }}" style="color: var(--cyber-danger);">
                                 <i class="bi bi-box-arrow-right me-2"></i>Выйти
                             </a>
-                        </li>
-                    </ul>
-                </div>
-                {% else %}
-                <div class="d-none d-lg-flex gap-2">
-                    <a href="{{ url_for('auth.login') }}" class="btn btn-cyber-outline btn-sm">
-                        <i class="bi bi-box-arrow-in-right me-1"></i>Войти
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn-cyber-outline">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти
                     </a>
-                    <a href="{{ url_for('auth.register') }}" class="btn btn-cyber btn-sm">
-                        <i class="bi bi-person-plus me-1"></i>Регистрация
+                    <a href="{{ url_for('auth.register') }}" class="btn-cyber">
+                        <i class="bi bi-person-plus me-2"></i>Регистрация
                     </a>
-                </div>
-                {% endif %}
-                
-                <!-- Индикатор статуса -->
-                <div class="d-none d-lg-block ms-3">
-                    <div class="cyber-badge bg-success">
+                    {% endif %}
+                    
+                    <!-- Индикатор статуса -->
+                    <div class="cyber-badge cyber-badge-accent ms-3">
                         <i class="bi bi-check-circle me-1"></i>Система активна
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Flash сообщения -->
-    <div class="container mt-3">
+    <div class="container-max" style="margin-top: 100px;">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show">
-                        <i class="bi 
-                            {% if category == 'success' %}bi-check-circle
-                            {% elif category == 'danger' %}bi-exclamation-circle
-                            {% elif category == 'warning' %}bi-exclamation-triangle
-                            {% else %}bi-info-circle
-                            {% endif %} me-2"></i>
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <div class="cyber-card mb-3" style="background: {% if category == 'success' %}rgba(29, 209, 161, 0.1){% elif category == 'danger' %}rgba(255, 107, 107, 0.1){% elif category == 'warning' %}rgba(255, 159, 67, 0.1){% else %}rgba(0, 168, 255, 0.1){% endif %}; border-color: {% if category == 'success' %}var(--cyber-success){% elif category == 'danger' %}var(--cyber-danger){% elif category == 'warning' %}var(--cyber-warning){% else %}var(--cyber-primary){% endif %};">
+                        <div class="d-flex align-items-center">
+                            <i class="bi 
+                                {% if category == 'success' %}bi-check-circle
+                                {% elif category == 'danger' %}bi-exclamation-circle
+                                {% elif category == 'warning' %}bi-exclamation-triangle
+                                {% else %}bi-info-circle
+                                {% endif %} me-3" 
+                                style="color: {% if category == 'success' %}var(--cyber-success){% elif category == 'danger' %}var(--cyber-danger){% elif category == 'warning' %}var(--cyber-warning){% else %}var(--cyber-primary){% endif %}; font-size: 1.5rem;"></i>
+                            <div class="flex-grow-1">
+                                <h6 class="cyber-text-bright mb-1">
+                                    {% if category == 'success' %}Успех
+                                    {% elif category == 'danger' %}Ошибка
+                                    {% elif category == 'warning' %}Предупреждение
+                                    {% else %}Информация
+                                    {% endif %}
+                                </h6>
+                                <p class="cyber-text mb-0">{{ message }}</p>
+                            </div>
+                            <button type="button" style="background: none; border: none; color: var(--cyber-text); cursor: pointer;" onclick="this.parentElement.parentElement.style.display='none'">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
                     </div>
                 {% endfor %}
             {% endif %}
@@ -367,57 +975,63 @@
     </div>
 
     <!-- Основной контент -->
-    <main class="cyber-main">
+    <main>
         {% block content %}{% endblock %}
     </main>
 
     <!-- Футер -->
     <footer class="cyber-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5 class="cyber-text">
-                        <i class="bi bi-shield-shaded me-2"></i>CyberGuardian
-                    </h5>
-                    <p class="cyber-subtext">Ваш цифровой защитник в мире кибербезопасности</p>
-                    <div class="cyber-subtext small">
-                        <i class="bi bi-cpu me-1"></i>
-                        <span id="serverStats">Система активна</span>
+        <div class="container-max">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <div class="footer-brand">
+                        <i class="bi bi-shield-shaded me-2" style="color: var(--cyber-primary);"></i>
+                        CyberGuardian
                     </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <h6 class="cyber-text">🔗 Быстрые ссылки</h6>
-                    <div class="d-flex flex-column">
-                        <a href="{{ url_for('index') }}" class="cyber-link mb-2">Главная</a>
-                        <a href="{{ url_for('dashboard') }}" class="cyber-link mb-2">Дашборд</a>
-                        <a href="{{ url_for('education.education_home') }}" class="cyber-link mb-2">Обучение</a>
-                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="cyber-link mb-2 text-danger">DDoS Simulator</a>
-                        <a href="{{ url_for('about') }}" class="cyber-link mb-2">О проекте</a>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 text-md-end">
-                    <p class="cyber-subtext">© {{ current_year }} CyberGuardian | Все права защищены</p>
-                    <div class="cyber-social">
-                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="cyber-social-link" target="_blank">
+                    <p class="footer-description">
+                        Ваш цифровой защитник в мире кибербезопасности. 
+                        Обучаем, защищаем и развиваем навыки безопасности.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="social-link" target="_blank">
                             <i class="bi bi-telegram"></i>
                         </a>
-                        <a href="https://github.com/AndrewYanorove/cyberguardian" class="cyber-social-link" target="_blank">
+                        <a href="https://github.com/AndrewYanorove/cyberguardian" class="social-link" target="_blank">
                             <i class="bi bi-github"></i>
                         </a>
-                        <a href="cyberguardian100@gmail.com" class="cyber-social-link">
+                        <a href="mailto:cyberguardian100@gmail.com" class="social-link">
                             <i class="bi bi-envelope"></i>
                         </a>
                     </div>
                 </div>
+                
+                <div class="footer-links">
+                    <h5>Быстрые ссылки</h5>
+                    <a href="{{ url_for('index') }}">Главная</a>
+                    <a href="{{ url_for('dashboard') }}">Дашборд</a>
+                    <a href="{{ url_for('education.education_home') }}">Обучение</a>
+                    <a href="{{ url_for('ddos.ddos_simulator') }}">DDoS Simulator</a>
+                    <a href="{{ url_for('about') }}">О проекте</a>
+                </div>
+                
+                <div class="footer-links">
+                    <h5>Инструменты</h5>
+                    <a href="{{ url_for('passwords.password_generator') }}">Генератор паролей</a>
+                    <a href="{{ url_for('encryption.encryption_tools') }}">Шифрование</a>
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}">Сканер безопасности</a>
+                    <a href="{{ url_for('ai.ai_chat') }}">ИИ-помощник</a>
+                    <a href="{{ url_for('games.games_dashboard') }}">Кибер-игры</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© {{ current_year }} CyberGuardian | Все права защищены</p>
             </div>
         </div>
     </footer>
 
-    <!-- ОТЛОЖЕННАЯ загрузка скриптов -->
     <script>
-        // Минимальный функционал для работы меню
+        // Функции для работы бокового меню
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -449,23 +1063,54 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') closeSidebar();
             });
+
+            // Простой dropdown
+            const userDropdown = document.querySelector('.dropdown');
+            if (userDropdown) {
+                const dropdownButton = userDropdown.querySelector('button');
+                const dropdownMenu = userDropdown.querySelector('.dropdown-menu');
+                
+                dropdownButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // Закрытие dropdown при клике вне его
+                document.addEventListener('click', () => {
+                    dropdownMenu.style.display = 'none';
+                });
+            }
+
+            // Анимация появления элементов
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in-up').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(element);
+            });
         });
 
-        // Загрузка тяжелых скриптов после рендера страницы
-        window.addEventListener('load', function() {
-            // Динамически загружаем Bootstrap JS
-            var script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js';
-            script.onload = function() {
-                // После загрузки Bootstrap загружаем наши скрипты
-                var mainScript = document.createElement('script');
-                mainScript.src = '{{ url_for("static", filename="js/main.js") }}?v=2.1';
-                document.head.appendChild(mainScript);
-            };
-            document.head.appendChild(script);
-
-            // Добавляем класс когда стили загружены
-            document.body.classList.add('styles-loaded');
+        // Performance optimization
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                // Recalculate any layout-dependent values
+            }, 250);
         });
     </script>
     

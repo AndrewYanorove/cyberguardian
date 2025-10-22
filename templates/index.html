@@ -1,75 +1,116 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Герой секция -->
-<section class="hero-section text-center py-5">
-    <div class="container">
-        <div class="row justify-content-center">
+<!-- Hero Section -->
+<section class="cyber-hero">
+    <div class="container-max">
+        <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold cyber-text mb-4 glow-text">
-                    <i class="bi bi-shield-shaded"></i> CyberGuardian 
+                <h1 class="cyber-title display-3 mb-4 fade-in-up">
+                    <i class="bi bi-shield-shaded me-3"></i>Ваш цифровой щит в мире кибербезопасности
                 </h1>
-                <p class="lead cyber-subtext mb-4">
-                    Ваш цифровой щит в мире кибербезопасности. 
-                    Защищайся, учись и исследуй с помощью современных технологий.
+                <p class="cyber-lead mb-4 fade-in-up" style="animation-delay: 0.1s;">
+                    Защищайся, учись и исследуй с помощью современных технологий. 
+                    Стань киберзащитником уже сегодня и получи востребованные навыки в области информационной безопасности.
                 </p>
-                <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber btn-lg">
+                <div class="d-flex flex-wrap gap-3 mb-4 fade-in-up" style="animation-delay: 0.2s;">
+                    <a href="{{ url_for('education.education_home') }}" class="btn-cyber btn-lg">
                         <i class="bi bi-book me-2"></i>Начать обучение
                     </a>
-                    <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn btn-cyber-outline btn-lg">
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn-cyber-outline btn-lg">
                         <i class="bi bi-shield-check me-2"></i>Проверить безопасность
                     </a>
-                    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-danger btn-lg">
+                    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger btn-lg">
                         <i class="bi bi-lightning-charge me-2"></i>DDoS Simulator
                     </a>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="stats-grid fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="stat-card">
+                        <span class="stat-number">1500+</span>
+                        <span class="stat-label">Пользователей</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Алгоритмов шифрования</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">ИИ-помощник доступен</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Безопасная учебная среда</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 text-center">
+                <div class="float-animation">
+                    <i class="bi bi-shield-lock" style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.9;"></i>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Фичи -->
-<section class="features-section py-5">
-    <div class="container">
-        <h2 class="text-center cyber-text mb-5 glow-text">Возможности платформы</h2>
+<!-- Features Section -->
+<section class="section-spacing">
+    <div class="container-max">
+        <h2 class="section-title cyber-title-primary fade-in-up">
+            <i class="bi bi-stars me-2"></i>Возможности платформы
+        </h2>
+        
         <div class="row g-4">
+            <!-- Первая строка фич -->
             <div class="col-md-3">
-                <div class="cyber-card h-100 p-4 text-center">
-                    <i class="bi bi-book display-4 text-cyber-primary mb-3"></i>
-                    <h5 class="text-cyber-primary">Интерактивное обучение</h5>
-                    <p class="cyber-subtext">Уроки по кибербезопасности, тесты и симуляции атак</p>
-                    <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                <div class="feature-card fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="feature-icon">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h3 class="cyber-text-bright mb-3">Интерактивное обучение</h3>
+                    <p class="cyber-text mb-4">Уроки по кибербезопасности, тесты и симуляции атак для полного погружения в тему.</p>
+                    <a href="{{ url_for('education.education_home') }}" class="btn-cyber-outline w-100">
                         Изучать
                     </a>
                 </div>
             </div>
+            
             <div class="col-md-3">
-                <div class="cyber-card h-100 p-4 text-center">
-                    <i class="bi bi-key display-4 text-cyber-secondary mb-3"></i>
-                    <h5 class="text-cyber-secondary">Генератор паролей</h5>
-                    <p class="cyber-subtext">Создание и проверка надежных паролей</p>
-                    <a href="{{ url_for('passwords.password_generator') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                <div class="feature-card fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="feature-icon">
+                        <i class="bi bi-key"></i>
+                    </div>
+                    <h3 class="cyber-text-bright mb-3">Генератор паролей</h3>
+                    <p class="cyber-text mb-4">Создание и проверка надежных паролей для защиты ваших учетных записей.</p>
+                    <a href="{{ url_for('passwords.password_generator') }}" class="btn-cyber-outline w-100">
                         Использовать
                     </a>
                 </div>
             </div>
+            
             <div class="col-md-3">
-                <div class="cyber-card h-100 p-4 text-center">
-                    <i class="bi bi-lock display-4 text-cyber-accent mb-3"></i>
-                    <h5 class="text-cyber-accent">Шифрование данных</h5>
-                    <p class="cyber-subtext">Шифрование текстов и файлов с различными алгоритмами</p>
-                    <a href="{{ url_for('encryption.encryption_tools') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                <div class="feature-card fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="feature-icon">
+                        <i class="bi bi-lock"></i>
+                    </div>
+                    <h3 class="cyber-text-bright mb-3">Шифрование данных</h3>
+                    <p class="cyber-text mb-4">Шифрование текстов и файлов с использованием современных алгоритмов.</p>
+                    <a href="{{ url_for('encryption.encryption_tools') }}" class="btn-cyber-outline w-100">
                         Шифровать
                     </a>
                 </div>
             </div>
+            
             <div class="col-md-3">
-                <div class="cyber-card h-100 p-4 text-center">
-                    <i class="bi bi-robot display-4 text-cyber-primary mb-3"></i>
-                    <h5 class="text-cyber-primary">ИИ-помощник</h5>
-                    <p class="cyber-subtext">Персональный консультант по безопасности</p>
-                    <a href="{{ url_for('ai.ai_chat') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                <div class="feature-card fade-in-up" style="animation-delay: 0.4s;">
+                    <div class="feature-icon">
+                        <i class="bi bi-robot"></i>
+                    </div>
+                    <h3 class="cyber-text-bright mb-3">ИИ-помощник</h3>
+                    <p class="cyber-text mb-4">Персональный консультант по безопасности, доступный 24/7.</p>
+                    <a href="{{ url_for('ai.ai_chat') }}" class="btn-cyber-outline w-100">
                         Спросить
                     </a>
                 </div>
@@ -77,43 +118,54 @@
         </div>
 
         <!-- Вторая строка фич -->
-        <div class="row g-4 mt-3">
+        <div class="row g-4 mt-4">
             <div class="col-md-3">
-                <div class="cyber-card h-100 p-4 text-center">
-                    <i class="bi bi-shield-exclamation display-4 text-warning mb-3"></i>
-                    <h5 class="text-warning">Мониторинг угроз</h5>
-                    <p class="cyber-subtext">Отслеживание киберугроз в реальном времени</p>
-                    <a href="{{ url_for('threats.threat_dashboard') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                <div class="feature-card fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="feature-icon" style="color: var(--cyber-warning);">
+                        <i class="bi bi-shield-exclamation"></i>
+                    </div>
+                    <h3 class="cyber-text-bright mb-3">Мониторинг угроз</h3>
+                    <p class="cyber-text mb-4">Отслеживание киберугроз в реальном времени и получение уведомлений.</p>
+                    <a href="{{ url_for('threats.threat_dashboard') }}" class="btn-cyber-outline w-100">
                         Мониторить
                     </a>
                 </div>
             </div>
+            
             <div class="col-md-3">
-                <div class="cyber-card h-100 p-4 text-center">
-                    <i class="bi bi-shield-check display-4 text-success mb-3"></i>
-                    <h5 class="text-success">Сканер безопасности</h5>
-                    <p class="cyber-subtext">Комплексная проверка системы безопасности</p>
-                    <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                <div class="feature-card fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="feature-icon" style="color: var(--cyber-success);">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h3 class="cyber-text-bright mb-3">Сканер безопасности</h3>
+                    <p class="cyber-text mb-4">Комплексная проверка системы на уязвимости и проблемы безопасности.</p>
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn-cyber-outline w-100">
                         Сканировать
                     </a>
                 </div>
             </div>
+            
             <div class="col-md-3">
-                <div class="cyber-card h-100 p-4 text-center">
-                    <i class="bi bi-joystick display-4 text-info mb-3"></i>
-                    <h5 class="text-info">Кибер-игры</h5>
-                    <p class="cyber-subtext">Обучение через увлекательные игры и квизы</p>
-                    <a href="{{ url_for('games.games_dashboard') }}" class="btn btn-cyber-outline btn-sm mt-2">
+                <div class="feature-card fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="feature-icon" style="color: var(--cyber-info);">
+                        <i class="bi bi-joystick"></i>
+                    </div>
+                    <h3 class="cyber-text-bright mb-3">Кибер-игры</h3>
+                    <p class="cyber-text mb-4">Обучение через увлекательные игры, квизы и практические задания.</p>
+                    <a href="{{ url_for('games.games_dashboard') }}" class="btn-cyber-outline w-100">
                         Играть
                     </a>
                 </div>
             </div>
+            
             <div class="col-md-3">
-                <div class="cyber-card h-100 p-4 text-center border-danger">
-                    <i class="bi bi-lightning-charge display-4 text-danger mb-3"></i>
-                    <h5 class="text-danger">DDoS Simulator</h5>
-                    <p class="cyber-subtext">Изучение механизмов DDoS атак и защиты</p>
-                    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-danger btn-sm mt-2">
+                <div class="feature-card fade-in-up" style="animation-delay: 0.4s; border-color: var(--cyber-danger);">
+                    <div class="feature-icon" style="color: var(--cyber-danger);">
+                        <i class="bi bi-lightning-charge"></i>
+                    </div>
+                    <h3 class="cyber-text-bright mb-3">DDoS Simulator</h3>
+                    <p class="cyber-text mb-4">Изучение механизмов DDoS атак и методов защиты в безопасной среде.</p>
+                    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger w-100">
                         Исследовать
                     </a>
                 </div>
@@ -122,51 +174,36 @@
     </div>
 </section>
 
-<!-- Статистика -->
-<section class="stats-section py-5">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-md-3">
-                <h3 class="text-cyber-primary fw-bold glow-text">1500+</h3>
-                <p class="cyber-subtext">Пользователей</p>
-            </div>
-            <div class="col-md-3">
-                <h3 class="text-cyber-secondary fw-bold glow-text">50+</h3>
-                <p class="cyber-subtext">Алгоритмов шифрования</p>
-            </div>
-            <div class="col-md-3">
-                <h3 class="text-cyber-accent fw-bold glow-text">24/7</h3>
-                <p class="cyber-subtext">ИИ-помощник доступен</p>
-            </div>
-            <div class="col-md-3">
-                <h3 class="text-danger fw-bold glow-text">100%</h3>
-                <p class="cyber-subtext">Безопасная учебная среда</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- DDoS Simulator промо -->
-<section class="cta-section py-5 bg-danger bg-opacity-10">
-    <div class="container">
+<!-- DDoS Simulator Promo -->
+<section class="section-spacing" style="background: rgba(255, 107, 107, 0.05); border-top: 2px solid var(--cyber-danger); border-bottom: 2px solid var(--cyber-danger);">
+    <div class="container-max">
         <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <div class="cyber-card p-5 border-danger">
-                    <i class="bi bi-lightning-charge display-1 text-danger mb-3"></i>
-                    <h3 class="cyber-text glow-text mb-3">🎯 Новый DDoS Simulator!</h3>
-                    <p class="cyber-subtext mb-4">
+            <div class="col-lg-10">
+                <div class="cyber-card text-center" style="border-color: var(--cyber-danger); background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(255, 107, 107, 0.05) 100%);">
+                    <div class="feature-icon mx-auto mb-4" style="color: var(--cyber-danger); font-size: 4rem;">
+                        <i class="bi bi-lightning-charge"></i>
+                    </div>
+                    <h2 class="cyber-title-primary mb-3">🎯 Новый DDoS Simulator!</h2>
+                    <p class="cyber-lead mb-4">
                         Изучайте механизмы DDoS атак в безопасной учебной среде. 
                         Понимайте как работают атаки и как от них защищаться.
                     </p>
-                    <div class="alert alert-warning mb-4">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        <strong>Только для образовательных целей!</strong> Все атаки симулируются и не наносят реального ущерба.
+                    
+                    <div class="cyber-card mb-4 mx-auto" style="max-width: 600px; background: rgba(255, 159, 67, 0.1); border-color: var(--cyber-warning);">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-exclamation-triangle me-3" style="color: var(--cyber-warning); font-size: 1.5rem;"></i>
+                            <div>
+                                <h6 class="cyber-text-bright mb-1">Только для образовательных целей!</h6>
+                                <p class="cyber-text mb-0">Все атаки симулируются и не наносят реального ущерба.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-danger btn-lg">
+                    
+                    <div class="d-flex flex-wrap gap-3 justify-content-center">
+                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger btn-lg">
                             <i class="bi bi-play-circle me-2"></i>Запустить симулятор
                         </a>
-                        <a href="{{ url_for('ddos.ddos_education') }}" class="btn btn-cyber-outline btn-lg">
+                        <a href="{{ url_for('ddos.ddos_education') }}" class="btn-cyber-outline btn-lg">
                             <i class="bi bi-book me-2"></i>Узнать больше
                         </a>
                     </div>
@@ -176,28 +213,127 @@
     </div>
 </section>
 
-<!-- Призыв к действию -->
-<section class="cta-section py-5">
-    <div class="container">
+<!-- Final CTA -->
+<section class="section-spacing">
+    <div class="container-max">
         <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <div class="cyber-card p-5">
-                    <h3 class="cyber-text glow-text mb-3">Готов стать киберзащитником?</h3>
-                    <p class="cyber-subtext mb-4">Присоединяйся к сообществу CyberGuardian и прокачай свои навыки безопасности</p>
-                    <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <a href="{{ url_for('auth.register') }}" class="btn btn-cyber btn-lg">
+            <div class="col-lg-8">
+                <div class="cyber-card text-center">
+                    <h2 class="cyber-title-primary mb-3">Готов стать киберзащитником?</h2>
+                    <p class="cyber-lead mb-4">
+                        Присоединяйся к сообществу CyberGuardian и прокачай свои навыки кибер-безопасности 
+                    </p>
+                    
+                    <div class="d-flex flex-wrap gap-3 justify-content-center">
+                        <a href="{{ url_for('auth.register') }}" class="btn-cyber btn-lg">
                             <i class="bi bi-person-plus me-2"></i>Присоединиться
                         </a>
-                        <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber-outline btn-lg">
+                        <a href="{{ url_for('education.education_home') }}" class="btn-cyber-outline btn-lg">
                             <i class="bi bi-play-circle me-2"></i>Начать обучение
                         </a>
-                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn btn-outline-danger btn-lg">
+                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger btn-lg">
                             <i class="bi bi-lightning me-2"></i>DDoS Simulator
                         </a>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="cyber-subtext">
+                            Уже присоединились к нам? 
+                            <a href="{{ url_for('auth.login') }}" class="cyber-text-bright" style="text-decoration: none;">Войдите в аккаунт</a>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Additional Stats -->
+<section class="section-spacing" style="background: var(--cyber-bg-card-dark);">
+    <div class="container-max">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Успешных студентов</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Практических заданий</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">Экспертов индустрии</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Поддержка</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Additional animations for index page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Floating animation for hero icon
+        const heroIcon = document.querySelector('.float-animation');
+        if (heroIcon) {
+            heroIcon.style.animation = 'float 6s ease-in-out infinite';
+        }
+
+        // Staggered animation for feature cards
+        const featureCards = document.querySelectorAll('.feature-card');
+        featureCards.forEach((card, index) => {
+            card.style.animationDelay = `${0.1 + (index * 0.1)}s`;
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.cyber-hero');
+            if (hero) {
+                hero.style.backgroundPositionY = `${scrolled * 0.5}px`;
+            }
+        });
+
+        // Interactive stats counter
+        const statNumbers = document.querySelectorAll('.stat-number');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumber = entry.target;
+                    if (!statNumber.classList.contains('animated')) {
+                        statNumber.classList.add('animated');
+                        const target = parseInt(statNumber.textContent);
+                        const duration = 2000;
+                        const step = target / (duration / 16);
+                        let current = 0;
+                        
+                        const timer = setInterval(() => {
+                            current += step;
+                            if (current >= target) {
+                                clearInterval(timer);
+                                statNumber.textContent = target + (statNumber.textContent.includes('+') ? '+' : '');
+                            } else {
+                                statNumber.textContent = Math.floor(current) + (statNumber.textContent.includes('+') ? '+' : '');
+                            }
+                        }, 16);
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statNumbers.forEach(stat => {
+            observer.observe(stat);
+        });
+    });
+</script>
 {% endblock %}

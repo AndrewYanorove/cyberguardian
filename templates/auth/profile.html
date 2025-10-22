@@ -1,69 +1,281 @@
+[file name]: profile.html
+[file content begin]
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="cyber-card p-4 text-center">
-                <div class="cyber-avatar mb-3">
-                    <i class="bi bi-person-circle display-1 text-cyber-primary"></i>
-                </div>
-                <h3 class="cyber-text">{{ user.username }}</h3>
-                <p class="cyber-subtext">{{ user.email }}</p>
-                <p class="cyber-subtext small">
-                    <i class="bi bi-calendar me-1"></i>
-                    Зарегистрирован: {{ user.created_at.strftime('%d.%m.%Y') }}
+<!-- Hero Section -->
+<section class="cyber-hero" style="padding: 6rem 0 3rem;">
+    <div class="container-max">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="cyber-title display-4 mb-3 fade-in-up">
+                    <i class="bi bi-person-badge me-3"></i>Профиль агента
+                </h1>
+                <p class="cyber-lead fade-in-up" style="animation-delay: 0.1s;">
+                    Управляйте вашими данными, отслеживайте прогресс и достижения в мире кибербезопасности.
                 </p>
-                <a href="{{ url_for('auth.logout') }}" class="btn btn-cyber-outline btn-sm">
-                    <i class="bi bi-box-arrow-right me-1"></i>Выйти
-                </a>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="float-animation">
+                    <i class="bi bi-shield-check" style="font-size: 6rem; color: var(--cyber-primary); opacity: 0.9;"></i>
+                </div>
             </div>
         </div>
-        
-        <div class="col-md-8">
-            <div class="cyber-card p-4">
-                <h4 class="cyber-text mb-4">📊 Ваш прогресс</h4>
-                
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="text-center p-3 cyber-stat">
-                            <i class="bi bi-book display-6 text-cyber-primary mb-2"></i>
-                            <h3 class="cyber-text">{{ user.get_progress().completed_lessons }}</h3>
-                            <p class="cyber-subtext">Пройдено уроков</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="text-center p-3 cyber-stat">
-                            <i class="bi bi-key display-6 text-cyber-secondary mb-2"></i>
-                            <h3 class="cyber-text">{{ user.get_progress().password_score }}</h3>
-                            <p class="cyber-subtext">Очков паролей</p>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="text-center p-3 cyber-stat">
-                            <i class="bi bi-lock display-6 text-cyber-accent mb-2"></i>
-                            <h3 class="cyber-text">{{ user.get_progress().encryption_usage }}</h3>
-                            <p class="cyber-subtext">Шифрований</p>
-                        </div>
+    </div>
+</section>
+
+<div class="container-max">
+    <div class="row">
+        <!-- Боковая панель профиля -->
+        <div class="col-lg-4 mb-4">
+            <div class="cyber-card p-4 text-center fade-in-up">
+                <div class="cyber-avatar mb-4">
+                    <div class="feature-icon mx-auto" style="width: 120px; height: 120px; font-size: 3rem;">
+                        <i class="bi bi-person-circle"></i>
                     </div>
                 </div>
                 
+                <h3 class="cyber-text-bright mb-2">{{ current_user.username }}</h3>
+                <p class="cyber-subtext mb-3">{{ current_user.email }}</p>
+                
+                <div class="cyber-badge cyber-badge-primary mb-3">
+                    <i class="bi bi-shield-check me-2"></i>Агент кибербезопасности
+                </div>
+                
+                <div class="user-meta mb-4">
+                    <div class="cyber-subtext small">
+                        <i class="bi bi-calendar me-2"></i>
+                        Зарегистрирован: {{ current_user.created_at.strftime('%d.%m.%Y') if current_user.created_at else 'Недавно' }}
+                    </div>
+                    <div class="cyber-subtext small mt-1">
+                        <i class="bi bi-award me-2"></i>
+                        Уровень: {{ current_user.get_level() if current_user.get_level else 'Новичок' }}
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('auth.logout') }}" class="btn-cyber-outline">
+                        <i class="bi bi-box-arrow-right me-2"></i>Выйти из системы
+                    </a>
+                </div>
+            </div>
+
+            <!-- Быстрые действия -->
+            <div class="cyber-card p-4 mt-4 fade-in-up" style="animation-delay: 0.2s;">
+                <h5 class="cyber-text-bright mb-3">
+                    <i class="bi bi-lightning me-2"></i>Быстрые действия
+                </h5>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('education.education_home') }}" class="btn-cyber-outline btn-sm">
+                        <i class="bi bi-book me-2"></i>Продолжить обучение
+                    </a>
+                    <a href="{{ url_for('passwords.password_generator') }}" class="btn-cyber-outline btn-sm">
+                        <i class="bi bi-key me-2"></i>Генератор паролей
+                    </a>
+                    <a href="{{ url_for('ai.ai_chat') }}" class="btn-cyber-outline btn-sm">
+                        <i class="bi bi-robot me-2"></i>ИИ-помощник
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основной контент профиля -->
+        <div class="col-lg-8">
+            <!-- Статистика прогресса -->
+            <div class="cyber-card p-4 mb-4 fade-in-up" style="animation-delay: 0.1s;">
+                <h4 class="cyber-text-bright mb-4">
+                    <i class="bi bi-graph-up me-2"></i>Статистика прогресса
+                </h4>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card text-center">
+                            <div class="feature-icon mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                <i class="bi bi-book"></i>
+                            </div>
+                            <span class="stat-number">{{ current_user.get_progress().completed_lessons if current_user.get_progress else 0 }}</span>
+                            <span class="stat-label">Пройдено уроков</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card text-center">
+                            <div class="feature-icon mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem; background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 255, 136, 0.1));">
+                                <i class="bi bi-key" style="color: var(--cyber-accent);"></i>
+                            </div>
+                            <span class="stat-number">{{ current_user.get_progress().password_score if current_user.get_progress else 0 }}</span>
+                            <span class="stat-label">Очков паролей</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card text-center">
+                            <div class="feature-icon mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem; background: linear-gradient(135deg, rgba(255, 159, 67, 0.15), rgba(255, 159, 67, 0.1));">
+                                <i class="bi bi-lock" style="color: var(--cyber-warning);"></i>
+                            </div>
+                            <span class="stat-number">{{ current_user.get_progress().encryption_usage if current_user.get_progress else 0 }}</span>
+                            <span class="stat-label">Шифрований</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Прогресс по курсам -->
                 <div class="mt-4">
-                    <h5 class="cyber-text mb-3">🏆 Достижения</h5>
-                    <div class="cyber-achievements">
-                        <div class="achievement-item">
-                            <i class="bi bi-trophy text-warning me-2"></i>
-                            <span>Новичок кибербезопасности</span>
+                    <h6 class="cyber-text-bright mb-3">Прогресс по курсам</h6>
+                    <div class="progress-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="cyber-subtext">Основы кибербезопасности</span>
+                            <span class="cyber-text-bright fw-bold">65%</span>
                         </div>
-                        <div class="achievement-item">
-                            <i class="bi bi-trophy text-secondary me-2"></i>
-                            <span>Первый урок пройден</span>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 65%"></div>
                         </div>
-                        <div class="achievement-item text-muted">
-                            <i class="bi bi-trophy me-2"></i>
-                            <span>Мастер шифрования (скрыто)</span>
+                    </div>
+                    <div class="progress-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="cyber-subtext">Этичный хакинг</span>
+                            <span class="cyber-text-bright fw-bold">30%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="cyber-subtext">Сетевая безопасность</span>
+                            <span class="cyber-text-bright fw-bold">15%</span>
+                        </div>
+                        <div class="cyber-progress">
+                            <div class="cyber-progress-bar" style="width: 15%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Достижения -->
+            <div class="cyber-card p-4 mb-4 fade-in-up" style="animation-delay: 0.2s;">
+                <h4 class="cyber-text-bright mb-4">
+                    <i class="bi bi-trophy me-2"></i>Достижения
+                </h4>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="achievement-card" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), transparent); border: 2px solid var(--cyber-warning);">
+                            <div class="achievement-icon" style="color: var(--cyber-warning);">
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <div class="achievement-content">
+                                <h6 class="cyber-text-bright mb-1">Новичок кибербезопасности</h6>
+                                <p class="cyber-subtext small mb-0">Пройдите первый урок</p>
+                            </div>
+                            <div class="achievement-badge">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="achievement-card" style="background: linear-gradient(135deg, rgba(0, 168, 255, 0.1), transparent); border: 2px solid var(--cyber-primary);">
+                            <div class="achievement-icon" style="color: var(--cyber-primary);">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <div class="achievement-content">
+                                <h6 class="cyber-text-bright mb-1">Первый урок пройден</h6>
+                                <p class="cyber-subtext small mb-0">Завершите вводный модуль</p>
+                            </div>
+                            <div class="achievement-badge">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="achievement-card locked">
+                            <div class="achievement-icon">
+                                <i class="bi bi-lock"></i>
+                            </div>
+                            <div class="achievement-content">
+                                <h6 class="cyber-subtext mb-1">Мастер шифрования</h6>
+                                <p class="cyber-subtext small mb-0">Используйте все алгоритмы шифрования</p>
+                            </div>
+                            <div class="achievement-badge">
+                                <i class="bi bi-lock-fill text-muted"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="achievement-card locked">
+                            <div class="achievement-icon">
+                                <i class="bi bi-lightning-charge"></i>
+                            </div>
+                            <div class="achievement-content">
+                                <h6 class="cyber-subtext mb-1">Эксперт DDoS</h6>
+                                <p class="cyber-subtext small mb-0">Пройдите все симуляции атак</p>
+                            </div>
+                            <div class="achievement-badge">
+                                <i class="bi bi-lock-fill text-muted"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Недавняя активность -->
+            <div class="cyber-card p-4 fade-in-up" style="animation-delay: 0.3s;">
+                <h4 class="cyber-text-bright mb-4">
+                    <i class="bi bi-clock-history me-2"></i>Недавняя активность
+                </h4>
+                
+                <div class="activity-timeline">
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="cyber-text-bright mb-1">Завершен урок "Основы сетевой безопасности"</h6>
+                                    <p class="cyber-subtext mb-0">Курс: Основы кибербезопасности</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">2 часа назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-key text-cyber-accent"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="cyber-text-bright mb-1">Сгенерирован сложный пароль</h6>
+                                    <p class="cyber-subtext mb-0">Длина: 16 символов</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">Вчера, 14:30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-lock text-cyber-warning"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="cyber-text-bright mb-1">Зашифрован текст AES-256</h6>
+                                    <p class="cyber-subtext mb-0">Длина текста: 245 символов</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">2 дня назад</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -71,4 +283,226 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Стили для профиля */
+    .cyber-avatar {
+        position: relative;
+    }
+
+    .user-meta {
+        border-top: 1px solid var(--cyber-border);
+        padding-top: 1rem;
+    }
+
+    .achievement-card {
+        background: var(--cyber-bg-card-light);
+        border: 2px solid var(--cyber-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .achievement-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--cyber-shadow-soft);
+    }
+
+    .achievement-card.locked {
+        opacity: 0.6;
+        filter: grayscale(0.8);
+    }
+
+    .achievement-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        background: rgba(0, 168, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .achievement-card.locked .achievement-icon {
+        background: rgba(160, 160, 192, 0.1);
+    }
+
+    .achievement-content {
+        flex-grow: 1;
+    }
+
+    .achievement-badge {
+        flex-shrink: 0;
+        font-size: 1.25rem;
+    }
+
+    .progress-item {
+        margin-bottom: 1.5rem;
+    }
+
+    .cyber-progress {
+        height: 8px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid var(--cyber-border);
+    }
+
+    .cyber-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+        border-radius: 6px;
+        transition: width 0.8s ease;
+        position: relative;
+    }
+
+    .cyber-progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    .activity-timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+    .activity-timeline::before {
+        content: '';
+        position: absolute;
+        left: 0.5rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, var(--cyber-primary), var(--cyber-accent));
+        border-radius: 1px;
+    }
+
+    .activity-item {
+        position: relative;
+        padding: 1rem 0;
+    }
+
+    .activity-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .activity-item::before {
+        content: '';
+        position: absolute;
+        left: -2rem;
+        top: 1.5rem;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--cyber-primary);
+        border: 2px solid var(--cyber-darker);
+        z-index: 2;
+    }
+
+    .activity-content {
+        background: var(--cyber-bg-card-light);
+        border: 1px solid var(--cyber-border);
+        border-radius: 10px;
+        padding: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .activity-item:hover .activity-content {
+        border-color: var(--cyber-primary);
+        transform: translateX(5px);
+    }
+
+    .activity-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        background: rgba(0, 168, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    .activity-time {
+        flex-shrink: 0;
+    }
+
+    @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .activity-timeline {
+            padding-left: 1.5rem;
+        }
+        
+        .activity-item::before {
+            left: -1.5rem;
+        }
+        
+        .achievement-card {
+            flex-direction: column;
+            text-align: center;
+            gap: 0.75rem;
+        }
+        
+        .achievement-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Анимация прогресс-баров
+        const progressBars = document.querySelectorAll('.cyber-progress-bar');
+        progressBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 500);
+        });
+
+        // Интерактивные достижения
+        const achievementCards = document.querySelectorAll('.achievement-card');
+        achievementCards.forEach(card => {
+            if (!card.classList.contains('locked')) {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-3px)';
+                    }, 150);
+                });
+            }
+        });
+
+        // Параллакс эффект для героя
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.cyber-hero');
+            if (hero) {
+                hero.style.backgroundPositionY = `${scrolled * 0.5}px`;
+            }
+        });
+    });
+</script>
 {% endblock %}
+[file content end]
