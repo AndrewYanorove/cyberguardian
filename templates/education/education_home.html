@@ -109,10 +109,10 @@
 
         /* ===== HERO SECTION ===== */
         .learning-hero {
-            background: linear-gradient(135deg, 
-                rgba(10, 10, 15, 0.95) 0%, 
-                rgba(26, 26, 46, 0.9) 50%, 
-                rgba(10, 20, 40, 0.85) 100%),
+            background: linear-gradient(135deg,
+                    rgba(10, 10, 15, 0.95) 0%,
+                    rgba(26, 26, 46, 0.9) 50%,
+                    rgba(10, 20, 40, 0.85) 100%),
                 url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300a8ff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
             padding: 5rem 0 4rem;
             position: relative;
@@ -127,7 +127,7 @@
             right: 0;
             bottom: 0;
             background: radial-gradient(circle at 20% 80%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%);
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%);
             pointer-events: none;
         }
 
@@ -137,8 +137,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
         }
 
         /* ===== LAYOUT ===== */
@@ -190,10 +197,10 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(0, 168, 255, 0.1), 
-                transparent);
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(0, 168, 255, 0.1),
+                    transparent);
             transition: left 0.6s ease;
         }
 
@@ -667,8 +674,13 @@
         }
 
         @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
         }
 
         /* ===== COURSE GRID ===== */
@@ -754,33 +766,33 @@
             .learning-hero {
                 padding: 3rem 0;
             }
-            
+
             .cyber-title {
                 font-size: 2.5rem;
             }
-            
+
             .section-spacing {
                 padding: 2rem 0;
             }
-            
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
+
             .quick-actions-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .pathway-item {
                 flex-direction: column;
                 text-align: center;
             }
-            
+
             .pathway-icon {
                 margin-right: 0;
                 margin-bottom: 1rem;
             }
-            
+
             .pathway-progress {
                 margin-top: 1rem;
                 width: 100%;
@@ -791,15 +803,15 @@
             .container-max {
                 padding: 0 15px;
             }
-            
+
             .cyber-card {
                 padding: 1.5rem;
             }
-            
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .course-grid {
                 grid-template-columns: 1fr;
             }
@@ -811,6 +823,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -823,7 +836,10 @@
 
         /* ===== ACCESSIBILITY ===== */
         @media (prefers-reduced-motion: reduce) {
-            *, ::before, ::after {
+
+            *,
+            ::before,
+            ::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
@@ -865,8 +881,9 @@
                         <i class="bi bi-book me-3"></i>Центр обучения CyberGuardian
                     </h1>
                     <p class="cyber-lead mb-4">
-                        Освойте современные навыки кибербезопасности через практические курсы и реальные сценарии. 
-                        Станьте востребованным специалистом в области информационной безопасности под руководством экспертов индустрии.
+                        Освойте современные навыки кибербезопасности через практические курсы и реальные сценарии.
+                        Станьте востребованным специалистом в области информационной безопасности под руководством
+                        экспертов индустрии.
                     </p>
                     <div class="d-flex flex-wrap gap-3 mb-4">
                         <a href="#featured-courses" class="btn btn-cyber btn-lg">
@@ -879,7 +896,7 @@
                             <i class="bi bi-compass me-2"></i>Пути обучения
                         </a>
                     </div>
-                    
+
                     <!-- Quick Stats -->
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -900,13 +917,13 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-lg-4 text-center">
-                    <div class="hero-graphic">
-                        <i class="bi bi-shield-lock" style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.9;"></i>
-                    </div>
+                    <i class="bi bi-shield-lock"
+                        style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.9;"></i>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 
@@ -916,7 +933,7 @@
             <h2 class="section-title cyber-title-primary">
                 <i class="bi bi-lightning me-2"></i>Быстрые действия
             </h2>
-            
+
             <div class="quick-actions-grid">
                 <div class="quick-action-card" onclick="location.href='{{ url_for('education.certificates') }}'">
                     <div class="quick-action-icon">
@@ -928,7 +945,7 @@
                         <span class="cyber-badge cyber-badge-accent">3 сертификата</span>
                     </div>
                 </div>
-                
+
                 <div class="quick-action-card" onclick="location.href='{{ url_for('education.achievements') }}'">
                     <div class="quick-action-icon">
                         <i class="bi bi-trophy"></i>
@@ -939,7 +956,7 @@
                         <span class="cyber-badge cyber-badge-warning">12 достижений</span>
                     </div>
                 </div>
-                
+
                 <div class="quick-action-card" onclick="showRecentActivity()">
                     <div class="quick-action-icon">
                         <i class="bi bi-clock-history"></i>
@@ -950,7 +967,7 @@
                         <span class="cyber-badge">15 активностей</span>
                     </div>
                 </div>
-                
+
                 <div class="quick-action-card" onclick="showLearningStats()">
                     <div class="quick-action-icon">
                         <i class="bi bi-graph-up"></i>
@@ -977,19 +994,22 @@
 
             <div class="course-grid">
                 {% for course in featured_courses %}
-                <div class="course-card {% if loop.first %}featured{% endif %} fade-in-up" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                <div class="course-card {% if loop.first %}featured{% endif %} fade-in-up"
+                    style="animation-delay: {{ loop.index0 * 0.1 }}s;">
                     <div class="course-icon">
                         <i class="bi bi-{{ course.icon }}"></i>
                     </div>
-                    
+
                     <div class="course-content">
                         <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
                         <p class="cyber-text mb-4">{{ course.description }}</p>
-                        
+
                         <div class="course-meta d-flex flex-wrap gap-2 mb-4">
                             <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                <i class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
-                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty == 'intermediate' else 'Продвинутый' }}
+                                <i
+                                    class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
+                                == 'intermediate' else 'Продвинутый' }}
                             </span>
                             <span class="cyber-badge">
                                 <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
@@ -1011,7 +1031,8 @@
 
                         <div class="d-grid">
                             <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
-                                <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
+                                <i
+                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
                                 {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
                             </a>
                         </div>
@@ -1026,12 +1047,13 @@
             <h2 class="section-title cyber-title-primary">
                 <i class="bi bi-signpost-2 me-2"></i>Пути обучения
             </h2>
-            
+
             <div class="pathway-card">
                 <p class="cyber-lead mb-4">
-                    Выберите специализацию и следуйте структурированному пути обучения для достижения ваших карьерных целей в кибербезопасности.
+                    Выберите специализацию и следуйте структурированному пути обучения для достижения ваших карьерных
+                    целей в кибербезопасности.
                 </p>
-                
+
                 <div class="pathway-list">
                     <div class="pathway-item">
                         <div class="pathway-icon">
@@ -1040,7 +1062,8 @@
                         <div class="pathway-content flex-grow-1">
                             <h4 class="cyber-text-bright mb-2">Начинающий специалист</h4>
                             <p class="cyber-subtext mb-0">
-                                Основы кибербезопасности для новичков. Идеально для начала карьеры в ИБ и понимания фундаментальных концепций.
+                                Основы кибербезопасности для новичков. Идеально для начала карьеры в ИБ и понимания
+                                фундаментальных концепций.
                             </p>
                         </div>
                         <div class="pathway-progress">
@@ -1050,7 +1073,7 @@
                             <small class="cyber-subtext">65% завершено</small>
                         </div>
                     </div>
-                    
+
                     <div class="pathway-item">
                         <div class="pathway-icon">
                             <i class="bi bi-bug"></i>
@@ -1058,7 +1081,8 @@
                         <div class="pathway-content flex-grow-1">
                             <h4 class="cyber-text-bright mb-2">Этичный хакинг</h4>
                             <p class="cyber-subtext mb-0">
-                                Методы тестирования на проникновение и поиска уязвимостей. Станьте сертифицированным этичным хакером.
+                                Методы тестирования на проникновение и поиска уязвимостей. Станьте сертифицированным
+                                этичным хакером.
                             </p>
                         </div>
                         <div class="pathway-progress">
@@ -1068,7 +1092,7 @@
                             <small class="cyber-subtext">30% завершено</small>
                         </div>
                     </div>
-                    
+
                     <div class="pathway-item">
                         <div class="pathway-icon">
                             <i class="bi bi-search"></i>
@@ -1076,7 +1100,8 @@
                         <div class="pathway-content flex-grow-1">
                             <h4 class="cyber-text-bright mb-2">Цифровая криминалистика</h4>
                             <p class="cyber-subtext mb-0">
-                                Расследование киберинцидентов и сбор цифровых доказательств. Освойте инструменты и методики расследований.
+                                Расследование киберинцидентов и сбор цифровых доказательств. Освойте инструменты и
+                                методики расследований.
                             </p>
                         </div>
                         <div class="pathway-progress">
@@ -1086,7 +1111,7 @@
                             <small class="cyber-subtext">15% завершено</small>
                         </div>
                     </div>
-                    
+
                     <div class="pathway-item">
                         <div class="pathway-icon">
                             <i class="bi bi-cloud"></i>
@@ -1114,14 +1139,14 @@
                 <h2 class="section-title cyber-title-primary">
                     <i class="bi bi-collection me-2"></i>Все курсы
                 </h2>
-                
+
                 <!-- Search and Filters -->
-                <div class="d-flex gap-3 align-items-center">
-                    <div class="search-box">
+                <div class="d-flex gap-3 d-flex align-items-baseline">
+                    <div class="search-box flex-grow-1">
                         <i class="bi bi-search search-icon"></i>
                         <input type="text" class="search-input" placeholder="Поиск курсов..." id="courseSearch">
                     </div>
-                    <button class="btn btn-cyber-outline" onclick="toggleFilters()">
+                    <button class="btn btn-cyber-outline filters-btn flex-shrink-0" onclick="toggleFilters()">
                         <i class="bi bi-funnel me-2"></i>Фильтры
                     </button>
                 </div>
@@ -1172,21 +1197,21 @@
 
             <div class="course-grid" id="coursesContainer">
                 {% for course in courses %}
-                <div class="course-card fade-in-up" data-course-id="{{ course.id }}" 
-                     data-difficulty="{{ course.difficulty }}" 
-                     data-progress="{{ course.progress }}"
-                     data-rating="{{ course.rating }}">
+                <div class="course-card fade-in-up" data-course-id="{{ course.id }}"
+                    data-difficulty="{{ course.difficulty }}" data-progress="{{ course.progress }}"
+                    data-rating="{{ course.rating }}">
                     <div class="course-icon">
                         <i class="bi bi-{{ course.icon }}"></i>
                     </div>
-                    
+
                     <div class="course-content">
                         <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
                         <p class="cyber-text mb-4">{{ course.description }}</p>
-                        
+
                         <div class="course-meta d-flex flex-wrap gap-2 mb-4">
                             <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty == 'intermediate' else 'Продвинутый' }}
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
+                                == 'intermediate' else 'Продвинутый' }}
                             </span>
                             <span class="cyber-badge">
                                 <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
@@ -1207,9 +1232,10 @@
                         </div>
 
                         <div class="d-grid">
-                            <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
-                               class="btn {% if course.progress == 0 %}btn-cyber{% else %}btn-cyber-outline{% endif %}">
-                                <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2"></i>
+                            <a href="{{ url_for('education.course_page', course_id=course.id) }}"
+                                class="btn {% if course.progress == 0 %}btn-cyber{% else %}btn-cyber-outline{% endif %}">
+                                <i
+                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
                                 {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
                             </a>
                         </div>
@@ -1224,7 +1250,7 @@
             <h2 class="section-title cyber-title-primary">
                 <i class="bi bi-activity me-2"></i>Недавняя активность
             </h2>
-            
+
             <div class="cyber-card">
                 <div class="activity-timeline">
                     <div class="activity-item">
@@ -1235,7 +1261,8 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <h5 class="cyber-text-bright mb-1">Завершен урок "Основы сетевой безопасности"</h5>
-                                    <p class="cyber-subtext mb-0">Курс: Основы кибербезопасности • Результат теста: 92%</p>
+                                    <p class="cyber-subtext mb-0">Курс: Основы кибербезопасности • Результат теста: 92%
+                                    </p>
                                 </div>
                                 <div class="activity-time">
                                     <span class="cyber-badge">2 часа назад</span>
@@ -1243,7 +1270,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="activity-item">
                         <div class="activity-content">
                             <div class="d-flex align-items-center">
@@ -1260,7 +1287,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="activity-item">
                         <div class="activity-content">
                             <div class="d-flex align-items-center">
@@ -1277,7 +1304,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="activity-item">
                         <div class="activity-content">
                             <div class="d-flex align-items-center">
@@ -1294,7 +1321,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="activity-item">
                         <div class="activity-content">
                             <div class="d-flex align-items-center">
@@ -1312,7 +1339,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="text-center mt-4">
                     <button class="btn btn-cyber-outline" onclick="loadMoreActivity()">
                         <i class="bi bi-arrow-down me-2"></i>Загрузить еще
@@ -1326,7 +1353,7 @@
             <h2 class="section-title cyber-title-primary">
                 <i class="bi bi-calendar-event me-2"></i>Предстоящие дедлайны
             </h2>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="cyber-card">
@@ -1334,7 +1361,8 @@
                             <i class="bi bi-clock-history me-2 text-warning"></i>Ближайшие сроки
                         </h4>
                         <div class="deadline-list">
-                            <div class="deadline-item d-flex align-items-center justify-content-between p-3 border-bottom border-cyber">
+                            <div
+                                class="deadline-item d-flex align-items-center justify-content-between p-3 border-bottom border-cyber">
                                 <div>
                                     <h6 class="cyber-text-bright mb-1">Финальный экзамен</h6>
                                     <p class="cyber-subtext mb-0">Основы кибербезопасности</p>
@@ -1343,7 +1371,8 @@
                                     <span class="cyber-badge cyber-badge-warning">3 дня</span>
                                 </div>
                             </div>
-                            <div class="deadline-item d-flex align-items-center justify-content-between p-3 border-bottom border-cyber">
+                            <div
+                                class="deadline-item d-flex align-items-center justify-content-between p-3 border-bottom border-cyber">
                                 <div>
                                     <h6 class="cyber-text-bright mb-1">Практическое задание</h6>
                                     <p class="cyber-subtext mb-0">Анализ сетевого трафика</p>
@@ -1364,7 +1393,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-6">
                     <div class="cyber-card">
                         <h4 class="cyber-text-bright mb-3">
@@ -1432,24 +1461,24 @@
 
         // Filter tags functionality
         document.querySelectorAll('.filter-tag').forEach(tag => {
-            tag.addEventListener('click', function() {
+            tag.addEventListener('click', function () {
                 const filterType = this.getAttribute('data-filter').split('-')[0];
-                
+
                 // Remove active class from all tags of this type
                 document.querySelectorAll(`.filter-tag[data-filter^="${filterType}-"]`).forEach(t => {
                     t.classList.remove('active');
                 });
-                
+
                 // Add active class to clicked tag
                 this.classList.add('active');
-                
+
                 // Apply filters
                 applyFilters();
             });
         });
 
         // Search functionality
-        document.getElementById('courseSearch').addEventListener('input', function(e) {
+        document.getElementById('courseSearch').addEventListener('input', function (e) {
             applyFilters();
         });
 
@@ -1457,21 +1486,21 @@
             const searchTerm = document.getElementById('courseSearch').value.toLowerCase();
             const difficultyFilter = document.querySelector('.filter-tag[data-filter^="difficulty-"].active').getAttribute('data-filter').replace('difficulty-', '');
             const statusFilter = document.querySelector('.filter-tag[data-filter^="status-"].active').getAttribute('data-filter').replace('status-', '');
-            
+
             document.querySelectorAll('.course-card').forEach(card => {
                 const title = card.querySelector('h3').textContent.toLowerCase();
                 const description = card.querySelector('p').textContent.toLowerCase();
                 const difficulty = card.getAttribute('data-difficulty');
                 const progress = parseInt(card.getAttribute('data-progress'));
-                
+
                 let matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
                 let matchesDifficulty = difficultyFilter === 'all' || difficulty === difficultyFilter;
                 let matchesStatus = true;
-                
+
                 if (statusFilter === 'not-started') matchesStatus = progress === 0;
                 else if (statusFilter === 'in-progress') matchesStatus = progress > 0 && progress < 100;
                 else if (statusFilter === 'completed') matchesStatus = progress === 100;
-                
+
                 card.style.display = (matchesSearch && matchesDifficulty && matchesStatus) ? 'block' : 'none';
             });
         }
@@ -1541,7 +1570,7 @@
         });
 
         // Initialize animations
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Add fade-in animation to course cards
             const observerOptions = {
                 threshold: 0.1,
@@ -1566,9 +1595,9 @@
         });
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.ctrlKey || e.metaKey) {
-                switch(e.key) {
+                switch (e.key) {
                     case 'k':
                         e.preventDefault();
                         document.getElementById('courseSearch').focus();
@@ -1583,13 +1612,14 @@
 
         // Performance optimization
         let resizeTimer;
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
+            resizeTimer = setTimeout(function () {
                 // Recalculate any layout-dependent values
                 applyFilters();
             }, 250);
         });
     </script>
 </body>
+
 </html>
