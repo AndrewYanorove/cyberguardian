@@ -722,6 +722,322 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--cyber-accent);
         }
+
+            /* ===== MOBILE FIRST APPROACH ===== */
+        @media (max-width: 768px) {
+            .container-max {
+                padding: 0 15px;
+            }
+            
+            .cyber-header {
+                padding: 0.75rem 0;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .cyber-brand {
+                font-size: 1.25rem;
+            }
+            
+            .header-actions {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            
+            .cyber-badge {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+            
+            /* Боковое меню для мобильных */
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            /* Футер для мобильных */
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .cyber-hero {
+                padding: 5rem 0 2rem;
+            }
+            
+            .section-spacing {
+                padding: 1.5rem 0;
+            }
+            
+            .cyber-card {
+                padding: 1.25rem;
+                margin-bottom: 1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1.5rem;
+            }
+            
+            .btn-cyber,
+            .btn-cyber-outline,
+            .btn-cyber-danger {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ===== TOUCH-FRIENDLY IMPROVEMENTS ===== */
+        @media (hover: none) and (pointer: coarse) {
+            .btn-cyber:hover,
+            .btn-cyber-outline:hover,
+            .btn-cyber-danger:hover,
+            .feature-card:hover,
+            .cyber-card:hover {
+                transform: none;
+            }
+            
+            .feature-card:active,
+            .cyber-card:active {
+                transform: scale(0.98);
+            }
+            
+            /* Увеличиваем зоны клика для тач-устройств */
+            .sidebar-item {
+                padding: 1.25rem 1rem;
+                min-height: 60px;
+            }
+            
+            .social-link {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* ===== IMPROVED RESPONSIVE TYPOGRAPHY ===== */
+        @media (max-width: 768px) {
+            .cyber-title {
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+            
+            .cyber-lead {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            
+            .display-3 {
+                font-size: 2.5rem !important;
+            }
+            
+            .section-title {
+                font-size: 1.75rem;
+                margin-bottom: 2rem;
+            }
+            
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* ===== SAFE AREA SUPPORT FOR NOTCH DEVICES ===== */
+        @supports(padding: max(0px)) {
+            .container-max {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+            }
+            
+            .cyber-hero {
+                padding-top: max(6rem, env(safe-area-inset-top));
+            }
+        }
+
+        /* ===== FIX HEADER OVERLAP ISSUE ===== */
+        @media (max-width: 768px) {
+            /* Увеличиваем верхний отступ для основного контента */
+            main {
+                margin-top: 80px !important;
+            }
+            
+            /* Исправляем контейнер для flash сообщений */
+            .container-max[style*="margin-top: 100px"] {
+                margin-top: 90px !important;
+            }
+            
+            /* Улучшаем хедер для мобильных */
+            .cyber-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                padding: 0.5rem 0;
+                background: rgba(10, 10, 15, 0.98);
+                backdrop-filter: blur(20px);
+            }
+            
+            /* Делаем хедер компактнее */
+            .header-container {
+                min-height: 60px;
+            }
+            
+            /* Уменьшаем логотип */
+            .cyber-brand {
+                font-size: 1.1rem;
+            }
+            
+            .cyber-brand-icon {
+                font-size: 1.4rem;
+            }
+            
+            /* Улучшаем кнопки входа/регистрации */
+            .header-actions {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 8px;
+                margin-top: 0;
+                width: auto;
+            }
+            
+            .header-actions .btn-cyber,
+            .header-actions .btn-cyber-outline {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+                white-space: nowrap;
+            }
+            
+            .header-actions .btn-cyber i,
+            .header-actions .btn-cyber-outline i {
+                margin-right: 4px;
+            }
+            
+            /* Скрываем текст "Меню" на очень маленьких экранах */
+            @media (max-width: 400px) {
+                .menu-text {
+                    display: none;
+                }
+                
+                .navbar-toggler.cyber-toggler {
+                    padding: 0.4rem 0.6rem;
+                }
+            }
+            
+            /* Уменьшаем бейдж статуса */
+            .cyber-badge {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+                display: none; /* Можно скрыть на очень маленьких экранах */
+            }
+        }
+
+        @media (max-width: 576px) {
+            /* Еще более компактный хедер для маленьких экранов */
+            .cyber-header {
+                padding: 0.4rem 0;
+            }
+            
+            .header-container {
+                min-height: 50px;
+            }
+            
+            /* Упрощаем кнопки авторизации */
+            .header-actions .btn-cyber-outline,
+            .header-actions .btn-cyber {
+                min-width: auto;
+                padding: 0.4rem 0.7rem;
+            }
+            
+            .header-actions .btn-cyber span,
+            .header-actions .btn-cyber-outline span {
+                display: none; /* Скрываем текст, оставляем только иконки */
+            }
+            
+            .header-actions .btn-cyber i,
+            .header-actions .btn-cyber-outline i {
+                margin-right: 0;
+                font-size: 1rem;
+            }
+            
+            /* Показываем бейдж статуса только при необходимости */
+            .cyber-badge {
+                display: none;
+            }
+        }
+
+        /* ===== SAFE AREA FOR NOTCHED PHONES ===== */
+        @supports(padding: max(0px)) {
+            .cyber-header {
+                padding-top: max(0.5rem, env(safe-area-inset-top));
+                padding-bottom: max(0.5rem, env(safe-area-inset-top));
+            }
+            
+            main {
+                padding-top: env(safe-area-inset-top);
+            }
+        }
+
+        /* ===== FIX DROPDOWN OVERLAP ===== */
+        @media (max-width: 768px) {
+            .dropdown-menu {
+                position: fixed !important;
+                top: 70px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                width: 90% !important;
+                max-width: 300px;
+                z-index: 1001;
+            }
+            
+            .dropdown-menu.show {
+                display: block !important;
+            }
+        }
+
+        /* ===== IMPROVE TOUCH TARGETS ===== */
+        @media (max-width: 768px) {
+            .navbar-toggler.cyber-toggler,
+            .header-actions .btn-cyber,
+            .header-actions .btn-cyber-outline {
+                min-height: 44px; /* Минимальный размер для тач-интерфейса */
+                min-width: 44px;
+            }
+        }
     </style>
 
     <!-- Preload критических ресурсов -->
