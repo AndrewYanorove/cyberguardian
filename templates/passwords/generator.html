@@ -1,1269 +1,719 @@
-{% extends "base.html" %}
-
-{% block title %}Генератор паролей - CyberGuardian{% endblock %}
-
-{% block extra_css %}
-<style>
-:root {
-    --cyber-glow: 0 0 10px rgba(0, 255, 136, 0.5);
-    --cyber-glow-strong: 0 0 20px rgba(0, 255, 136, 0.8);
-    --pulse-animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { box-shadow: var(--cyber-glow); }
-    50% { box-shadow: var(--cyber-glow-strong); }
-    100% { box-shadow: var(--cyber-glow); }
-}
-
-@keyframes slideIn {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-.password-section {
-    background: rgba(15, 15, 20, 0.95);
-    border: 2px solid var(--cyber-border);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    backdrop-filter: blur(15px);
-    animation: slideIn 0.6s ease-out;
-    position: relative;
-    overflow: hidden;
-    height: fit-content;
-}
-
-.password-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--cyber-primary), transparent);
-    animation: scanline 3s linear infinite;
-}
-
-@keyframes scanline {
-    0% { left: -100%; }
-    100% { left: 100%; }
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.section-title {
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.password-result {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-    margin-top: 1.5rem;
-}
-
-#generated-password {
-    flex: 1;
-    padding: 1rem 1.25rem;
-    background: rgba(25, 25, 35, 0.9);
-    border: 2px solid var(--cyber-border);
-    border-radius: 12px;
-    color: var(--cyber-primary);
-    font-family: 'Courier New', monospace;
-    font-size: 1.1rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    height: 54px;
-    display: flex;
-    align-items: center;
-}
-
-#generated-password:focus {
-    border-color: var(--cyber-primary);
-    box-shadow: var(--cyber-glow);
-}
-
-.strength-visualization {
-    margin: 1.5rem 0;
-}
-
-.strength-meter {
-    width: 100%;
-    height: 16px;
-    background: linear-gradient(90deg, #dc3545, #ffc107, #28a745, #007bff, #6f42c1);
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
-.strength-fill {
-    height: 100%;
-    width: 0%;
-    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    position: relative;
-    overflow: hidden;
-}
-
-.strength-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--cyber-subtext);
-}
-
-.strength-label {
-    flex: 1;
-    text-align: center;
-}
-
-.entropy-display {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin: 1.5rem 0;
-    background: linear-gradient(135deg, #00ff88, #00ccff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.crack-time {
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: var(--cyber-primary);
-    padding: 0.875rem;
-    border: 2px solid;
-    border-radius: 10px;
-    margin: 1rem 0;
-    background: rgba(0, 255, 136, 0.1);
-}
-
-.options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 0.875rem;
-    margin: 1.5rem 0;
-}
-
-.option-card {
-    background: rgba(30, 30, 40, 0.8);
-    border: 2px solid var(--cyber-border);
-    border-radius: 12px;
-    padding: 1.25rem 0.75rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.option-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--cyber-primary);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
-
-.option-card:hover {
-    border-color: var(--cyber-primary);
-    transform: translateY(-3px);
-}
-
-.option-card.active {
-    background: rgba(0, 255, 136, 0.1);
-    border-color: var(--cyber-primary);
-}
-
-.option-card.active::before {
-    transform: scaleX(1);
-}
-
-.option-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.option-card h5 {
-    margin: 0;
-    font-size: 1rem;
-}
-
-.option-card small {
-    font-size: 0.75rem;
-    line-height: 1.2;
-}
-
-.advanced-options {
-    background: rgba(25, 25, 35, 0.8);
-    border-radius: 10px;
-    padding: 1.25rem;
-    margin-top: 1rem;
-    border: 1px solid var(--cyber-border);
-}
-
-.advanced-title {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.option-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.option-toggle:last-child {
-    border-bottom: none;
-}
-
-.toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-}
-
-/* Стили для переключателей */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 22px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #555;
-    transition: .4s;
-    border-radius: 22px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: var(--cyber-primary);
-}
-
-input:checked + .slider:before {
-    transform: translateX(22px);
-}
-
-/* Анимации для фидбека */
-.feedback-item {
-    padding: 0.875rem;
-    margin: 0.5rem 0;
-    background: rgba(30, 30, 40, 0.8);
-    border-radius: 8px;
-    border-left: 4px solid;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.feedback-item.good {
-    border-left-color: #28a745;
-    background: rgba(40, 167, 69, 0.1);
-}
-
-.feedback-item.warning {
-    border-left-color: #ffc107;
-    background: rgba(255, 193, 7, 0.1);
-}
-
-.feedback-item.critical {
-    border-left-color: #dc3545;
-    background: rgba(220, 53, 69, 0.1);
-}
-
-/* Стили для деталей анализа */
-.analysis-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
-    margin: 1.25rem 0;
-}
-
-.analysis-card {
-    background: rgba(30, 30, 40, 0.8);
-    border: 1px solid var(--cyber-border);
-    border-radius: 8px;
-    padding: 0.875rem 0.5rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 70px;
-}
-
-.analysis-value {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: var(--cyber-primary);
-    margin-bottom: 0.25rem;
-}
-
-.analysis-label {
-    font-size: 0.7rem;
-    color: var(--cyber-subtext);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Стили для кнопок */
-.btn-cyber-glow {
-    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary));
-    border: none;
-    color: black;
-    font-weight: bold;
-    padding: 1rem 1.5rem;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    width: 100%;
-    font-size: 1rem;
-    margin: 1rem 0;
-}
-
-.btn-cyber-glow:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
-}
-
-.btn-group {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.btn-cyber, .btn-cyber-outline {
-    padding: 0.75rem;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    height: 54px;
-}
-
-.quick-options {
-    margin-top: 1rem;
-}
-
-.quick-buttons {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.quick-buttons .btn {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-    border-radius: 6px;
-}
-
-/* Группа ввода пароля */
-.password-input-group {
-    position: relative;
-    margin-bottom: 1rem;
-}
-
-.password-input-group .form-control {
-    padding-right: 50px;
-    height: 54px;
-    font-size: 1rem;
-}
-
-.toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--cyber-subtext);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: color 0.3s ease;
-}
-
-.toggle-password:hover {
-    color: var(--cyber-primary);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* Статистика */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.stat-card {
-    background: rgba(30, 30, 40, 0.6);
-    border: 1px solid var(--cyber-border);
-    border-radius: 10px;
-    padding: 1.25rem;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-    border-color: var(--cyber-primary);
-    transform: translateY(-2px);
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.stat-label {
-    font-size: 0.8rem;
-    color: var(--cyber-subtext);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Адаптивность */
-@media (max-width: 1200px) {
-    .options-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор паролей - CyberGuardian</title>
     
-    .analysis-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+    <style>
+    :root {
+        --cyber-primary: #00ff88;
+        --cyber-secondary: #00ccff;
+        --cyber-accent: #ff0088;
+        --cyber-border: #00ff88;
+        --cyber-subtext: #888;
+        --cyber-bg: #0a0a0f;
+        --cyber-card-bg: rgba(15, 15, 20, 0.95);
+        --cyber-text: #ffffff;
+        
+        --cyber-glow: 0 0 10px rgba(0, 255, 136, 0.5);
+        --cyber-glow-strong: 0 0 20px rgba(0, 255, 136, 0.8);
+        --pulse-animation: pulse 2s infinite;
     }
-}
 
-@media (max-width: 768px) {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: var(--cyber-bg);
+        color: var(--cyber-text);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 20%),
+            radial-gradient(circle at 90% 80%, rgba(0, 204, 255, 0.05) 0%, transparent 20%),
+            radial-gradient(circle at 50% 50%, rgba(255, 0, 136, 0.03) 0%, transparent 30%);
+    }
+
+    .cyber-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: var(--cyber-glow); }
+        50% { box-shadow: var(--cyber-glow-strong); }
+        100% { box-shadow: var(--cyber-glow); }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes scanline {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .cyber-text {
+        color: var(--cyber-text);
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+    }
+
+    .glow-text {
+        text-shadow: 0 0 15px var(--cyber-primary),
+                     0 0 25px var(--cyber-primary),
+                     0 0 35px var(--cyber-primary);
+    }
+
+    .text-cyber-primary { color: var(--cyber-primary) !important; }
+    .text-cyber-secondary { color: var(--cyber-secondary) !important; }
+    .text-cyber-accent { color: var(--cyber-accent) !important; }
+    .cyber-subtext { color: var(--cyber-subtext) !important; }
+
+    .bg-cyber-primary { background-color: var(--cyber-primary) !important; }
+    .bg-cyber-secondary { background-color: var(--cyber-secondary) !important; }
+
     .password-section {
-        padding: 1.5rem;
+        background: var(--cyber-card-bg);
+        border: 2px solid var(--cyber-border);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(15px);
+        animation: slideIn 0.6s ease-out;
+        position: relative;
+        overflow: hidden;
+        height: fit-content;
+    }
+
+    .password-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--cyber-primary), transparent);
+        animation: scanline 3s linear infinite;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .section-title {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .password-result {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        margin-top: 1.5rem;
+    }
+
+    #generated-password {
+        flex: 1;
+        padding: 1rem 1.25rem;
+        background: rgba(25, 25, 35, 0.9);
+        border: 2px solid var(--cyber-border);
+        border-radius: 12px;
+        color: var(--cyber-primary);
+        font-family: 'Courier New', monospace;
+        font-size: 1.1rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        height: 54px;
+        display: flex;
+        align-items: center;
+    }
+
+    #generated-password:focus {
+        border-color: var(--cyber-primary);
+        box-shadow: var(--cyber-glow);
+    }
+
+    .strength-visualization {
+        margin: 1.5rem 0;
+    }
+
+    .strength-meter {
+        width: 100%;
+        height: 16px;
+        background: linear-gradient(90deg, #dc3545, #ffc107, #28a745, #007bff, #6f42c1);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .strength-fill {
+        height: 100%;
+        width: 0%;
+        transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .strength-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--cyber-subtext);
+    }
+
+    .strength-label {
+        flex: 1;
+        text-align: center;
+    }
+
+    .entropy-display {
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin: 1.5rem 0;
+        background: linear-gradient(135deg, #00ff88, #00ccff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .crack-time {
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--cyber-primary);
+        padding: 0.875rem;
+        border: 2px solid;
+        border-radius: 10px;
+        margin: 1rem 0;
+        background: rgba(0, 255, 136, 0.1);
+    }
+
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.875rem;
+        margin: 1.5rem 0;
+    }
+
+    .option-card {
+        background: rgba(30, 30, 40, 0.8);
+        border: 2px solid var(--cyber-border);
+        border-radius: 12px;
+        padding: 1.25rem 0.75rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .option-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--cyber-primary);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .option-card:hover {
+        border-color: var(--cyber-primary);
+        transform: translateY(-3px);
+    }
+
+    .option-card.active {
+        background: rgba(0, 255, 136, 0.1);
+        border-color: var(--cyber-primary);
+    }
+
+    .option-card.active::before {
+        transform: scaleX(1);
+    }
+
+    .option-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .option-card h5 {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .option-card small {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+
+    .advanced-options {
+        background: rgba(25, 25, 35, 0.8);
+        border-radius: 10px;
+        padding: 1.25rem;
+        margin-top: 1rem;
+        border: 1px solid var(--cyber-border);
+    }
+
+    .advanced-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .option-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .option-toggle:last-child {
+        border-bottom: none;
+    }
+
+    .toggle-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* Стили для переключателей */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 22px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #555;
+        transition: .4s;
+        border-radius: 22px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: var(--cyber-primary);
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
+
+    /* Анимации для фидбека */
+    .feedback-item {
+        padding: 0.875rem;
+        margin: 0.5rem 0;
+        background: rgba(30, 30, 40, 0.8);
+        border-radius: 8px;
+        border-left: 4px solid;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .feedback-item.good {
+        border-left-color: #28a745;
+        background: rgba(40, 167, 69, 0.1);
+    }
+
+    .feedback-item.warning {
+        border-left-color: #ffc107;
+        background: rgba(255, 193, 7, 0.1);
+    }
+
+    .feedback-item.critical {
+        border-left-color: #dc3545;
+        background: rgba(220, 53, 69, 0.1);
+    }
+
+    /* Стили для деталей анализа */
+    .analysis-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        margin: 1.25rem 0;
+    }
+
+    .analysis-card {
+        background: rgba(30, 30, 40, 0.8);
+        border: 1px solid var(--cyber-border);
+        border-radius: 8px;
+        padding: 0.875rem 0.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 70px;
+    }
+
+    .analysis-value {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--cyber-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .analysis-label {
+        font-size: 0.7rem;
+        color: var(--cyber-subtext);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Стили для кнопок */
+    .btn-cyber-glow {
+        background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary));
+        border: none;
+        color: black;
+        font-weight: bold;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-size: 1rem;
+        margin: 1rem 0;
+    }
+
+    .btn-cyber-glow:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-cyber, .btn-cyber-outline {
+        padding: 0.75rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 54px;
+        border: 2px solid var(--cyber-primary);
+        background: var(--cyber-primary);
+        color: black;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-cyber-outline {
+        background: transparent;
+        color: var(--cyber-primary);
+    }
+
+    .btn-cyber:hover, .btn-cyber-outline:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--cyber-glow);
+    }
+
+    .quick-options {
+        margin-top: 1rem;
+    }
+
+    .quick-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .quick-buttons .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        border-radius: 6px;
+        border: 1px solid var(--cyber-border);
+        background: transparent;
+        color: var(--cyber-primary);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .quick-buttons .btn:hover {
+        background: rgba(0, 255, 136, 0.1);
+        transform: translateY(-1px);
+    }
+
+    /* Группа ввода пароля */
+    .password-input-group {
+        position: relative;
         margin-bottom: 1rem;
     }
-    
-    .section-header {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: flex-start;
+
+    .cyber-input {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        background: rgba(25, 25, 35, 0.9);
+        border: 2px solid var(--cyber-border);
+        border-radius: 12px;
+        color: var(--cyber-text);
+        font-size: 1rem;
+        transition: all 0.3s ease;
     }
-    
-    .options-grid {
-        grid-template-columns: 1fr;
+
+    .cyber-input:focus {
+        outline: none;
+        border-color: var(--cyber-primary);
+        box-shadow: var(--cyber-glow);
     }
-    
-    .analysis-grid {
-        grid-template-columns: repeat(2, 1fr);
+
+    .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--cyber-subtext);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: color 0.3s ease;
     }
-    
+
+    .toggle-password:hover {
+        color: var(--cyber-primary);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Статистика */
     .stats-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
     }
-    
-    .entropy-display {
+
+    .stat-card {
+        background: rgba(30, 30, 40, 0.6);
+        border: 1px solid var(--cyber-border);
+        border-radius: 10px;
+        padding: 1.25rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        border-color: var(--cyber-primary);
+        transform: translateY(-2px);
+    }
+
+    .stat-value {
         font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
     }
-    
-    .btn-group {
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--cyber-subtext);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 1200px) {
+        .options-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .analysis-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .cyber-container {
+            padding: 10px;
+        }
+
+        .password-section {
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+        
+        .options-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .analysis-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .entropy-display {
+            font-size: 2rem;
+        }
+        
+        .btn-group {
+            flex-direction: column;
+        }
+        
+        .btn-cyber, .btn-cyber-outline {
+            height: 44px;
+        }
+    }
+
+    /* Утилиты */
+    .hidden {
+        display: none !important;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.75rem;
+        background: var(--cyber-primary);
+        color: black;
+        border-radius: 6px;
+        font-weight: bold;
+    }
+
+    /* Специальные классы для силы пароля */
+    .strength-perfect { background: linear-gradient(135deg, #6f42c1, #007bff); }
+    .strength-very-strong { background: linear-gradient(135deg, #007bff, #28a745); }
+    .strength-strong { background: #28a745; }
+    .strength-medium { background: #ffc107; }
+    .strength-weak { background: #dc3545; }
+    .strength-critical { 
+        background: linear-gradient(135deg, #dc3545, #000);
+    }
+
+    /* Выравнивание для placeholder */
+    #analyzer-placeholder {
+        display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+        text-align: center;
     }
-    
-    .btn-cyber, .btn-cyber-outline {
-        height: 44px;
+
+    #analyzer-placeholder .display-1 {
+        margin-bottom: 1rem;
     }
-}
 
-/* Утилиты */
-.hidden {
-    display: none !important;
-}
-
-.text-cyber-primary {
-    color: var(--cyber-primary) !important;
-}
-
-.badge {
-    font-size: 0.7rem;
-    padding: 0.35rem 0.75rem;
-}
-
-/* Специальные классы для силы пароля */
-.strength-perfect { background: linear-gradient(135deg, #6f42c1, #007bff); }
-.strength-very-strong { background: linear-gradient(135deg, #007bff, #28a745); }
-.strength-strong { background: #28a745; }
-.strength-medium { background: #ffc107; }
-.strength-weak { background: #dc3545; }
-.strength-critical { 
-    background: linear-gradient(135deg, #dc3545, #000);
-}
-
-/* Выравнивание для placeholder */
-#analyzer-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 2rem;
-    text-align: center;
-}
-
-#analyzer-placeholder .display-1 {
-    margin-bottom: 1rem;
-}
-
-/* Выравнивание слайдера */
-.range-container {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0;
-}
-
-.range-value {
-    min-width: 40px;
-    text-align: center;
-    font-weight: bold;
-    color: var(--cyber-primary);
-}
-
-.range-slider {
-    flex: 1;
-}
-</style>
-{% endblock %}
-
-{% block content %}
-<div class="container-fluid">
-    <!-- Заголовок -->
-    <div class="row mb-4">
-        <div class="col-12 text-center">
-            <h1 class="cyber-text glow-text mb-3" style="font-size: 2.5rem;">
-                <i class="bi bi-shield-lock-fill me-2"></i>ГЕНЕРАТОР ПАРОЛЕЙ
-            </h1>
-            <p class="cyber-subtext lead">
-                Создавайте <span class="text-cyber-primary">неприступные</span> пароли с искусственным интеллектом
-            </p>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <!-- Генератор паролей -->
-        <div class="col-xl-6">
-            <div class="password-section">
-                <div class="section-header">
-                    <h3 class="section-title cyber-text">
-                        <i class="bi bi-cpu-fill me-2"></i>ГЕНЕРАТОР
-                    </h3>
-                    <span class="badge bg-cyber-primary">AI POWERED</span>
-                </div>
-
-                <!-- Выбор типа пароля -->
-                <div class="options-grid">
-                    <div class="option-card active" data-type="strong">
-                        <i class="bi bi-shield-check option-icon text-cyber-primary"></i>
-                        <h5>Бронебойный</h5>
-                        <small class="cyber-subtext">Максимальная защита</small>
-                    </div>
-                    
-                    <div class="option-card" data-type="memorable">
-                        <i class="bi bi-lightbulb-fill option-icon text-cyber-secondary"></i>
-                        <h5>Запоминающийся</h5>
-                        <small class="cyber-subtext">Легко запомнить</small>
-                    </div>
-                    
-                    <div class="option-card" data-type="phonetic">
-                        <i class="bi bi-mic-fill option-icon text-cyber-accent"></i>
-                        <h5>Фонетический</h5>
-                        <small class="cyber-subtext">Легко произнести</small>
-                    </div>
-                </div>
-
-                <!-- Расширенные настройки -->
-                <div class="advanced-options">
-                    <h6 class="advanced-title cyber-text">
-                        <i class="bi bi-gear-fill"></i>Расширенные настройки
-                    </h6>
-                    
-                    <div class="option-toggle">
-                        <span class="toggle-label cyber-text">
-                            <i class="bi bi-rulers"></i>
-                            Длина пароля
-                        </span>
-                        <div class="range-container">
-                            <span class="range-value" id="length-value">16</span>
-                            <input type="range" class="form-range range-slider" id="length-slider" min="8" max="32" value="16">
-                        </div>
-                    </div>
-                    
-                    <div class="option-toggle">
-                        <span class="toggle-label cyber-text">
-                            <i class="bi bi-asterisk"></i>
-                            Специальные символы
-                        </span>
-                        <label class="switch">
-                            <input type="checkbox" id="special-chars" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="option-toggle">
-                        <span class="toggle-label cyber-text">
-                            <i class="bi bi-123"></i>
-                            Цифры
-                        </span>
-                        <label class="switch">
-                            <input type="checkbox" id="include-numbers" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="option-toggle" id="memorable-options" style="display: none;">
-                        <span class="toggle-label cyber-text">
-                            <i class="bi bi-type"></i>
-                            Заглавные буквы
-                        </span>
-                        <label class="switch">
-                            <input type="checkbox" id="capitalize-words" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Кнопка генерации -->
-                <button onclick="generatePassword()" class="btn btn-cyber-glow">
-                    <i class="bi bi-lightning-charge-fill me-2"></i>
-                    <span id="generate-text">СГЕНЕРИРОВАТЬ СУПЕРПАРОЛЬ</span>
-                </button>
-
-                <!-- Результат -->
-                <div class="password-result">
-                    <input type="text" id="generated-password" readonly>
-                    <div class="btn-group">
-                        <button onclick="copyPassword()" class="btn btn-cyber" title="Скопировать" id="copy-btn">
-                            <i class="bi bi-clipboard"></i>
-                        </button>
-                        <button onclick="regeneratePassword()" class="btn btn-cyber-outline" title="Перегенерировать">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Быстрое копирование вариантов -->
-                <div class="quick-options">
-                    <div class="quick-buttons">
-                        <button class="btn btn-outline-cyber btn-sm" onclick="generateSimilar()">
-                            <i class="bi bi-copy me-1"></i>Похожий
-                        </button>
-                        <button class="btn btn-outline-cyber btn-sm" onclick="generateShorter()">
-                            <i class="bi bi-dash-circle me-1"></i>Короче
-                        </button>
-                        <button class="btn btn-outline-cyber btn-sm" onclick="generateLonger()">
-                            <i class="bi bi-plus-circle me-1"></i>Длиннее
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Анализатор паролей -->
-        <div class="col-xl-6">
-            <div class="password-section">
-                <div class="section-header">
-                    <h3 class="section-title cyber-text">
-                        <i class="bi bi-graph-up-arrow me-2"></i>АНАЛИЗАТОР
-                    </h3>
-                    <span class="badge bg-cyber-secondary">REAL-TIME</span>
-                </div>
-
-                <!-- Поле ввода пароля -->
-                <div class="password-input-group">
-                    <input type="password" class="form-control cyber-input" id="password-input" 
-                           placeholder="Введите пароль для глубокого анализа..." 
-                           oninput="debouncedCheckPassword()">
-                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" id="toggle-password">
-                        <i class="bi bi-eye"></i>
-                    </button>
-                </div>
-
-                <!-- Визуализация силы -->
-                <div id="password-strength" class="hidden">
-                    <div class="strength-visualization">
-                        <div class="strength-meter">
-                            <div class="strength-fill" id="strength-bar"></div>
-                        </div>
-                        <div class="strength-labels">
-                            <span class="strength-label">Слабый</span>
-                            <span class="strength-label">Средний</span>
-                            <span class="strength-label">Надежный</span>
-                            <span class="strength-label">Очень надежный</span>
-                            <span class="strength-label">Идеальный</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Основные метрики -->
-                    <div class="analysis-grid">
-                        <div class="analysis-card">
-                            <div class="analysis-value" id="password-length">0</div>
-                            <div class="analysis-label">Длина</div>
-                        </div>
-                        <div class="analysis-card">
-                            <div class="analysis-value" id="score-percent">0%</div>
-                            <div class="analysis-label">Надежность</div>
-                        </div>
-                        <div class="analysis-card">
-                            <div class="analysis-value" id="unique-chars">0</div>
-                            <div class="analysis-label">Уникальные</div>
-                        </div>
-                        <div class="analysis-card">
-                            <div class="analysis-value" id="entropy-value">0</div>
-                            <div class="analysis-label">Энтропия</div>
-                        </div>
-                    </div>
-
-                    <!-- Время взлома -->
-                    <div class="crack-time">
-                        <i class="bi bi-clock-history me-2"></i>
-                        Взлом: <span id="crack-time-value">мгновенно</span>
-                    </div>
-
-                    <!-- Детальный анализ -->
-                    <div class="analysis-grid">
-                        <div class="analysis-card">
-                            <div class="analysis-value" id="uppercase-count">0</div>
-                            <div class="analysis-label">Заглавные</div>
-                        </div>
-                        <div class="analysis-card">
-                            <div class="analysis-value" id="lowercase-count">0</div>
-                            <div class="analysis-label">Строчные</div>
-                        </div>
-                        <div class="analysis-card">
-                            <div class="analysis-value" id="digit-count">0</div>
-                            <div class="analysis-label">Цифры</div>
-                        </div>
-                        <div class="analysis-card">
-                            <div class="analysis-value" id="special-count">0</div>
-                            <div class="analysis-label">Спец. символы</div>
-                        </div>
-                    </div>
-
-                    <!-- Обратная связь -->
-                    <div id="password-feedback"></div>
-                </div>
-
-                <!-- Placeholder при загрузке -->
-                <div id="analyzer-placeholder" class="text-center py-5">
-                    <i class="bi bi-shield-check display-4 text-cyber-subtext mb-3"></i>
-                    <p class="cyber-subtext mb-0">Введите пароль для анализа безопасности</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Панель статистики -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="password-section">
-                <h3 class="section-title cyber-text mb-4">
-                    <i class="bi bi-trophy-fill me-2"></i>ВАША СТАТИСТИКА БЕЗОПАСНОСТИ
-                </h3>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value text-cyber-primary" id="total-generated">0</div>
-                        <div class="stat-label">Сгенерировано паролей</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value text-cyber-secondary" id="total-checked">0</div>
-                        <div class="stat-label">Проверено паролей</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value text-cyber-accent" id="average-strength">0%</div>
-                        <div class="stat-label">Средняя надежность</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value text-success" id="strong-passwords">0</div>
-                        <div class="stat-label">Надежных паролей</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-// Глобальные переменные
-let currentPasswordType = 'strong';
-let generatedPasswords = [];
-let checkedPasswords = [];
-let debounceTimer;
-
-// Инициализация
-document.addEventListener('DOMContentLoaded', function() {
-    initPasswordGenerator();
-    loadStatistics();
-    updateStatistics();
-});
-
-function initPasswordGenerator() {
-    // Выбор типа пароля
-    document.querySelectorAll('.option-card').forEach(card => {
-        card.addEventListener('click', function() {
-            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
-            this.classList.add('active');
-            currentPasswordType = this.dataset.type;
-            updateAdvancedOptions();
-        });
-    });
-
-    // Слайдер длины
-    const lengthSlider = document.getElementById('length-slider');
-    const lengthValue = document.getElementById('length-value');
-    
-    lengthSlider.addEventListener('input', function() {
-        lengthValue.textContent = this.value;
-        lengthValue.style.color = getLengthColor(this.value);
-    });
-
-    // Инициализируем расширенные настройки
-    updateAdvancedOptions();
-}
-
-function updateAdvancedOptions() {
-    const memorableOptions = document.getElementById('memorable-options');
-    const lengthSlider = document.getElementById('length-slider');
-    const lengthValue = document.getElementById('length-value');
-    
-    if (currentPasswordType === 'memorable') {
-        memorableOptions.style.display = 'flex';
-        lengthSlider.min = 3;
-        lengthSlider.max = 6;
-        lengthSlider.value = 4;
-        lengthValue.textContent = '4';
-    } else if (currentPasswordType === 'phonetic') {
-        memorableOptions.style.display = 'none';
-        lengthSlider.min = 6;
-        lengthSlider.max = 20;
-        lengthSlider.value = 12;
-        lengthValue.textContent = '12';
-    } else {
-        memorableOptions.style.display = 'none';
-        lengthSlider.min = 8;
-        lengthSlider.max = 32;
-        lengthSlider.value = 16;
-        lengthValue.textContent = '16';
+    /* Выравнивание слайдера */
+    .range-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0;
     }
-    
-    lengthValue.style.color = getLengthColor(lengthSlider.value);
-}
 
-function getLengthColor(length) {
-    length = parseInt(length);
-    if (length >= 20) return '#6f42c1';
-    if (length >= 16) return '#007bff';
-    if (length >= 12) return '#28a745';
-    if (length >= 8) return '#ffc107';
-    return '#dc3545';
-}
-
-// Генерация пароля
-async function generatePassword() {
-    const generateBtn = document.querySelector('.btn-cyber-glow');
-    const generateText = document.getElementById('generate-text');
-    const originalText = generateText.innerHTML;
-    
-    // Анимация кнопки
-    generateBtn.disabled = true;
-    generateText.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>ГЕНЕРАЦИЯ...';
-    generateBtn.style.opacity = '0.7';
-    
-    const length = document.getElementById('length-slider').value;
-    const options = {
-        special: document.getElementById('special-chars').checked,
-        numbers: document.getElementById('include-numbers').checked,
-        capitalize: document.getElementById('capitalize-words')?.checked || true,
-        add_number: true
-    };
-    
-    try {
-        const response = await fetch('/passwords/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-                type: currentPasswordType,
-                length: parseInt(length),
-                options: options
-            })
-        });
-        
-        if (!response.ok) throw new Error('Ошибка сервера');
-        const data = await response.json();
-        
-        if (data.error) throw new Error(data.error);
-        
-        // Анимация появления пароля
-        animatePasswordDisplay(data.password);
-        
-        // Автоматическая проверка
-        document.getElementById('password-input').value = data.password;
-        checkPassword();
-        
-        // Сохранение статистики
-        generatedPasswords.push({
-            password: data.password,
-            type: data.type,
-            length: data.length,
-            timestamp: new Date().toISOString()
-        });
-        saveStatistics();
-        updateStatistics();
-        
-        showNotification('🎉 Пароль сгенерирован!', 'success');
-        
-    } catch (error) {
-        console.error('Ошибка:', error);
-        showNotification('❌ Ошибка генерации: ' + error.message, 'danger');
-    } finally {
-        // Восстановление кнопки
-        setTimeout(() => {
-            generateBtn.disabled = false;
-            generateText.innerHTML = originalText;
-            generateBtn.style.opacity = '1';
-        }, 1000);
+    .range-value {
+        min-width: 40px;
+        text-align: center;
+        font-weight: bold;
+        color: var(--cyber-primary);
     }
-}
 
-function animatePasswordDisplay(password) {
-    const passwordField = document.getElementById('generated-password');
-    passwordField.value = '';
-    
-    let i = 0;
-    const typingEffect = setInterval(() => {
-        if (i < password.length) {
-            passwordField.value += password[i];
-            i++;
-        } else {
-            clearInterval(typingEffect);
-            
-            // Анимация успеха
-            passwordField.style.borderColor = '#00ff88';
-            setTimeout(() => {
-                passwordField.style.borderColor = '';
-            }, 2000);
-        }
-    }, 30);
-}
-
-// Проверка пароля с дебаунсом
-function debouncedCheckPassword() {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-        const password = document.getElementById('password-input').value;
-        if (password.length > 0) {
-            checkPassword();
-        } else {
-            hideAnalysisResults();
-        }
-    }, 500);
-}
-
-async function checkPassword() {
-    const password = document.getElementById('password-input').value;
-    
-    if (!password) {
-        hideAnalysisResults();
-        return;
+    .range-slider {
+        flex: 1;
+        -webkit-appearance: none;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
     }
-    
-    try {
-        const response = await fetch('/passwords/check-strength', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ password: password })
-        });
-        
-        if (!response.ok) throw new Error('Ошибка сервера');
-        const result = await response.json();
-        
-        if (result.error) throw new Error(result.error);
-        
-        displayPasswordStrength(result);
-        
-        // Сохранение статистики
-        if (!checkedPasswords.some(p => p.password === password)) {
-            checkedPasswords.push({
-                password: password,
-                strength: result.strength,
-                score: result.score,
-                timestamp: new Date().toISOString()
-            });
-            saveStatistics();
-            updateStatistics();
-        }
-        
-    } catch (error) {
-        console.error('Ошибка:', error);
-        showNotification('❌ Ошибка проверки: ' + error.message, 'danger');
+
+    .range-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        background: var(--cyber-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: var(--cyber-glow);
     }
-}
 
-function displayPasswordStrength(result) {
-    const strengthElement = document.getElementById('password-strength');
-    const placeholder = document.getElementById('analyzer-placeholder');
-    const strengthBar = document.getElementById('strength-bar');
-    
-    // Показываем результаты, скрываем плейсхолдер
-    strengthElement.classList.remove('hidden');
-    placeholder.style.display = 'none';
-    
-    // Анимация заполнения шкалы
-    strengthBar.style.width = result.score_percent + '%';
-    strengthBar.className = `strength-fill strength-${result.strength_class}`;
-    
-    // Обновляем основные метрики
-    document.getElementById('password-length').textContent = result.length;
-    document.getElementById('score-percent').textContent = result.score_percent + '%';
-    document.getElementById('unique-chars').textContent = result.details.unique_chars || '?';
-    document.getElementById('entropy-value').textContent = result.entropy;
-    document.getElementById('crack-time-value').textContent = result.crack_time;
-    
-    // Обновляем детальную статистику
-    if (result.details.char_categories) {
-        document.getElementById('uppercase-count').textContent = 
-            result.details.char_categories.uppercase ? '✓' : '✗';
-        document.getElementById('lowercase-count').textContent = 
-            result.details.char_categories.lowercase ? '✓' : '✗';
-        document.getElementById('digit-count').textContent = 
-            result.details.char_categories.digits ? '✓' : '✗';
-        document.getElementById('special-count').textContent = 
-            result.details.char_categories.special ? '✓' : '✗';
+    .range-slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: var(--cyber-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+        box-shadow: var(--cyber-glow);
     }
-    
-    // Показываем обратную связь
-    const feedbackContainer = document.getElementById('password-feedback');
-    feedbackContainer.innerHTML = '';
-    
-    if (result.feedback && result.feedback.length > 0) {
-        result.feedback.forEach(item => {
-            const feedbackItem = document.createElement('div');
-            let itemClass = 'warning';
-            let icon = 'bi-exclamation-triangle';
-            
-            if (item.includes('КРИТИЧЕСКИЙ') || item.includes('ОПАСНЫЙ')) {
-                itemClass = 'critical';
-                icon = 'bi-shield-exclamation';
-            } else if (item.includes('рекомендуется') || item.includes('Добавьте')) {
-                itemClass = 'warning';
-                icon = 'bi-info-circle';
-            }
-            
-            feedbackItem.className = `feedback-item ${itemClass}`;
-            feedbackItem.innerHTML = `
-                <i class="bi ${icon}"></i>
-                <span>${item}</span>
-            `;
-            feedbackContainer.appendChild(feedbackItem);
-        });
-    } else {
-        const feedbackItem = document.createElement('div');
-        feedbackItem.className = 'feedback-item good';
-        feedbackItem.innerHTML = `
-            <i class="bi bi-shield-check"></i>
-            <span>Отличный пароль! Соответствует всем рекомендациям безопасности</span>
-        `;
-        feedbackContainer.appendChild(feedbackItem);
-    }
-}
 
-function hideAnalysisResults() {
-    document.getElementById('password-strength').classList.add('hidden');
-    document.getElementById('analyzer-placeholder').style.display = 'flex';
-}
-
-// Копирование пароля
-async function copyPassword() {
-    const passwordField = document.getElementById('generated-password');
-    const copyBtn = document.getElementById('copy-btn');
-    
-    if (!passwordField.value) {
-        showNotification('⚠️ Сначала сгенерируйте пароль', 'warning');
-        return;
-    }
-    
-    const originalHTML = copyBtn.innerHTML;
-    
-    try {
-        await navigator.clipboard.writeText(passwordField.value);
-        
-        // Анимация успешного копирования
-        copyBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
-        copyBtn.classList.add('btn-success');
-        copyBtn.classList.remove('btn-cyber');
-        
-        showNotification('✅ Пароль скопирован в буфер обмена!', 'success');
-        
-        // Восстановление кнопки через 2 секунды
-        setTimeout(() => {
-            copyBtn.innerHTML = originalHTML;
-            copyBtn.classList.remove('btn-success');
-            copyBtn.classList.add('btn-cyber');
-        }, 2000);
-        
-    } catch (err) {
-        // Fallback
-        passwordField.select();
-        document.execCommand('copy');
-        showNotification('✅ Пароль скопирован!', 'success');
-    }
-}
-
-// Дополнительные функции генерации
-function regeneratePassword() {
-    generatePassword();
-}
-
-function generateSimilar() {
-    generatePassword();
-}
-
-function generateShorter() {
-    const currentLength = parseInt(document.getElementById('length-slider').value);
-    const newLength = Math.max(
-        parseInt(document.getElementById('length-slider').min), 
-        currentLength - 2
-    );
-    document.getElementById('length-slider').value = newLength;
-    document.getElementById('length-value').textContent = newLength;
-    document.getElementById('length-value').style.color = getLengthColor(newLength);
-    generatePassword();
-}
-
-function generateLonger() {
-    const currentLength = parseInt(document.getElementById('length-slider').value);
-    const newLength = Math.min(
-        parseInt(document.getElementById('length-slider').max), 
-        currentLength + 2
-    );
-    document.getElementById('length-slider').value = newLength;
-    document.getElementById('length-value').textContent = newLength;
-    document.getElementById('length-value').style.color = getLengthColor(newLength);
-    generatePassword();
-}
-
-// Управление видимостью пароля
-function togglePasswordVisibility() {
-    const passwordInput = document.getElementById('password-input');
-    const toggleBtn = document.getElementById('toggle-password');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleBtn.innerHTML = '<i class="bi bi-eye-slash"></i>';
-        toggleBtn.classList.add('text-cyber-primary');
-    } else {
-        passwordInput.type = 'password';
-        toggleBtn.innerHTML = '<i class="bi bi-eye"></i>';
-        toggleBtn.classList.remove('text-cyber-primary');
-    }
-}
-
-// Система статистики
-function loadStatistics() {
-    const savedStats = localStorage.getItem('passwordGeneratorStats');
-    if (savedStats) {
-        const stats = JSON.parse(savedStats);
-        generatedPasswords = stats.generatedPasswords || [];
-        checkedPasswords = stats.checkedPasswords || [];
-    }
-}
-
-function saveStatistics() {
-    const stats = {
-        generatedPasswords: generatedPasswords.slice(-100),
-        checkedPasswords: checkedPasswords.slice(-100),
-        lastUpdated: new Date().toISOString()
-    };
-    localStorage.setItem('passwordGeneratorStats', JSON.stringify(stats));
-}
-
-function updateStatistics() {
-    document.getElementById('total-generated').textContent = generatedPasswords.length;
-    document.getElementById('total-checked').textContent = checkedPasswords.length;
-    
-    const averageStrength = checkedPasswords.length > 0 
-        ? Math.round(checkedPasswords.reduce((sum, p) => sum + p.score, 0) / checkedPasswords.length * 10)
-        : 0;
-    document.getElementById('average-strength').textContent = averageStrength + '%';
-    
-    const strongCount = checkedPasswords.filter(p => p.score >= 7).length;
-    document.getElementById('strong-passwords').textContent = strongCount;
-}
-
-// Система уведомлений
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type} position-fixed`;
-    notification.style.cssText = `
+    /* Уведомления */
+    .alert {
+        position: fixed;
         top: 20px;
         right: 20px;
         z-index: 9999;
@@ -1271,40 +721,867 @@ function showNotification(message, type) {
         border: none;
         border-radius: 10px;
         backdrop-filter: blur(10px);
-    `;
-    
-    const iconClass = {
-        'success': 'bi-check-circle-fill',
-        'danger': 'bi-exclamation-circle-fill',
-        'warning': 'bi-exclamation-triangle-fill',
-        'info': 'bi-info-circle-fill'
-    }[type] || 'bi-info-circle-fill';
-    
-    notification.innerHTML = `
-        <div class="d-flex align-items-center">
-            <i class="bi ${iconClass} me-2"></i>
-            <span class="flex-grow-1">${message}</span>
-            <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, 4000);
-}
+        background: rgba(15, 15, 20, 0.95);
+        border: 2px solid;
+        color: white;
+    }
 
-// Глобальные функции
-window.copyPassword = copyPassword;
-window.generatePassword = generatePassword;
-window.checkPassword = checkPassword;
-window.togglePasswordVisibility = togglePasswordVisibility;
-window.regeneratePassword = regeneratePassword;
-window.generateSimilar = generateSimilar;
-window.generateShorter = generateShorter;
-window.generateLonger = generateLonger;
-</script>
-{% endblock %}
+    .alert-success { border-color: #00ff88; }
+    .alert-danger { border-color: #dc3545; }
+    .alert-warning { border-color: #ffc107; }
+    .alert-info { border-color: #00ccff; }
+
+    .btn-close-white {
+        filter: invert(1);
+    }
+
+    .btn-cyber-outline {
+        border: 2px solid var(--cyber-primary);
+        background: transparent;
+        color: var(--cyber-primary);
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-cyber-outline:hover {
+        background: var(--cyber-primary);
+        color: black;
+        transform: translateY(-2px);
+        box-shadow: var(--cyber-glow);
+    }
+    </style>
+</head>
+<body>
+    <div class="cyber-container">
+        <!-- Заголовок -->
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="cyber-text glow-text mb-3" style="font-size: 2.5rem;">
+                    <i class="bi bi-shield-lock-fill me-2"></i>ГЕНЕРАТОР ПАРОЛЕЙ
+                </h1>
+                <p class="cyber-subtext lead">
+                    Создавайте <span class="text-cyber-primary">неприступные</span> пароли
+                </p>
+            </div>
+        </div>
+            <!-- Кнопка возврата на главную -->
+        <div class="text-center mb-4">
+            <a href="/" class="btn btn-cyber-outline">
+                <i class="bi bi-arrow-left me-2"></i>На главную страницу
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <!-- Генератор паролей -->
+            <div class="col-xl-6">
+                <div class="password-section">
+                    <div class="section-header">
+                        <h3 class="section-title cyber-text">
+                            <i class="bi bi-cpu-fill me-2"></i>ГЕНЕРАТОР
+                        </h3>
+                        <span class="badge bg-cyber-primary">AI POWERED</span>
+                    </div>
+
+                    <!-- Выбор типа пароля -->
+                    <div class="options-grid">
+                        <div class="option-card active" data-type="strong">
+                            <i class="bi bi-shield-check option-icon text-cyber-primary"></i>
+                            <h5>Бронебойный</h5>
+                            <small class="cyber-subtext">Максимальная защита</small>
+                        </div>
+                        
+                        <div class="option-card" data-type="memorable">
+                            <i class="bi bi-lightbulb-fill option-icon text-cyber-secondary"></i>
+                            <h5>Запоминающийся</h5>
+                            <small class="cyber-subtext">Легко запомнить</small>
+                        </div>
+                        
+                        <div class="option-card" data-type="phonetic">
+                            <i class="bi bi-mic-fill option-icon text-cyber-accent"></i>
+                            <h5>Фонетический</h5>
+                            <small class="cyber-subtext">Легко произнести</small>
+                        </div>
+                    </div>
+
+                    <!-- Расширенные настройки -->
+                    <div class="advanced-options">
+                        <h6 class="advanced-title cyber-text">
+                            <i class="bi bi-gear-fill"></i>Расширенные настройки
+                        </h6>
+                        
+                        <div class="option-toggle">
+                            <span class="toggle-label cyber-text">
+                                <i class="bi bi-rulers"></i>
+                                Длина пароля
+                            </span>
+                            <div class="range-container">
+                                <span class="range-value" id="length-value">16</span>
+                                <input type="range" class="range-slider" id="length-slider" min="8" max="32" value="16">
+                            </div>
+                        </div>
+                        
+                        <div class="option-toggle">
+                            <span class="toggle-label cyber-text">
+                                <i class="bi bi-asterisk"></i>
+                                Специальные символы
+                            </span>
+                            <label class="switch">
+                                <input type="checkbox" id="special-chars" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="option-toggle">
+                            <span class="toggle-label cyber-text">
+                                <i class="bi bi-123"></i>
+                                Цифры
+                            </span>
+                            <label class="switch">
+                                <input type="checkbox" id="include-numbers" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="option-toggle" id="memorable-options" style="display: none;">
+                            <span class="toggle-label cyber-text">
+                                <i class="bi bi-type"></i>
+                                Заглавные буквы
+                            </span>
+                            <label class="switch">
+                                <input type="checkbox" id="capitalize-words" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Кнопка генерации -->
+                    <button onclick="generatePassword()" class="btn-cyber-glow">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>
+                        <span id="generate-text">СГЕНЕРИРОВАТЬ СУПЕРПАРОЛЬ</span>
+                    </button>
+
+                    <!-- Результат -->
+                    <div class="password-result">
+                        <input type="text" id="generated-password" readonly class="cyber-input">
+                        <div class="btn-group">
+                            <button onclick="copyPassword()" class="btn-cyber" title="Скопировать" id="copy-btn">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                            <button onclick="regeneratePassword()" class="btn-cyber-outline" title="Перегенерировать">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Быстрое копирование вариантов -->
+                    <div class="quick-options">
+                        <div class="quick-buttons">
+                            <button class="btn" onclick="generateSimilar()">
+                                <i class="bi bi-copy me-1"></i>Похожий
+                            </button>
+                            <button class="btn" onclick="generateShorter()">
+                                <i class="bi bi-dash-circle me-1"></i>Короче
+                            </button>
+                            <button class="btn" onclick="generateLonger()">
+                                <i class="bi bi-plus-circle me-1"></i>Длиннее
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Анализатор паролей -->
+            <div class="col-xl-6">
+                <div class="password-section">
+                    <div class="section-header">
+                        <h3 class="section-title cyber-text">
+                            <i class="bi bi-graph-up-arrow me-2"></i>АНАЛИЗАТОР
+                        </h3>
+                        <span class="badge bg-cyber-secondary">REAL-TIME</span>
+                    </div>
+
+                    <!-- Поле ввода пароля -->
+                    <div class="password-input-group">
+                        <input type="password" class="cyber-input" id="password-input" 
+                               placeholder="Введите пароль для глубокого анализа..." 
+                               oninput="debouncedCheckPassword()">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" id="toggle-password">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+
+                    <!-- Визуализация силы -->
+                    <div id="password-strength" class="hidden">
+                        <div class="strength-visualization">
+                            <div class="strength-meter">
+                                <div class="strength-fill" id="strength-bar"></div>
+                            </div>
+                            <div class="strength-labels">
+                                <span class="strength-label">Слабый</span>
+                                <span class="strength-label">Средний</span>
+                                <span class="strength-label">Надежный</span>
+                                <span class="strength-label">Очень надежный</span>
+                                <span class="strength-label">Идеальный</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Основные метрики -->
+                        <div class="analysis-grid">
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="password-length">0</div>
+                                <div class="analysis-label">Длина</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="score-percent">0%</div>
+                                <div class="analysis-label">Надежность</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="unique-chars">0</div>
+                                <div class="analysis-label">Уникальные</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="entropy-value">0</div>
+                                <div class="analysis-label">Энтропия</div>
+                            </div>
+                        </div>
+
+                        <!-- Время взлома -->
+                        <div class="crack-time">
+                            <i class="bi bi-clock-history me-2"></i>
+                            Взлом: <span id="crack-time-value">мгновенно</span>
+                        </div>
+
+                        <!-- Детальный анализ -->
+                        <div class="analysis-grid">
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="uppercase-count">0</div>
+                                <div class="analysis-label">Заглавные</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="lowercase-count">0</div>
+                                <div class="analysis-label">Строчные</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="digit-count">0</div>
+                                <div class="analysis-label">Цифры</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="special-count">0</div>
+                                <div class="analysis-label">Спец. символы</div>
+                            </div>
+                        </div>
+
+                        <!-- Обратная связь -->
+                        <div id="password-feedback"></div>
+                    </div>
+
+                    <!-- Placeholder при загрузке -->
+                    <div id="analyzer-placeholder" class="text-center py-5">
+                        <i class="bi bi-shield-check display-4 text-cyber-subtext mb-3"></i>
+                        <p class="cyber-subtext mb-0">Введите пароль для анализа безопасности</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Панель статистики -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="password-section">
+                    <h3 class="section-title cyber-text mb-4">
+                        <i class="bi bi-trophy-fill me-2"></i>ВАША СТАТИСТИКА БЕЗОПАСНОСТИ
+                    </h3>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value text-cyber-primary" id="total-generated">0</div>
+                            <div class="stat-label">Сгенерировано паролей</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value text-cyber-secondary" id="total-checked">0</div>
+                            <div class="stat-label">Проверено паролей</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value text-cyber-accent" id="average-strength">0%</div>
+                            <div class="stat-label">Средняя надежность</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value text-success" id="strong-passwords">0</div>
+                            <div class="stat-label">Надежных паролей</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Глобальные переменные
+    let currentPasswordType = 'strong';
+    let generatedPasswords = [];
+    let checkedPasswords = [];
+    let debounceTimer;
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', function() {
+        initPasswordGenerator();
+        loadStatistics();
+        updateStatistics();
+    });
+
+    function initPasswordGenerator() {
+        // Выбор типа пароля
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentPasswordType = this.dataset.type;
+                updateAdvancedOptions();
+            });
+        });
+
+        // Слайдер длины
+        const lengthSlider = document.getElementById('length-slider');
+        const lengthValue = document.getElementById('length-value');
+        
+        lengthSlider.addEventListener('input', function() {
+            lengthValue.textContent = this.value;
+            lengthValue.style.color = getLengthColor(this.value);
+        });
+
+        // Инициализируем расширенные настройки
+        updateAdvancedOptions();
+    }
+
+    function updateAdvancedOptions() {
+        const memorableOptions = document.getElementById('memorable-options');
+        const lengthSlider = document.getElementById('length-slider');
+        const lengthValue = document.getElementById('length-value');
+        
+        if (currentPasswordType === 'memorable') {
+            memorableOptions.style.display = 'flex';
+            lengthSlider.min = 3;
+            lengthSlider.max = 6;
+            lengthSlider.value = 4;
+            lengthValue.textContent = '4';
+        } else if (currentPasswordType === 'phonetic') {
+            memorableOptions.style.display = 'none';
+            lengthSlider.min = 6;
+            lengthSlider.max = 20;
+            lengthSlider.value = 12;
+            lengthValue.textContent = '12';
+        } else {
+            memorableOptions.style.display = 'none';
+            lengthSlider.min = 8;
+            lengthSlider.max = 32;
+            lengthSlider.value = 16;
+            lengthValue.textContent = '16';
+        }
+        
+        lengthValue.style.color = getLengthColor(lengthSlider.value);
+    }
+
+    function getLengthColor(length) {
+        if (length < 8) return '#dc3545';
+        if (length < 12) return '#ffc107';
+        if (length < 16) return '#28a745';
+        return '#00ff88';
+    }
+
+    // Генерация паролей
+    function generatePassword() {
+        const length = parseInt(document.getElementById('length-slider').value);
+        const includeSpecial = document.getElementById('special-chars').checked;
+        const includeNumbers = document.getElementById('include-numbers').checked;
+        
+        let password = '';
+        
+        switch(currentPasswordType) {
+            case 'memorable':
+                password = generateMemorablePassword(length);
+                break;
+            case 'phonetic':
+                password = generatePhoneticPassword(length);
+                break;
+            default:
+                password = generateStrongPassword(length, includeSpecial, includeNumbers);
+        }
+        
+        document.getElementById('generated-password').value = password;
+        generatedPasswords.push(password);
+        saveStatistics();
+        updateStatistics();
+        
+        // Автоматически анализируем сгенерированный пароль
+        document.getElementById('password-input').value = password;
+        checkPassword(password);
+        
+        // Анимация успеха
+        showAlert('Пароль успешно сгенерирован!', 'success');
+    }
+
+    function generateStrongPassword(length, includeSpecial, includeNumbers) {
+        const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const numbers = '0123456789';
+        const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        
+        let charset = lowercase + uppercase;
+        if (includeNumbers) charset += numbers;
+        if (includeSpecial) charset += special;
+        
+        let password = '';
+        for (let i = 0; i < length; i++) {
+            password += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        
+        return password;
+    }
+
+    function generateMemorablePassword(wordCount) {
+        const words = [
+            'Кибер', 'Гардиан', 'Секьюр', 'Протек', 'Шилд', 'Гейт', 'Волт', 'Код',
+            'Нетворк', 'Систем', 'Дейта', 'Инфо', 'Сейф', 'Гост', 'Крипто', 'Лок',
+            'Файрвол', 'Аксес', 'Кей', 'Пасс', 'Ворд', 'Сигнал', 'Траст', 'Верифай'
+        ];
+        
+        let password = '';
+        const capitalize = document.getElementById('capitalize-words').checked;
+        
+        for (let i = 0; i < wordCount; i++) {
+            let word = words[Math.floor(Math.random() * words.length)];
+            if (capitalize && Math.random() > 0.3) {
+                word = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            }
+            password += word;
+            if (i < wordCount - 1) {
+                password += Math.floor(Math.random() * 10);
+            }
+        }
+        
+        return password;
+    }
+
+    function generatePhoneticPassword(length) {
+        const consonants = 'bcdfghjklmnpqrstvwxyz';
+        const vowels = 'aeiou';
+        
+        let password = '';
+        let useConsonant = true;
+        
+        for (let i = 0; i < length; i++) {
+            if (useConsonant) {
+                password += consonants.charAt(Math.floor(Math.random() * consonants.length));
+            } else {
+                password += vowels.charAt(Math.floor(Math.random() * vowels.length));
+            }
+            
+            // Чередуем согласные и гласные для лучшей произносимости
+            useConsonant = !useConsonant;
+            
+            // Иногда добавляем цифры
+            if (i > 0 && i % 3 === 0 && Math.random() > 0.7) {
+                password += Math.floor(Math.random() * 10);
+                useConsonant = true;
+            }
+        }
+        
+        return password;
+    }
+
+    // Функции для быстрого копирования
+    function copyPassword() {
+        const passwordField = document.getElementById('generated-password');
+        passwordField.select();
+        document.execCommand('copy');
+        
+        const copyBtn = document.getElementById('copy-btn');
+        const originalIcon = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
+        copyBtn.style.background = '#28a745';
+        copyBtn.style.borderColor = '#28a745';
+        
+        showAlert('Пароль скопирован в буфер обмена!', 'success');
+        
+        setTimeout(() => {
+            copyBtn.innerHTML = originalIcon;
+            copyBtn.style.background = '';
+            copyBtn.style.borderColor = '';
+        }, 2000);
+    }
+
+    function regeneratePassword() {
+        generatePassword();
+        showAlert('Пароль перегенерирован!', 'info');
+    }
+
+    function generateSimilar() {
+        const currentPassword = document.getElementById('generated-password').value;
+        if (!currentPassword) return;
+        
+        // Просто меняем несколько символов
+        let newPassword = currentPassword.split('');
+        const changes = Math.max(2, Math.floor(newPassword.length * 0.2));
+        
+        for (let i = 0; i < changes; i++) {
+            const pos = Math.floor(Math.random() * newPassword.length);
+            const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+            newPassword[pos] = charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        
+        document.getElementById('generated-password').value = newPassword.join('');
+        showAlert('Создан похожий пароль!', 'info');
+    }
+
+    function generateShorter() {
+        const currentPassword = document.getElementById('generated-password').value;
+        if (!currentPassword || currentPassword.length <= 8) return;
+        
+        const newLength = Math.max(8, currentPassword.length - 3);
+        document.getElementById('generated-password').value = currentPassword.substring(0, newLength);
+        showAlert('Пароль укорочен!', 'info');
+    }
+
+    function generateLonger() {
+        const currentPassword = document.getElementById('generated-password').value;
+        if (!currentPassword || currentPassword.length >= 32) return;
+        
+        const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+        const additionalLength = Math.min(5, 32 - currentPassword.length);
+        
+        let extendedPassword = currentPassword;
+        for (let i = 0; i < additionalLength; i++) {
+            extendedPassword += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        
+        document.getElementById('generated-password').value = extendedPassword;
+        showAlert('Пароль удлинен!', 'info');
+    }
+
+    // Анализ паролей
+    function debouncedCheckPassword() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            const password = document.getElementById('password-input').value;
+            checkPassword(password);
+        }, 300);
+    }
+
+    function checkPassword(password) {
+        if (!password) {
+            document.getElementById('password-strength').classList.add('hidden');
+            document.getElementById('analyzer-placeholder').classList.remove('hidden');
+            return;
+        }
+
+        document.getElementById('password-strength').classList.remove('hidden');
+        document.getElementById('analyzer-placeholder').classList.add('hidden');
+
+        // Базовые метрики
+        const length = password.length;
+        const uppercase = (password.match(/[A-ZА-Я]/g) || []).length;
+        const lowercase = (password.match(/[a-zа-я]/g) || []).length;
+        const digits = (password.match(/\d/g) || []).length;
+        const special = (password.match(/[^A-Za-zА-Яа-я0-9]/g) || []).length;
+        const unique = new Set(password).size;
+
+        // Расчет энтропии
+        let charsetSize = 0;
+        if (lowercase > 0) charsetSize += 26;
+        if (uppercase > 0) charsetSize += 26;
+        if (digits > 0) charsetSize += 10;
+        if (special > 0) charsetSize += 32;
+        
+        const entropy = charsetSize > 0 ? Math.log2(Math.pow(charsetSize, length)) : 0;
+
+        // Расчет оценки
+        let score = 0;
+        
+        // Баллы за длину
+        if (length >= 8) score += 25;
+        if (length >= 12) score += 15;
+        if (length >= 16) score += 10;
+        
+        // Баллы за разнообразие символов
+        if (uppercase > 0) score += 10;
+        if (lowercase > 0) score += 10;
+        if (digits > 0) score += 10;
+        if (special > 0) score += 15;
+        
+        // Баллы за уникальность
+        const uniqueness = unique / length;
+        if (uniqueness > 0.8) score += 15;
+        else if (uniqueness > 0.6) score += 10;
+        else if (uniqueness > 0.4) score += 5;
+
+        // Ограничиваем оценку 100%
+        score = Math.min(score, 100);
+
+        // Обновляем интерфейс
+        updatePasswordAnalysis({
+            length, uppercase, lowercase, digits, special, unique, entropy, score
+        });
+
+        // Сохраняем статистику
+        checkedPasswords.push({password, score, timestamp: Date.now()});
+        saveStatistics();
+        updateStatistics();
+    }
+
+    function updatePasswordAnalysis(metrics) {
+        // Обновляем основные метрики
+        document.getElementById('password-length').textContent = metrics.length;
+        document.getElementById('score-percent').textContent = Math.round(metrics.score) + '%';
+        document.getElementById('unique-chars').textContent = metrics.unique;
+        document.getElementById('entropy-value').textContent = Math.round(metrics.entropy);
+        
+        // Обновляем детальную статистику
+        document.getElementById('uppercase-count').textContent = metrics.uppercase;
+        document.getElementById('lowercase-count').textContent = metrics.lowercase;
+        document.getElementById('digit-count').textContent = metrics.digits;
+        document.getElementById('special-count').textContent = metrics.special;
+        
+        // Обновляем визуализацию силы
+        updateStrengthVisualization(metrics.score, metrics.entropy);
+        
+        // Обновляем время взлома
+        updateCrackTime(metrics.entropy, metrics.length);
+        
+        // Обновляем обратную связь
+        updatePasswordFeedback(metrics);
+    }
+
+    function updateStrengthVisualization(score, entropy) {
+        const strengthBar = document.getElementById('strength-bar');
+        const width = Math.min(100, score);
+        
+        strengthBar.style.width = width + '%';
+        
+        // Обновляем цвет в зависимости от силы
+        strengthBar.className = 'strength-fill';
+        if (score >= 90) {
+            strengthBar.classList.add('strength-perfect');
+        } else if (score >= 80) {
+            strengthBar.classList.add('strength-very-strong');
+        } else if (score >= 70) {
+            strengthBar.classList.add('strength-strong');
+        } else if (score >= 50) {
+            strengthBar.classList.add('strength-medium');
+        } else if (score >= 30) {
+            strengthBar.classList.add('strength-weak');
+        } else {
+            strengthBar.classList.add('strength-critical');
+        }
+    }
+
+    function updateCrackTime(entropy, length) {
+        const crackTimeElement = document.getElementById('crack-time-value');
+        
+        // Упрощенный расчет времени взлома
+        let crackTime;
+        if (entropy < 40) {
+            crackTime = 'мгновенно';
+        } else if (entropy < 60) {
+            crackTime = 'несколько минут';
+        } else if (entropy < 80) {
+            crackTime = 'несколько дней';
+        } else if (entropy < 100) {
+            crackTime = 'несколько лет';
+        } else if (entropy < 120) {
+            crackTime = 'тысячи лет';
+        } else {
+            crackTime = 'миллионы лет';
+        }
+        
+        crackTimeElement.textContent = crackTime;
+        crackTimeElement.style.color = getCrackTimeColor(entropy);
+    }
+
+    function getCrackTimeColor(entropy) {
+        if (entropy < 40) return '#dc3545';
+        if (entropy < 60) return '#ffc107';
+        if (entropy < 80) return '#28a745';
+        if (entropy < 100) return '#007bff';
+        return '#6f42c1';
+    }
+
+    function updatePasswordFeedback(metrics) {
+        const feedbackContainer = document.getElementById('password-feedback');
+        feedbackContainer.innerHTML = '';
+        
+        const feedbacks = [];
+        
+        // Проверка длины
+        if (metrics.length < 8) {
+            feedbacks.push({
+                type: 'critical',
+                message: 'Слишком короткий пароль. Используйте минимум 8 символов.'
+            });
+        } else if (metrics.length < 12) {
+            feedbacks.push({
+                type: 'warning',
+                message: 'Пароль можно сделать длиннее для повышения безопасности.'
+            });
+        } else {
+            feedbacks.push({
+                type: 'good',
+                message: 'Отличная длина пароля!'
+            });
+        }
+        
+        // Проверка разнообразия символов
+        const charTypes = [metrics.uppercase, metrics.lowercase, metrics.digits, metrics.special].filter(count => count > 0).length;
+        
+        if (charTypes < 2) {
+            feedbacks.push({
+                type: 'critical',
+                message: 'Используйте разные типы символов (заглавные, строчные, цифры, спецсимволы).'
+            });
+        } else if (charTypes < 3) {
+            feedbacks.push({
+                type: 'warning',
+                message: 'Добавьте больше типов символов для улучшения безопасности.'
+            });
+        } else {
+            feedbacks.push({
+                type: 'good',
+                message: 'Отличное разнообразие символов!'
+            });
+        }
+        
+        // Проверка уникальности
+        const uniqueness = metrics.unique / metrics.length;
+        if (uniqueness < 0.5) {
+            feedbacks.push({
+                type: 'warning',
+                message: 'Много повторяющихся символов. Попробуйте использовать более уникальные комбинации.'
+            });
+        }
+        
+        // Проверка энтропии
+        if (metrics.entropy < 50) {
+            feedbacks.push({
+                type: 'critical',
+                message: 'Низкая энтропия. Пароль может быть легко взломан.'
+            });
+        } else if (metrics.entropy < 70) {
+            feedbacks.push({
+                type: 'warning',
+                message: 'Энтропия можно улучшить.'
+            });
+        }
+        
+        // Отображаем фидбек
+        feedbacks.forEach(feedback => {
+            const feedbackElement = document.createElement('div');
+            feedbackElement.className = `feedback-item ${feedback.type}`;
+            feedbackElement.innerHTML = `
+                <i class="bi bi-${getFeedbackIcon(feedback.type)}"></i>
+                <span>${feedback.message}</span>
+            `;
+            feedbackContainer.appendChild(feedbackElement);
+        });
+    }
+
+    function getFeedbackIcon(type) {
+        switch(type) {
+            case 'good': return 'check-circle-fill';
+            case 'warning': return 'exclamation-triangle-fill';
+            case 'critical': return 'x-circle-fill';
+            default: return 'info-circle';
+        }
+    }
+
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password-input');
+        const toggleButton = document.getElementById('toggle-password');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.innerHTML = '<i class="bi bi-eye-slash"></i>';
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.innerHTML = '<i class="bi bi-eye"></i>';
+        }
+    }
+
+    // Статистика
+    function saveStatistics() {
+        const stats = {
+            generated: generatedPasswords.length,
+            checked: checkedPasswords.length,
+            averageStrength: calculateAverageStrength(),
+            strongPasswords: countStrongPasswords()
+        };
+        
+        localStorage.setItem('passwordStats', JSON.stringify(stats));
+    }
+
+    function loadStatistics() {
+        const saved = localStorage.getItem('passwordStats');
+        if (saved) {
+            const stats = JSON.parse(saved);
+            generatedPasswords = Array(stats.generated).fill('');
+            checkedPasswords = Array(stats.checked).fill('');
+        }
+    }
+
+    function updateStatistics() {
+        document.getElementById('total-generated').textContent = generatedPasswords.length;
+        document.getElementById('total-checked').textContent = checkedPasswords.length;
+        document.getElementById('average-strength').textContent = calculateAverageStrength() + '%';
+        document.getElementById('strong-passwords').textContent = countStrongPasswords();
+    }
+
+    function calculateAverageStrength() {
+        if (checkedPasswords.length === 0) return 0;
+        const total = checkedPasswords.reduce((sum, item) => sum + (item.score || 0), 0);
+        return Math.round(total / checkedPasswords.length);
+    }
+
+    function countStrongPasswords() {
+        return checkedPasswords.filter(item => item.score >= 70).length;
+    }
+
+    // Уведомления
+    function showAlert(message, type) {
+        const alertClass = `alert-${type}`;
+        const iconClass = getAlertIcon(type);
+        
+        const alert = document.createElement('div');
+        alert.className = `alert ${alertClass} alert-dismissible fade show`;
+        alert.innerHTML = `
+            <i class="bi ${iconClass} me-2"></i>
+            ${message}
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alert);
+        
+        // Автоматическое скрытие
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 4000);
+    }
+
+    function getAlertIcon(type) {
+        switch(type) {
+            case 'success': return 'bi-check-circle-fill';
+            case 'danger': return 'bi-x-circle-fill';
+            case 'warning': return 'bi-exclamation-triangle-fill';
+            case 'info': return 'bi-info-circle-fill';
+            default: return 'bi-info-circle';
+        }
+    }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
