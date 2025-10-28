@@ -11,69 +11,148 @@
     border: 2px solid var(--cyber-border);
     border-radius: 15px;
     overflow: hidden;
+    position: relative;
 }
 
-/* Сайдбар */
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .chat-interface {
+        height: 90vh;
+        flex-direction: column;
+        border-radius: 10px;
+    }
+    
+    .chat-sidebar {
+        width: 100%;
+        height: 200px;
+        border-right: none;
+        border-bottom: 1px solid var(--cyber-border);
+    }
+    
+    .chat-window {
+        height: calc(100% - 200px);
+    }
+    
+    .message {
+        max-width: 95% !important;
+        padding: 0.8rem 1rem !important;
+    }
+    
+    .chat-header {
+        padding: 0.8rem 1rem !important;
+    }
+    
+    .chat-messages {
+        padding: 1rem !important;
+    }
+    
+    .chat-input-container {
+        padding: 1rem !important;
+    }
+    
+    .code-block {
+        font-size: 0.8rem !important;
+    }
+    
+    .mobile-hidden {
+        display: none !important;
+    }
+    
+    .mobile-menu-btn {
+        display: block !important;
+    }
+}
+
+/* Сайдбар в стиле DeepSeek */
 .chat-sidebar {
-    width: 260px;
-    background: rgba(15, 15, 15, 0.95);
-    border-right: 1px solid var(--cyber-border);
+    width: 280px;
+    background: linear-gradient(135deg, rgba(20, 20, 30, 0.98) 0%, rgba(15, 15, 25, 0.98) 100%);
+    border-right: 1px solid rgba(0, 136, 255, 0.3);
     display: flex;
     flex-direction: column;
     height: 100%;
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.mobile-menu-btn {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1000;
+    background: var(--cyber-primary);
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem;
+    color: black;
+    font-size: 1.1rem;
 }
 
 .sidebar-header {
-    padding: 1rem;
-    border-bottom: 1px solid var(--cyber-border);
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 136, 255, 0.2);
+    background: rgba(0, 136, 255, 0.05);
 }
 
 .btn-new-chat {
     width: 100%;
-    background: var(--cyber-primary);
+    background: linear-gradient(135deg, var(--cyber-primary) 0%, var(--cyber-secondary) 100%);
     border: none;
     color: black;
-    padding: 0.8rem 1rem;
-    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    border-radius: 12px;
     font-weight: 600;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
 }
 
 .btn-new-chat:hover {
-    background: var(--cyber-secondary);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 136, 255, 0.4);
 }
 
 .chat-list {
     flex: 1;
     overflow-y: auto;
-    padding: 0.5rem;
+    padding: 0.8rem;
 }
 
 .chat-item {
-    padding: 0.8rem 1rem;
-    margin: 0.2rem 0;
-    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.3rem 0;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px);
 }
 
 .chat-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 136, 255, 0.1);
+    border-color: rgba(0, 136, 255, 0.3);
+    transform: translateX(5px);
 }
 
 .chat-item.active {
     background: rgba(0, 136, 255, 0.15);
     border-color: var(--cyber-secondary);
+    box-shadow: 0 2px 10px rgba(0, 136, 255, 0.2);
 }
 
 .chat-title {
-    font-weight: 500;
-    margin-bottom: 0.3rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--cyber-text);
+    font-size: 0.95rem;
 }
 
 .chat-preview {
@@ -82,19 +161,22 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--cyber-subtext);
 }
 
 .chat-meta {
     display: flex;
     justify-content: space-between;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     opacity: 0.6;
-    margin-top: 0.3rem;
+    margin-top: 0.4rem;
+    color: var(--cyber-subtext);
 }
 
 .sidebar-footer {
-    padding: 1rem;
-    border-top: 1px solid var(--cyber-border);
+    padding: 1.2rem;
+    border-top: 1px solid rgba(0, 136, 255, 0.2);
+    background: rgba(0, 136, 255, 0.03);
 }
 
 .user-info {
@@ -104,41 +186,68 @@
 }
 
 .user-avatar {
-    width: 32px;
-    height: 32px;
-    background: var(--cyber-primary);
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--cyber-primary) 0%, var(--cyber-secondary) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: black;
+    font-weight: bold;
 }
 
 .user-name {
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--cyber-text);
 }
 
-/* Окно чата */
+/* Окно чата в стиле DeepSeek */
 .chat-window {
     flex: 1;
     display: flex;
     flex-direction: column;
     height: 100%;
+    background: linear-gradient(135deg, rgba(10, 10, 15, 0.98) 0%, rgba(8, 8, 12, 0.98) 100%);
 }
 
 .chat-header {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--cyber-border);
+    padding: 1.2rem 1.8rem;
+    border-bottom: 1px solid rgba(0, 136, 255, 0.2);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(20, 20, 20, 0.9);
+    background: rgba(0, 136, 255, 0.05);
+    backdrop-filter: blur(10px);
 }
 
 .chat-title-header {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 700;
     color: var(--cyber-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chat-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-outline-cyber {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    color: var(--cyber-text);
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-cyber:hover {
+    background: rgba(0, 136, 255, 0.1);
+    border-color: var(--cyber-secondary);
+    transform: translateY(-1px);
 }
 
 .chat-messages {
@@ -147,76 +256,327 @@
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.8rem;
+    background: transparent;
 }
 
+/* Сообщения в стиле DeepSeek */
 .message {
-    max-width: 85%;
-    padding: 1rem 1.5rem;
-    border-radius: 15px;
+    max-width: 80%;
+    padding: 1.2rem 1.5rem;
+    border-radius: 18px;
     position: relative;
-    animation: messageSlide 0.3s ease;
+    animation: messageSlide 0.4s ease;
+    line-height: 1.7;
+    backdrop-filter: blur(5px);
+    border: 1px solid transparent;
 }
 
 .message.user {
     align-self: flex-end;
-    background: rgba(0, 136, 255, 0.2);
-    border: 1px solid var(--cyber-secondary);
-    border-bottom-right-radius: 5px;
+    background: linear-gradient(135deg, rgba(0, 136, 255, 0.15) 0%, rgba(0, 136, 255, 0.25) 100%);
+    border: 1px solid rgba(0, 136, 255, 0.4);
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0, 136, 255, 0.2);
 }
 
 .message.assistant {
     align-self: flex-start;
-    background: rgba(0, 255, 136, 0.1);
-    border: 1px solid var(--cyber-primary);
-    border-bottom-left-radius: 5px;
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.08) 0%, rgba(0, 255, 136, 0.15) 100%);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-bottom-left-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.15);
 }
 
 .message-content {
     color: var(--cyber-text);
-    line-height: 1.5;
     white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 0.95rem;
+    line-height: 1.7;
 }
 
+/* Стили для форматирования кода */
+.code-block {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin: 0.8rem 0;
+    overflow-x: auto;
+    position: relative;
+    backdrop-filter: blur(5px);
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(0, 136, 255, 0.2);
+}
+
+.code-language {
+    font-size: 0.85rem;
+    color: var(--cyber-primary);
+    font-weight: 600;
+    background: rgba(0, 136, 255, 0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+}
+
+.copy-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    color: var(--cyber-text);
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.copy-btn:hover {
+    background: var(--cyber-primary);
+    color: black;
+    transform: translateY(-1px);
+}
+
+.code-content {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #00ff88;
+    white-space: pre;
+    tab-size: 4;
+}
+
+.inline-code {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    border-radius: 6px;
+    padding: 0.2rem 0.5rem;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--cyber-primary);
+}
+
+/* Стили для математических выражений */
+.math-equation {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin: 0.8rem 0;
+    text-align: center;
+    font-family: 'Times New Roman', 'Cambria Math', serif;
+    font-size: 1.2rem;
+    color: var(--cyber-primary);
+    line-height: 2;
+    backdrop-filter: blur(5px);
+}
+
+.math-inline {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    margin: 0 0.2rem;
+    font-family: 'Times New Roman', 'Cambria Math', serif;
+    font-size: 1.1rem;
+    color: var(--cyber-primary);
+    vertical-align: middle;
+    backdrop-filter: blur(5px);
+}
+
+.super {
+    vertical-align: super;
+    font-size: 0.75em;
+    position: relative;
+    top: -0.4em;
+}
+
+.sub {
+    vertical-align: sub;
+    font-size: 0.75em;
+}
+
+.math-fraction {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 0.3rem;
+}
+
+.math-numerator {
+    border-bottom: 1px solid var(--cyber-primary);
+    padding: 0 0.6rem;
+    display: block;
+    font-size: 0.9em;
+}
+
+.math-denominator {
+    padding: 0 0.6rem;
+    display: block;
+    font-size: 0.9em;
+}
+
+.math-sqrt {
+    border-top: 1px solid var(--cyber-primary);
+    padding: 0 0.4rem;
+    display: inline-block;
+}
+
+.math-root {
+    position: relative;
+    display: inline-block;
+}
+
+.math-root-index {
+    position: absolute;
+    top: -0.6em;
+    left: -0.8em;
+    font-size: 0.65em;
+}
+
+.math-equation-block {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    border-radius: 12px;
+    padding: 1.8rem;
+    margin: 1.2rem 0;
+    overflow-x: auto;
+    backdrop-filter: blur(5px);
+}
+
+.math-equation-block .math-equation {
+    background: none;
+    border: none;
+    padding: 0.6rem 0;
+    margin: 0;
+}
+
+/* Стили для списков и структуры */
+.message-list {
+    margin: 0.8rem 0;
+    padding-left: 1.8rem;
+}
+
+.message-list li {
+    margin: 0.4rem 0;
+    line-height: 1.6;
+    position: relative;
+}
+
+.message-list li::before {
+    content: "•";
+    color: var(--cyber-primary);
+    position: absolute;
+    left: -1.2rem;
+}
+
+.message-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.message-table th,
+.message-table td {
+    border: 1px solid rgba(0, 136, 255, 0.2);
+    padding: 0.8rem;
+    text-align: left;
+}
+
+.message-table th {
+    background: rgba(0, 136, 255, 0.15);
+    color: var(--cyber-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.message-table td {
+    color: var(--cyber-text);
+    font-size: 0.9rem;
+}
+
+/* Поле ввода в стиле DeepSeek */
 .chat-input-container {
     padding: 1.5rem;
-    border-top: 1px solid var(--cyber-border);
-    background: rgba(10, 10, 10, 0.95);
+    border-top: 1px solid rgba(0, 136, 255, 0.2);
+    background: rgba(0, 136, 255, 0.05);
+    backdrop-filter: blur(10px);
 }
 
 .form-control.cyber-input {
-    padding: 1rem 1.2rem;
+    padding: 1.2rem 1.5rem;
     font-size: 1rem;
-    border-radius: 10px;
+    border-radius: 12px;
     height: auto;
+    resize: none;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    color: var(--cyber-text);
+    transition: all 0.3s ease;
+}
+
+.form-control.cyber-input:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 0 2px rgba(0, 136, 255, 0.2);
+    outline: none;
 }
 
 .btn-cyber {
-    padding: 1rem 1.5rem;
+    padding: 1.2rem 1.8rem;
     font-size: 1rem;
-    border-radius: 10px;
-    margin-left: 0.5rem;
+    border-radius: 12px;
+    margin-left: 0.8rem;
+    background: linear-gradient(135deg, var(--cyber-primary) 0%, var(--cyber-secondary) 100%);
+    border: none;
+    color: black;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-cyber:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 136, 255, 0.4);
 }
 
 .typing-indicator {
     display: none;
     align-self: flex-start;
-    padding: 1rem 1.5rem;
-    background: rgba(0, 255, 136, 0.1);
-    border: 1px solid var(--cyber-primary);
-    border-radius: 15px;
-    border-bottom-left-radius: 5px;
-    margin: 0 1.5rem 0.5rem 1.5rem;
+    padding: 1.2rem 1.5rem;
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 255, 136, 0.2) 100%);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 18px;
+    border-bottom-left-radius: 6px;
+    margin: 0 1.5rem 0.8rem 1.5rem;
+    backdrop-filter: blur(5px);
 }
 
 .typing-dots {
     display: flex;
-    gap: 0.3rem;
+    gap: 0.4rem;
+    align-items: center;
 }
 
 .typing-dots span {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: var(--cyber-primary);
     border-radius: 50%;
     animation: typingPulse 1.4s ease-in-out infinite both;
@@ -231,13 +591,14 @@
 }
 
 .usage-stats {
-    background: rgba(255, 193, 7, 0.1);
-    border: 1px solid #ffc107;
-    border-radius: 10px;
-    padding: 0.8rem;
-    margin-bottom: 1rem;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.2) 100%);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.2rem;
     text-align: center;
     font-size: 0.9rem;
+    backdrop-filter: blur(5px);
 }
 
 .empty-state {
@@ -247,13 +608,21 @@
     justify-content: center;
     height: 100%;
     text-align: center;
-    padding: 2rem;
-    opacity: 0.7;
+    padding: 3rem;
+    opacity: 0.8;
 }
 
 .empty-state i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: var(--cyber-primary);
+    opacity: 0.7;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    color: var(--cyber-subtext);
+    margin: 0;
 }
 
 @keyframes messageSlide {
@@ -279,7 +648,7 @@
 }
 
 .chat-messages::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 .chat-messages::-webkit-scrollbar-track {
@@ -291,6 +660,70 @@
     background: var(--cyber-primary);
     border-radius: 10px;
 }
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--cyber-secondary);
+}
+
+/* Улучшенная анимация для мобильных устройств */
+@media (max-width: 768px) {
+    .chat-sidebar.mobile-hidden {
+        transform: translateX(-100%);
+    }
+    
+    .chat-sidebar.mobile-visible {
+        transform: translateX(0);
+        position: absolute;
+        z-index: 100;
+        height: 100%;
+        box-shadow: 2px 0 20px rgba(0,0,0,0.5);
+    }
+    
+    .math-equation {
+        font-size: 1rem;
+        padding: 1rem;
+        overflow-x: auto;
+    }
+    
+    .math-equation-block {
+        padding: 1.2rem;
+    }
+    
+    .math-inline {
+        font-size: 0.95rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .message {
+        max-width: 90% !important;
+    }
+}
+
+/* Градиентные акценты */
+.gradient-border {
+    border: 1px solid;
+    border-image: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary)) 1;
+}
+
+.glow-effect {
+    box-shadow: 0 0 20px rgba(0, 136, 255, 0.3);
+}
+
+/* Анимация появления */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 </style>
 {% endblock %}
 
@@ -299,7 +732,7 @@
     <div class="row">
         <div class="col-12">
             <!-- Заголовок -->
-            <div class="text-center mb-4">
+            <div class="text-center mb-4 fade-in">
                 <h1 class="cyber-text glow-text mb-3">
                     <i class="bi bi-robot me-2"></i>GigaChat помощник по кибербезопасности
                 </h1>
@@ -317,8 +750,13 @@
 
             <!-- Основной интерфейс -->
             <div class="chat-interface">
+                <!-- Кнопка мобильного меню -->
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="bi bi-list"></i>
+                </button>
+
                 <!-- Сайдбар с чатами -->
-                <div class="chat-sidebar">
+                <div class="chat-sidebar mobile-hidden" id="chatSidebar">
                     <div class="sidebar-header">
                         <button class="btn btn-new-chat" id="newChatBtn">
                             <i class="bi bi-plus-lg"></i> Новый чат
@@ -370,13 +808,14 @@
                     <div class="chat-input-container">
                         <form id="chatForm">
                             <div class="input-group">
-                                <input type="text" class="form-control cyber-input" 
+                                <textarea class="form-control cyber-input" 
                                        id="messageInput" 
                                        placeholder="Введите ваш вопрос..."
                                        autocomplete="off"
-                                       maxlength="1000">
+                                       maxlength="1000"
+                                       rows="1"></textarea>
                                 <button type="submit" class="btn btn-cyber" id="sendButton">
-                                    <i class="bi bi-send"></i>
+                                    <i class="bi bi-send"></i> Отправить
                                 </button>
                             </div>
                         </form>
@@ -393,6 +832,186 @@
 let currentChatId = null;
 let chats = [];
 let isCreatingChat = false;
+let isMobileMenuOpen = false;
+
+// Улучшенные функции для форматирования математических выражений
+function formatMathExpression(text) {
+    // Обработка степеней с числами в основании: 2^x, 10^3 и т.д.
+    text = text.replace(/(\d+)\^([a-zA-Zα-ω])/g, '$1<span class="super">$2</span>');
+    text = text.replace(/(\d+)\^(\d+)/g, '$1<span class="super">$2</span>');
+    text = text.replace(/([a-zA-Zα-ω])\^(\d+)/g, '$1<span class="super">$2</span>');
+    text = text.replace(/([a-zA-Zα-ω])\^([a-zA-Zα-ω])/g, '$1<span class="super">$2</span>');
+    
+    // Обработка нижних индексов: x_1, a_n и т.д.
+    text = text.replace(/([a-zA-Zα-ω])_(\d+)/g, '$1<span class="sub">$2</span>');
+    text = text.replace(/([a-zA-Zα-ω])_([a-zA-Zα-ω])/g, '$1<span class="sub">$2</span>');
+    
+    // Обработка дробей: \frac{a}{b}
+    text = text.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, 
+        '<span class="math-fraction"><span class="math-numerator">$1</span><span class="math-denominator">$2</span></span>');
+    
+    // Обработка квадратных корней: \sqrt{x}, \sqrt[n]{x}
+    text = text.replace(/\\sqrt\[(\d+)\]\{([^}]+)\}/g, 
+        '<span class="math-root"><span class="math-root-index">$1</span><span class="math-sqrt">$2</span></span>');
+    text = text.replace(/\\sqrt\{([^}]+)\}/g, 
+        '<span class="math-sqrt">$1</span>');
+    
+    // Обработка греческих букв
+    const greekLetters = {
+        'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'delta': 'δ', 'epsilon': 'ε',
+        'zeta': 'ζ', 'eta': 'η', 'theta': 'θ', 'iota': 'ι', 'kappa': 'κ',
+        'lambda': 'λ', 'mu': 'μ', 'nu': 'ν', 'xi': 'ξ', 'omicron': 'ο',
+        'pi': 'π', 'rho': 'ρ', 'sigma': 'σ', 'tau': 'τ', 'upsilon': 'υ',
+        'phi': 'φ', 'chi': 'χ', 'psi': 'ψ', 'omega': 'ω',
+        'Alpha': 'Α', 'Beta': 'Β', 'Gamma': 'Γ', 'Delta': 'Δ', 'Epsilon': 'Ε',
+        'Zeta': 'Ζ', 'Eta': 'Η', 'Theta': 'Θ', 'Iota': 'Ι', 'Kappa': 'Κ',
+        'Lambda': 'Λ', 'Mu': 'Μ', 'Nu': 'Ν', 'Xi': 'Ξ', 'Omicron': 'Ο',
+        'Pi': 'Π', 'Rho': 'Ρ', 'Sigma': 'Σ', 'Tau': 'Τ', 'Upsilon': 'Υ',
+        'Phi': 'Φ', 'Chi': 'Χ', 'Psi': 'Ψ', 'Omega': 'Ω'
+    };
+    
+    for (const [key, value] of Object.entries(greekLetters)) {
+        text = text.replace(new RegExp('\\\\' + key, 'g'), value);
+    }
+    
+    // Обработка математических операторов
+    text = text.replace(/\\times/g, '×');
+    text = text.replace(/\\div/g, '÷');
+    text = text.replace(/\\cdot/g, '·');
+    text = text.replace(/\\pm/g, '±');
+    text = text.replace(/\\mp/g, '∓');
+    text = text.replace(/\\infty/g, '∞');
+    text = text.replace(/\\approx/g, '≈');
+    text = text.replace(/\\neq/g, '≠');
+    text = text.replace(/\\leq/g, '≤');
+    text = text.replace(/\\geq/g, '≥');
+    text = text.replace(/\\rightarrow/g, '→');
+    text = text.replace(/\\leftarrow/g, '←');
+    text = text.replace(/\\Rightarrow/g, '⇒');
+    text = text.replace(/\\Leftarrow/g, '⇐');
+    
+    return text;
+}
+
+function formatMessageContent(content) {
+    // Обработка блоков кода
+    content = content.replace(/```(\w+)?\n([\s\S]*?)```/g, function(match, lang, code) {
+        const language = lang || 'text';
+        return `<div class="code-block">
+            <div class="code-header">
+                <span class="code-language">${language.toUpperCase()}</span>
+                <button class="copy-btn" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Копировать
+                </button>
+            </div>
+            <pre class="code-content">${escapeHtml(code.trim())}</pre>
+        </div>`;
+    });
+
+    // Обработка inline кода
+    content = content.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+
+    // Обработка математических блоков с улучшенным форматированием
+    content = content.replace(/\$\$([^$]+)\$\$/g, function(match, math) {
+        const formattedMath = formatMathExpression(math.trim());
+        return `<div class="math-equation-block">
+            <div class="math-equation">${formattedMath}</div>
+        </div>`;
+    });
+
+    // Обработка inline математики с улучшенным форматированием
+    content = content.replace(/\$([^$]+)\$/g, function(match, math) {
+        const formattedMath = formatMathExpression(math.trim());
+        return `<span class="math-inline">${formattedMath}</span>`;
+    });
+
+    // Обработка систем уравнений
+    content = content.replace(/\\begin\{cases\}([\s\S]*?)\\end\{cases\}/g, function(match, system) {
+        const equations = system.split('\\\\').map(eq => 
+            `<div class="math-equation">${formatMathExpression(eq.trim())}</div>`
+        ).join('');
+        return `<div class="math-system">${equations}</div>`;
+    });
+
+    // Обработка простых степеней вне математических блоков
+    content = content.replace(/(\w+)\^(\d+)(?![^<]*>)/g, '$1<span class="super">$2</span>');
+    content = content.replace(/(\d+)\^(\d+)(?![^<]*>)/g, '$1<span class="super">$2</span>');
+    content = content.replace(/(\d+)\^([a-zA-Z])(?![^<]*>)/g, '$1<span class="super">$2</span>');
+    
+    // Обработка списков
+    content = content.replace(/^- (.+)$/gm, '<li>$1</li>');
+    content = content.replace(/(<li>.*<\/li>)/s, '<ul class="message-list">$1</ul>');
+
+    // Обработка таблиц
+    content = content.replace(/\|(.+)\|/g, function(match, row) {
+        const cells = row.split('|').map(cell => `<td>${formatMathExpression(cell.trim())}</td>`).join('');
+        return `<table class="message-table"><tbody><tr>${cells}</tr></tbody></table>`;
+    });
+
+    // Обработка жирного текста
+    content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    content = content.replace(/__(.+?)__/g, '<strong>$1</strong>');
+
+    // Обработка курсива
+    content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    content = content.replace(/_(.+?)_/g, '<em>$1</em>');
+
+    return content;
+}
+
+// Функция копирования кода
+function copyCode(button) {
+    const codeBlock = button.closest('.code-block');
+    const codeContent = codeBlock.querySelector('.code-content');
+    const text = codeContent.textContent;
+    
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="bi bi-check"></i> Скопировано!';
+        button.style.background = 'var(--cyber-primary)';
+        button.style.color = 'black';
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.background = '';
+            button.style.color = '';
+        }, 2000);
+    }).catch(err => {
+        console.error('Ошибка копирования:', err);
+        button.innerHTML = '<i class="bi bi-x"></i> Ошибка';
+    });
+}
+
+// Автоматическое изменение высоты textarea
+function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px';
+}
+
+// Мобильное меню
+function toggleMobileMenu() {
+    const sidebar = document.getElementById('chatSidebar');
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    
+    if (isMobileMenuOpen) {
+        sidebar.classList.remove('mobile-visible');
+        sidebar.classList.add('mobile-hidden');
+        menuBtn.innerHTML = '<i class="bi bi-list"></i>';
+    } else {
+        sidebar.classList.remove('mobile-hidden');
+        sidebar.classList.add('mobile-visible');
+        menuBtn.innerHTML = '<i class="bi bi-x"></i>';
+    }
+    
+    isMobileMenuOpen = !isMobileMenuOpen;
+}
+
+// Закрытие мобильного меню при клике на чат
+function closeMobileMenu() {
+    if (window.innerWidth <= 768 && isMobileMenuOpen) {
+        toggleMobileMenu();
+    }
+}
 
 // Загрузка списка чатов
 async function loadChats() {
@@ -435,7 +1054,10 @@ function renderChatList() {
         
         const chatItem = document.createElement('div');
         chatItem.className = `chat-item ${chat.id === currentChatId ? 'active' : ''}`;
-        chatItem.onclick = () => openChat(chat.id);
+        chatItem.onclick = () => {
+            openChat(chat.id);
+            closeMobileMenu();
+        };
         
         chatItem.innerHTML = `
             <div class="chat-title">${escapeHtml(chat.title)}</div>
@@ -452,7 +1074,7 @@ function renderChatList() {
 
 // Создание нового чата
 async function createNewChat() {
-    if (isCreatingChat) return; // Защита от множественных кликов
+    if (isCreatingChat) return;
     
     isCreatingChat = true;
     try {
@@ -467,8 +1089,9 @@ async function createNewChat() {
         
         if (data.success) {
             console.log('✅ Чат создан:', data.chat_id);
-            await loadChats(); // Перезагружаем список
-            await openChat(data.chat_id); // Открываем новый чат
+            await loadChats();
+            await openChat(data.chat_id);
+            closeMobileMenu();
             return data.chat_id;
         } else {
             console.error('❌ Ошибка создания чата:', data.error);
@@ -492,11 +1115,9 @@ async function openChat(chatId) {
             currentChatId = chatId;
             document.getElementById('currentChatTitle').textContent = data.chat.title;
             renderChatMessages(data.chat.messages);
-            renderChatList(); // Обновляем активный элемент в списке
+            renderChatList();
             
-            // Активируем поле ввода
             document.getElementById('messageInput').focus();
-            
             console.log('✅ Чат открыт:', chatId);
         } else {
             console.error('❌ Чат не найден:', chatId);
@@ -530,7 +1151,6 @@ function renderChatMessages(messages) {
 function addMessage(content, isUser = false) {
     const messagesContainer = document.getElementById('chatMessages');
     
-    // Убираем empty-state если он есть
     if (messagesContainer.querySelector('.empty-state')) {
         messagesContainer.innerHTML = '';
     }
@@ -540,7 +1160,13 @@ function addMessage(content, isUser = false) {
     
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
-    contentDiv.innerHTML = content;
+    
+    // Форматируем контент только для AI сообщений
+    if (!isUser) {
+        contentDiv.innerHTML = formatMessageContent(content);
+    } else {
+        contentDiv.textContent = content;
+    }
     
     messageDiv.appendChild(contentDiv);
     messagesContainer.appendChild(messageDiv);
@@ -564,7 +1190,6 @@ async function sendMessage(message) {
     
     let targetChatId = currentChatId;
     
-    // Если нет активного чата, создаем новый
     if (!targetChatId) {
         console.log('🔄 Создаем новый чат для сообщения...');
         targetChatId = await createNewChat();
@@ -574,21 +1199,16 @@ async function sendMessage(message) {
             return;
         }
         
-        // Ждем немного чтобы чат точно создался
         await new Promise(resolve => setTimeout(resolve, 500));
     }
     
-    // Добавляем сообщение пользователя
     addMessage(message, true);
-    
-    // Очищаем input
     document.getElementById('messageInput').value = '';
+    document.getElementById('messageInput').style.height = 'auto';
     
-    // Показываем индикатор набора
     setTyping(true);
     
     try {
-        console.log('📤 Отправляем сообщение в чат:', targetChatId);
         const response = await fetch(`/ai/chats/${targetChatId}/ask`, {
             method: 'POST',
             headers: {
@@ -600,14 +1220,11 @@ async function sendMessage(message) {
         const data = await response.json();
         
         if (data.response) {
-            console.log('✅ Получен ответ от AI');
             addMessage(data.response, false);
-            await loadChats(); // Обновляем список чатов
+            await loadChats();
         } else if (data.error) {
-            console.error('❌ Ошибка от сервера:', data.error);
             addMessage(`❌ ${data.error}`, false);
             
-            // Если чат не найден, создаем новый
             if (data.error.includes('не найден')) {
                 currentChatId = null;
                 await createNewChat();
@@ -688,7 +1305,7 @@ async function updateUsageStats() {
 
 // Обработчики событий
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Инициализация чата...');
+    console.log('🚀 Инициализация чата в стиле DeepSeek...');
     
     // Загружаем чаты и статистику
     loadChats();
@@ -697,6 +1314,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчик кнопки нового чата
     document.getElementById('newChatBtn').addEventListener('click', createNewChat);
     
+    // Обработчик мобильного меню
+    document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+    
     // Обработчик формы
     document.getElementById('chatForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -704,12 +1324,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const message = input.value.trim();
         
         if (message) {
-            console.log('📝 Отправка сообщения:', message);
             sendMessage(message);
         }
     });
     
-    // Enter для отправки
+    // Автоматическое изменение высоты textarea
+    document.getElementById('messageInput').addEventListener('input', function() {
+        autoResizeTextarea(this);
+    });
+    
+    // Enter для отправки (Shift+Enter для новой строки)
     document.getElementById('messageInput').addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -719,9 +1343,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Фокус на поле ввода при загрузке
     document.getElementById('messageInput').focus();
+    
+    // Закрытие мобильного меню при ресайзе
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && isMobileMenuOpen) {
+            toggleMobileMenu();
+        }
+    });
 });
 
 // Делаем функции глобальными для кнопок
 window.clearCurrentChat = clearCurrentChat;
+window.copyCode = copyCode;
+window.toggleMobileMenu = toggleMobileMenu;
 </script>
 {% endblock %}

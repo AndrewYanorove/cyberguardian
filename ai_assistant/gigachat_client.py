@@ -169,7 +169,7 @@ class OptimizedGigaChatClient:
             system_prompt, _ = self._optimize_prompt(message)
             
             payload = {
-                "model": "GigaChat",
+                "model": "GigaChat-Max",  # ⚡ ИЗМЕНЕНО: GigaChat-Max вместо GigaChat
                 "messages": [
                     {
                         "role": "system",
@@ -180,11 +180,11 @@ class OptimizedGigaChatClient:
                         "content": message
                     }
                 ],
-                "max_tokens": 500,  # Увеличил лимит
+                "max_tokens": 500,
                 "temperature": 0.7
             }
             
-            print(f"📤 Отправляем запрос к GigaChat: {message[:50]}...")
+            print(f"📤 Отправляем запрос к GigaChat-Max: {message[:50]}...")
             
             response = requests.post(
                 f"{self.api_url}/chat/completions",
@@ -198,7 +198,7 @@ class OptimizedGigaChatClient:
                 result = response.json()
                 ai_response = result['choices'][0]['message']['content']
                 
-                print(f"✅ Получен ответ от GigaChat: {ai_response[:50]}...")
+                print(f"✅ Получен ответ от GigaChat-Max: {ai_response[:50]}...")
                 
                 # Сохраняем в кэш
                 self._cache_response(message, ai_response)
@@ -243,7 +243,7 @@ class OptimizedGigaChatClient:
             if key in msg_lower:
                 return f"🤖 Демо-режим: {demo_responses[key]}"
         
-        return "🤖 GigaChat временно недоступен. Используется демо-режим. Попробуйте спросить о:\n• Паролях\n• Фишинге\n• Wi-Fi безопасности"
+        return "🤖 GigaChat-Max временно недоступен. Используется демо-режим. Попробуйте спросить о:\n• Паролях\n• Фишинге\n• Wi-Fi безопасности"
     
     def get_usage_stats(self) -> dict:
         """Возвращает статистику использования"""
