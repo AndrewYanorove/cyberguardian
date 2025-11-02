@@ -13,6 +13,38 @@ login_manager = LoginManager()
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+def get_password_strength(password):
+    """Просто показываем силу пароля, но не блокируем регистрацию"""
+    strength = 0
+    feedback = []
+    
+    if len(password) >= 8:
+        strength += 25
+    else:
+        feedback.append("минимум 8 символов")
+    
+    if re.search(r"[A-Z]", password):
+        strength += 25
+    else:
+        feedback.append("заглавные буквы")
+    
+    if re.search(r"[a-z]", password):
+        strength += 25
+    else:
+        feedback.append("строчные буквы")
+    
+    if re.search(r"\d", password):
+        strength += 15
+    else:
+        feedback.append("цифры")
+    
+    if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        strength += 10
+    else:
+        feedback.append("спецсимволы")
+    
+    return strength, feedback
+
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -24,18 +56,21 @@ def register():
         # Валидация
         errors = []
         
+        # Валидация имени пользователя
         if not username or len(username) < 3:
             errors.append('Имя пользователя должно содержать минимум 3 символа')
+        elif not re.match(r'^[a-zA-Z0-9_]+$', username):
+            errors.append('Имя пользователя может содержать только буквы, цифры и подчеркивания')
         
-        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+        # Валидация email
+        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
             errors.append('Некорректный email адрес')
         
-        if len(password) < 8:
-            errors.append('Пароль должен содержать минимум 8 символов')
-        
+        # Проверка совпадения паролей
         if password != confirm_password:
             errors.append('Пароли не совпадают')
         
+        # Проверка уникальности
         if User.query.filter_by(username=username).first():
             errors.append('Имя пользователя уже занято')
         
@@ -45,7 +80,9 @@ def register():
         if errors:
             for error in errors:
                 flash(error, 'danger')
-            return render_template('auth/register.html')
+            return render_template('auth/register.html', 
+                                 username=username, 
+                                 email=email)
         
         # Создание пользователя
         try:
@@ -54,8 +91,10 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            flash('Регистрация успешна! Теперь войдите в систему.', 'success')
-            return redirect(url_for('auth.login'))
+            # Автоматический вход после регистрации
+            login_user(user)
+            flash('Регистрация успешна! Добро пожаловать в CyberGuardian!', 'success')
+            return redirect(url_for('dashboard'))
             
         except Exception as e:
             db.session.rollback()
@@ -74,8 +113,14 @@ def login():
         
         if user and user.check_password(password):
             login_user(user, remember=remember)
-            flash('Вход выполнен успешно!', 'success')
-            return redirect(url_for('index'))
+            user.last_login = db.func.now()
+            db.session.commit()
+            
+            flash(f'Добро пожаловать обратно, {username}!', 'success')
+            
+            # Перенаправление на запрошенную страницу или dashboard
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('dashboard'))
         else:
             flash('Неверное имя пользователя или пароль', 'danger')
     
@@ -84,14 +129,48 @@ def login():
 @auth_bp.route('/logout')
 @login_required
 def logout():
+    username = current_user.username
     logout_user()
-    flash('Вы вышли из системы', 'info')
+    flash(f'Вы вышли из системы. Возвращайтесь, {username}!', 'info')
     return redirect(url_for('index'))
 
 @auth_bp.route('/profile')
 @login_required
 def profile():
     return render_template('auth/profile.html', user=current_user)
+
+@auth_bp.route('/check_username')
+def check_username():
+    """AJAX проверка доступности имени пользователя"""
+    username = request.args.get('username', '')
+    if len(username) < 3:
+        return jsonify({'available': False, 'message': 'Минимум 3 символа'})
+    
+    user = User.query.filter_by(username=username).first()
+    if user:
+        return jsonify({'available': False, 'message': 'Имя занято'})
+    else:
+        return jsonify({'available': True, 'message': 'Доступно'})
+
+@auth_bp.route('/check_email')
+def check_email():
+    """AJAX проверка email"""
+    email = request.args.get('email', '')
+    if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+        return jsonify({'valid': False, 'message': 'Некорректный email'})
+    
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return jsonify({'valid': False, 'message': 'Email уже используется'})
+    else:
+        return jsonify({'valid': True, 'message': 'Email доступен'})
+
+@auth_bp.route('/check_password', methods=['POST'])
+def check_password():
+    """AJAX проверка сложности пароля"""
+    password = request.form.get('password', '')
+    strength, feedback = get_password_strength(password)
+    return jsonify({'strength': strength, 'feedback': feedback})
 
 def init_login_manager(app):
     login_manager.init_app(app)

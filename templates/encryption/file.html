@@ -57,6 +57,61 @@
     margin-top: 1rem;
 }
 
+/* Стили для кастомной навигации */
+.custom-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--cyber-border);
+    margin-bottom: 2rem;
+}
+
+.custom-tab {
+    background: transparent;
+    border: none;
+    color: var(--cyber-text);
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    position: relative;
+    border-radius: 8px 8px 0 0;
+    font-size: 1rem;
+}
+
+.custom-tab:hover {
+    opacity: 1;
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.custom-tab.active {
+    opacity: 1;
+    background: rgba(0, 255, 136, 0.15);
+    color: var(--cyber-primary);
+}
+
+.custom-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--cyber-primary);
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 /* Адаптивность для мобильных */
 @media (max-width: 768px) {
     .back-btn {
@@ -71,6 +126,25 @@
     
     .file-header {
         position: static;
+    }
+
+    .custom-tabs {
+        flex-direction: column;
+        border-bottom: none;
+        gap: 0.5rem;
+    }
+
+    .custom-tab {
+        border-radius: 8px;
+        border-bottom: none !important;
+    }
+
+    .custom-tab.active::after {
+        display: none;
+    }
+
+    .custom-tab.active {
+        border-left: 3px solid var(--cyber-primary);
     }
 }
 </style>
@@ -94,26 +168,20 @@
                 <p class="cyber-subtext">Шифруйте текст в файлы и расшифровывайте их обратно</p>
             </div>
 
-            <!-- Навигация -->
-            <ul class="nav nav-cyber mb-4" id="fileTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="encrypt-tab" data-bs-toggle="tab" 
-                            data-bs-target="#encrypt" type="button" role="tab">
-                        <i class="bi bi-lock me-2"></i>Зашифровать в файл
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="decrypt-tab" data-bs-toggle="tab" 
-                            data-bs-target="#decrypt" type="button" role="tab">
-                        <i class="bi bi-unlock me-2"></i>Расшифровать файл
-                    </button>
-                </li>
-            </ul>
+            <!-- КАСТОМНАЯ НАВИГАЦИЯ БЕЗ BOOTSTRAP -->
+            <div class="custom-tabs" id="fileTabs">
+                <button class="custom-tab active" data-tab="encrypt">
+                    <i class="bi bi-lock me-2"></i>Зашифровать в файл
+                </button>
+                <button class="custom-tab" data-tab="decrypt">
+                    <i class="bi bi-unlock me-2"></i>Расшифровать файл
+                </button>
+            </div>
 
             <!-- Контент вкладок -->
-            <div class="tab-content" id="fileTabsContent">
+            <div class="tab-content">
                 <!-- Вкладка шифрования -->
-                <div class="tab-pane fade show active" id="encrypt" role="tabpanel">
+                <div class="tab-pane active" id="encrypt-pane">
                     <div class="cyber-file">
                         <h4 class="cyber-text mb-4">
                             <i class="bi bi-lock-fill me-2"></i>Создать зашифрованный файл
@@ -164,7 +232,7 @@
                 </div>
 
                 <!-- Вкладка дешифрования -->
-                <div class="tab-pane fade" id="decrypt" role="tabpanel">
+                <div class="tab-pane" id="decrypt-pane">
                     <div class="cyber-file">
                         <h4 class="cyber-text mb-4">
                             <i class="bi bi-unlock-fill me-2"></i>Расшифровать файл
@@ -236,35 +304,69 @@
 <script>
 let selectedFile = null;
 
-// Переключение алгоритмов
-document.getElementById('encrypt-algorithm').addEventListener('change', function() {
-    document.getElementById('caesar-options').style.display = 
-        this.value === 'caesar' ? 'block' : 'none';
-});
+// Простая логика переключения табов
+function switchTab(tabName) {
+    console.log('Переключаем на таб:', tabName);
+    
+    // Убираем активный класс у всех кнопок
+    document.querySelectorAll('.custom-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Убираем активный класс у всех панелей
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+    });
+    
+    // Добавляем активный класс выбранной кнопке
+    document.querySelector(`.custom-tab[data-tab="${tabName}"]`).classList.add('active');
+    
+    // Показываем выбранную панель
+    document.getElementById(`${tabName}-pane`).classList.add('active');
+}
 
-// Drag & Drop функционал
-const uploadArea = document.getElementById('uploadArea');
-const fileInput = document.getElementById('fileInput');
+// Инициализация после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Инициализация кастомных табов...');
+    
+    // Добавляем обработчики клика на кнопки табов
+    document.querySelectorAll('.custom-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+    
+    // Переключение алгоритмов
+    document.getElementById('encrypt-algorithm').addEventListener('change', function() {
+        document.getElementById('caesar-options').style.display = 
+            this.value === 'caesar' ? 'block' : 'none';
+    });
 
-uploadArea.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    uploadArea.classList.add('dragover');
-});
+    // Drag & Drop функционал
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
 
-uploadArea.addEventListener('dragleave', function() {
-    uploadArea.classList.remove('dragover');
-});
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
 
-uploadArea.addEventListener('drop', function(e) {
-    e.preventDefault();
-    uploadArea.classList.remove('dragover');
-    handleFile(e.dataTransfer.files[0]);
-});
+    uploadArea.addEventListener('dragleave', function() {
+        uploadArea.classList.remove('dragover');
+    });
 
-fileInput.addEventListener('change', function(e) {
-    if (e.target.files[0]) {
-        handleFile(e.target.files[0]);
-    }
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        handleFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            handleFile(e.target.files[0]);
+        }
+    });
 });
 
 function handleFile(file) {
@@ -272,7 +374,6 @@ function handleFile(file) {
         showNotification('Выберите файл с расширением .cyber', 'warning');
         return;
     }
-
 
     selectedFile = file;
     

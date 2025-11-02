@@ -6,31 +6,44 @@
         <div class="col-md-5">
             <div class="cyber-card p-5">
                 <div class="text-center mb-4">
-                    <i class="bi bi-shield-lock display-4 text-cyber-primary"></i>
-                    <h2 class="cyber-text glow-text mt-3">Вход в систему</h2>
+                    <div class="cyber-icon-large">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <h2 class="cyber-title glow-text mt-3">Вход в систему</h2>
                     <p class="cyber-subtext">Добро пожаловать обратно, агент</p>
                 </div>
                 
-                <form method="POST">
-                    <div class="mb-3">
-                        <label class="form-label cyber-subtext">Имя пользователя</label>
+                <form method="POST" id="loginForm">
+                    <div class="mb-4">
+                        <label class="form-label cyber-label">
+                            <i class="bi bi-person me-2"></i>Имя пользователя
+                        </label>
                         <input type="text" class="form-control cyber-input" name="username" required 
-                               placeholder="Введите имя пользователя">
+                               placeholder="Введите имя пользователя" autofocus>
                     </div>
                     
                     <div class="mb-4">
-                        <label class="form-label cyber-subtext">Пароль</label>
+                        <label class="form-label cyber-label">
+                            <i class="bi bi-key me-2"></i>Пароль
+                        </label>
                         <input type="password" class="form-control cyber-input" name="password" required 
-                               placeholder="Введите пароль">
+                               placeholder="Введите пароль" id="passwordInput">
+                        <div class="text-end mt-2">
+                            <button type="button" class="btn btn-sm cyber-link p-0" id="togglePassword">
+                                <i class="bi bi-eye"></i> Показать пароль
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="mb-3 form-check">
+                    <div class="mb-4 form-check">
                         <input type="checkbox" class="form-check-input cyber-check" id="remember" name="remember">
-                        <label class="form-check-label cyber-subtext" for="remember">Запомнить меня</label>
+                        <label class="form-check-label cyber-subtext" for="remember">
+                            Запомнить меня на этом устройстве
+                        </label>
                     </div>
                     
-                    <button type="submit" class="btn btn-cyber w-100 mb-3">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+                    <button type="submit" class="btn btn-cyber w-100 mb-3 py-3">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти в систему
                     </button>
                     
                     <div class="text-center">
@@ -39,7 +52,94 @@
                     </div>
                 </form>
             </div>
+            
+            <!-- Быстрый доступ для демо -->
+            <div class="cyber-card mt-4 p-4">
+                <h6 class="cyber-text-bright mb-3">
+                    <i class="bi bi-lightning me-2"></i>Быстрый доступ
+                </h6>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-cyber btn-sm" onclick="fillDemoCredentials()">
+                        <i class="bi bi-play-circle me-2"></i>Демо аккаунт
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+.cyber-icon-large {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 2rem;
+    color: white;
+}
+
+.btn-outline-cyber {
+    border: 2px solid var(--cyber-primary);
+    color: var(--cyber-primary);
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-cyber:hover {
+    background: var(--cyber-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('passwordInput');
+    let passwordVisible = false;
+    
+    // Переключение видимости пароля
+    togglePassword.addEventListener('click', function() {
+        passwordVisible = !passwordVisible;
+        passwordInput.type = passwordVisible ? 'text' : 'password';
+        togglePassword.innerHTML = passwordVisible ? 
+            '<i class="bi bi-eye-slash"></i> Скрыть пароль' : 
+            '<i class="bi bi-eye"></i> Показать пароль';
+    });
+    
+    // Анимация при фокусе
+    const inputs = document.querySelectorAll('.cyber-input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+    });
+});
+
+// Заполнение демо credentials
+function fillDemoCredentials() {
+    document.querySelector('input[name="username"]').value = 'demo';
+    document.querySelector('input[name="password"]').value = 'demo123';
+    
+    // Показать уведомление
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-info alert-dismissible fade show mt-3';
+    alert.innerHTML = `
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Демо доступ:</strong> demo / demo123
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.querySelector('.cyber-card').appendChild(alert);
+}
+</script>
 {% endblock %}

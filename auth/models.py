@@ -39,37 +39,20 @@ class User(db.Model):
         }
     
     # Методы, необходимые для Flask-Login
+    @property
     def is_authenticated(self):
         return True
     
+    @property
     def is_active(self):
         return True
     
+    @property
     def is_anonymous(self):
         return False
     
     def get_id(self):
         return str(self.id)
     
-    def get_learning_statistics(self):
-        """Получить статистику обучения пользователя"""
-        from education.models import UserProgress
-        
-        completed_lessons = UserProgress.query.filter_by(
-            user_id=self.id, 
-            completed=True
-        ).count()
-        
-        total_time = db.session.query(db.func.sum(UserProgress.time_spent)).filter_by(
-            user_id=self.id
-        ).scalar() or 0
-        
-        average_score = db.session.query(db.func.avg(UserProgress.score)).filter_by(
-            user_id=self.id
-        ).scalar() or 0
-        
-        return {
-            'completed_lessons': completed_lessons,
-            'total_time_hours': round(total_time / 3600, 1),
-            'average_score': round(average_score, 1)
-        }
+    def __repr__(self):
+        return f'<User {self.username}>'

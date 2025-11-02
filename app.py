@@ -5,6 +5,7 @@ from flask import send_from_directory
 import os
 from datetime import datetime
 import json
+import sqlite3
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -15,7 +16,13 @@ def create_app():
     # Конфигурация
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'cyberguardian-super-secret-2024')
     app.config['TEMPLATES_AUTO_RELOAD'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///cyberguardian.db')
+    
+    # 🔒 АБСОЛЮТНАЯ ЗАЩИТА БАЗЫ ДАННЫХ
+    os.makedirs('instance', exist_ok=True)
+    os.makedirs('backups', exist_ok=True)
+    
+    db_path = os.path.join(os.path.abspath('instance'), 'cyberguardian.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SESSION_TYPE'] = 'filesystem'
     
@@ -141,7 +148,7 @@ def create_app():
                                 authenticated=False, 
                                 error=False)
         
-        # Получение данных для админ-панели (остальной код тот же)
+        # Получение данных для админ-панели
         try:
             from auth.models import User
             from education.models import UserProgress
@@ -210,37 +217,53 @@ def create_app():
     # Добавляем кэширование для всех ответов
     @app.after_request
     def add_cache_headers(response):
-        # Используем request.path вместо response.request.path
         if 'static' in request.path:
             response.headers['Cache-Control'] = 'public, max-age=31536000'
-        # HTML страницы - кэш на 5 минут
         elif response.content_type and 'text/html' in response.content_type:
             response.headers['Cache-Control'] = 'public, max-age=300'
-        # API ответы - кэш на 30 секунд
         elif response.content_type and 'application/json' in response.content_type:
             response.headers['Cache-Control'] = 'public, max-age=30'
         
         return response
     
-    # Создаем таблицы при запуске
+    # 🔒 УЛУЧШЕННАЯ ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ
     with app.app_context():
         try:
-            # Импортируем все модели для создания таблиц
             from auth.models import User
-            from education.models import UserProgress
-            from encryption.models import EncryptionHistory
             
-            db.create_all()
-            print("✅ База данных инициализирована успешно!")
-            print("🔄 Создаем демо-данные...")
-            create_demo_data()
+            # Проверяем существует ли файл БД
+            db_file = 'instance/cyberguardian.db'
+            db_exists = os.path.exists(db_file)
+            
+            print(f"🔍 Проверка БД: {db_file}")
+            print(f"📁 Файл БД существует: {db_exists}")
+            
+            if db_exists:
+                # 🔒 ВАЖНО: НЕ пересоздаем таблицы если БД уже существует!
+                # Только добавляем недостающие таблицы
+                db.create_all()
+                
+                # Проверяем что данные на месте
+                user_count = User.query.count()
+                print(f"👤 Пользователей в БД: {user_count}")
+                
+                if user_count == 0:
+                    print("⚠️ БД существует но пустая, создаем демо-данные...")
+                    create_demo_data()
+            else:
+                # Создаем новую БД только если файла нет
+                print("🆕 Создаем новую базу данных...")
+                db.create_all()
+                create_demo_data()
+                
         except Exception as e:
             print(f"❌ Ошибка инициализации БД: {e}")
+            # НЕ пересоздаем БД, просто логируем ошибку
     
     return app
 
 def create_demo_data():
-    """Создание демо-данных при первом запуске"""
+    """Создание демо-данных только для ПУСТОЙ БД"""
     from database import db
     from auth.models import User
     from education.models import UserProgress
@@ -251,26 +274,13 @@ def create_demo_data():
         if User.query.count() == 0:
             demo_user = User(
                 username='demo',
-                email='demo@cyberguardian.ru',
-                password_hash='pbkdf2:sha256:260000$abc123$def456'
+                email='demo@cyberguardian.ru'
             )
-            demo_user.set_password('demo123')  # Для реального использования
+            demo_user.set_password('demo123')
             
             db.session.add(demo_user)
             db.session.commit()
             print("👤 Демо-пользователь создан: demo / demo123")
-            
-            # Создаем демо-запись в истории шифрования
-            demo_history = EncryptionHistory(
-                user_id=demo_user.id,
-                operation_type='encrypt',
-                algorithm='AES',
-                original_text='Hello CyberGuardian!',
-                processed_text='U2FsdGVkX1+2w6L8JcKc6w=='
-            )
-            db.session.add(demo_history)
-            db.session.commit()
-            print("📝 Демо-запись истории шифрования создана")
             
     except Exception as e:
         print(f"⚠️ Ошибка создания демо-данных: {e}")
@@ -281,9 +291,28 @@ app = create_app()
 
 if __name__ == '__main__':
     print("🚀 CyberGuardian 2.0 запускается...")
+    print("🛡️ РЕЖИМ ПОЛНОЙ ЗАЩИТЫ ДАННЫХ АКТИВИРОВАН!")
+    
+    # СУПЕР-ПРОВЕРКА БАЗЫ ДАННЫХ
+    try:
+        from check_db import check_database_integrity, backup_database
+        
+        print("🔍 Проверяем целостность базы данных...")
+        if check_database_integrity():
+            print("✅ База данных готова к работе!")
+        else:
+            print("⚠️ Обнаружены проблемы с БД!")
+            
+        # Создаем резервную копию при КАЖДОМ запуске
+        print("💾 Создаем резервную копию БД...")
+        backup_database()
+        
+    except Exception as e:
+        print(f"⚠️ Не удалось проверить БД: {e}")
+    
     print("🎯 Новые функции: Threat Monitor, Security Scanner, Cyber Games!")
-    print("⚡ ОПТИМИЗАЦИЯ: Включено GZIP сжатие и кэширование")
     print("📖 Документация: http://localhost:5000")
     print("🔧 Health check: http://localhost:5000/health")
     print("=" * 60)
+    
     app.run(debug=True, host='0.0.0.0', port=5000)
