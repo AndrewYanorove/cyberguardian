@@ -1,7 +1,6 @@
-from flask import Flask, render_template, jsonify, request , redirect, url_for , session
+from flask import Flask, render_template, jsonify, request, redirect, url_for, session
 from flask_compress import Compress
 from dotenv import load_dotenv
-from flask import send_from_directory
 import os
 from datetime import datetime
 import json
@@ -35,7 +34,7 @@ def create_app():
     # Инициализация базы данных
     from database import db
     db.init_app(app)
-    
+
     # Инициализация Flask-Login
     from auth.routes import init_login_manager
     init_login_manager(app)
@@ -62,6 +61,15 @@ def create_app():
     app.register_blueprint(games_bp, url_prefix='/games')
     app.register_blueprint(simulators_bp, url_prefix='/simulators')
     app.register_blueprint(ddos_bp, url_prefix='/ddos')
+
+    # 🔥 АВТОМАТИЧЕСКОЕ СОЗДАНИЕ ТАБЛИЦ ПРИ ЗАПУСКЕ
+    with app.app_context():
+        try:
+            print("🔧 Проверка и создание таблиц БД...")
+            db.create_all()
+            print("✅ Таблицы БД готовы")
+        except Exception as e:
+            print(f"⚠️ Предупреждение при создании таблиц: {e}")
 
     # Контекстный процессор для глобальных переменных
     @app.context_processor
@@ -117,7 +125,7 @@ def create_app():
     
     @app.route('/admin', methods=['GET', 'POST'])
     def admin_panel():
-        """Админ-панель с паролем в коде"""
+        """Админ-панель с защитой от ошибок БД"""
         
         # Пароль прямо здесь - легко поменять!
         ADMIN_PASSWORD = "16795"  # 🔑 Ваш пароль
@@ -148,7 +156,7 @@ def create_app():
                                 authenticated=False, 
                                 error=False)
         
-        # Получение данных для админ-панели
+        # 🔥 ЗАЩИЩЕННАЯ ЗАГРУЗКА ДАННЫХ
         try:
             from auth.models import User
             from education.models import UserProgress
@@ -159,14 +167,20 @@ def create_app():
             # Подготовка данных пользователей
             users_data = []
             for user in users:
-                lessons_completed = UserProgress.query.filter_by(
-                    user_id=user.id, 
-                    completed=True
-                ).count()
+                try:
+                    lessons_completed = UserProgress.query.filter_by(
+                        user_id=user.id, 
+                        completed=True
+                    ).count()
+                except:
+                    lessons_completed = 0
                 
-                encryption_count = EncryptionHistory.query.filter_by(
-                    user_id=user.id
-                ).count()
+                try:
+                    encryption_count = EncryptionHistory.query.filter_by(
+                        user_id=user.id
+                    ).count()
+                except:
+                    encryption_count = 0
                 
                 users_data.append({
                     'id': user.id,
@@ -178,10 +192,20 @@ def create_app():
                 })
             
             # Общая статистика
+            try:
+                total_lessons = UserProgress.query.filter_by(completed=True).count()
+            except:
+                total_lessons = 0
+                
+            try:
+                total_encryptions = EncryptionHistory.query.count()
+            except:
+                total_encryptions = 0
+            
             stats = {
                 'total_users': len(users),
-                'total_lessons': UserProgress.query.filter_by(completed=True).count(),
-                'total_encryptions': EncryptionHistory.query.count(),
+                'total_lessons': total_lessons,
+                'total_encryptions': total_encryptions,
                 'active_users': len([u for u in users_data if u['encryption_count'] > 0 or u['lessons_completed'] > 0])
             }
             
@@ -191,7 +215,11 @@ def create_app():
                                 stats=stats)
             
         except Exception as e:
-            return f"Ошибка загрузки данных: {str(e)}", 500
+            return render_template('admin_panel.html',
+                                authenticated=True,
+                                users=[],
+                                stats={'total_users': 0, 'total_lessons': 0, 'total_encryptions': 0, 'active_users': 0},
+                                error_message=f"Временные проблемы с базой данных: {str(e)}")
 
     # API для статистики
     @app.route('/api/stats')
