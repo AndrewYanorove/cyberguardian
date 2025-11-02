@@ -125,6 +125,8 @@ body.cyber-bg {
     border: 2px solid var(--cyber-primary);
     color: var(--cyber-primary);
     font-weight: bold;
+    text-align: center;
+    align-items: center;
 }
 
 .btn-cyber-outline:hover {
@@ -1085,6 +1087,8 @@ body.cyber-bg {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    text-align: center;
+    align-items: center;
 }
 
 .btn-cyber:hover,

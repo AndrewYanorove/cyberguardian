@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<link rel="stylesheet" href="static/css/main.css">
+
+<head>
+    <link rel="stylesheet" href="static/css/main.css">
+</head>
 <!-- Hero Section -->
 <section class="cyber-hero">
     <div class="container-max">
@@ -30,8 +33,8 @@
                 <!-- Quick Stats -->
                 <div class="stats-grid fade-in-up" style="animation-delay: 0.3s;">
                     <div class="stat-card">
-                        <span class="stat-number">1500+</span>
-                        <span class="stat-label">Пользователей</span>
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Курсов доступно</span>
                     </div>
                     <div class="stat-card">
                         <span class="stat-number">50+</span>
@@ -138,7 +141,7 @@
                 <div class="feature-icon" style="color: var(--cyber-info);">
                     <i class="bi bi-joystick"></i>
                 </div>
-                <h3 class="cyber-text-bright mb-3">Кибер-игры и развлечения</h3>
+                <h3 class="cyber-text-bright mb-3">Кибер-тренировка и развлечения</h3>
                 <p class="cyber-text mb-4">Обучение через увлекательные игры, квизы и практические задания.</p>
                 <a href="{{ url_for('games.games_dashboard') }}" class="btn-cyber-outline w-100">
                     Играть
@@ -154,49 +157,6 @@
                 <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger w-100">
                     Исследовать
                 </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- DDoS Simulator Promo -->
-<section class="section-spacing"
-    style="background: rgba(255, 107, 107, 0.05); border-top: 2px solid var(--cyber-danger); border-bottom: 2px solid var(--cyber-danger);">
-    <div class="container-max">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="cyber-card text-center"
-                    style="border-color: var(--cyber-danger); background: linear-gradient(135deg, var(--cyber-bg-card) 0%, rgba(255, 107, 107, 0.05) 100%);">
-                    <div class="feature-icon mx-auto mb-4" style="color: var(--cyber-danger); font-size: 4rem;">
-                        <i class="bi bi-lightning-charge"></i>
-                    </div>
-                    <h2 class="cyber-title-primary mb-3">🎯 Новый DDoS Simulator!</h2>
-                    <p class="cyber-lead mb-4">
-                        Изучайте механизмы DDoS атак в безопасной учебной среде.
-                        Понимайте как работают атаки и как от них защищаться.
-                    </p>
-
-                    <div class="cyber-card mb-4 mx-auto"
-                        style="max-width: 600px; background: rgba(255, 159, 67, 0.1); border-color: var(--cyber-warning);">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-exclamation-triangle me-3"
-                                style="color: var(--cyber-warning); font-size: 1.5rem;"></i>
-                            <div>
-                                <h6 class="cyber-text-bright mb-1">Только для образовательных целей!</h6>
-                                <p class="cyber-text mb-0">Все атаки симулируются и не наносят реального ущерба.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-3 justify-content-center">
-                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger btn-lg">
-                            <i class="bi bi-play-circle me-2"></i>Запустить симулятор
-                        </a>
-                        <a href="{{ url_for('ddos.ddos_education') }}" class="btn-cyber-outline btn-lg">
-                            <i class="bi bi-book me-2"></i>Узнать больше
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -244,8 +204,8 @@
         <div class="row text-center">
             <div class="col-md-3 mb-4">
                 <div class="stat-card">
-                    <span class="stat-number">98%</span>
-                    <span class="stat-label">Успешных студентов</span>
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Игры доступно</span>
                 </div>
             </div>
             <div class="col-md-3 mb-4">

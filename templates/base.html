@@ -11,6 +11,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}" />
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}" />
+    <link rel="stylesheet" href="/static/css/main.css">
 
     <meta name="google-site-verification" content="yUE6fLPLqqqIMNhRrZAiC7PsZIMfgfG8rPRtpmJJ4Gw" />
     
@@ -237,6 +238,7 @@
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
+            align-items: center;
         }
 
         .btn-cyber-outline:hover {
@@ -411,12 +413,6 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
-        }
-
-        .stat-card:hover {
-            border-color: var(--cyber-primary);
-            transform: translateY(-5px);
-            box-shadow: var(--cyber-shadow-soft);
         }
 
         .stat-number {
@@ -820,6 +816,7 @@
                 font-size: 0.9rem;
                 width: 100%;
                 justify-content: center;
+                align-items: center;
             }
         }
 
@@ -1130,7 +1127,7 @@
             
             <a href="{{ url_for('games.games_dashboard') }}" class="sidebar-item">
                 <i class="bi bi-joystick"></i>
-                <span>Кибер-игры</span>
+                <span>Кибер-тренировка</span>
                 <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
             </a>
 
@@ -1263,7 +1260,7 @@
     </header>
 
     <!-- Flash сообщения -->
-    <div class="container-max" style="margin-top: 100px;">
+    <div class="container-max" style="margin-top: 70px;">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -1342,7 +1339,7 @@
                     <a href="{{ url_for('encryption.encryption_tools') }}">Шифрование</a>
                     <a href="{{ url_for('scanner.scanner_dashboard') }}">Сканер безопасности</a>
                     <a href="{{ url_for('ai.ai_chat') }}">ИИ-помощник</a>
-                    <a href="{{ url_for('games.games_dashboard') }}">Кибер-игры</a>
+                    <a href="{{ url_for('games.games_dashboard') }}">Кибер-тренировка</a>
                 </div>
             </div>
             
