@@ -1084,6 +1084,15 @@
                 <i class="bi bi-speedometer2"></i>
                 <span>Дашборд</span>
             </a>
+
+            <a href="{{ url_for('forum.forum_home') }}" class="sidebar-item">
+                <i class="bi bi-chat-square-text"></i>
+                <span>Форум историй</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            
+            
             
             <div class="sidebar-divider"></div>
             
@@ -1349,6 +1358,76 @@
         </div>
     </footer>
 
+        <!-- Скрытая админ-кнопка -->
+    <div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999;">
+        <button onclick="showAdminLogin()" 
+                style="background: transparent; border: 1px solid #dc3545; color: #dc3545; 
+                    padding: 5px 10px; border-radius: 5px; font-size: 12px; opacity: 0.3;
+                    cursor: pointer; transition: opacity 0.3s ease;"
+                onmouseover="this.style.opacity='1'" 
+                onmouseout="this.style.opacity='0.3'">
+            🔧
+        </button>
+    </div>
+
+    <!-- Модальное окно для админ-входа -->
+    <div id="adminModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; 
+                            height: 100%; background: rgba(0,0,0,0.8); z-index: 10000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: var(--cyber-bg-card); padding: 2rem; border-radius: 15px;
+                border: 2px solid var(--cyber-primary); min-width: 300px;">
+            <h3 class="cyber-text-bright mb-3">🔐 Админ доступ</h3>
+            <input type="password" 
+                id="adminPassword" 
+                placeholder="Введите пароль..." 
+                style="width: 100%; padding: 10px; margin-bottom: 1rem; 
+                        background: var(--cyber-darker); border: 1px solid var(--cyber-border);
+                        color: var(--cyber-text); border-radius: 8px;">
+            <div style="display: flex; gap: 10px;">
+                <button onclick="checkAdminPassword()" class="btn-cyber" style="flex: 1;">
+                    Войти
+                </button>
+                <button onclick="hideAdminLogin()" class="btn-cyber-outline" style="flex: 1;">
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </div><!-- Скрытая админ-кнопка -->
+    <div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999;">
+        <button onclick="showAdminLogin()" 
+                style="background: transparent; border: 1px solid #dc3545; color: #dc3545; 
+                    padding: 5px 10px; border-radius: 5px; font-size: 12px; opacity: 0.3;
+                    cursor: pointer; transition: opacity 0.3s ease;"
+                onmouseover="this.style.opacity='1'" 
+                onmouseout="this.style.opacity='0.3'">
+            🔧
+        </button>
+    </div>
+
+    <!-- Модальное окно для админ-входа -->
+    <div id="adminModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; 
+                            height: 100%; background: rgba(0,0,0,0.8); z-index: 10000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: var(--cyber-bg-card); padding: 2rem; border-radius: 15px;
+                border: 2px solid var(--cyber-primary); min-width: 300px;">
+            <h3 class="cyber-text-bright mb-3">🔐 Админ доступ</h3>
+            <input type="password" 
+                id="adminPassword" 
+                placeholder="Введите пароль..." 
+                style="width: 100%; padding: 10px; margin-bottom: 1rem; 
+                        background: var(--cyber-darker); border: 1px solid var(--cyber-border);
+                        color: var(--cyber-text); border-radius: 8px;">
+            <div style="display: flex; gap: 10px;">
+                <button onclick="checkAdminPassword()" class="btn-cyber" style="flex: 1;">
+                    Войти
+                </button>
+                <button onclick="hideAdminLogin()" class="btn-cyber-outline" style="flex: 1;">
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Функции для работы бокового меню
         function toggleSidebar() {
@@ -1434,5 +1513,122 @@
     </script>
     
     {% block extra_js %}{% endblock %}
+
+    <script>
+    // Пароль для админ-доступа (можешь поменять)
+    const ADMIN_PASSWORD = "16795";
+
+    function showAdminLogin() {
+        document.getElementById('adminModal').style.display = 'block';
+    }
+
+    function hideAdminLogin() {
+        document.getElementById('adminModal').style.display = 'none';
+        document.getElementById('adminPassword').value = '';
+    }
+
+    function checkAdminPassword() {
+        const password = document.getElementById('adminPassword').value;
+        
+        if (password === ADMIN_PASSWORD) {
+            // Сохраняем в sessionStorage что пользователь админ
+            sessionStorage.setItem('isAdmin', 'true');
+            hideAdminLogin();
+            
+            // Показываем уведомление и переходим в админку
+            showNotification('🔐 Админ доступ получен!', 'success');
+            setTimeout(() => {
+                window.location.href = "{{ url_for('forum.admin_panel') }}";
+            }, 1000);
+        } else {
+            showNotification('❌ Неверный пароль!', 'danger');
+            document.getElementById('adminPassword').value = '';
+        }
+    }
+
+    // Функция для проверки админ-доступа
+    function isAdmin() {
+        return sessionStorage.getItem('isAdmin') === 'true';
+    }
+
+    // Показываем админ-кнопки если есть доступ
+    function checkAdminAccess() {
+        if (isAdmin()) {
+            // Добавляем админ-кнопки на страницу
+            addAdminButtons();
+        }
+    }
+
+    // Добавляем админ-кнопки на страницы
+    function addAdminButtons() {
+        // На главной форума
+        const forumContainer = document.querySelector('.forum-container');
+        if (forumContainer && !document.querySelector('.admin-panel-btn')) {
+            const adminBtn = document.createElement('div');
+            adminBtn.className = 'admin-panel-btn';
+            adminBtn.innerHTML = `
+                <div style="text-align: center; margin: 1rem 0;">
+                    <a href="{{ url_for('forum.admin_panel') }}" class="create-story-btn" style="background: #dc3545;">
+                        <i class="bi bi-shield-check"></i> Панель модерации
+                    </a>
+                </div>
+            `;
+            forumContainer.insertBefore(adminBtn, forumContainer.firstChild);
+        }
+        
+        // В боковом меню
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar && !document.querySelector('.sidebar-admin-btn')) {
+            const sidebarAdminBtn = document.createElement('a');
+            sidebarAdminBtn.className = 'sidebar-item sidebar-admin-btn';
+            sidebarAdminBtn.href = "{{ url_for('forum.admin_panel') }}";
+            sidebarAdminBtn.innerHTML = `
+                <i class="bi bi-shield-check"></i>
+                <span>Панель модерации</span>
+                <span class="cyber-badge cyber-badge-danger ms-auto">ADMIN</span>
+            `;
+            
+            // Вставляем после кнопки создания истории
+            const createStoryBtn = sidebar.querySelector('a[href*="create_story"]');
+            if (createStoryBtn) {
+                createStoryBtn.parentNode.insertBefore(sidebarAdminBtn, createStoryBtn.nextSibling);
+            }
+        }
+    }
+
+    // Уведомления
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed; top: 100px; right: 20px; 
+            background: var(--cyber-bg-card); border: 2px solid var(--cyber-${type});
+            border-radius: 10px; padding: 1rem 1.5rem; color: var(--cyber-text);
+            z-index: 10000; animation: slideInRight 0.3s ease; max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        `;
+        notification.innerHTML = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // Проверяем доступ при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAdminAccess();
+    });
+
+    // Стили для анимации
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+    </script>
+
 </body>
 </html>

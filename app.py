@@ -16,6 +16,7 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'cyberguardian-super-secret-2024')
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     
+
     # 🔒 АБСОЛЮТНАЯ ЗАЩИТА БАЗЫ ДАННЫХ
     os.makedirs('instance', exist_ok=True)
     os.makedirs('backups', exist_ok=True)
@@ -50,6 +51,7 @@ def create_app():
     from cyber_games.routes import games_bp
     from templates.simulators.routes import simulators_bp
     from ddos_simulator.routes import ddos_bp
+    from forum.routes import forum_bp
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(education_bp, url_prefix='/education')
@@ -61,6 +63,7 @@ def create_app():
     app.register_blueprint(games_bp, url_prefix='/games')
     app.register_blueprint(simulators_bp, url_prefix='/simulators')
     app.register_blueprint(ddos_bp, url_prefix='/ddos')
+    app.register_blueprint(forum_bp, url_prefix='/forum')
 
     # 🔥 АВТОМАТИЧЕСКОЕ СОЗДАНИЕ ТАБЛИЦ ПРИ ЗАПУСКЕ
     with app.app_context():

@@ -1,0 +1,392 @@
+<!-- [file name]: templates/forum/story_detail.html -->
+{% extends "base.html" %}
+{% block title %}{{ story.title }} - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.story-detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.story-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--cyber-border);
+}
+
+.story-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--cyber-subtext);
+}
+
+.story-category {
+    background: var(--cyber-primary);
+    color: #000;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.story-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--cyber-text-bright);
+    line-height: 1.3;
+}
+
+.story-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--cyber-subtext);
+}
+
+.story-content {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+.story-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn-like, .btn-share {
+    background: transparent;
+    border: 1px solid var(--cyber-border);
+    color: var(--cyber-text);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-like:hover, .btn-share:hover {
+    border-color: var(--cyber-primary);
+    color: var(--cyber-primary);
+}
+
+.btn-like.liked {
+    background: var(--cyber-primary);
+    color: #000;
+    border-color: var(--cyber-primary);
+}
+
+.comments-section {
+    margin-top: 3rem;
+}
+
+.comments-header {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--cyber-text-bright);
+}
+
+.comment-form {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.comment-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 1rem;
+    background: var(--cyber-darker);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    color: var(--cyber-text);
+    font-family: inherit;
+    resize: vertical;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: var(--cyber-primary);
+}
+
+.btn-comment {
+    background: var(--cyber-primary);
+    color: #000;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-comment:hover {
+    background: var(--cyber-secondary);
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.comment {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: var(--cyber-text-bright);
+}
+
+.comment-date {
+    font-size: 0.9rem;
+    color: var(--cyber-subtext);
+}
+
+.comment-content {
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.no-comments {
+    text-align: center;
+    padding: 2rem;
+    color: var(--cyber-subtext);
+}
+
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn-admin {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background: var(--cyber-warning);
+    color: #000;
+}
+
+.btn-delete {
+    background: var(--cyber-danger);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .story-title {
+        font-size: 1.5rem;
+    }
+    
+    .story-content {
+        padding: 1.5rem;
+    }
+    
+    .story-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="story-detail-container">
+    <!-- Заголовок и мета-информация -->
+    <div class="story-header">
+        <div class="story-meta">
+            <span class="story-category">
+                {% if story.category == 'scam' %}Мошенничество
+                {% elif story.category == 'phishing' %}Фишинг
+                {% elif story.category == 'social' %}Социальная инженерия
+                {% else %}Другие случаи
+                {% endif %}
+            </span>
+            <span>{{ story.created_at.strftime('%d.%m.%Y в %H:%M') }}</span>
+            <span><i class="bi bi-eye"></i> {{ story.views_count }}</span>
+        </div>
+        
+        <h1 class="story-title">{{ story.title }}</h1>
+        
+        <div class="story-author">
+            <i class="bi bi-person"></i>
+            {{ story.author.username }}
+        </div>
+    </div>
+
+    <!-- Содержание истории -->
+    <div class="story-content">
+        {{ story.content }}
+    </div>
+
+    <!-- Действия -->
+    <div class="story-actions">
+        <button class="btn-like {% if user_has_liked %}liked{% endif %}" 
+                data-story-id="{{ story.id }}">
+            <i class="bi bi-heart{% if user_has_liked %}-fill{% endif %}"></i>
+            <span class="likes-count">{{ story.likes_count }}</span>
+        </button>
+        
+        <button class="btn-share">
+            <i class="bi bi-share"></i> Поделиться
+        </button>
+    </div>
+
+    <!-- Админские действия -->
+    {% if current_user.is_authenticated and current_user.is_admin() %}
+    <div class="admin-actions">
+        <a href="{{ url_for('forum.edit_story', story_id=story.id) }}" 
+           class="btn-admin btn-edit">
+            <i class="bi bi-pencil"></i> Редактировать
+        </a>
+        <form method="POST" 
+              action="{{ url_for('forum.reject_story', story_id=story.id) }}" 
+              style="display: inline;"
+              onsubmit="return confirm('Удалить эту историю?')">
+            <button type="submit" class="btn-admin btn-delete">
+                <i class="bi bi-trash"></i> Удалить
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Комментарии -->
+    <div class="comments-section">
+        <h3 class="comments-header">
+            Комментарии ({{ story.comments|length }})
+        </h3>
+
+        <!-- Форма комментария -->
+        {% if current_user.is_authenticated %}
+        <form method="POST" 
+              action="{{ url_for('forum.add_comment', story_id=story.id) }}" 
+              class="comment-form">
+            <textarea name="content" 
+                      class="comment-input" 
+                      placeholder="Напишите ваш комментарий..."
+                      required></textarea>
+            <button type="submit" class="btn-comment">
+                <i class="bi bi-send"></i> Отправить комментарий
+            </button>
+        </form>
+        {% else %}
+        <div class="comment-form">
+            <p>Чтобы оставить комментарий, <a href="{{ url_for('auth.login') }}">войдите</a> в систему.</p>
+        </div>
+        {% endif %}
+
+        <!-- Список комментариев -->
+        <div class="comments-list">
+            {% if story.comments %}
+                {% for comment in story.comments %}
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-author">{{ comment.author.username }}</span>
+                        <span class="comment-date">{{ comment.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
+                    </div>
+                    <div class="comment-content">
+                        {{ comment.content }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-comments">
+                    <i class="bi bi-chat"></i>
+                    <p>Пока нет комментариев. Будьте первым!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Лайк истории
+    const likeBtn = document.querySelector('.btn-like');
+    const likesCount = document.querySelector('.likes-count');
+    
+    if (likeBtn) {
+        likeBtn.addEventListener('click', async function() {
+            const storyId = this.dataset.storyId;
+            
+            try {
+                const response = await fetch(`/forum/story/${storyId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    likesCount.textContent = data.likes_count;
+                    
+                    if (data.liked) {
+                        this.classList.add('liked');
+                        this.innerHTML = `<i class="bi bi-heart-fill"></i> ${data.likes_count}`;
+                    } else {
+                        this.classList.remove('liked');
+                        this.innerHTML = `<i class="bi bi-heart"></i> ${data.likes_count}`;
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Не удалось поставить лайк');
+            }
+        });
+    }
+
+    // Поделиться
+    const shareBtn = document.querySelector('.btn-share');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ story.title }}',
+                    text: '{{ story.content[:100] }}...',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback - копирование ссылки
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Ссылка скопирована в буфер обмена!');
+                });
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

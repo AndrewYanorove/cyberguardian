@@ -1,0 +1,458 @@
+<!-- [file name]: templates/forum/forum_home.html -->
+{% extends "base.html" %}
+{% block title %}Форум историй - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.forum-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.forum-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+    border-bottom: 2px solid var(--cyber-border);
+}
+
+.forum-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--cyber-text-bright);
+}
+
+.forum-subtitle {
+    font-size: 1.2rem;
+    color: var(--cyber-subtext);
+    margin-bottom: 2rem;
+}
+
+.stories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.story-item {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.story-item:hover {
+    border-color: var(--cyber-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 168, 255, 0.1);
+}
+
+.story-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--cyber-subtext);
+}
+
+.story-category {
+    background: var(--cyber-primary);
+    color: #000;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.story-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: var(--cyber-text-bright);
+}
+
+.story-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.story-title a:hover {
+    color: var(--cyber-primary);
+}
+
+.story-preview {
+    color: var(--cyber-text);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.story-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cyber-border);
+}
+
+.story-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--cyber-subtext);
+    font-size: 0.9rem;
+}
+
+.story-stats {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--cyber-subtext);
+    font-size: 0.9rem;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.create-story-btn {
+    display: block;
+    width: 200px;
+    margin: 2rem auto 3rem;
+    text-align: center;
+    background: var(--cyber-primary);
+    color: #000;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.create-story-btn:hover {
+    background: var(--cyber-secondary);
+    color: #000;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--cyber-subtext);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 3rem 0;
+}
+
+.page-link {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--cyber-border);
+    border-radius: 6px;
+    color: var(--cyber-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    border-color: var(--cyber-primary);
+    color: var(--cyber-primary);
+}
+
+.page-link.active {
+    background: var(--cyber-primary);
+    border-color: var(--cyber-primary);
+    color: #000;
+}
+
+.forum-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cyber-primary);
+    display: block;
+}
+
+.stat-label {
+    color: var(--cyber-subtext);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--cyber-border);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--cyber-text);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--cyber-primary);
+    border-color: var(--cyber-primary);
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .forum-container {
+        padding: 0 15px;
+    }
+    
+    .forum-title {
+        font-size: 2rem;
+    }
+    
+    .story-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .story-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .filters {
+        justify-content: center;
+    }
+    
+    .forum-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="forum-container">
+    <!-- Заголовок -->
+    <div class="forum-header">
+        <h1 class="forum-title">Форум историй</h1>
+        <p class="forum-subtitle">Реальные случаи мошенничества от пользователей</p>
+        
+        <!-- Статистика -->
+        <div class="forum-stats" id="forumStats">
+            <div class="stat-card">
+                <span class="stat-number" id="totalStories">0</span>
+                <div class="stat-label">Историй</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalComments">0</span>
+                <div class="stat-label">Комментариев</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalViews">0</span>
+                <div class="stat-label">Просмотров</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="storiesToday">0</span>
+                <div class="stat-label">Сегодня</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопка создания истории -->
+    <a href="{{ url_for('forum.create_story') }}" class="create-story-btn">
+        <i class="bi bi-plus-circle"></i> Поделиться историей
+    </a>
+
+    <!-- Фильтры -->
+    <div class="filters">
+        <a href="{{ url_for('forum.forum_home', category='all') }}" 
+           class="filter-btn {% if current_category == 'all' %}active{% endif %}">
+            Все истории
+        </a>
+        {% for category in categories %}
+        <a href="{{ url_for('forum.forum_home', category=category.id) }}" 
+           class="filter-btn {% if current_category == category.id %}active{% endif %}">
+            {{ category.name }} ({{ category.count }})
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Список историй -->
+    <div class="stories-list">
+        {% if stories.items %}
+            {% for story in stories.items %}
+            <div class="story-item">
+                <div class="story-meta">
+                    <span class="story-category">
+                        {% if story.category == 'scam' %}Мошенничество
+                        {% elif story.category == 'phishing' %}Фишинг
+                        {% elif story.category == 'social' %}Социальная инженерия
+                        {% else %}Другие случаи
+                        {% endif %}
+                    </span>
+                    <span class="story-date">{{ story.created_at.strftime('%d.%m.%Y') }}</span>
+                </div>
+                
+                <h3 class="story-title">
+                    <a href="{{ url_for('forum.story_detail', story_id=story.id) }}">
+                        {{ story.title }}
+                    </a>
+                </h3>
+                
+                <div class="story-preview">
+                    {{ story.content|truncate(300) }}
+                </div>
+                
+                <div class="story-footer">
+                    <div class="story-author">
+                        <i class="bi bi-person"></i>
+                        {{ story.author.username }}
+                    </div>
+                    <div class="story-stats">
+                        <span class="stat">
+                            <i class="bi bi-eye"></i> {{ story.views_count }}
+                        </span>
+                        <span class="stat">
+                            <i class="bi bi-heart"></i> {{ story.likes_count }}
+                        </span>
+                        <span class="stat">
+                            <i class="bi bi-chat"></i> {{ story.comments|length }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <i class="bi bi-chat-square-text"></i>
+                <h3>Пока нет историй</h3>
+                <p>Будьте первым, кто поделится своим опытом!</p>
+                <a href="{{ url_for('forum.create_story') }}" class="create-story-btn">
+                    Написать историю
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Пагинация -->
+    {% if stories.pages > 1 %}
+    <div class="pagination">
+        {% if stories.has_prev %}
+        <a href="{{ url_for('forum.forum_home', page=stories.prev_num, category=current_category) }}" 
+           class="page-link">
+            Назад
+        </a>
+        {% endif %}
+        
+        {% for page_num in stories.iter_pages() %}
+            {% if page_num %}
+                <a href="{{ url_for('forum.forum_home', page=page_num, category=current_category) }}" 
+                   class="page-link {% if page_num == stories.page %}active{% endif %}">
+                    {{ page_num }}
+                </a>
+            {% endif %}
+        {% endfor %}
+        
+        {% if stories.has_next %}
+        <a href="{{ url_for('forum.forum_home', page=stories.next_num, category=current_category) }}" 
+           class="page-link">
+            Вперед
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Админ панель -->
+    {% if current_user.is_authenticated and current_user.is_admin() %}
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="{{ url_for('forum.admin_panel') }}" class="create-story-btn" style="background: #dc3545;">
+            <i class="bi bi-shield-check"></i> Панель модерации
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Простой JavaScript для форума
+document.addEventListener('DOMContentLoaded', function() {
+    // Загрузка статистики
+    loadForumStats();
+    
+    // Плавное появление историй
+    const storyItems = document.querySelectorAll('.story-item');
+    storyItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.style.transition = 'all 0.5s ease';
+        
+        setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+
+// Загрузка статистики
+async function loadForumStats() {
+    try {
+        const response = await fetch('/forum/api/stats');
+        const data = await response.json();
+        
+        document.getElementById('totalStories').textContent = data.total_stories || 0;
+        document.getElementById('totalComments').textContent = data.total_comments || 0;
+        document.getElementById('totalViews').textContent = data.total_views || 0;
+        document.getElementById('storiesToday').textContent = data.stories_today || 0;
+        
+    } catch (error) {
+        console.error('Ошибка загрузки статистики:', error);
+    }
+}
+
+// Простые хоткеи
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'n' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        window.location.href = "{{ url_for('forum.create_story') }}";
+    }
+});
+</script>
+{% endblock %}

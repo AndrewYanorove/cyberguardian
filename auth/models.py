@@ -56,3 +56,9 @@ class User(db.Model):
     
     def __repr__(self):
         return f'<User {self.username}>'
+    
+    def is_admin(self):
+        """Проверяет, является ли пользователь администратором"""
+        # Простая проверка - можно расширить системой ролей
+        admin_emails = ['admin@cyberguardian.ru', 'your-email@example.com']  # Добавьте email админов
+        return self.email in admin_emails

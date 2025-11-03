@@ -1,0 +1,294 @@
+<!-- [file name]: templates/forum/admin_panel.html -->
+{% extends "base.html" %}
+{% block title %}Панель модерации - CyberGuardian{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="cyber-card">
+                <h1 class="cyber-title">
+                    <i class="bi bi-shield-check"></i> Панель модерации
+                </h1>
+                <p class="cyber-subtext">Управление историями на форуме</p>
+                
+                <!-- Статистика -->
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-number">{{ stories|length }}</div>
+                            <div class="stat-label">Всего историй</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-number">{{ total_comments }}</div>
+                            <div class="stat-label">Комментариев</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-number">{{ total_views }}</div>
+                            <div class="stat-label">Просмотров</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-number">{{ stories_today }}</div>
+                            <div class="stat-label">Сегодня</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="cyber-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="cyber-text-bright mb-0">Все истории</h3>
+                    <button class="btn-cyber-outline" onclick="refreshStories()">
+                        <i class="bi bi-arrow-clockwise"></i> Обновить
+                    </button>
+                </div>
+                
+                {% if stories %}
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Заголовок</th>
+                                <th>Автор</th>
+                                <th>Категория</th>
+                                <th>Дата</th>
+                                <th>📊</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for story in stories %}
+                            <tr id="story-{{ story.id }}">
+                                <td><strong>#{{ story.id }}</strong></td>
+                                <td>
+                                    <a href="{{ url_for('forum.story_detail', story_id=story.id) }}" 
+                                       class="cyber-text-bright" target="_blank">
+                                        {{ story.title }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="author-avatar-sm">
+                                            {{ story.author.username[0]|upper }}
+                                        </div>
+                                        <span class="ms-2">{{ story.author.username }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="category-badge category-{{ story.category }}">
+                                        {% if story.category == 'scam' %}Мошенничество
+                                        {% elif story.category == 'phishing' %}Фишинг
+                                        {% elif story.category == 'social' %}Соц. инженерия
+                                        {% else %}Другие случаи
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>{{ story.created_at.strftime('%d.%m.%Y') }}</td>
+                                <td>
+                                    <div class="small-stats">
+                                        <span title="Просмотры"><i class="bi bi-eye"></i> {{ story.views_count }}</span>
+                                        <span title="Лайки"><i class="bi bi-heart"></i> {{ story.likes_count }}</span>
+                                        <span title="Комментарии"><i class="bi bi-chat"></i> {{ story.comments|length }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('forum.edit_story', story_id=story.id) }}" 
+                                           class="btn btn-warning btn-sm" title="Редактировать">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button class="btn btn-danger btn-sm" 
+                                                onclick="deleteStory({{ story.id }})"
+                                                title="Удалить">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox display-1 text-secondary"></i>
+                    <h4 class="cyber-text-bright mt-3">Нет историй</h4>
+                    <p class="cyber-subtext">На форуме пока нет опубликованных историй</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.stat-card {
+    background: var(--cyber-bg-card-light);
+    border: 1px solid var(--cyber-border);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--cyber-primary);
+    line-height: 1;
+}
+
+.stat-label {
+    color: var(--cyber-subtext);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.author-avatar-sm {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.category-badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.category-scam { background: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid #dc3545; }
+.category-phishing { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
+.category-social { background: rgba(32, 201, 151, 0.2); color: #20c997; border: 1px solid #20c997; }
+.category-other { background: rgba(108, 117, 125, 0.2); color: #6c757d; border: 1px solid #6c757d; }
+
+.small-stats {
+    display: flex;
+    gap: 0.8rem;
+    font-size: 0.8rem;
+}
+
+.small-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.table-hover tbody tr:hover {
+    background: rgba(0, 168, 255, 0.1) !important;
+}
+
+.btn-group .btn {
+    padding: 0.25rem 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function deleteStory(storyId) {
+    if (!confirm('Точно удалить эту историю? Это действие нельзя отменить!')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/forum/admin/story/${storyId}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+        
+        if (response.ok) {
+            // Плавно скрываем строку
+            const row = document.getElementById(`story-${storyId}`);
+            if (row) {
+                row.style.opacity = '0';
+                row.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    row.remove();
+                    showNotification('✅ История успешно удалена!', 'success');
+                }, 300);
+            }
+        } else {
+            showNotification('❌ Ошибка при удалении истории', 'danger');
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showNotification('❌ Ошибка при удалении истории', 'danger');
+    }
+}
+
+function refreshStories() {
+    location.reload();
+}
+
+function showNotification(message, type = 'info') {
+    // Создаем уведомление
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: var(--cyber-bg-card);
+        border: 2px solid var(--cyber-${type});
+        border-radius: 10px;
+        padding: 1rem 1.5rem;
+        color: var(--cyber-text);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        max-width: 300px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    `;
+    notification.innerHTML = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Добавляем стили для анимации
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOutRight {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+
+// Автообновление каждые 30 секунд
+setInterval(() => {
+    console.log('Автообновление админ-панели...');
+}, 30000);
+</script>
+{% endblock %}

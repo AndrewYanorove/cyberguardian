@@ -1,0 +1,238 @@
+<!-- [file name]: templates/forum/create_story.html -->
+{% extends "base.html" %}
+{% block title %}Поделиться историей - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.create-story-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.create-story-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.create-story-form {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--cyber-text-bright);
+    font-weight: 600;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--cyber-darker);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    color: var(--cyber-text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 0 2px rgba(0, 168, 255, 0.2);
+}
+
+textarea.form-control {
+    min-height: 200px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.select-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--cyber-darker);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    color: var(--cyber-text);
+    font-size: 1rem;
+}
+
+.form-help {
+    font-size: 0.9rem;
+    color: var(--cyber-subtext);
+    margin-top: 0.5rem;
+}
+
+.btn-submit {
+    background: var(--cyber-primary);
+    color: #000;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.btn-submit:hover {
+    background: var(--cyber-secondary);
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background: transparent;
+    color: var(--cyber-text);
+    border: 1px solid var(--cyber-border);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: var(--cyber-border);
+    color: var(--cyber-text-bright);
+    text-decoration: none;
+}
+
+.character-count {
+    text-align: right;
+    font-size: 0.9rem;
+    color: var(--cyber-subtext);
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .create-story-form {
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="create-story-container">
+    <div class="create-story-header">
+        <h1>Поделиться историей</h1>
+        <p>Расскажите о случае мошенничества, чтобы помочь другим</p>
+    </div>
+
+    <form method="POST" class="create-story-form">
+        <div class="form-group">
+            <label class="form-label" for="title">Заголовок *</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="title" 
+                   name="title" 
+                   placeholder="Кратко опишите ситуацию"
+                   maxlength="200"
+                   required>
+            <div class="character-count">
+                <span id="titleCount">0</span>/200 символов
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="category">Категория *</label>
+            <select class="select-control" id="category" name="category" required>
+                <option value="">Выберите категорию</option>
+                <option value="scam">Мошенничество</option>
+                <option value="phishing">Фишинг</option>
+                <option value="social">Социальная инженерия</option>
+                <option value="other">Другие случаи</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="content">Ваша история *</label>
+            <textarea class="form-control" 
+                      id="content" 
+                      name="content" 
+                      placeholder="Опишите подробно что произошло, как вы поняли что это мошенничество, и какие уроки извлекли..."
+                      required></textarea>
+            <div class="character-count">
+                <span id="contentCount">0</span> символов
+            </div>
+            <div class="form-help">
+                💡 Совет: Опишите ситуацию максимально подробно, но не указывайте личную информацию
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="tags">Теги (через запятую)</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="tags" 
+                   name="tags" 
+                   placeholder="банк, телефон, интернет, карта">
+            <div class="form-help">
+                Укажите ключевые слова, чтобы другим было проще найти вашу историю
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="bi bi-send"></i> Опубликовать историю
+        </button>
+
+        <a href="{{ url_for('forum.forum_home') }}" class="btn-cancel">
+            Отмена
+        </a>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Счетчик символов для заголовка
+    const titleInput = document.getElementById('title');
+    const titleCount = document.getElementById('titleCount');
+    
+    titleInput.addEventListener('input', function() {
+        titleCount.textContent = this.value.length;
+    });
+
+    // Счетчик символов для контента
+    const contentInput = document.getElementById('content');
+    const contentCount = document.getElementById('contentCount');
+    
+    contentInput.addEventListener('input', function() {
+        contentCount.textContent = this.value.length;
+    });
+
+    // Предупреждение при закрытии страницы
+    let formChanged = false;
+    
+    titleInput.addEventListener('input', () => formChanged = true);
+    contentInput.addEventListener('input', () => formChanged = true);
+    
+    window.addEventListener('beforeunload', function(e) {
+        if (formChanged) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    // Отправка формы
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function() {
+        formChanged = false;
+    });
+});
+</script>
+{% endblock %}

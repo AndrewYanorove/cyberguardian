@@ -1,0 +1,286 @@
+<!-- [file name]: templates/forum/edit_story.html -->
+{% extends "base.html" %}
+{% block title %}Редактирование истории - CyberGuardian{% endblock %}
+
+{% block extra_css %}
+<style>
+.edit-story-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.edit-story-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.edit-story-form {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--cyber-text-bright);
+    font-weight: 600;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--cyber-darker);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    color: var(--cyber-text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 0 2px rgba(0, 168, 255, 0.2);
+}
+
+textarea.form-control {
+    min-height: 300px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.select-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--cyber-darker);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    color: var(--cyber-text);
+    font-size: 1rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-save {
+    background: var(--cyber-primary);
+    color: #000;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    background: var(--cyber-secondary);
+}
+
+.btn-cancel {
+    background: transparent;
+    color: var(--cyber-text);
+    border: 1px solid var(--cyber-border);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    text-decoration: none;
+    text-align: center;
+    flex: 1;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: var(--cyber-border);
+    color: var(--cyber-text-bright);
+    text-decoration: none;
+}
+
+.btn-delete {
+    background: var(--cyber-danger);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+    background: #dc3545;
+}
+
+.character-count {
+    text-align: right;
+    font-size: 0.9rem;
+    color: var(--cyber-subtext);
+    margin-top: 0.5rem;
+}
+
+.admin-info {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid var(--cyber-warning);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    color: var(--cyber-warning);
+}
+
+@media (max-width: 768px) {
+    .edit-story-form {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="edit-story-container">
+    <div class="edit-story-header">
+        <h1>Редактирование истории</h1>
+        <p>Внесение изменений в историю пользователя</p>
+    </div>
+
+    {% if current_user.is_authenticated and current_user.is_admin() %}
+    <div class="admin-info">
+        <i class="bi bi-shield-check"></i>
+        <strong>Режим администратора:</strong> Вы редактируете историю как модератор
+    </div>
+    {% endif %}
+
+    <form method="POST" class="edit-story-form">
+        <div class="form-group">
+            <label class="form-label" for="title">Заголовок *</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="title" 
+                   name="title" 
+                   value="{{ story.title }}"
+                   maxlength="200"
+                   required>
+            <div class="character-count">
+                <span id="titleCount">{{ story.title|length }}</span>/200 символов
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="category">Категория *</label>
+            <select class="select-control" id="category" name="category" required>
+                <option value="scam" {% if story.category == 'scam' %}selected{% endif %}>Мошенничество</option>
+                <option value="phishing" {% if story.category == 'phishing' %}selected{% endif %}>Фишинг</option>
+                <option value="social" {% if story.category == 'social' %}selected{% endif %}>Социальная инженерия</option>
+                <option value="other" {% if story.category == 'other' %}selected{% endif %}>Другие случаи</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="content">Содержание *</label>
+            <textarea class="form-control" 
+                      id="content" 
+                      name="content" 
+                      required>{{ story.content }}</textarea>
+            <div class="character-count">
+                <span id="contentCount">{{ story.content|length }}</span> символов
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="tags">Теги (через запятую)</label>
+            <input type="text" 
+                   class="form-control" 
+                   id="tags" 
+                   name="tags" 
+                   value="{{ story.tags or '' }}"
+                   placeholder="банк, телефон, интернет, карта">
+        </div>
+
+        {% if current_user.is_authenticated and current_user.is_admin() %}
+        <div class="form-group">
+            <label class="form-label">
+                <input type="checkbox" name="is_approved" {% if story.is_approved %}checked{% endif %}>
+                История одобрена
+            </label>
+        </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">
+                <i class="bi bi-check"></i> Сохранить изменения
+            </button>
+            <a href="{{ url_for('forum.story_detail', story_id=story.id) }}" class="btn-cancel">
+                Отмена
+            </a>
+        </div>
+    </form>
+
+    {% if current_user.is_authenticated and current_user.is_admin() %}
+    <form method="POST" 
+          action="{{ url_for('forum.reject_story', story_id=story.id) }}" 
+          onsubmit="return confirm('Вы уверены что хотите удалить эту историю? Это действие нельзя отменить.')">
+        <button type="submit" class="btn-delete">
+            <i class="bi bi-trash"></i> Удалить историю
+        </button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Счетчик символов для заголовка
+    const titleInput = document.getElementById('title');
+    const titleCount = document.getElementById('titleCount');
+    
+    titleInput.addEventListener('input', function() {
+        titleCount.textContent = this.value.length;
+    });
+
+    // Счетчик символов для контента
+    const contentInput = document.getElementById('content');
+    const contentCount = document.getElementById('contentCount');
+    
+    contentInput.addEventListener('input', function() {
+        contentCount.textContent = this.value.length;
+    });
+
+    // Предупреждение при закрытии страницы
+    let formChanged = false;
+    
+    titleInput.addEventListener('input', () => formChanged = true);
+    contentInput.addEventListener('input', () => formChanged = true);
+    
+    window.addEventListener('beforeunload', function(e) {
+        if (formChanged) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    // Отправка формы
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function() {
+        formChanged = false;
+    });
+});
+</script>
+{% endblock %}
