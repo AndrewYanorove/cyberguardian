@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import json
 import sqlite3
+import shutil
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -16,11 +17,11 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'cyberguardian-super-secret-2024')
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     
-
-    # 🔒 АБСОЛЮТНАЯ ЗАЩИТА БАЗЫ ДАННЫХ
+    # 🔒 АВТОМАТИЧЕСКАЯ ЗАЩИТА БАЗЫ ДАННЫХ ДЛЯ RENDER
     os.makedirs('instance', exist_ok=True)
     os.makedirs('backups', exist_ok=True)
     
+    # 🔥 ВАЖНО: Используем абсолютный путь для Render
     db_path = os.path.join(os.path.abspath('instance'), 'cyberguardian.db')
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -65,14 +66,9 @@ def create_app():
     app.register_blueprint(ddos_bp, url_prefix='/ddos')
     app.register_blueprint(forum_bp, url_prefix='/forum')
 
-    # 🔥 АВТОМАТИЧЕСКОЕ СОЗДАНИЕ ТАБЛИЦ ПРИ ЗАПУСКЕ
+    # 🔥 АВТОМАТИЧЕСКАЯ ЗАЩИТА ДАННЫХ ПРИ КАЖДОМ ЗАПУСКЕ
     with app.app_context():
-        try:
-            print("🔧 Проверка и создание таблиц БД...")
-            db.create_all()
-            print("✅ Таблицы БД готовы")
-        except Exception as e:
-            print(f"⚠️ Предупреждение при создании таблиц: {e}")
+        auto_protect_database(app)
 
     # Контекстный процессор для глобальных переменных
     @app.context_processor
@@ -235,6 +231,18 @@ def create_app():
             'ai_questions': 56
         })
     
+    # 🔥 АВТОМАТИЧЕСКИЙ БЭКАП ЧЕРЕЗ API
+    @app.route('/api/auto-backup', methods=['POST'])
+    def auto_backup():
+        """Автоматическое создание бэкапа (для cron jobs)"""
+        try:
+            if create_automatic_backup():
+                return jsonify({'status': 'success', 'message': 'Backup created'})
+            else:
+                return jsonify({'status': 'error', 'message': 'Backup failed'})
+        except Exception as e:
+            return jsonify({'status': 'error', 'message': str(e)})
+    
     # Обработчик 404 ошибок
     @app.errorhandler(404)
     def not_found(error):
@@ -257,41 +265,122 @@ def create_app():
         
         return response
     
-    # 🔒 УЛУЧШЕННАЯ ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ
-    with app.app_context():
-        try:
-            from auth.models import User
-            
-            # Проверяем существует ли файл БД
-            db_file = 'instance/cyberguardian.db'
-            db_exists = os.path.exists(db_file)
-            
-            print(f"🔍 Проверка БД: {db_file}")
-            print(f"📁 Файл БД существует: {db_exists}")
-            
-            if db_exists:
-                # 🔒 ВАЖНО: НЕ пересоздаем таблицы если БД уже существует!
-                # Только добавляем недостающие таблицы
-                db.create_all()
-                
-                # Проверяем что данные на месте
-                user_count = User.query.count()
-                print(f"👤 Пользователей в БД: {user_count}")
-                
-                if user_count == 0:
-                    print("⚠️ БД существует но пустая, создаем демо-данные...")
-                    create_demo_data()
-            else:
-                # Создаем новую БД только если файла нет
-                print("🆕 Создаем новую базу данных...")
-                db.create_all()
-                create_demo_data()
-                
-        except Exception as e:
-            print(f"❌ Ошибка инициализации БД: {e}")
-            # НЕ пересоздаем БД, просто логируем ошибку
-    
     return app
+
+def auto_protect_database(app):
+    """Автоматическая защита базы данных при каждом запуске"""
+    from database import db
+    import sqlite3
+    
+    print("🛡️ АВТОМАТИЧЕСКАЯ ЗАЩИТА БАЗЫ ДАННЫХ...")
+    
+    db_path = 'instance/cyberguardian.db'
+    persistent_backup = 'backups/persistent_backup.db'
+    
+    # 1. Создаем папки если их нет
+    os.makedirs('instance', exist_ok=True)
+    os.makedirs('backups', exist_ok=True)
+    
+    # 2. Если есть постоянный бэкап - восстанавливаем из него
+    if os.path.exists(persistent_backup):
+        print("💾 Обнаружен постоянный бэкап, восстанавливаем...")
+        shutil.copy2(persistent_backup, db_path)
+        print("✅ Данные восстановлены из постоянного бэкапа")
+    
+    # 3. Проверяем текущую БД
+    db_exists = os.path.exists(db_path)
+    print(f"📁 Текущая БД существует: {db_exists}")
+    
+    try:
+        if db_exists:
+            # Проверяем целостность существующей БД
+            if check_database_integrity(db_path):
+                print("✅ Текущая БД цела, обновляем структуру...")
+                db.create_all()  # Только обновляем структуру
+                
+                # Создаем бэкап успешной БД
+                create_automatic_backup()
+            else:
+                print("⚠️ Текущая БД повреждена, восстанавливаем...")
+                restore_from_backup_or_create_new(db_path, persistent_backup, db)
+        else:
+            print("🆕 БД не существует, создаем новую...")
+            db.create_all()
+            create_demo_data()
+            create_automatic_backup()
+            
+        # 4. Всегда создаем постоянный бэкап после успешной инициализации
+        if os.path.exists(db_path):
+            shutil.copy2(db_path, persistent_backup)
+            print("💾 Создан постоянный бэкап для следующего деплоя")
+            
+    except Exception as e:
+        print(f"❌ Ошибка инициализации БД: {e}")
+        # Пробуем восстановить
+        restore_from_backup_or_create_new(db_path, persistent_backup, db)
+
+def check_database_integrity(db_path):
+    """Проверяет целостность базы данных"""
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        # Проверяем целостность
+        cursor.execute("PRAGMA integrity_check")
+        result = cursor.fetchone()
+        
+        # Проверяем основные таблицы
+        required_tables = ['user', 'user_progress', 'encryption_history']
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        existing_tables = [row[0] for row in cursor.fetchall()]
+        
+        # Проверяем что все нужные таблицы существуют
+        for table in required_tables:
+            if table not in existing_tables:
+                print(f"❌ Отсутствует таблица: {table}")
+                return False
+        
+        conn.close()
+        return result[0] == 'ok'
+        
+    except Exception as e:
+        print(f"❌ Ошибка проверки целостности: {e}")
+        return False
+
+def restore_from_backup_or_create_new(db_path, backup_path, db):
+    """Восстанавливает из бэкапа или создает новую БД"""
+    if os.path.exists(backup_path):
+        print("🔥 Восстанавливаем из бэкапа...")
+        shutil.copy2(backup_path, db_path)
+        db.create_all()  # Обновляем структуру
+        print("✅ Восстановлено из бэкапа")
+    else:
+        print("💥 Бэкапа нет, создаем чистую БД...")
+        db.create_all()
+        create_demo_data()
+
+def create_automatic_backup():
+    """Создает автоматический бэкап"""
+    try:
+        source = 'instance/cyberguardian.db'
+        if not os.path.exists(source):
+            return False
+            
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_file = f'backups/auto_backup_{timestamp}.db'
+        
+        shutil.copy2(source, backup_file)
+        
+        # Сохраняем также как постоянный бэкап
+        persistent_backup = 'backups/persistent_backup.db'
+        shutil.copy2(source, persistent_backup)
+        
+        print(f"💾 Автоматический бэкап создан: {backup_file}")
+        return True
+        
+    except Exception as e:
+        print(f"⚠️ Ошибка создания бэкапа: {e}")
+        return False
 
 def create_demo_data():
     """Создание демо-данных только для ПУСТОЙ БД"""
@@ -322,26 +411,8 @@ app = create_app()
 
 if __name__ == '__main__':
     print("🚀 CyberGuardian 2.0 запускается...")
-    print("🛡️ РЕЖИМ ПОЛНОЙ ЗАЩИТЫ ДАННЫХ АКТИВИРОВАН!")
-    
-    # СУПЕР-ПРОВЕРКА БАЗЫ ДАННЫХ
-    try:
-        from check_db import check_database_integrity, backup_database
-        
-        print("🔍 Проверяем целостность базы данных...")
-        if check_database_integrity():
-            print("✅ База данных готова к работе!")
-        else:
-            print("⚠️ Обнаружены проблемы с БД!")
-            
-        # Создаем резервную копию при КАЖДОМ запуске
-        print("💾 Создаем резервную копию БД...")
-        backup_database()
-        
-    except Exception as e:
-        print(f"⚠️ Не удалось проверить БД: {e}")
-    
-    print("🎯 Новые функции: Threat Monitor, Security Scanner, Cyber Games!")
+    print("🛡️ АВТОМАТИЧЕСКАЯ ЗАЩИТА ДАННЫХ АКТИВИРОВАНА!")
+    print("🎯 Данные сохранятся при следующем деплое!")
     print("📖 Документация: http://localhost:5000")
     print("🔧 Health check: http://localhost:5000/health")
     print("=" * 60)
