@@ -2,6 +2,86 @@
 
 {% block content %}
 
+<style>
+
+.features-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: stretch; /* Растягивает карточки по высоте */
+}
+
+.feature-card h3 {
+    flex-shrink: 0;
+    height: 60px; /* Фиксированная высота заголовка */
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    text-align: center !important;
+    justify-content: center;
+}
+
+.feature-card p {
+    flex: 1; /* Занимает всё доступное пространство */
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+}
+
+.btn-cyber,
+.btn-cyber-outline,
+.btn-cyber-danger {
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center;
+}
+
+.feature-card p {
+    text-align: center !important;
+}
+
+.feature-card .feature-icon {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .feature-card {
+        flex: 0 0 calc(33.333% - 20px);
+        height: 370px;
+    }
+}
+
+@media (max-width: 992px) {
+    .feature-card {
+        flex: 0 0 calc(50% - 20px);
+        height: 360px;
+    }
+}
+
+@media (max-width: 768px) {
+    .feature-card {
+        height: 340px;
+    }
+}
+
+@media (max-width: 576px) {
+    .feature-card {
+        flex: 0 0 100%;
+        height: 320px;
+        max-width: 100%;
+    }
+}
+
+</style>
+
 <head>
     <link rel="stylesheet" href="static/css/main.css">
 </head>
@@ -76,7 +156,7 @@
                 <h3 class="cyber-text-bright mb-3">Интерактивное обучение</h3>
                 <p class="cyber-text mb-4">Уроки по кибербезопасности, тесты и симуляции атак для полного погружения в
                     тему.</p>
-                <a href="{{ url_for('education.education_home') }}" class="btn-cyber-outline w-100">
+                <a href="{{ url_for('education.education_home') }}" class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
                     Изучать
                 </a>
             </div>
@@ -87,7 +167,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Генератор паролей</h3>
                 <p class="cyber-text mb-4">Создание и проверка надежных паролей для защиты ваших учетных записей.</p>
-                <a href="{{ url_for('passwords.password_generator') }}" class="btn-cyber-outline w-100">
+                <a href="{{ url_for('passwords.password_generator') }}" class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
                     Использовать
                 </a>
             </div>
@@ -98,7 +178,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Шифрование данных</h3>
                 <p class="cyber-text mb-4">Шифрование текстов и файлов с использованием современных алгоритмов.</p>
-                <a href="{{ url_for('encryption.encryption_tools') }}" class="btn-cyber-outline w-100">
+                <a href="{{ url_for('encryption.encryption_tools') }}" class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
                     Шифровать
                 </a>
             </div>
@@ -109,7 +189,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">ИИ-помощник</h3>
                 <p class="cyber-text mb-4">Ваш персональный консультант по безопасности, доступный 24/7.</p>
-                <a href="{{ url_for('ai.ai_chat') }}" class="btn-cyber-outline w-100">
+                <a href="{{ url_for('ai.ai_chat') }}" class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
                     Спросить
                 </a>
             </div>
@@ -121,7 +201,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Мониторинг угроз</h3>
                 <p class="cyber-text mb-4">Отслеживание киберугроз в реальном времени и получение уведомлений.</p>
-                <a href="{{ url_for('threats.threat_dashboard') }}" class="btn-cyber-outline w-100">
+                <a href="{{ url_for('threats.threat_dashboard') }}" class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
                     Мониторить
                 </a>
             </div>
@@ -132,7 +212,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Сканер безопасности</h3>
                 <p class="cyber-text mb-4">Комплексная проверка системы на уязвимости и проблемы безопасности.</p>
-                <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn-cyber-outline w-100">
+                <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
                     Сканировать
                 </a>
             </div>
@@ -143,7 +223,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Кибер-тренировка и развлечения</h3>
                 <p class="cyber-text mb-4">Обучение через увлекательные игры, квизы и практические задания.</p>
-                <a href="{{ url_for('games.games_dashboard') }}" class="btn-cyber-outline w-100">
+                <a href="{{ url_for('games.games_dashboard') }}" class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
                     Играть
                 </a>
             </div>
@@ -154,7 +234,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">DDoS Simulator</h3>
                 <p class="cyber-text mb-4">Изучение механизмов DDoS атак и методов защиты в безопасной среде.</p>
-                <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger w-100">
+                <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger w-100 mt-auto d-flex justify-content-center align-items-center">
                     Исследовать
                 </a>
             </div>
