@@ -1692,15 +1692,15 @@
         });
 
         // Progress ring animation
+        // Прогресс ring animation
         document.addEventListener('DOMContentLoaded', function () {
-            const progress = {{ progress.percentage }
-        };
-        const circle = document.querySelector('.progress-ring-fill');
-        if (circle) {
-            const circumference = 377;
-            const offset = circumference - (circumference * progress / 100);
-            circle.style.strokeDashoffset = offset;
-        }
+            const progress = {{ progress.percentage }};
+            const circle = document.querySelector('.progress-ring-fill');
+            if (circle) {
+                const circumference = 377;
+                const offset = circumference - (circumference * progress / 100);
+                circle.style.strokeDashoffset = offset;
+            }
         });
 
         // Keyboard shortcuts
