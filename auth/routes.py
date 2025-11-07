@@ -48,16 +48,33 @@ def get_password_strength(password):
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
         
-        # Валидация
+        # СТРОГАЯ ВАЛИДАЦИЯ
         errors = []
         
+        # Проверка на пустые поля
+        if not username:
+            errors.append('Имя пользователя обязательно')
+        if not email:
+            errors.append('Email обязателен')
+        if not password:
+            errors.append('Пароль обязателен')
+        if not confirm_password:
+            errors.append('Подтверждение пароля обязательно')
+        
+        if errors:
+            for error in errors:
+                flash(error, 'danger')
+            return render_template('auth/register.html', 
+                                 username=username, 
+                                 email=email)
+        
         # Валидация имени пользователя
-        if not username or len(username) < 3:
+        if len(username) < 3:
             errors.append('Имя пользователя должно содержать минимум 3 символа')
         elif not re.match(r'^[a-zA-Z0-9_]+$', username):
             errors.append('Имя пользователя может содержать только буквы, цифры и подчеркивания')
@@ -66,8 +83,12 @@ def register():
         if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
             errors.append('Некорректный email адрес')
         
-        # Проверка совпадения паролей
-        if password != confirm_password:
+        # Строгая проверка пароля
+        if len(password) < 1:
+            errors.append('Пароль не может быть пустым')
+        elif len(password) < 3:  # Минимум 3 символа
+            errors.append('Пароль должен содержать минимум 3 символа')
+        elif password != confirm_password:
             errors.append('Пароли не совпадают')
         
         # Проверка уникальности
@@ -96,6 +117,9 @@ def register():
             flash('Регистрация успешна! Добро пожаловать в CyberGuardian!', 'success')
             return redirect(url_for('dashboard'))
             
+        except ValueError as e:
+            db.session.rollback()
+            flash(str(e), 'danger')
         except Exception as e:
             db.session.rollback()
             flash('Ошибка при регистрации. Попробуйте позже.', 'danger')
@@ -105,9 +129,14 @@ def register():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
         remember = bool(request.form.get('remember'))
+        
+        # Проверка на пустые поля
+        if not username or not password:
+            flash('Заполните все обязательные поля', 'danger')
+            return render_template('auth/login.html')
         
         user = User.query.filter_by(username=username).first()
         
@@ -177,3 +206,4 @@ def init_login_manager(app):
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Пожалуйста, войдите для доступа к этой странице'
     login_manager.login_message_category = 'warning'
+

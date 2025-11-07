@@ -13,7 +13,7 @@
                     <p class="cyber-subtext">Присоединяйтесь к сообществу кибербезопасности</p>
                 </div>
                 
-                <form method="POST" id="registerForm" novalidate>
+                <form method="POST" id="registerForm">
                     <!-- Имя пользователя -->
                     <div class="mb-4">
                         <label class="form-label cyber-label">
@@ -49,12 +49,13 @@
                         <input type="password" class="form-control cyber-input" 
                                name="password" required 
                                id="passwordInput" 
-                               placeholder="Создайте пароль">
+                               placeholder="Создайте пароль (минимум 3 символа)"
+                               minlength="3">
                         
                         <!-- Простая подсказка о пароле -->
                         <div class="password-hint mt-2">
                             <small class="form-text text-muted" id="passwordHint">
-                                Рекомендуем использовать не менее 8 символов
+                                Минимум 3 символа
                             </small>
                         </div>
                     </div>
@@ -67,7 +68,8 @@
                         <input type="password" class="form-control cyber-input" 
                                name="confirm_password" required 
                                id="confirmPasswordInput" 
-                               placeholder="Повторите пароль">
+                               placeholder="Повторите пароль"
+                               minlength="3">
                         <div class="form-feedback" id="confirmFeedback"></div>
                     </div>
                     
@@ -171,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('passwordInput');
     const confirmInput = document.getElementById('confirmPasswordInput');
     const passwordHint = document.getElementById('passwordHint');
+    const registerForm = document.getElementById('registerForm');
     
     const usernameFeedback = document.getElementById('usernameFeedback');
     const emailFeedback = document.getElementById('emailFeedback');
@@ -246,10 +249,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = passwordInput.value;
         
         if (!password) {
-            passwordHint.textContent = 'Рекомендуем использовать не менее 8 символов';
+            passwordHint.textContent = 'Минимум 3 символа';
             passwordHint.className = 'form-text text-muted';
-        } else if (password.length < 8) {
-            passwordHint.textContent = 'Пароль слишком короткий (рекомендуется 8+ символов)';
+        } else if (password.length < 3) {
+            passwordHint.textContent = 'Пароль слишком короткий (минимум 3 символа)';
             passwordHint.className = 'form-text text-warning';
         } else {
             passwordHint.textContent = '✓ Пароль достаточной длины';
@@ -294,6 +297,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
         }
     }
+
+    // Валидация формы перед отправкой
+    registerForm.addEventListener('submit', function(e) {
+        const username = usernameInput.value.trim();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const confirm = confirmInput.value;
+        
+        let hasErrors = false;
+        
+        // Проверка имени пользователя
+        if (username.length < 3) {
+            showFeedback(usernameFeedback, 'Минимум 3 символа', 'error');
+            hasErrors = true;
+        }
+        
+        // Проверка email
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            showFeedback(emailFeedback, 'Некорректный email', 'error');
+            hasErrors = true;
+        }
+        
+        // Проверка пароля
+        if (password.length < 3) {
+            showFeedback(confirmFeedback, 'Пароль должен содержать минимум 3 символа', 'error');
+            hasErrors = true;
+        } else if (password !== confirm) {
+            showFeedback(confirmFeedback, 'Пароли не совпадают', 'error');
+            hasErrors = true;
+        }
+        
+        if (hasErrors) {
+            e.preventDefault();
+            return false;
+        }
+    });
 
     // Обработчики событий
     usernameInput.addEventListener('input', checkUsername);

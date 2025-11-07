@@ -275,3 +275,41 @@ def achievements():
         }
     ]
     return render_template("education/achievements.html", achievements=achievements_data)
+
+@education_bp.route("/course/<course_id>/video_intro")
+def course_video_intro(course_id):
+    """Страница с вступительным видео курса"""
+    course_data = get_course(course_id)
+    if not course_data:
+        return "Страница не найдена", 404
+    
+    return render_template(
+        "education/video_intro.html",
+        course=course_data
+    )
+
+@education_bp.route("/api/generate_password")
+def generate_password_api():
+    """API для генерации надежных паролей"""
+    import random
+    import string
+    
+    adjectives = ["Быстрый", "Сильный", "Умный", "Смелый", "Ловкий", "Яркий", "Тихий", "Громкий"]
+    nouns = ["Тигр", "Дракон", "Феникс", "Единорог", "Волк", "Орел", "Дельфин", "Ястреб"]
+    symbols = ["!", "@", "#", "$", "%", "&", "*"]
+    
+    adjective = random.choice(adjectives)
+    noun = random.choice(nouns)
+    number = random.randint(10, 99)
+    symbol = random.choice(symbols)
+    
+    password = f"{adjective}{noun}{number}{symbol}"
+    
+    # Альтернативный вариант
+    characters = string.ascii_letters + string.digits + "!@#$%&*"
+    alt_password = ''.join(random.choice(characters) for i in range(16))
+    
+    return jsonify({
+        'simple': password,
+        'strong': alt_password
+    })

@@ -19,6 +19,10 @@ class User(db.Model):
     encryption_usage = db.Column(db.Integer, default=0)
     
     def set_password(self, password):
+        if not password or len(password.strip()) == 0:
+            raise ValueError("Пароль не может быть пустым")
+        if len(password) < 3:
+            raise ValueError("Пароль должен содержать минимум 3 символа")
         self.password_hash = generate_password_hash(password)
     
     def check_password(self, password):

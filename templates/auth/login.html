@@ -19,7 +19,8 @@
                             <i class="bi bi-person me-2"></i>Имя пользователя
                         </label>
                         <input type="text" class="form-control cyber-input" name="username" required 
-                               placeholder="Введите имя пользователя" autofocus>
+                               placeholder="Введите имя пользователя" autofocus
+                               minlength="1">
                     </div>
                     
                     <div class="mb-4">
@@ -27,7 +28,8 @@
                             <i class="bi bi-key me-2"></i>Пароль
                         </label>
                         <input type="password" class="form-control cyber-input" name="password" required 
-                               placeholder="Введите пароль" id="passwordInput">
+                               placeholder="Введите пароль" id="passwordInput"
+                               minlength="1">
                         <div class="text-end mt-2">
                             <button type="button" class="btn btn-sm cyber-link p-0" id="togglePassword">
                                 <i class="bi bi-eye"></i> Показать пароль
@@ -100,6 +102,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('passwordInput');
+    const loginForm = document.getElementById('loginForm');
     let passwordVisible = false;
     
     // Переключение видимости пароля
@@ -123,6 +126,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.parentElement.classList.remove('focused');
             }
         });
+    });
+
+    // Валидация формы входа
+    loginForm.addEventListener('submit', function(e) {
+        const username = document.querySelector('input[name="username"]').value.trim();
+        const password = document.getElementById('passwordInput').value;
+        
+        if (!username || !password) {
+            e.preventDefault();
+            alert('Заполните все обязательные поля');
+            return false;
+        }
     });
 });
 
