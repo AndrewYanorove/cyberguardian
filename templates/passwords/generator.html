@@ -1,681 +1,1307 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Генератор паролей - CyberGuardian</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    
+
     <style>
-    :root {
-        --cyber-primary: #00ff88;
-        --cyber-secondary: #00ccff;
-        --cyber-accent: #ff0088;
-        --cyber-border: #2a2a3a;
-        --cyber-subtext: #888;
-        --cyber-bg: #0a0a0f;
-        --cyber-card-bg: #151520;
-        --cyber-text: #ffffff;
-        
-        --cyber-glow: 0 0 20px rgba(0, 255, 136, 0.3);
-        --cyber-glow-strong: 0 0 30px rgba(0, 255, 136, 0.6);
-    }
+        :root {
+            --cyber-primary: #00ff88;
+            --cyber-secondary: #00ccff;
+            --cyber-accent: #ff0088;
+            --cyber-border: #2a2a3a;
+            --cyber-subtext: #888;
+            --cyber-bg: #0a0a0f;
+            --cyber-card-bg: #151520;
+            --cyber-text: #ffffff;
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        background: var(--cyber-bg);
-        color: var(--cyber-text);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-
-    .cyber-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    @keyframes slideUp {
-        from { 
-            transform: translateY(20px); 
-            opacity: 0; 
+            --cyber-glow: 0 0 20px rgba(0, 255, 136, 0.3);
+            --cyber-glow-strong: 0 0 30px rgba(0, 255, 136, 0.6);
         }
-        to { 
-            transform: translateY(0); 
-            opacity: 1; 
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    }
 
-    @keyframes pulse {
-        0% { box-shadow: var(--cyber-glow); }
-        50% { box-shadow: var(--cyber-glow-strong); }
-        100% { box-shadow: var(--cyber-glow); }
-    }
+        body {
+            background: var(--cyber-bg);
+            color: var(--cyber-text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    @keyframes progressFill {
-        from { width: 0%; }
-        to { width: var(--progress-width); }
-    }
-
-    .cyber-card {
-        background: var(--cyber-card-bg);
-        border: 1px solid var(--cyber-border);
-        border-radius: 16px;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        animation: slideUp 0.5s ease-out;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .cyber-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--cyber-primary), transparent);
-    }
-
-    .cyber-card:hover {
-        border-color: var(--cyber-primary);
-        transform: translateY(-2px);
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--cyber-border);
-    }
-
-    .section-title {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .badge-cyber {
-        background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary));
-        color: black;
-        padding: 0.4rem 0.8rem;
-        border-radius: 12px;
-        font-size: 0.7rem;
-        font-weight: 700;
-    }
-
-    /* Опции генератора */
-    .options-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 1rem;
-        margin: 1.5rem 0;
-    }
-
-    .option-card {
-        background: rgba(30, 30, 45, 0.8);
-        border: 1px solid var(--cyber-border);
-        border-radius: 12px;
-        padding: 1.5rem 1rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .option-card:hover {
-        border-color: var(--cyber-primary);
-        transform: translateY(-3px);
-    }
-
-    .option-card.active {
-        background: rgba(0, 255, 136, 0.1);
-        border-color: var(--cyber-primary);
-        animation: pulse 2s infinite;
-    }
-
-    .option-icon {
-        font-size: 1.75rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .option-card h5 {
-        margin: 0;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-
-    .option-card small {
-        font-size: 0.7rem;
-        color: var(--cyber-subtext);
-        line-height: 1.3;
-    }
-
-    /* Настройки */
-    .settings-panel {
-        background: rgba(25, 25, 35, 0.8);
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-top: 1rem;
-        border: 1px solid var(--cyber-border);
-    }
-
-    .setting-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .setting-item:last-child {
-        border-bottom: none;
-    }
-
-    .setting-label {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-weight: 500;
-    }
-
-    /* Слайдер */
-    .range-container {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem 0;
-    }
-
-    .range-value {
-        min-width: 40px;
-        text-align: center;
-        font-weight: 700;
-        color: var(--cyber-primary);
-        font-size: 1.1rem;
-    }
-
-    .range-slider {
-        flex: 1;
-        -webkit-appearance: none;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-        outline: none;
-    }
-
-    .range-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 20px;
-        height: 20px;
-        background: var(--cyber-primary);
-        border-radius: 50%;
-        cursor: pointer;
-        box-shadow: 0 0 15px var(--cyber-primary);
-        transition: all 0.3s ease;
-    }
-
-    .range-slider::-webkit-slider-thumb:hover {
-        transform: scale(1.2);
-    }
-
-    .range-slider::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        background: var(--cyber-primary);
-        border-radius: 50%;
-        cursor: pointer;
-        border: none;
-        box-shadow: 0 0 15px var(--cyber-primary);
-    }
-
-    /* Переключатели */
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 26px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: #333;
-        transition: .3s;
-        border-radius: 26px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 4px;
-        bottom: 4px;
-        background: white;
-        transition: .3s;
-        border-radius: 50%;
-    }
-
-    input:checked + .slider {
-        background: var(--cyber-primary);
-    }
-
-    input:checked + .slider:before {
-        transform: translateX(24px);
-    }
-
-    /* Поле пароля */
-    .password-display {
-        display: flex;
-        gap: 0.75rem;
-        align-items: center;
-        margin: 1.5rem 0;
-    }
-
-    .password-field {
-        flex: 1;
-        padding: 1.25rem 1.5rem;
-        background: rgba(20, 20, 30, 0.9);
-        border: 1px solid var(--cyber-border);
-        border-radius: 12px;
-        color: var(--cyber-primary);
-        font-family: 'Courier New', monospace;
-        font-size: 1.1rem;
-        font-weight: 600;
-        letter-spacing: 1px;
-        transition: all 0.3s ease;
-    }
-
-    .password-field:focus {
-        outline: none;
-        border-color: var(--cyber-primary);
-        box-shadow: var(--cyber-glow);
-    }
-
-    .btn-group {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .btn-cyber {
-        padding: 1rem;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 54px;
-        height: 54px;
-        border: 1px solid var(--cyber-primary);
-        background: var(--cyber-primary);
-        color: black;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        font-weight: 600;
-    }
-
-    .btn-cyber:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--cyber-glow);
-    }
-
-    .btn-cyber-outline {
-        background: transparent;
-        color: var(--cyber-primary);
-    }
-
-    /* Кнопка генерации */
-    .btn-generate {
-        background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary));
-        border: none;
-        color: black;
-        font-weight: 700;
-        padding: 1.25rem 2rem;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        width: 100%;
-        font-size: 1rem;
-        margin: 1rem 0;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-generate:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0, 255, 136, 0.4);
-    }
-
-    .btn-generate::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: 0.5s;
-    }
-
-    .btn-generate:hover::before {
-        left: 100%;
-    }
-
-    /* Индикатор силы пароля */
-    .strength-section {
-        margin: 1.5rem 0;
-    }
-
-    .strength-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.75rem;
-    }
-
-    .strength-title {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--cyber-subtext);
-    }
-
-    .strength-value {
-        font-size: 0.9rem;
-        font-weight: 700;
-    }
-
-    .strength-meter {
-        width: 100%;
-        height: 12px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-        overflow: hidden;
-        position: relative;
-    }
-
-    .strength-fill {
-        height: 100%;
-        width: 0%;
-        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        border-radius: 6px;
-        position: relative;
-        animation: progressFill 1s ease-out;
-    }
-
-    .strength-labels {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 0.5rem;
-        font-size: 0.7rem;
-        color: var(--cyber-subtext);
-    }
-
-    /* Цвета для силы пароля */
-    .strength-weak { 
-        background: linear-gradient(90deg, #ff4444, #ff6b6b);
-        box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
-    }
-    .strength-medium { 
-        background: linear-gradient(90deg, #ffa726, #ffb74d);
-        box-shadow: 0 0 10px rgba(255, 167, 38, 0.5);
-    }
-    .strength-strong { 
-        background: linear-gradient(90deg, #66bb6a, #81c784);
-        box-shadow: 0 0 10px rgba(102, 187, 106, 0.5);
-    }
-    .strength-very-strong { 
-        background: linear-gradient(90deg, #42a5f5, #64b5f6);
-        box-shadow: 0 0 10px rgba(66, 165, 245, 0.5);
-    }
-    .strength-excellent { 
-        background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
-        box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
-    }
-
-    /* Метрики анализа */
-    .metrics-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-        margin: 1.5rem 0;
-    }
-
-    .metric-card {
-        background: rgba(30, 30, 45, 0.8);
-        border: 1px solid var(--cyber-border);
-        border-radius: 10px;
-        padding: 1.25rem 0.75rem;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .metric-card:hover {
-        border-color: var(--cyber-primary);
-        transform: translateY(-2px);
-    }
-
-    .metric-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--cyber-primary);
-        margin-bottom: 0.25rem;
-    }
-
-    .metric-label {
-        font-size: 0.7rem;
-        color: var(--cyber-subtext);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    /* Время взлома */
-    .crack-time {
-        text-align: center;
-        padding: 1.25rem;
-        background: rgba(20, 20, 30, 0.9);
-        border-radius: 12px;
-        margin: 1rem 0;
-        border: 1px solid var(--cyber-border);
-        font-weight: 700;
-        font-size: 1.1rem;
-    }
-
-    /* Обратная связь */
-    .feedback-item {
-        padding: 1rem;
-        margin: 0.75rem 0;
-        background: rgba(30, 30, 45, 0.8);
-        border-radius: 10px;
-        border-left: 4px solid;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-    }
-
-    .feedback-item:hover {
-        transform: translateX(5px);
-    }
-
-    .feedback-item.good {
-        border-left-color: var(--cyber-primary);
-        background: rgba(0, 255, 136, 0.1);
-    }
-
-    .feedback-item.warning {
-        border-left-color: #ffa726;
-        background: rgba(255, 167, 38, 0.1);
-    }
-
-    .feedback-item.critical {
-        border-left-color: #ff4444;
-        background: rgba(255, 68, 68, 0.1);
-    }
-
-    /* Статистика */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-
-    .stat-card {
-        background: rgba(30, 30, 45, 0.8);
-        border: 1px solid var(--cyber-border);
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-        border-color: var(--cyber-primary);
-        transform: translateY(-3px);
-    }
-
-    .stat-value {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-label {
-        font-size: 0.8rem;
-        color: var(--cyber-subtext);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    /* Адаптивность */
-    @media (max-width: 768px) {
         .cyber-container {
-            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: var(--cyber-glow);
+            }
+
+            50% {
+                box-shadow: var(--cyber-glow-strong);
+            }
+
+            100% {
+                box-shadow: var(--cyber-glow);
+            }
+        }
+
+        @keyframes progressFill {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: var(--progress-width);
+            }
         }
 
         .cyber-card {
-            padding: 1.5rem;
+            background: var(--cyber-card-bg);
+            border: 1px solid var(--cyber-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            animation: slideUp 0.5s ease-out;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyber-primary), transparent);
+        }
+
+        .cyber-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-2px);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--cyber-border);
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary));
+            color: black;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Опции генератора */
         .options-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
         }
-        
-        .metrics-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .password-display {
+
+        .option-card {
+            background: rgba(30, 30, 45, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
             flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
         }
-        
-        .btn-group {
-            width: 100%;
+
+        .option-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-3px);
         }
-        
-        .btn-cyber {
+
+        .option-card.active {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--cyber-primary);
+            animation: pulse 2s infinite;
+        }
+
+        .option-icon {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .option-card h5 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .option-card small {
+            font-size: 0.7rem;
+            color: var(--cyber-subtext);
+            line-height: 1.3;
+        }
+
+        /* Настройки */
+        .settings-panel {
+            background: rgba(25, 25, 35, 0.8);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid var(--cyber-border);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Слайдер */
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+
+        .range-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--cyber-primary);
+            font-size: 1.1rem;
+        }
+
+        .range-slider {
             flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
         }
-    }
 
-    /* Утилиты */
-    .hidden {
-        display: none !important;
-    }
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--cyber-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--cyber-primary);
+            transition: all 0.3s ease;
+        }
 
-    .text-cyber-primary { color: var(--cyber-primary) !important; }
-    .text-cyber-secondary { color: var(--cyber-secondary) !important; }
-    .text-cyber-accent { color: var(--cyber-accent) !important; }
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
 
-    /* Поле ввода анализатора */
-    .input-group {
-        position: relative;
-        margin-bottom: 1.5rem;
-    }
+        .range-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--cyber-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 15px var(--cyber-primary);
+        }
 
-    .input-field {
-        width: 100%;
-        padding: 1.25rem 1.5rem;
-        background: rgba(20, 20, 30, 0.9);
-        border: 1px solid var(--cyber-border);
-        border-radius: 12px;
-        color: var(--cyber-text);
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
+        /* Переключатели */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
 
-    .input-field:focus {
-        outline: none;
-        border-color: var(--cyber-primary);
-        box-shadow: var(--cyber-glow);
-    }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-    .toggle-password {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: var(--cyber-subtext);
-        cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 4px;
-        transition: color 0.3s ease;
-    }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #333;
+            transition: .3s;
+            border-radius: 26px;
+        }
 
-    .toggle-password:hover {
-        color: var(--cyber-primary);
-    }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background: var(--cyber-primary);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Поле пароля */
+        .password-display {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+        .password-field {
+            flex: 1;
+            padding: 1.25rem 1.5rem;
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid var(--cyber-border);
+            border-radius: 12px;
+            color: var(--cyber-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .password-field:focus {
+            outline: none;
+            border-color: var(--cyber-primary);
+            box-shadow: var(--cyber-glow);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-cyber {
+            padding: 1rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 54px;
+            height: 54px;
+            border: 1px solid var(--cyber-primary);
+            background: var(--cyber-primary);
+            color: black;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--cyber-glow);
+        }
+
+        .btn-cyber-outline {
+            background: transparent;
+            color: var(--cyber-primary);
+        }
+
+        /* Кнопка генерации */
+        .btn-generate {
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-secondary));
+            border: none;
+            color: black;
+            font-weight: 700;
+            padding: 1.25rem 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 1rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-generate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-generate:hover::before {
+            left: 100%;
+        }
+
+        /* Индикатор силы пароля */
+        .strength-section {
+            margin: 1.5rem 0;
+        }
+
+        .strength-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .strength-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--cyber-subtext);
+        }
+
+        .strength-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .strength-meter {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 6px;
+            position: relative;
+            animation: progressFill 1s ease-out;
+        }
+
+        .strength-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.7rem;
+            color: var(--cyber-subtext);
+        }
+
+        /* Цвета для силы пароля */
+        .strength-weak {
+            background: linear-gradient(90deg, #ff4444, #ff6b6b);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+        }
+
+        .strength-medium {
+            background: linear-gradient(90deg, #ffa726, #ffb74d);
+            box-shadow: 0 0 10px rgba(255, 167, 38, 0.5);
+        }
+
+        .strength-strong {
+            background: linear-gradient(90deg, #66bb6a, #81c784);
+            box-shadow: 0 0 10px rgba(102, 187, 106, 0.5);
+        }
+
+        .strength-very-strong {
+            background: linear-gradient(90deg, #42a5f5, #64b5f6);
+            box-shadow: 0 0 10px rgba(66, 165, 245, 0.5);
+        }
+
+        .strength-excellent {
+            background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+        }
+
+        /* Метрики анализа */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric-card {
+            background: rgba(30, 30, 45, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 10px;
+            padding: 1.25rem 0.75rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-2px);
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--cyber-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--cyber-subtext);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Время взлома */
+        .crack-time {
+            text-align: center;
+            padding: 1.25rem;
+            background: rgba(20, 20, 30, 0.9);
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 1px solid var(--cyber-border);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Обратная связь */
+        .feedback-item {
+            padding: 1rem;
+            margin: 0.75rem 0;
+            background: rgba(30, 30, 45, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-item:hover {
+            transform: translateX(5px);
+        }
+
+        .feedback-item.good {
+            border-left-color: var(--cyber-primary);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .feedback-item.warning {
+            border-left-color: #ffa726;
+            background: rgba(255, 167, 38, 0.1);
+        }
+
+        .feedback-item.critical {
+            border-left-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        /* Статистика */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: rgba(30, 30, 45, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyber-primary);
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--cyber-subtext);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .cyber-container {
+                padding: 1rem;
+            }
+
+            .cyber-card {
+                padding: 1.5rem;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .password-display {
+                flex-direction: column;
+            }
+
+            .btn-group {
+                width: 100%;
+            }
+
+            .btn-cyber {
+                flex: 1;
+            }
+        }
+
+        /* Утилиты */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-cyber-primary {
+            color: var(--cyber-primary) !important;
+        }
+
+        .text-cyber-secondary {
+            color: var(--cyber-secondary) !important;
+        }
+
+        .text-cyber-accent {
+            color: var(--cyber-accent) !important;
+        }
+
+        /* Поле ввода анализатора */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid var(--cyber-border);
+            border-radius: 12px;
+            color: var(--cyber-text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--cyber-primary);
+            box-shadow: var(--cyber-glow);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--cyber-subtext);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: var(--cyber-primary);
+        }
+
+        /* ===== HEADER ===== */
+        .cyber-header {
+            background: rgba(10, 10, 15, 0.95);
+            border-bottom: 2px solid var(--cyber-border);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cyber-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--cyber-text-bright);
+            text-decoration: none;
+        }
+
+        .cyber-brand-icon {
+            color: var(--cyber-primary);
+            font-size: 1.75rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .navbar-toggler.cyber-toggler {
+            background: rgba(0, 168, 255, 0.1);
+            border: 1px solid var(--cyber-primary);
+            padding: 0.5rem 0.75rem;
+            color: var(--cyber-text);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* ===== FOOTER ===== */
+        .cyber-footer {
+            background: rgba(5, 5, 10, 0.95);
+            border-top: 2px solid var(--cyber-border);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--cyber-text-bright);
+        }
+
+        .footer-description {
+            color: var(--cyber-subtext);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .footer-links h5 {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: var(--cyber-text-bright);
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--cyber-subtext);
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--cyber-bg-card);
+            color: var(--cyber-subtext);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--cyber-primary);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--cyber-border);
+            color: var(--cyber-subtext);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 350px;
+            height: 100vh;
+            background: rgba(10, 10, 15, 0.98);
+            border-right: 2px solid var(--cyber-primary);
+            z-index: 10000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--cyber-border);
+            background: rgba(15, 15, 25, 0.95);
+        }
+
+        .sidebar-menu {
+            padding: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: var(--cyber-text);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 168, 255, 0.1);
+            border-color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .sidebar-item i {
+            width: 20px;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--cyber-border);
+            margin: 1rem 0;
+        }
+
+        .sidebar-category {
+            color: var(--cyber-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== DROPDOWN ===== */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 0.5rem;
+            right: 0;
+        }
+
+        /* ===== БЕЙДЖИ ===== */
+        .cyber-badge {
+            background: rgba(40, 40, 55, 0.8);
+            border: 1px solid var(--cyber-border);
+            border-radius: 25px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--cyber-text);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-badge-primary {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.2), rgba(0, 168, 255, 0.1));
+            border-color: var(--cyber-primary);
+            color: var(--cyber-primary);
+        }
+
+        .cyber-badge-accent {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border-color: var(--cyber-accent);
+            color: var(--cyber-accent);
+        }
+
+        .cyber-badge-danger {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
+            border-color: var(--cyber-danger);
+            color: var(--cyber-danger);
+        }
+
+        /* ===== КНОПКИ ===== */
+        .btn-cyber {
+            background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+            border: none;
+            color: #000;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+        }
+
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-cyber:hover::before {
+            left: 100%;
+        }
+
+        .btn-cyber:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4), 0 0 30px rgba(0, 255, 136, 0.3);
+            color: #000;
+        }
+
+        .btn-cyber-outline {
+            background: transparent;
+            border: 2px solid var(--cyber-primary);
+            color: var(--cyber-primary);
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-cyber-outline:hover {
+            background: var(--cyber-primary);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .cyber-header {
+                padding: 0.75rem 0;
+            }
+
+            .header-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .cyber-brand {
+                font-size: 1.25rem;
+            }
+
+            .header-actions {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cyber-header {
+                padding: 0.5rem 0;
+            }
+
+            .header-actions .btn-cyber-outline,
+            .header-actions .btn-cyber {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .header-actions .btn-cyber span,
+            .header-actions .btn-cyber-outline span {
+                display: none;
+            }
+
+            .header-actions .btn-cyber i,
+            .header-actions .btn-cyber-outline i {
+                margin-right: 0;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <div class="cyber-container">
+    <!-- Боковое меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-shaded cyber-brand-icon me-3"></i>
+                    <div>
+                        <h5 class="cyber-text-bright mb-0">CyberGuardian</h5>
+                        <small class="cyber-subtext">Цифровая безопасность</small>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="closeSidebar()"
+                    style="background: none; border: none; color: var(--cyber-text); font-size: 1.2rem;">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <!-- Основная навигация -->
+            <a href="{{ url_for('index') }}" class="sidebar-item">
+                <i class="bi bi-house"></i>
+                <span>Главная</span>
+            </a>
+
+            <a href="{{ url_for('dashboard') }}" class="sidebar-item">
+                <i class="bi bi-speedometer2"></i>
+                <span>Дашборд</span>
+            </a>
+
+            <a href="{{ url_for('forum.forum_home') }}" class="sidebar-item">
+                <i class="bi bi-chat-square-text"></i>
+                <span>Форум историй</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Основные модули -->
+            <a href="{{ url_for('education.education_home') }}" class="sidebar-item">
+                <i class="bi bi-book"></i>
+                <span>Обучение</span>
+            </a>
+
+            <a href="{{ url_for('passwords.password_generator') }}" class="sidebar-item">
+                <i class="bi bi-key"></i>
+                <span>Пароли</span>
+            </a>
+
+            <a href="{{ url_for('encryption.encryption_tools') }}" class="sidebar-item">
+                <i class="bi bi-lock"></i>
+                <span>Шифрование</span>
+            </a>
+
+            <a href="{{ url_for('ai.ai_chat') }}" class="sidebar-item">
+                <i class="bi bi-robot"></i>
+                <span>ИИ-помощник</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Экспертные инструменты -->
+            <div class="sidebar-category">Экспертные инструменты</div>
+
+            <a href="{{ url_for('threats.threat_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-shield-exclamation"></i>
+                <span>Мониторинг угроз</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <a href="{{ url_for('scanner.scanner_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-shield-check"></i>
+                <span>Сканер безопасности</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <a href="{{ url_for('games.games_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-joystick"></i>
+                <span>Кибер-тренировка</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <!-- DDoS Simulator -->
+            <a href="{{ url_for('ddos.ddos_simulator') }}" class="sidebar-item">
+                <i class="bi bi-lightning-charge"></i>
+                <span>DDoS Simulator</span>
+                <span class="cyber-badge cyber-badge-danger ms-auto" style="font-size: 0.6rem;">HOT</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Информационные страницы -->
+            <a href="{{ url_for('about') }}" class="sidebar-item">
+                <i class="bi bi-info-circle"></i>
+                <span>О проекте</span>
+            </a>
+
+            <a href="{{ url_for('contact') }}" class="sidebar-item">
+                <i class="bi bi-envelope"></i>
+                <span>Контакты</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Авторизация -->
+            {% if current_user.is_authenticated %}
+            <div class="sidebar-user-info p-3 mb-3" style="background: var(--cyber-bg-card); border-radius: 10px;">
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar-sidebar"
+                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--cyber-primary); display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="bi bi-person" style="color: white;"></i>
+                    </div>
+                    <div>
+                        <div class="username" style="color: var(--cyber-text-bright); font-weight: 600;">{{
+                            current_user.username }}</div>
+                        <div class="user-email" style="color: var(--cyber-subtext); font-size: 0.8rem;">{{
+                            current_user.email if current_user.email else 'Пользователь' }}</div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('auth.profile') }}" class="sidebar-item">
+                <i class="bi bi-person"></i>
+                <span>Профиль</span>
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-item" style="color: var(--cyber-danger);">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Выйти</span>
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}" class="sidebar-item">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Войти</span>
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="sidebar-item">
+                <i class="bi bi-person-plus"></i>
+                <span>Регистрация</span>
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="sidebar-footer p-3" style="border-top: 1px solid var(--cyber-border);">
+            <div class="social-links justify-content-center">
+                <a href="https://t.me/cyberguardian_support" class="social-link" target="_blank">
+                    <i class="bi bi-telegram"></i>
+                </a>
+                <a href="https://github.com" class="social-link" target="_blank">
+                    <i class="bi bi-github"></i>
+                </a>
+                <a href="mailto:support@cyberguardian.ru" class="social-link">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay для закрытия меню -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Верхняя навигация -->
+    <header class="cyber-header">
+        <div class="container-max">
+            <div class="header-container">
+                <!-- Кнопка меню -->
+                <button class="navbar-toggler cyber-toggler me-3" type="button" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                    <span class="menu-text ms-2">Меню</span>
+                </button>
+
+                <!-- Лого -->
+                <a class="cyber-brand" href="{{ url_for('index') }}">
+                    <i class="bi bi-shield-shaded cyber-brand-icon"></i>
+                    CyberGuardian
+                </a>
+
+                <!-- Правая часть с пользователем -->
+                <div class="header-actions">
+                    {% if current_user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn-cyber-outline" type="button" style="position: relative;">
+                            <i class="bi bi-person me-2"></i>
+                            {{ current_user.username }}
+                        </button>
+                        <div class="dropdown-menu"
+                            style="position: absolute; background: var(--cyber-bg-card); border: 2px solid var(--cyber-border); border-radius: 12px; padding: 1rem; min-width: 200px; z-index: 1000; display: none; margin-top: 0.5rem;">
+                            <a class="sidebar-item mb-2" href="{{ url_for('auth.profile') }}">
+                                <i class="bi bi-person me-2"></i>Профиль
+                            </a>
+                            <a class="sidebar-item mb-2" href="{{ url_for('dashboard') }}">
+                                <i class="bi bi-speedometer2 me-2"></i>Дашборд
+                            </a>
+                            <div class="sidebar-divider my-2"></div>
+                            <a class="sidebar-item" href="{{ url_for('auth.logout') }}"
+                                style="color: var(--cyber-danger);">
+                                <i class="bi bi-box-arrow-right me-2"></i>Выйти
+                            </a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn-cyber-outline">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+                    </a>
+                    <a href="{{ url_for('auth.register') }}" class="btn-cyber">
+                        <i class="bi bi-person-plus me-2"></i>Регистрация
+                    </a>
+                    {% endif %}
+
+                    <!-- Индикатор статуса -->
+                    <div class="cyber-badge cyber-badge-accent ms-3">
+                        <i class="bi bi-check-circle me-1"></i>Система активна
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    </section>
+
+    <div class="cyber-container mt-5">
         <!-- Заголовок -->
-        <div class="text-center mb-5">
-            <h1 class="mb-3" style="font-size: 2.5rem; font-weight: 800;">
+        <div class="text-center mb-7">
+            <h1 class="mb-3 mt-5" style="font-size: 2.5rem; font-weight: 800;">
                 <i class="bi bi-shield-lock-fill me-2 text-cyber-primary"></i>ГЕНЕРАТОР ПАРОЛЕЙ
             </h1>
             <p class="text-cyber-subtext lead">
                 Создавайте <span class="text-cyber-primary">неприступные</span> пароли с искусственным интеллектом
             </p>
-            <a href="/" class="btn-cyber-outline" style="display: inline-flex; width: auto; padding: 0.75rem 1.5rem;">
-                <i class="bi bi-arrow-left me-2"></i>На главную страницу
-            </a>
         </div>
 
         <div class="row g-4">
@@ -696,13 +1322,13 @@
                             <h5>Бронебойный</h5>
                             <small>Максимальная защита</small>
                         </div>
-                        
+
                         <div class="option-card" data-type="memorable">
                             <i class="bi bi-lightbulb-fill option-icon text-cyber-secondary"></i>
                             <h5>Запоминающийся</h5>
                             <small>Легко запомнить</small>
                         </div>
-                        
+
                         <div class="option-card" data-type="phonetic">
                             <i class="bi bi-mic-fill option-icon text-cyber-accent"></i>
                             <h5>Фонетический</h5>
@@ -722,7 +1348,7 @@
                                 <input type="range" class="range-slider" id="length-slider" min="8" max="32" value="16">
                             </div>
                         </div>
-                        
+
                         <div class="setting-item">
                             <span class="setting-label">
                                 <i class="bi bi-asterisk text-cyber-primary"></i>
@@ -733,7 +1359,7 @@
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        
+
                         <div class="setting-item">
                             <span class="setting-label">
                                 <i class="bi bi-123 text-cyber-primary"></i>
@@ -744,7 +1370,7 @@
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        
+
                         <div class="setting-item hidden" id="memorable-options">
                             <span class="setting-label">
                                 <i class="bi bi-type text-cyber-primary"></i>
@@ -770,7 +1396,8 @@
                             <button onclick="copyPassword()" class="btn-cyber" title="Скопировать" id="copy-btn">
                                 <i class="bi bi-clipboard"></i>
                             </button>
-                            <button onclick="regeneratePassword()" class="btn-cyber btn-cyber-outline" title="Перегенерировать">
+                            <button onclick="regeneratePassword()" class="btn-cyber btn-cyber-outline"
+                                title="Перегенерировать">
                                 <i class="bi bi-arrow-clockwise"></i>
                             </button>
                         </div>
@@ -790,10 +1417,10 @@
 
                     <!-- Поле ввода пароля -->
                     <div class="input-group">
-                        <input type="password" class="input-field" id="password-input" 
-                               placeholder="Введите пароль для глубокого анализа..." 
-                               oninput="debouncedCheckPassword()">
-                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" id="toggle-password">
+                        <input type="password" class="input-field" id="password-input"
+                            placeholder="Введите пароль для глубокого анализа..." oninput="debouncedCheckPassword()">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()"
+                            id="toggle-password">
                             <i class="bi bi-eye"></i>
                         </button>
                     </div>
@@ -817,7 +1444,7 @@
                                 <span>Идеальный</span>
                             </div>
                         </div>
-                        
+
                         <!-- Метрики -->
                         <div class="metrics-grid">
                             <div class="metric-card">
@@ -862,7 +1489,7 @@
             <h3 class="section-title mb-4">
                 <i class="bi bi-trophy-fill text-cyber-primary"></i>СТАТИСТИКА БЕЗОПАСНОСТИ
             </h3>
-            
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-value text-cyber-primary" id="total-generated">0</div>
@@ -885,438 +1512,489 @@
     </div>
 
     <script>
-    // JavaScript код остается практически таким же, как в предыдущей версии
-    // с небольшими изменениями для работы с новыми классами
-    
-    let currentPasswordType = 'strong';
-    let generatedPasswords = [];
-    let checkedPasswords = [];
-    let debounceTimer;
+        // JavaScript код остается практически таким же, как в предыдущей версии
+        // с небольшими изменениями для работы с новыми классами
 
-    document.addEventListener('DOMContentLoaded', function() {
-        initPasswordGenerator();
-        loadStatistics();
-        updateStatistics();
-    });
+        let currentPasswordType = 'strong';
+        let generatedPasswords = [];
+        let checkedPasswords = [];
+        let debounceTimer;
 
-    function initPasswordGenerator() {
-        document.querySelectorAll('.option-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                currentPasswordType = this.dataset.type;
-                updateAdvancedOptions();
+        document.addEventListener('DOMContentLoaded', function () {
+            initPasswordGenerator();
+            loadStatistics();
+            updateStatistics();
+        });
+
+        function initPasswordGenerator() {
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.addEventListener('click', function () {
+                    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    currentPasswordType = this.dataset.type;
+                    updateAdvancedOptions();
+                });
             });
-        });
 
-        const lengthSlider = document.getElementById('length-slider');
-        const lengthValue = document.getElementById('length-value');
-        
-        lengthSlider.addEventListener('input', function() {
-            lengthValue.textContent = this.value;
-        });
+            const lengthSlider = document.getElementById('length-slider');
+            const lengthValue = document.getElementById('length-value');
 
-        updateAdvancedOptions();
-    }
+            lengthSlider.addEventListener('input', function () {
+                lengthValue.textContent = this.value;
+            });
 
-    function updateAdvancedOptions() {
-        const memorableOptions = document.getElementById('memorable-options');
-        const lengthSlider = document.getElementById('length-slider');
-        const lengthValue = document.getElementById('length-value');
-        
-        if (currentPasswordType === 'memorable') {
-            memorableOptions.classList.remove('hidden');
-            lengthSlider.min = 3;
-            lengthSlider.max = 6;
-            lengthSlider.value = 4;
-            lengthValue.textContent = '4';
-        } else if (currentPasswordType === 'phonetic') {
-            memorableOptions.classList.add('hidden');
-            lengthSlider.min = 6;
-            lengthSlider.max = 20;
-            lengthSlider.value = 12;
-            lengthValue.textContent = '12';
-        } else {
-            memorableOptions.classList.add('hidden');
-            lengthSlider.min = 8;
-            lengthSlider.max = 32;
-            lengthSlider.value = 16;
-            lengthValue.textContent = '16';
+            updateAdvancedOptions();
         }
-    }
 
-    function generatePassword() {
-        const length = parseInt(document.getElementById('length-slider').value);
-        const includeSpecial = document.getElementById('special-chars').checked;
-        const includeNumbers = document.getElementById('include-numbers').checked;
-        
-        let password = '';
-        
-        switch(currentPasswordType) {
-            case 'memorable':
-                password = generateMemorablePassword(length);
-                break;
-            case 'phonetic':
-                password = generatePhoneticPassword(length);
-                break;
-            default:
-                password = generateStrongPassword(length, includeSpecial, includeNumbers);
-        }
-        
-        document.getElementById('generated-password').value = password;
-        generatedPasswords.push(password);
-        saveStatistics();
-        updateStatistics();
-        
-        document.getElementById('password-input').value = password;
-        checkPassword(password);
-        
-        showAlert('Пароль успешно сгенерирован!', 'success');
-    }
+        function updateAdvancedOptions() {
+            const memorableOptions = document.getElementById('memorable-options');
+            const lengthSlider = document.getElementById('length-slider');
+            const lengthValue = document.getElementById('length-value');
 
-    function generateStrongPassword(length, includeSpecial, includeNumbers) {
-        const lowercase = 'abcdefghijklmnopqrstuvwxyz';
-        const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const numbers = '0123456789';
-        const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-        
-        let charset = lowercase + uppercase;
-        if (includeNumbers) charset += numbers;
-        if (includeSpecial) charset += special;
-        
-        let password = '';
-        for (let i = 0; i < length; i++) {
-            password += charset.charAt(Math.floor(Math.random() * charset.length));
-        }
-        
-        return password;
-    }
-
-    function generateMemorablePassword(wordCount) {
-        const words = [
-            'Кибер', 'Гардиан', 'Секьюр', 'Протек', 'Шилд', 'Гейт', 'Волт', 'Код',
-            'Нетворк', 'Систем', 'Дейта', 'Инфо', 'Сейф', 'Гост', 'Крипто', 'Лок'
-        ];
-        
-        let password = '';
-        const capitalize = document.getElementById('capitalize-words').checked;
-        
-        for (let i = 0; i < wordCount; i++) {
-            let word = words[Math.floor(Math.random() * words.length)];
-            if (capitalize && Math.random() > 0.3) {
-                word = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-            }
-            password += word;
-            if (i < wordCount - 1) {
-                password += Math.floor(Math.random() * 10);
-            }
-        }
-        
-        return password;
-    }
-
-    function generatePhoneticPassword(length) {
-        const consonants = 'bcdfghjklmnpqrstvwxyz';
-        const vowels = 'aeiou';
-        
-        let password = '';
-        let useConsonant = true;
-        
-        for (let i = 0; i < length; i++) {
-            if (useConsonant) {
-                password += consonants.charAt(Math.floor(Math.random() * consonants.length));
+            if (currentPasswordType === 'memorable') {
+                memorableOptions.classList.remove('hidden');
+                lengthSlider.min = 3;
+                lengthSlider.max = 6;
+                lengthSlider.value = 4;
+                lengthValue.textContent = '4';
+            } else if (currentPasswordType === 'phonetic') {
+                memorableOptions.classList.add('hidden');
+                lengthSlider.min = 6;
+                lengthSlider.max = 20;
+                lengthSlider.value = 12;
+                lengthValue.textContent = '12';
             } else {
-                password += vowels.charAt(Math.floor(Math.random() * vowels.length));
-            }
-            
-            useConsonant = !useConsonant;
-            
-            if (i > 0 && i % 3 === 0 && Math.random() > 0.7) {
-                password += Math.floor(Math.random() * 10);
-                useConsonant = true;
+                memorableOptions.classList.add('hidden');
+                lengthSlider.min = 8;
+                lengthSlider.max = 32;
+                lengthSlider.value = 16;
+                lengthValue.textContent = '16';
             }
         }
-        
-        return password;
-    }
 
-    function copyPassword() {
-        const passwordField = document.getElementById('generated-password');
-        passwordField.select();
-        document.execCommand('copy');
-        
-        const copyBtn = document.getElementById('copy-btn');
-        const originalIcon = copyBtn.innerHTML;
-        copyBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
-        
-        showAlert('Пароль скопирован в буфер обмена!', 'success');
-        
-        setTimeout(() => {
-            copyBtn.innerHTML = originalIcon;
-        }, 2000);
-    }
+        function generatePassword() {
+            const length = parseInt(document.getElementById('length-slider').value);
+            const includeSpecial = document.getElementById('special-chars').checked;
+            const includeNumbers = document.getElementById('include-numbers').checked;
 
-    function regeneratePassword() {
-        generatePassword();
-    }
+            let password = '';
 
-    function debouncedCheckPassword() {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            const password = document.getElementById('password-input').value;
+            switch (currentPasswordType) {
+                case 'memorable':
+                    password = generateMemorablePassword(length);
+                    break;
+                case 'phonetic':
+                    password = generatePhoneticPassword(length);
+                    break;
+                default:
+                    password = generateStrongPassword(length, includeSpecial, includeNumbers);
+            }
+
+            document.getElementById('generated-password').value = password;
+            generatedPasswords.push(password);
+            saveStatistics();
+            updateStatistics();
+
+            document.getElementById('password-input').value = password;
             checkPassword(password);
-        }, 300);
-    }
 
-    function checkPassword(password) {
-        if (!password) {
-            document.getElementById('password-strength').classList.add('hidden');
-            document.getElementById('analyzer-placeholder').classList.remove('hidden');
-            return;
+            showAlert('Пароль успешно сгенерирован!', 'success');
         }
 
-        document.getElementById('password-strength').classList.remove('hidden');
-        document.getElementById('analyzer-placeholder').classList.add('hidden');
+        function generateStrongPassword(length, includeSpecial, includeNumbers) {
+            const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+            const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
 
-        const length = password.length;
-        const uppercase = (password.match(/[A-ZА-Я]/g) || []).length;
-        const lowercase = (password.match(/[a-zа-я]/g) || []).length;
-        const digits = (password.match(/\d/g) || []).length;
-        const special = (password.match(/[^A-Za-zА-Яа-я0-9]/g) || []).length;
-        const unique = new Set(password).size;
+            let charset = lowercase + uppercase;
+            if (includeNumbers) charset += numbers;
+            if (includeSpecial) charset += special;
 
-        let charsetSize = 0;
-        if (lowercase > 0) charsetSize += 26;
-        if (uppercase > 0) charsetSize += 26;
-        if (digits > 0) charsetSize += 10;
-        if (special > 0) charsetSize += 32;
-        
-        const entropy = charsetSize > 0 ? Math.log2(Math.pow(charsetSize, length)) : 0;
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
 
-        let score = 0;
-        
-        if (length >= 8) score += 25;
-        if (length >= 12) score += 15;
-        if (length >= 16) score += 10;
-        
-        if (uppercase > 0) score += 10;
-        if (lowercase > 0) score += 10;
-        if (digits > 0) score += 10;
-        if (special > 0) score += 15;
-        
-        const uniqueness = unique / length;
-        if (uniqueness > 0.8) score += 15;
-        else if (uniqueness > 0.6) score += 10;
-        else if (uniqueness > 0.4) score += 5;
-
-        score = Math.min(score, 100);
-
-        updatePasswordAnalysis({
-            length, uppercase, lowercase, digits, special, unique, entropy, score
-        });
-
-        checkedPasswords.push({password, score, timestamp: Date.now()});
-        saveStatistics();
-        updateStatistics();
-    }
-
-    function updatePasswordAnalysis(metrics) {
-        document.getElementById('password-length').textContent = metrics.length;
-        document.getElementById('score-percent').textContent = Math.round(metrics.score) + '%';
-        document.getElementById('unique-chars').textContent = metrics.unique;
-        document.getElementById('entropy-value').textContent = Math.round(metrics.entropy);
-        
-        updateStrengthVisualization(metrics.score, metrics.entropy);
-        updateCrackTime(metrics.entropy);
-        updatePasswordFeedback(metrics);
-    }
-
-    function updateStrengthVisualization(score, entropy) {
-        const strengthBar = document.getElementById('strength-bar');
-        const strengthText = document.getElementById('strength-text');
-        const width = Math.min(100, score);
-        
-        strengthBar.style.width = width + '%';
-        
-        // Обновляем классы для цвета
-        strengthBar.className = 'strength-fill';
-        let strengthClass = '';
-        let text = '';
-        
-        if (score >= 90) {
-            strengthClass = 'strength-excellent';
-            text = 'ИДЕАЛЬНЫЙ';
-            strengthText.className = 'strength-value text-cyber-primary';
-        } else if (score >= 80) {
-            strengthClass = 'strength-very-strong';
-            text = 'ОЧЕНЬ НАДЕЖНЫЙ';
-            strengthText.className = 'strength-value text-cyber-secondary';
-        } else if (score >= 70) {
-            strengthClass = 'strength-strong';
-            text = 'НАДЕЖНЫЙ';
-            strengthText.className = 'strength-value';
-            strengthText.style.color = '#66bb6a';
-        } else if (score >= 50) {
-            strengthClass = 'strength-medium';
-            text = 'СРЕДНИЙ';
-            strengthText.className = 'strength-value';
-            strengthText.style.color = '#ffa726';
-        } else if (score >= 30) {
-            strengthClass = 'strength-weak';
-            text = 'СЛАБЫЙ';
-            strengthText.className = 'strength-value';
-            strengthText.style.color = '#ff4444';
-        } else {
-            strengthClass = 'strength-weak';
-            text = 'ОЧЕНЬ СЛАБЫЙ';
-            strengthText.className = 'strength-value';
-            strengthText.style.color = '#ff4444';
+            return password;
         }
-        
-        strengthBar.classList.add(strengthClass);
-        strengthText.textContent = text;
-    }
 
-    function updateCrackTime(entropy) {
-        const crackTimeElement = document.getElementById('crack-time-value');
-        
-        let crackTime;
-        if (entropy < 40) {
-            crackTime = 'мгновенно';
-            crackTimeElement.className = 'text-cyber-accent';
-        } else if (entropy < 60) {
-            crackTime = 'несколько минут';
-            crackTimeElement.className = 'text-warning';
-        } else if (entropy < 80) {
-            crackTime = 'несколько дней';
-            crackTimeElement.className = 'text-cyber-secondary';
-        } else if (entropy < 100) {
-            crackTime = 'несколько лет';
-            crackTimeElement.className = 'text-cyber-primary';
-        } else {
-            crackTime = 'тысячи лет';
-            crackTimeElement.className = 'text-cyber-primary';
-        }
-        
-        crackTimeElement.textContent = crackTime;
-    }
+        function generateMemorablePassword(wordCount) {
+            const words = [
+                'Кибер', 'Гардиан', 'Секьюр', 'Протек', 'Шилд', 'Гейт', 'Волт', 'Код',
+                'Нетворк', 'Систем', 'Дейта', 'Инфо', 'Сейф', 'Гост', 'Крипто', 'Лок'
+            ];
 
-    function updatePasswordFeedback(metrics) {
-        const feedbackContainer = document.getElementById('password-feedback');
-        feedbackContainer.innerHTML = '';
-        
-        const feedbacks = [];
-        
-        if (metrics.length < 8) {
-            feedbacks.push({
-                type: 'critical',
-                message: 'Слишком короткий пароль. Используйте минимум 8 символов.'
-            });
-        } else if (metrics.length < 12) {
-            feedbacks.push({
-                type: 'warning',
-                message: 'Пароль можно сделать длиннее для повышения безопасности.'
-            });
-        } else {
-            feedbacks.push({
-                type: 'good',
-                message: 'Отличная длина пароля!'
-            });
+            let password = '';
+            const capitalize = document.getElementById('capitalize-words').checked;
+
+            for (let i = 0; i < wordCount; i++) {
+                let word = words[Math.floor(Math.random() * words.length)];
+                if (capitalize && Math.random() > 0.3) {
+                    word = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                }
+                password += word;
+                if (i < wordCount - 1) {
+                    password += Math.floor(Math.random() * 10);
+                }
+            }
+
+            return password;
         }
-        
-        const charTypes = [metrics.uppercase, metrics.lowercase, metrics.digits, metrics.special].filter(count => count > 0).length;
-        
-        if (charTypes < 2) {
-            feedbacks.push({
-                type: 'critical',
-                message: 'Используйте разные типы символов (заглавные, строчные, цифры, спецсимволы).'
-            });
-        } else if (charTypes < 3) {
-            feedbacks.push({
-                type: 'warning',
-                message: 'Добавьте больше типов символов для улучшения безопасности.'
-            });
-        } else {
-            feedbacks.push({
-                type: 'good',
-                message: 'Отличное разнообразие символов!'
-            });
+
+        function generatePhoneticPassword(length) {
+            const consonants = 'bcdfghjklmnpqrstvwxyz';
+            const vowels = 'aeiou';
+
+            let password = '';
+            let useConsonant = true;
+
+            for (let i = 0; i < length; i++) {
+                if (useConsonant) {
+                    password += consonants.charAt(Math.floor(Math.random() * consonants.length));
+                } else {
+                    password += vowels.charAt(Math.floor(Math.random() * vowels.length));
+                }
+
+                useConsonant = !useConsonant;
+
+                if (i > 0 && i % 3 === 0 && Math.random() > 0.7) {
+                    password += Math.floor(Math.random() * 10);
+                    useConsonant = true;
+                }
+            }
+
+            return password;
         }
-        
-        feedbacks.forEach(feedback => {
-            const feedbackElement = document.createElement('div');
-            feedbackElement.className = `feedback-item ${feedback.type}`;
-            feedbackElement.innerHTML = `
+
+        function copyPassword() {
+            const passwordField = document.getElementById('generated-password');
+            passwordField.select();
+            document.execCommand('copy');
+
+            const copyBtn = document.getElementById('copy-btn');
+            const originalIcon = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
+
+            showAlert('Пароль скопирован в буфер обмена!', 'success');
+
+            setTimeout(() => {
+                copyBtn.innerHTML = originalIcon;
+            }, 2000);
+        }
+
+        function regeneratePassword() {
+            generatePassword();
+        }
+
+        function debouncedCheckPassword() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                const password = document.getElementById('password-input').value;
+                checkPassword(password);
+            }, 300);
+        }
+
+        function checkPassword(password) {
+            if (!password) {
+                document.getElementById('password-strength').classList.add('hidden');
+                document.getElementById('analyzer-placeholder').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('password-strength').classList.remove('hidden');
+            document.getElementById('analyzer-placeholder').classList.add('hidden');
+
+            const length = password.length;
+            const uppercase = (password.match(/[A-ZА-Я]/g) || []).length;
+            const lowercase = (password.match(/[a-zа-я]/g) || []).length;
+            const digits = (password.match(/\d/g) || []).length;
+            const special = (password.match(/[^A-Za-zА-Яа-я0-9]/g) || []).length;
+            const unique = new Set(password).size;
+
+            let charsetSize = 0;
+            if (lowercase > 0) charsetSize += 26;
+            if (uppercase > 0) charsetSize += 26;
+            if (digits > 0) charsetSize += 10;
+            if (special > 0) charsetSize += 32;
+
+            const entropy = charsetSize > 0 ? Math.log2(Math.pow(charsetSize, length)) : 0;
+
+            let score = 0;
+
+            if (length >= 8) score += 25;
+            if (length >= 12) score += 15;
+            if (length >= 16) score += 10;
+
+            if (uppercase > 0) score += 10;
+            if (lowercase > 0) score += 10;
+            if (digits > 0) score += 10;
+            if (special > 0) score += 15;
+
+            const uniqueness = unique / length;
+            if (uniqueness > 0.8) score += 15;
+            else if (uniqueness > 0.6) score += 10;
+            else if (uniqueness > 0.4) score += 5;
+
+            score = Math.min(score, 100);
+
+            updatePasswordAnalysis({
+                length, uppercase, lowercase, digits, special, unique, entropy, score
+            });
+
+            checkedPasswords.push({ password, score, timestamp: Date.now() });
+            saveStatistics();
+            updateStatistics();
+        }
+
+        function updatePasswordAnalysis(metrics) {
+            document.getElementById('password-length').textContent = metrics.length;
+            document.getElementById('score-percent').textContent = Math.round(metrics.score) + '%';
+            document.getElementById('unique-chars').textContent = metrics.unique;
+            document.getElementById('entropy-value').textContent = Math.round(metrics.entropy);
+
+            updateStrengthVisualization(metrics.score, metrics.entropy);
+            updateCrackTime(metrics.entropy);
+            updatePasswordFeedback(metrics);
+        }
+
+        function updateStrengthVisualization(score, entropy) {
+            const strengthBar = document.getElementById('strength-bar');
+            const strengthText = document.getElementById('strength-text');
+            const width = Math.min(100, score);
+
+            strengthBar.style.width = width + '%';
+
+            // Обновляем классы для цвета
+            strengthBar.className = 'strength-fill';
+            let strengthClass = '';
+            let text = '';
+
+            if (score >= 90) {
+                strengthClass = 'strength-excellent';
+                text = 'ИДЕАЛЬНЫЙ';
+                strengthText.className = 'strength-value text-cyber-primary';
+            } else if (score >= 80) {
+                strengthClass = 'strength-very-strong';
+                text = 'ОЧЕНЬ НАДЕЖНЫЙ';
+                strengthText.className = 'strength-value text-cyber-secondary';
+            } else if (score >= 70) {
+                strengthClass = 'strength-strong';
+                text = 'НАДЕЖНЫЙ';
+                strengthText.className = 'strength-value';
+                strengthText.style.color = '#66bb6a';
+            } else if (score >= 50) {
+                strengthClass = 'strength-medium';
+                text = 'СРЕДНИЙ';
+                strengthText.className = 'strength-value';
+                strengthText.style.color = '#ffa726';
+            } else if (score >= 30) {
+                strengthClass = 'strength-weak';
+                text = 'СЛАБЫЙ';
+                strengthText.className = 'strength-value';
+                strengthText.style.color = '#ff4444';
+            } else {
+                strengthClass = 'strength-weak';
+                text = 'ОЧЕНЬ СЛАБЫЙ';
+                strengthText.className = 'strength-value';
+                strengthText.style.color = '#ff4444';
+            }
+
+            strengthBar.classList.add(strengthClass);
+            strengthText.textContent = text;
+        }
+
+        function updateCrackTime(entropy) {
+            const crackTimeElement = document.getElementById('crack-time-value');
+
+            let crackTime;
+            if (entropy < 40) {
+                crackTime = 'мгновенно';
+                crackTimeElement.className = 'text-cyber-accent';
+            } else if (entropy < 60) {
+                crackTime = 'несколько минут';
+                crackTimeElement.className = 'text-warning';
+            } else if (entropy < 80) {
+                crackTime = 'несколько дней';
+                crackTimeElement.className = 'text-cyber-secondary';
+            } else if (entropy < 100) {
+                crackTime = 'несколько лет';
+                crackTimeElement.className = 'text-cyber-primary';
+            } else {
+                crackTime = 'тысячи лет';
+                crackTimeElement.className = 'text-cyber-primary';
+            }
+
+            crackTimeElement.textContent = crackTime;
+        }
+
+        function updatePasswordFeedback(metrics) {
+            const feedbackContainer = document.getElementById('password-feedback');
+            feedbackContainer.innerHTML = '';
+
+            const feedbacks = [];
+
+            if (metrics.length < 8) {
+                feedbacks.push({
+                    type: 'critical',
+                    message: 'Слишком короткий пароль. Используйте минимум 8 символов.'
+                });
+            } else if (metrics.length < 12) {
+                feedbacks.push({
+                    type: 'warning',
+                    message: 'Пароль можно сделать длиннее для повышения безопасности.'
+                });
+            } else {
+                feedbacks.push({
+                    type: 'good',
+                    message: 'Отличная длина пароля!'
+                });
+            }
+
+            const charTypes = [metrics.uppercase, metrics.lowercase, metrics.digits, metrics.special].filter(count => count > 0).length;
+
+            if (charTypes < 2) {
+                feedbacks.push({
+                    type: 'critical',
+                    message: 'Используйте разные типы символов (заглавные, строчные, цифры, спецсимволы).'
+                });
+            } else if (charTypes < 3) {
+                feedbacks.push({
+                    type: 'warning',
+                    message: 'Добавьте больше типов символов для улучшения безопасности.'
+                });
+            } else {
+                feedbacks.push({
+                    type: 'good',
+                    message: 'Отличное разнообразие символов!'
+                });
+            }
+
+            feedbacks.forEach(feedback => {
+                const feedbackElement = document.createElement('div');
+                feedbackElement.className = `feedback-item ${feedback.type}`;
+                feedbackElement.innerHTML = `
                 <i class="bi bi-${getFeedbackIcon(feedback.type)}"></i>
                 <span>${feedback.message}</span>
             `;
-            feedbackContainer.appendChild(feedbackElement);
-        });
-    }
-
-    function getFeedbackIcon(type) {
-        switch(type) {
-            case 'good': return 'check-circle-fill';
-            case 'warning': return 'exclamation-triangle-fill';
-            case 'critical': return 'x-circle-fill';
-            default: return 'info-circle';
+                feedbackContainer.appendChild(feedbackElement);
+            });
         }
-    }
 
-    function togglePasswordVisibility() {
-        const passwordInput = document.getElementById('password-input');
-        const toggleButton = document.getElementById('toggle-password');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleButton.innerHTML = '<i class="bi bi-eye-slash"></i>';
-        } else {
-            passwordInput.type = 'password';
-            toggleButton.innerHTML = '<i class="bi bi-eye"></i>';
+        function getFeedbackIcon(type) {
+            switch (type) {
+                case 'good': return 'check-circle-fill';
+                case 'warning': return 'exclamation-triangle-fill';
+                case 'critical': return 'x-circle-fill';
+                default: return 'info-circle';
+            }
         }
-    }
 
-    function saveStatistics() {
-        const stats = {
-            generated: generatedPasswords.length,
-            checked: checkedPasswords.length,
-            averageStrength: calculateAverageStrength(),
-            strongPasswords: countStrongPasswords()
-        };
-        
-        localStorage.setItem('passwordStats', JSON.stringify(stats));
-    }
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password-input');
+            const toggleButton = document.getElementById('toggle-password');
 
-    function loadStatistics() {
-        const saved = localStorage.getItem('passwordStats');
-        if (saved) {
-            const stats = JSON.parse(saved);
-            generatedPasswords = Array(stats.generated).fill('');
-            checkedPasswords = Array(stats.checked).fill('');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.innerHTML = '<i class="bi bi-eye-slash"></i>';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.innerHTML = '<i class="bi bi-eye"></i>';
+            }
         }
-    }
 
-    function updateStatistics() {
-        document.getElementById('total-generated').textContent = generatedPasswords.length;
-        document.getElementById('total-checked').textContent = checkedPasswords.length;
-        document.getElementById('average-strength').textContent = calculateAverageStrength() + '%';
-        document.getElementById('strong-passwords').textContent = countStrongPasswords();
-    }
+        function saveStatistics() {
+            const stats = {
+                generated: generatedPasswords.length,
+                checked: checkedPasswords.length,
+                averageStrength: calculateAverageStrength(),
+                strongPasswords: countStrongPasswords()
+            };
 
-    function calculateAverageStrength() {
-        if (checkedPasswords.length === 0) return 0;
-        const total = checkedPasswords.reduce((sum, item) => sum + (item.score || 0), 0);
-        return Math.round(total / checkedPasswords.length);
-    }
+            localStorage.setItem('passwordStats', JSON.stringify(stats));
+        }
 
-    function countStrongPasswords() {
-        return checkedPasswords.filter(item => item.score >= 80).length;
-    }
+        function loadStatistics() {
+            const saved = localStorage.getItem('passwordStats');
+            if (saved) {
+                const stats = JSON.parse(saved);
+                generatedPasswords = Array(stats.generated).fill('');
+                checkedPasswords = Array(stats.checked).fill('');
+            }
+        }
 
-    function showAlert(message, type) {
-        // Простая реализация уведомления
-        console.log(`${type}: ${message}`);
-    }
+        function updateStatistics() {
+            document.getElementById('total-generated').textContent = generatedPasswords.length;
+            document.getElementById('total-checked').textContent = checkedPasswords.length;
+            document.getElementById('average-strength').textContent = calculateAverageStrength() + '%';
+            document.getElementById('strong-passwords').textContent = countStrongPasswords();
+        }
+
+        function calculateAverageStrength() {
+            if (checkedPasswords.length === 0) return 0;
+            const total = checkedPasswords.reduce((sum, item) => sum + (item.score || 0), 0);
+            return Math.round(total / checkedPasswords.length);
+        }
+
+        function countStrongPasswords() {
+            return checkedPasswords.filter(item => item.score >= 80).length;
+        }
+
+        function showAlert(message, type) {
+            // Простая реализация уведомления
+            console.log(`${type}: ${message}`);
+        }
     </script>
+    <!-- Футер -->
+    <footer class="cyber-footer">
+        <div class="container-max">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <div class="footer-brand">
+                        <i class="bi bi-shield-shaded me-2" style="color: var(--cyber-primary);"></i>
+                        CyberGuardian
+                    </div>
+                    <p class="footer-description">
+                        Ваш цифровой защитник в мире кибербезопасности.
+                        Обучаем, защищаем и развиваем навыки безопасности.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="social-link" target="_blank">
+                            <i class="bi bi-telegram"></i>
+                        </a>
+                        <a href="https://github.com/AndrewYanorove/cyberguardian" class="social-link" target="_blank">
+                            <i class="bi bi-github"></i>
+                        </a>
+                        <a href="mailto:cyberguardian100@gmail.com" class="social-link">
+                            <i class="bi bi-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Быстрые ссылки</h5>
+                    <a href="{{ url_for('index') }}">Главная</a>
+                    <a href="{{ url_for('dashboard') }}">Дашборд</a>
+                    <a href="{{ url_for('education.education_home') }}">Обучение</a>
+                    <a href="{{ url_for('ddos.ddos_simulator') }}">DDoS Simulator</a>
+                    <a href="{{ url_for('about') }}">О проекте</a>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Инструменты</h5>
+                    <a href="{{ url_for('passwords.password_generator') }}">Генератор паролей</a>
+                    <a href="{{ url_for('encryption.encryption_tools') }}">Шифрование</a>
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}">Сканер безопасности</a>
+                    <a href="{{ url_for('ai.ai_chat') }}">ИИ-помощник</a>
+                    <a href="{{ url_for('games.games_dashboard') }}">Кибер-тренировка</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© {{ current_year }} CyberGuardian | Все права защищены</p>
+            </div>
+        </div>
+    </footer>
 </body>
+
 </html>
