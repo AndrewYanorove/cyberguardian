@@ -8,7 +8,7 @@
     <title>Центр обучения - CyberGuardian</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/main.css"> 
+    <link rel="stylesheet" href="/static/css/main.css">
     <style>
         :root {
             --cyber-darker: #0a0a0f;
@@ -871,16 +871,537 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--cyber-accent);
         }
+
+        /* ===== HEADER ===== */
+        .cyber-header {
+            background: rgba(10, 10, 15, 0.95);
+            border-bottom: 2px solid var(--cyber-border);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cyber-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--cyber-text-bright);
+            text-decoration: none;
+        }
+
+        .cyber-brand-icon {
+            color: var(--cyber-primary);
+            font-size: 1.75rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .navbar-toggler.cyber-toggler {
+            background: rgba(0, 168, 255, 0.1);
+            border: 1px solid var(--cyber-primary);
+            padding: 0.5rem 0.75rem;
+            color: var(--cyber-text);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* ===== FOOTER ===== */
+        .cyber-footer {
+            background: rgba(5, 5, 10, 0.95);
+            border-top: 2px solid var(--cyber-border);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--cyber-text-bright);
+        }
+
+        .footer-description {
+            color: var(--cyber-subtext);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .footer-links h5 {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: var(--cyber-text-bright);
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--cyber-subtext);
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--cyber-bg-card);
+            color: var(--cyber-subtext);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--cyber-primary);
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.3);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--cyber-border);
+            color: var(--cyber-subtext);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 350px;
+            height: 100vh;
+            background: rgba(10, 10, 15, 0.98);
+            border-right: 2px solid var(--cyber-primary);
+            z-index: 10000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--cyber-border);
+            background: rgba(15, 15, 25, 0.95);
+        }
+
+        .sidebar-menu {
+            padding: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: var(--cyber-text);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 168, 255, 0.1);
+            border-color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .sidebar-item i {
+            width: 20px;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--cyber-border);
+            margin: 1rem 0;
+        }
+
+        .sidebar-category {
+            color: var(--cyber-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== DROPDOWN ===== */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 0.5rem;
+            right: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .cyber-header {
+                padding: 0.75rem 0;
+            }
+
+            .header-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .cyber-brand {
+                font-size: 1.25rem;
+            }
+
+            .header-actions {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cyber-header {
+                padding: 0.5rem 0;
+            }
+
+            .header-actions .btn-cyber-outline,
+            .header-actions .btn-cyber {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .header-actions .btn-cyber span,
+            .header-actions .btn-cyber-outline span {
+                display: none;
+            }
+
+            .header-actions .btn-cyber i,
+            .header-actions .btn-cyber-outline i {
+                margin-right: 0;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cyber-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-accent);
+        }
     </style>
 </head>
 
 <body>
+    <!-- Верхняя навигация -->
+    <header class="cyber-header">
+        <div class="container-max">
+            <div class="header-container">
+                <!-- Кнопка меню -->
+                <button class="navbar-toggler cyber-toggler me-3" type="button" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                    <span class="menu-text ms-2">Меню</span>
+                </button>
+
+                <!-- Лого -->
+                <a class="cyber-brand" href="{{ url_for('index') }}">
+                    <i class="bi bi-shield-shaded cyber-brand-icon"></i>
+                    CyberGuardian
+                </a>
+
+                <!-- Правая часть с пользователем -->
+                <div class="header-actions">
+                    {% if current_user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn-cyber-outline" type="button" style="position: relative;">
+                            <i class="bi bi-person me-2"></i>
+                            {{ current_user.username }}
+                        </button>
+                        <div class="dropdown-menu"
+                            style="position: absolute; background: var(--cyber-bg-card); border: 2px solid var(--cyber-border); border-radius: 12px; padding: 1rem; min-width: 200px; z-index: 1000; display: none; margin-top: 0.5rem;">
+                            <a class="sidebar-item mb-2" href="{{ url_for('auth.profile') }}">
+                                <i class="bi bi-person me-2"></i>Профиль
+                            </a>
+                            <a class="sidebar-item mb-2" href="{{ url_for('dashboard') }}">
+                                <i class="bi bi-speedometer2 me-2"></i>Дашборд
+                            </a>
+                            <div class="sidebar-divider my-2"></div>
+                            <a class="sidebar-item" href="{{ url_for('auth.logout') }}"
+                                style="color: var(--cyber-danger);">
+                                <i class="bi bi-box-arrow-right me-2"></i>Выйти
+                            </a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn-cyber-outline">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+                    </a>
+                    <a href="{{ url_for('auth.register') }}" class="btn-cyber">
+                        <i class="bi bi-person-plus me-2"></i>Регистрация
+                    </a>
+                    {% endif %}
+
+                    <!-- Индикатор статуса -->
+                    <div class="cyber-badge cyber-badge-accent ms-3">
+                        <i class="bi bi-check-circle me-1"></i>Система активна
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Боковое меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-shaded cyber-brand-icon me-3"></i>
+                    <div>
+                        <h5 class="cyber-text-bright mb-0">CyberGuardian</h5>
+                        <small class="cyber-subtext">Цифровая безопасность</small>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="closeSidebar()"
+                    style="background: none; border: none; color: var(--cyber-text); font-size: 1.2rem;">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <!-- Основная навигация -->
+            <a href="{{ url_for('index') }}" class="sidebar-item">
+                <i class="bi bi-house"></i>
+                <span>Главная</span>
+            </a>
+
+            <a href="{{ url_for('dashboard') }}" class="sidebar-item">
+                <i class="bi bi-speedometer2"></i>
+                <span>Дашборд</span>
+            </a>
+
+            <a href="{{ url_for('forum.forum_home') }}" class="sidebar-item">
+                <i class="bi bi-chat-square-text"></i>
+                <span>Форум историй</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Основные модули -->
+            <a href="{{ url_for('education.education_home') }}" class="sidebar-item">
+                <i class="bi bi-book"></i>
+                <span>Обучение</span>
+            </a>
+
+            <a href="{{ url_for('passwords.password_generator') }}" class="sidebar-item">
+                <i class="bi bi-key"></i>
+                <span>Пароли</span>
+            </a>
+
+            <a href="{{ url_for('encryption.encryption_tools') }}" class="sidebar-item">
+                <i class="bi bi-lock"></i>
+                <span>Шифрование</span>
+            </a>
+
+            <a href="{{ url_for('ai.ai_chat') }}" class="sidebar-item">
+                <i class="bi bi-robot"></i>
+                <span>ИИ-помощник</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Экспертные инструменты -->
+            <div class="sidebar-category">Экспертные инструменты</div>
+
+            <a href="{{ url_for('threats.threat_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-shield-exclamation"></i>
+                <span>Мониторинг угроз</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <a href="{{ url_for('scanner.scanner_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-shield-check"></i>
+                <span>Сканер безопасности</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <a href="{{ url_for('games.games_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-joystick"></i>
+                <span>Кибер-тренировка</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <!-- DDoS Simulator -->
+            <a href="{{ url_for('ddos.ddos_simulator') }}" class="sidebar-item">
+                <i class="bi bi-lightning-charge"></i>
+                <span>DDoS Simulator</span>
+                <span class="cyber-badge cyber-badge-danger ms-auto" style="font-size: 0.6rem;">HOT</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Информационные страницы -->
+            <a href="{{ url_for('about') }}" class="sidebar-item">
+                <i class="bi bi-info-circle"></i>
+                <span>О проекте</span>
+            </a>
+
+            <a href="{{ url_for('contact') }}" class="sidebar-item">
+                <i class="bi bi-envelope"></i>
+                <span>Контакты</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Авторизация -->
+            {% if current_user.is_authenticated %}
+            <div class="sidebar-user-info p-3 mb-3" style="background: var(--cyber-bg-card); border-radius: 10px;">
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar-sidebar"
+                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--cyber-primary); display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="bi bi-person" style="color: white;"></i>
+                    </div>
+                    <div>
+                        <div class="username" style="color: var(--cyber-text-bright); font-weight: 600;">{{
+                            current_user.username }}</div>
+                        <div class="user-email" style="color: var(--cyber-subtext); font-size: 0.8rem;">{{
+                            current_user.email if current_user.email else 'Пользователь' }}</div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('auth.profile') }}" class="sidebar-item">
+                <i class="bi bi-person"></i>
+                <span>Профиль</span>
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-item" style="color: var(--cyber-danger);">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Выйти</span>
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}" class="sidebar-item">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Войти</span>
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="sidebar-item">
+                <i class="bi bi-person-plus"></i>
+                <span>Регистрация</span>
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="sidebar-footer p-3" style="border-top: 1px solid var(--cyber-border);">
+            <div class="social-links justify-content-center">
+                <a href="https://t.me/cyberguardian_support" class="social-link" target="_blank">
+                    <i class="bi bi-telegram"></i>
+                </a>
+                <a href="https://github.com" class="social-link" target="_blank">
+                    <i class="bi bi-github"></i>
+                </a>
+                <a href="mailto:support@cyberguardian.ru" class="social-link">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay для закрытия меню -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <!-- Hero Section -->
     <section class="learning-hero">
         <div class="container-max">
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <h1 class="cyber-title display-3 mb-4">
+                    <h1 class="cyber-title display-3 mb-4 mt-5">
                         <i class="bi bi-book me-3"></i>Центр обучения CyberGuardian
                     </h1>
                     <p class="cyber-lead mb-4">
@@ -1622,7 +2143,108 @@
                 applyFilters();
             }, 250);
         });
+
+        // Функции для работы бокового меню
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Закрытие меню при клике на ссылку
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth < 992) closeSidebar();
+                });
+            });
+
+            // Закрытие меню при клике на оверлей
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+            // Закрытие меню при нажатии Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeSidebar();
+            });
+
+            // Простой dropdown
+            const userDropdown = document.querySelector('.dropdown');
+            if (userDropdown) {
+                const dropdownButton = userDropdown.querySelector('button');
+                const dropdownMenu = userDropdown.querySelector('.dropdown-menu');
+
+                dropdownButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // Закрытие dropdown при клике вне его
+                document.addEventListener('click', () => {
+                    dropdownMenu.style.display = 'none';
+                });
+            }
+        });
     </script>
+    <!-- Футер -->
+    <footer class="cyber-footer">
+        <div class="container-max">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <div class="footer-brand">
+                        <i class="bi bi-shield-shaded me-2" style="color: var(--cyber-primary);"></i>
+                        CyberGuardian
+                    </div>
+                    <p class="footer-description">
+                        Ваш цифровой защитник в мире кибербезопасности.
+                        Обучаем, защищаем и развиваем навыки безопасности.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="social-link" target="_blank">
+                            <i class="bi bi-telegram"></i>
+                        </a>
+                        <a href="https://github.com/AndrewYanorove/cyberguardian" class="social-link" target="_blank">
+                            <i class="bi bi-github"></i>
+                        </a>
+                        <a href="mailto:cyberguardian100@gmail.com" class="social-link">
+                            <i class="bi bi-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Быстрые ссылки</h5>
+                    <a href="{{ url_for('index') }}">Главная</a>
+                    <a href="{{ url_for('dashboard') }}">Дашборд</a>
+                    <a href="{{ url_for('education.education_home') }}">Обучение</a>
+                    <a href="{{ url_for('ddos.ddos_simulator') }}">DDoS Simulator</a>
+                    <a href="{{ url_for('about') }}">О проекте</a>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Инструменты</h5>
+                    <a href="{{ url_for('passwords.password_generator') }}">Генератор паролей</a>
+                    <a href="{{ url_for('encryption.encryption_tools') }}">Шифрование</a>
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}">Сканер безопасности</a>
+                    <a href="{{ url_for('ai.ai_chat') }}">ИИ-помощник</a>
+                    <a href="{{ url_for('games.games_dashboard') }}">Кибер-тренировка</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© {{ current_year }} CyberGuardian | Все права защищены</p>
+            </div>
+        </div>
+    </footer>
 </body>
 
 </html>
