@@ -1944,6 +1944,57 @@
             // Простая реализация уведомления
             console.log(`${type}: ${message}`);
         }
+
+        // Функции для работы бокового меню
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Закрытие меню при клике на ссылку
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth < 992) closeSidebar();
+                });
+            });
+
+            // Закрытие меню при клике на оверлей
+            document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+            // Закрытие меню при нажатии Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeSidebar();
+            });
+
+            // Простой dropdown
+            const userDropdown = document.querySelector('.dropdown');
+            if (userDropdown) {
+                const dropdownButton = userDropdown.querySelector('button');
+                const dropdownMenu = userDropdown.querySelector('.dropdown-menu');
+
+                dropdownButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // Закрытие dropdown при клике вне его
+                document.addEventListener('click', () => {
+                    dropdownMenu.style.display = 'none';
+                });
+            }
+        });
     </script>
     <!-- Футер -->
     <footer class="cyber-footer">
