@@ -140,6 +140,105 @@
             margin-right: auto;
         }
     }
+
+    /* Мобильная версия - исправление слетающих кнопок */
+    @media (max-width: 768px) {
+        .features-buttons-container {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 15px !important;
+            width: 100% !important;
+        }
+
+        .feature-card {
+            width: 100% !important;
+            max-width: 400px !important;
+            min-height: 280px !important;
+            margin: 0 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* Гарантируем фиксированное положение кнопок */
+        .feature-card .btn-cyber-outline,
+        .feature-card .btn-cyber-danger {
+            margin-top: auto !important;
+            width: 90% !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            margin-bottom: 1rem !important;
+            min-height: 44px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            position: static !important;
+        }
+
+        /* Центрируем весь контент */
+        .feature-card .feature-icon,
+        .feature-card h3,
+        .feature-card p {
+            text-align: center !important;
+            width: 100% !important;
+        }
+
+        .feature-card .feature-icon {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin: 0 auto !important;
+        }
+    }
+
+    /* Для очень маленьких экранов */
+    @media (max-width: 480px) {
+        .features-buttons-container {
+            gap: 12px !important;
+            padding: 0 10px !important;
+        }
+
+        .feature-card {
+            min-height: 260px !important;
+            max-width: 100% !important;
+        }
+
+        .feature-card .btn-cyber-outline,
+        .feature-card .btn-cyber-danger {
+            width: 95% !important;
+            min-height: 42px !important;
+            font-size: 0.9rem !important;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem !important;
+            margin-bottom: 0.8rem !important;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem !important;
+            margin-bottom: 0.8rem !important;
+        }
+    }
+
+    /* Дополнительный фикс для iOS Safari */
+    @supports (-webkit-touch-callout: none) {
+        .feature-card {
+            min-height: 300px !important;
+        }
+    }
+
+    /* Фикс для viewport на мобильных */
+    @media (max-width: 768px) {
+        .container-max {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
+        .section-spacing {
+            padding: 2rem 0 !important;
+        }
+    }
 </style>
 
 <head>
