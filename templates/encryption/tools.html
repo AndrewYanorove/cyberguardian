@@ -2,9 +2,6 @@
 
 {% block title %}Шифрование - CyberGuardian{% endblock %}
 
-
-/* ЗАМЕНИТЬ ВЕСЬ БЛОК extra_css В tools.html */
-
 {% block extra_css %}
 <style>
 .encryption-module {
@@ -19,6 +16,18 @@
 .module-header {
     text-align: center;
     margin-bottom: 4rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
     position: relative;
 }
 
@@ -47,7 +56,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
 }
 
 .feature-card:hover {
@@ -59,18 +68,39 @@
 .feature-icon {
     font-size: 4rem;
     margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .feature-content {
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
     justify-content: space-between;
 }
 
-.feature-description {
-    margin-bottom: 2rem;
+.feature-text {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.feature-description {
+    width: 100%;
+}
+
+.btn-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
 }
 
 .btn-feature {
@@ -78,11 +108,38 @@
     font-size: 1.1rem;
     border-radius: 10px;
     transition: all 0.3s ease;
-    width: 100%;
+    width: 280px;
+    min-height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
 }
 
 .btn-feature:hover {
     transform: translateY(-2px);
+}
+
+.btn-home-main {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--cyber-primary);
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--cyber-primary);
+    text-decoration: none;
+}
+
+.btn-home-main:hover {
+    background: rgba(0, 255, 136, 0.2);
+    border-color: var(--cyber-primary);
+    color: var(--cyber-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
 }
 
 .info-section {
@@ -93,20 +150,34 @@
     border-left: 4px solid var(--cyber-primary);
 }
 
+.info-section .row {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.info-section .col-md-4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 /* ===== MOBILE OPTIMIZATION ===== */
 @media (max-width: 768px) {
     .home-btn {
         position: static;
         transform: none;
         margin-bottom: 1rem;
-        display: block;
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
+        align-self: center;
+    }
+    
+    .header-content {
+        position: static;
     }
     
     .module-header {
-        position: static;
+        gap: 1rem;
         margin-bottom: 2rem;
     }
     
@@ -131,18 +202,24 @@
         margin-bottom: 1rem;
     }
     
-    .feature-description {
+    .feature-text {
         margin-bottom: 1.5rem;
+    }
+    
+    .feature-description {
         font-size: 0.95rem;
     }
     
     .btn-feature {
         padding: 0.75rem 1.5rem;
         font-size: 1rem;
+        width: 240px;
         min-height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    }
+    
+    .btn-home-main {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
     }
     
     .info-section {
@@ -151,12 +228,13 @@
     }
     
     .info-section .row {
+        flex-direction: column;
         gap: 1.5rem;
     }
     
     .info-section .col-md-4 {
         margin-bottom: 1rem;
-        text-align: center;
+        padding: 0 1rem;
     }
     
     .info-section .display-6 {
@@ -204,9 +282,15 @@
     .btn-feature {
         padding: 0.75rem 1rem;
         font-size: 0.95rem;
+        width: 220px;
+        min-height: 45px;
     }
     
-    /* Улучшаем отступы для маленьких экранов */
+    .btn-home-main {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+    
     .container {
         padding-left: 10px;
         padding-right: 10px;
@@ -232,6 +316,14 @@
     .btn-feature:active {
         transform: scale(0.95);
     }
+    
+    .btn-home-main:hover {
+        transform: none;
+    }
+    
+    .btn-home-main:active {
+        transform: scale(0.95);
+    }
 }
 
 /* ===== SAFE AREA SUPPORT ===== */
@@ -241,28 +333,73 @@
         padding-right: max(15px, env(safe-area-inset-right));
     }
 }
+
+/* ===== ENHANCED ALIGNMENT ===== */
+.cyber-text {
+    text-align: center;
+}
+
+.cyber-subtext {
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.feature-grid {
+    align-items: stretch;
+}
+
+.feature-card {
+    min-height: 400px;
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-12">
             <!-- Заголовок модуля с кнопкой назад -->
             <div class="module-header">
-                <!-- Кнопка На главную -->
-                <div class="home-btn">
-                    <a href="{{ url_for('index') }}" class="btn btn-cyber-outline">
-                        <i class="bi bi-arrow-left me-2"></i>На главную
-                    </a>
+                <div class="header-content">
+                    <!-- Кнопка На главную -->
+                    <div class="home-btn">
+                        <a href="{{ url_for('index') }}" class="btn-home-main d-flex align-items-center">
+                            <i class="bi bi-house-door me-2"></i>На главную
+                        </a>
+                    </div>
+                    
+                    <div class="d-flex flex-column align-items-center w-100">
+                        <h1 class="cyber-text glow-text mb-3">
+                            <i class="bi bi-shield-lock me-2"></i>Модуль Шифрования
+                        </h1>
+                        <p class="cyber-subtext lead">
+                            Полный набор инструментов для защиты ваших данных
+                        </p>
+                    </div>
                 </div>
-                
-                <h1 class="cyber-text glow-text mb-3">
-                    <i class="bi bi-shield-lock me-2"></i>Модуль Шифрования
-                </h1>
-                <p class="cyber-subtext lead">
-                    Полный набор инструментов для защиты ваших данных
-                </p>
             </div>
 
             <!-- Основные функции -->
@@ -274,16 +411,18 @@
                             <i class="bi bi-file-lock"></i>
                         </div>
                         <div class="feature-content">
-                            <div>
+                            <div class="feature-text">
                                 <h3 class="cyber-text mb-3">Шифрование файлов</h3>
                                 <p class="cyber-subtext feature-description">
                                     Создавайте зашифрованные файлы и расшифровывайте их обратно. 
                                     Файлы маскируются под обычные документы для максимальной скрытности.
                                 </p>
                             </div>
-                            <a href="{{ url_for('encryption.file_encryption') }}" class="btn btn-cyber btn-feature">
-                                <i class="bi bi-arrow-right me-2"></i>Открыть модуль
-                            </a>
+                            <div class="btn-container">
+                                <a href="{{ url_for('encryption.file_encryption') }}" class="btn btn-cyber btn-feature d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-arrow-right me-2"></i>Открыть модуль
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -293,16 +432,18 @@
                             <i class="bi bi-clock-history"></i>
                         </div>
                         <div class="feature-content">
-                            <div>
+                            <div class="feature-text">
                                 <h3 class="cyber-text mb-3">История операций</h3>
                                 <p class="cyber-subtext feature-description">
                                     Просматривайте историю всех ваших операций шифрования и дешифрования. 
                                     Полная статистика и детальный журнал действий.
                                 </p>
                             </div>
-                            <a href="{{ url_for('encryption.encryption_history') }}" class="btn btn-cyber-outline btn-feature">
-                                <i class="bi bi-list-ul me-2"></i>Посмотреть историю
-                            </a>
+                            <div class="btn-container">
+                                <a href="{{ url_for('encryption.encryption_history') }}" class="btn btn-cyber-outline btn-feature d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-list-ul me-2"></i>Посмотреть историю
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -312,16 +453,18 @@
                             <i class="bi bi-gear"></i>
                         </div>
                         <div class="feature-content">
-                            <div>
+                            <div class="feature-text">
                                 <h3 class="cyber-text mb-3">Продвинутые инструменты</h3>
                                 <p class="cyber-subtext feature-description">
                                     Расширенные возможности шифрования, работа с большими файлами, 
                                     пакетная обработка и экспериментальные алгоритмы.
                                 </p>
                             </div>
-                            <button class="btn btn-cyber-outline btn-feature" disabled>
-                                <i class="bi bi-tools me-2"></i>Скоро будет
-                            </button>
+                            <div class="btn-container">
+                                <button class="btn btn-cyber-outline btn-feature d-flex align-items-center justify-content-center" disabled>
+                                    <i class="bi bi-tools me-2"></i>Скоро будет
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -331,18 +474,18 @@
                     <h4 class="cyber-text mb-4 text-center">
                         <i class="bi bi-info-circle me-2"></i>О модуле шифрования
                     </h4>
-                    <div class="row">
-                        <div class="col-md-4 text-center">
+                    <div class="row justify-content-center">
+                        <div class="col-md-4 text-center d-flex flex-column align-items-center">
                             <i class="bi bi-shield-check display-6 text-cyber-primary mb-3"></i>
                             <h5>Безопасность</h5>
                             <p class="cyber-subtext">Все операции выполняются локально</p>
                         </div>
-                        <div class="col-md-4 text-center">
+                        <div class="col-md-4 text-center d-flex flex-column align-items-center">
                             <i class="bi bi-file-earmark-lock display-6 text-cyber-secondary mb-3"></i>
                             <h5>Stealth-файлы</h5>
                             <p class="cyber-subtext">Файлы маскируются под документы</p>
                         </div>
-                        <div class="col-md-4 text-center">
+                        <div class="col-md-4 text-center d-flex flex-column align-items-center">
                             <i class="bi bi-graph-up display-6 text-cyber-accent mb-3"></i>
                             <h5>Статистика</h5>
                             <p class="cyber-subtext">Полная история операций</p>
@@ -357,7 +500,6 @@
 
 {% block extra_js %}
 <script>
-// Простая инициализация для любых будущих функций
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Модуль шифрования загружен!');
 });
