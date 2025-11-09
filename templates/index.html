@@ -23,7 +23,6 @@
     .feature-card h3 {
         flex-shrink: 0;
         height: 60px;
-        /* Фиксированная высота заголовка */
         display: flex;
         align-items: center;
         margin-bottom: 1rem;
@@ -33,19 +32,9 @@
 
     .feature-card p {
         flex: 1;
-        /* Занимает всё доступное пространство */
         margin-bottom: 1rem;
         display: flex;
         align-items: flex-start;
-    }
-
-    .btn-cyber,
-    .btn-cyber-outline,
-    .btn-cyber-danger {
-        display: inline-flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        text-align: center;
     }
 
     .feature-card p {
@@ -60,6 +49,57 @@
         margin-right: auto;
     }
 
+    /* ФИКС ДЛЯ КНОПОК - УБИРАЕМ ОВАЛ И ДЕЛАЕМ ВЫШЕ */
+    .feature-card .feature-btn {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        margin-top: auto !important;
+        margin-bottom: 1rem !important;
+        padding: 1rem 1.5rem !important;
+        border-radius: 12px !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid var(--cyber-primary);
+        background: transparent;
+        color: var(--cyber-primary);
+        font-weight: 700;
+        font-size: 1.1rem;
+        width: calc(100% - 2rem);
+        margin-left: auto !important;
+        margin-right: auto !important;
+        min-height: 60px !important;
+        line-height: 1.2 !important;
+    }
+
+    .feature-card .feature-btn-danger {
+        border-color: var(--cyber-danger);
+        color: var(--cyber-danger);
+    }
+
+    .feature-card .feature-btn:hover {
+        background: var(--cyber-primary);
+        color: #000;
+        box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+
+    .feature-card .feature-btn-danger:hover {
+        background: var(--cyber-danger);
+        color: #000;
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        transform: translateY(-2px);
+    }
+
+    /* Убираем все анимации овала */
+    .feature-card .feature-btn::before,
+    .feature-card .feature-btn-danger::before {
+        display: none !important;
+    }
 
     /* Адаптивность */
     @media (max-width: 1200px) {
@@ -130,7 +170,6 @@
             }
         }
 
-        /* Фикс для контейнера */
         .container-max {
             width: 100%;
             max-width: 100%;
@@ -160,9 +199,7 @@
             flex-direction: column !important;
         }
 
-        /* Гарантируем фиксированное положение кнопок */
-        .feature-card .btn-cyber-outline,
-        .feature-card .btn-cyber-danger {
+        .feature-card .feature-btn {
             margin-top: auto !important;
             width: 90% !important;
             margin-left: auto !important;
@@ -172,10 +209,8 @@
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            position: static !important;
         }
 
-        /* Центрируем весь контент */
         .feature-card .feature-icon,
         .feature-card h3,
         .feature-card p {
@@ -203,8 +238,7 @@
             max-width: 100% !important;
         }
 
-        .feature-card .btn-cyber-outline,
-        .feature-card .btn-cyber-danger {
+        .feature-card .feature-btn {
             width: 95% !important;
             min-height: 42px !important;
             font-size: 0.9rem !important;
@@ -244,14 +278,15 @@
 <head>
     <link rel="stylesheet" href="static/css/main.css">
 </head>
+
 <!-- Hero Section -->
 <section class="cyber-hero">
     <div class="container-max">
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <h1 class="cyber-title display-3 mb-4 fade-in-up">
-                    <i class="bi bi-shield-shaded me-3"><b></i>Ваш цифровой щит в мире кибербезопасности
-                </h1></b>
+                    <i class="bi bi-shield-shaded me-3"></i><b>Ваш цифровой щит в мире кибербезопасности</b>
+                </h1>
                 <p class="cyber-lead mb-4 fade-in-up" style="animation-delay: 0.1s;">
                     Защищайся, учись и исследуй с помощью современных технологий.
                     Стань киберзащитником уже сегодня и получи востребованные навыки в области информационной
@@ -291,10 +326,9 @@
             </div>
 
             <div class="col-lg-4 text-center">
-                <i class="bi bi-shield-lock" style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.9;"></i>
+                <i class="bi bi-shield-lock float-animation" style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.9;"></i>
             </div>
         </div>
-    </div>
     </div>
 </section>
 
@@ -313,10 +347,8 @@
                     <i class="bi bi-book"></i>
                 </div>
                 <h3 class="cyber-text-bright mb-3">Интерактивное обучение</h3>
-                <p class="cyber-text mb-4">Уроки по кибербезопасности, тесты и симуляции атак для полного погружения в
-                    тему.</p>
-                <a href="{{ url_for('education.education_home') }}"
-                    class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
+                <p class="cyber-text mb-4">Уроки по кибербезопасности, тесты и симуляции атак для полного погружения в тему.</p>
+                <a href="{{ url_for('education.education_home') }}" class="feature-btn">
                     Изучать
                 </a>
             </div>
@@ -327,8 +359,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Генератор паролей</h3>
                 <p class="cyber-text mb-4">Создание и проверка надежных паролей для защиты ваших учетных записей.</p>
-                <a href="{{ url_for('passwords.password_generator') }}"
-                    class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
+                <a href="{{ url_for('passwords.password_generator') }}" class="feature-btn">
                     Использовать
                 </a>
             </div>
@@ -339,8 +370,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Шифрование данных</h3>
                 <p class="cyber-text mb-4">Шифрование текстов и файлов с использованием современных алгоритмов.</p>
-                <a href="{{ url_for('encryption.encryption_tools') }}"
-                    class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
+                <a href="{{ url_for('encryption.encryption_tools') }}" class="feature-btn">
                     Шифровать
                 </a>
             </div>
@@ -351,8 +381,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">ИИ-помощник</h3>
                 <p class="cyber-text mb-4">Ваш персональный консультант по безопасности, доступный 24/7.</p>
-                <a href="{{ url_for('ai.ai_chat') }}"
-                    class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
+                <a href="{{ url_for('ai.ai_chat') }}" class="feature-btn">
                     Спросить
                 </a>
             </div>
@@ -364,8 +393,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Мониторинг угроз</h3>
                 <p class="cyber-text mb-4">Отслеживание киберугроз в реальном времени и получение уведомлений.</p>
-                <a href="{{ url_for('threats.threat_dashboard') }}"
-                    class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
+                <a href="{{ url_for('threats.threat_dashboard') }}" class="feature-btn">
                     Мониторить
                 </a>
             </div>
@@ -376,8 +404,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Сканер безопасности</h3>
                 <p class="cyber-text mb-4">Комплексная проверка системы на уязвимости и проблемы безопасности.</p>
-                <a href="{{ url_for('scanner.scanner_dashboard') }}"
-                    class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
+                <a href="{{ url_for('scanner.scanner_dashboard') }}" class="feature-btn">
                     Сканировать
                 </a>
             </div>
@@ -388,8 +415,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">Кибер-тренировка и развлечения</h3>
                 <p class="cyber-text mb-4">Обучение через увлекательные игры, квизы и практические задания.</p>
-                <a href="{{ url_for('games.games_dashboard') }}"
-                    class="btn-cyber-outline w-100 mt-auto d-flex justify-content-center align-items-center">
+                <a href="{{ url_for('games.games_dashboard') }}" class="feature-btn">
                     Играть
                 </a>
             </div>
@@ -400,8 +426,7 @@
                 </div>
                 <h3 class="cyber-text-bright mb-3">DDoS Simulator</h3>
                 <p class="cyber-text mb-4">Изучение механизмов DDoS атак и методов защиты в безопасной среде.</p>
-                <a href="{{ url_for('ddos.ddos_simulator') }}"
-                    class="btn-cyber-danger w-100 mt-auto d-flex justify-content-center align-items-center">
+                <a href="{{ url_for('ddos.ddos_simulator') }}" class="feature-btn feature-btn-danger">
                     Исследовать
                 </a>
             </div>
@@ -435,8 +460,7 @@
                     <div class="mt-4">
                         <p class="cyber-subtext">
                             Уже присоединились к нам?
-                            <a href="{{ url_for('auth.login') }}" class="cyber-text-bright"
-                                style="text-decoration: none;">Войдите в аккаунт</a>
+                            <a href="{{ url_for('auth.login') }}" class="cyber-text-bright" style="text-decoration: none;">Войдите в аккаунт</a>
                         </p>
                     </div>
                 </div>

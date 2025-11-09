@@ -706,6 +706,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .cyber-brand {
@@ -714,7 +717,7 @@
             gap: 10px;
             font-weight: 700;
             font-size: 1.5rem;
-            color: var(--cyber-text-bright);
+            color: var(--cyber-text);
             text-decoration: none;
         }
 
@@ -746,6 +749,12 @@
             margin-top: 4rem;
         }
 
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
         .footer-grid {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
@@ -757,7 +766,7 @@
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: var(--cyber-text-bright);
+            color: var(--cyber-text);
         }
 
         .footer-description {
@@ -769,7 +778,7 @@
         .footer-links h5 {
             font-size: 1.125rem;
             margin-bottom: 1.5rem;
-            color: var(--cyber-text-bright);
+            color: var(--cyber-text);
         }
 
         .footer-links a {
@@ -797,7 +806,7 @@
             width: 45px;
             height: 45px;
             border-radius: 12px;
-            background: var(--cyber-bg-card);
+            background: var(--cyber-card-bg);
             color: var(--cyber-subtext);
             transition: all 0.3s ease;
             text-decoration: none;
@@ -909,7 +918,7 @@
 
         .dropdown-menu {
             position: absolute;
-            background: var(--cyber-bg-card);
+            background: var(--cyber-card-bg);
             border: 2px solid var(--cyber-border);
             border-radius: 12px;
             padding: 1rem;
@@ -946,8 +955,8 @@
 
         .cyber-badge-danger {
             background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
-            border-color: var(--cyber-danger);
-            color: var(--cyber-danger);
+            border-color: #ff4444;
+            color: #ff4444;
         }
 
         /* ===== КНОПКИ ===== */
@@ -1073,6 +1082,78 @@
                 margin-right: 0;
             }
         }
+
+        /* ===== ENHANCED HEADER & FOOTER ===== */
+        .container-max {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .module-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .home-btn {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .btn-home-main {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--cyber-primary);
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--cyber-primary);
+            text-decoration: none;
+        }
+
+        .btn-home-main:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--cyber-primary);
+            color: var(--cyber-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .home-btn {
+                position: static;
+                transform: none;
+                margin-bottom: 1rem;
+                align-self: center;
+            }
+            
+            .header-content {
+                position: static;
+            }
+            
+            .module-header {
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+        }
     </style>
 </head>
 
@@ -1084,7 +1165,7 @@
                 <div class="d-flex align-items-center">
                     <i class="bi bi-shield-shaded cyber-brand-icon me-3"></i>
                     <div>
-                        <h5 class="cyber-text-bright mb-0">CyberGuardian</h5>
+                        <h5 class="cyber-text mb-0">CyberGuardian</h5>
                         <small class="cyber-subtext">Цифровая безопасность</small>
                     </div>
                 </div>
@@ -1183,14 +1264,14 @@
 
             <!-- Авторизация -->
             {% if current_user.is_authenticated %}
-            <div class="sidebar-user-info p-3 mb-3" style="background: var(--cyber-bg-card); border-radius: 10px;">
+            <div class="sidebar-user-info p-3 mb-3" style="background: var(--cyber-card-bg); border-radius: 10px;">
                 <div class="d-flex align-items-center">
                     <div class="user-avatar-sidebar"
                         style="width: 40px; height: 40px; border-radius: 50%; background: var(--cyber-primary); display: flex; align-items: center; justify-content: center; margin-right: 12px;">
                         <i class="bi bi-person" style="color: white;"></i>
                     </div>
                     <div>
-                        <div class="username" style="color: var(--cyber-text-bright); font-weight: 600;">{{
+                        <div class="username" style="color: var(--cyber-text); font-weight: 600;">{{
                             current_user.username }}</div>
                         <div class="user-email" style="color: var(--cyber-subtext); font-size: 0.8rem;">{{
                             current_user.email if current_user.email else 'Пользователь' }}</div>
@@ -1201,7 +1282,7 @@
                 <i class="bi bi-person"></i>
                 <span>Профиль</span>
             </a>
-            <a href="{{ url_for('auth.logout') }}" class="sidebar-item" style="color: var(--cyber-danger);">
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-item" style="color: #ff4444;">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Выйти</span>
             </a>
@@ -1237,71 +1318,80 @@
 
     <!-- Верхняя навигация -->
     <header class="cyber-header">
-        <div class="container-max">
-            <div class="header-container">
-                <!-- Кнопка меню -->
-                <button class="navbar-toggler cyber-toggler me-3" type="button" onclick="toggleSidebar()">
-                    <i class="bi bi-list"></i>
-                    <span class="menu-text ms-2">Меню</span>
-                </button>
+        <div class="header-container">
+            <!-- Кнопка меню -->
+            <button class="navbar-toggler cyber-toggler me-3" type="button" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+                <span class="menu-text ms-2">Меню</span>
+            </button>
 
-                <!-- Лого -->
-                <a class="cyber-brand" href="{{ url_for('index') }}">
-                    <i class="bi bi-shield-shaded cyber-brand-icon"></i>
-                    CyberGuardian
+            <!-- Лого -->
+            <a class="cyber-brand" href="{{ url_for('index') }}">
+                <i class="bi bi-shield-shaded cyber-brand-icon"></i>
+                CyberGuardian
+            </a>
+
+            <!-- Правая часть с пользователем -->
+            <div class="header-actions">
+                {% if current_user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn-cyber-outline" type="button" style="position: relative;">
+                        <i class="bi bi-person me-2"></i>
+                        {{ current_user.username }}
+                    </button>
+                    <div class="dropdown-menu"
+                        style="position: absolute; background: var(--cyber-card-bg); border: 2px solid var(--cyber-border); border-radius: 12px; padding: 1rem; min-width: 200px; z-index: 1000; display: none; margin-top: 0.5rem;">
+                        <a class="sidebar-item mb-2" href="{{ url_for('auth.profile') }}">
+                            <i class="bi bi-person me-2"></i>Профиль
+                        </a>
+                        <a class="sidebar-item mb-2" href="{{ url_for('dashboard') }}">
+                            <i class="bi bi-speedometer2 me-2"></i>Дашборд
+                        </a>
+                        <div class="sidebar-divider my-2"></div>
+                        <a class="sidebar-item" href="{{ url_for('auth.logout') }}"
+                            style="color: #ff4444;">
+                            <i class="bi bi-box-arrow-right me-2"></i>Выйти
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn-cyber-outline">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Войти
                 </a>
+                <a href="{{ url_for('auth.register') }}" class="btn-cyber">
+                    <i class="bi bi-person-plus me-2"></i>Регистрация
+                </a>
+                {% endif %}
 
-                <!-- Правая часть с пользователем -->
-                <div class="header-actions">
-                    {% if current_user.is_authenticated %}
-                    <div class="dropdown">
-                        <button class="btn-cyber-outline" type="button" style="position: relative;">
-                            <i class="bi bi-person me-2"></i>
-                            {{ current_user.username }}
-                        </button>
-                        <div class="dropdown-menu"
-                            style="position: absolute; background: var(--cyber-bg-card); border: 2px solid var(--cyber-border); border-radius: 12px; padding: 1rem; min-width: 200px; z-index: 1000; display: none; margin-top: 0.5rem;">
-                            <a class="sidebar-item mb-2" href="{{ url_for('auth.profile') }}">
-                                <i class="bi bi-person me-2"></i>Профиль
-                            </a>
-                            <a class="sidebar-item mb-2" href="{{ url_for('dashboard') }}">
-                                <i class="bi bi-speedometer2 me-2"></i>Дашборд
-                            </a>
-                            <div class="sidebar-divider my-2"></div>
-                            <a class="sidebar-item" href="{{ url_for('auth.logout') }}"
-                                style="color: var(--cyber-danger);">
-                                <i class="bi bi-box-arrow-right me-2"></i>Выйти
-                            </a>
-                        </div>
-                    </div>
-                    {% else %}
-                    <a href="{{ url_for('auth.login') }}" class="btn-cyber-outline">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти
-                    </a>
-                    <a href="{{ url_for('auth.register') }}" class="btn-cyber">
-                        <i class="bi bi-person-plus me-2"></i>Регистрация
-                    </a>
-                    {% endif %}
-
-                    <!-- Индикатор статуса -->
-                    <div class="cyber-badge cyber-badge-accent ms-3">
-                        <i class="bi bi-check-circle me-1"></i>Система активна
-                    </div>
+                <!-- Индикатор статуса -->
+                <div class="cyber-badge cyber-badge-accent ms-3">
+                    <i class="bi bi-check-circle me-1"></i>Система активна
                 </div>
             </div>
         </div>
     </header>
-    </section>
 
+    <!-- Основной контент -->
     <div class="cyber-container mt-5">
-        <!-- Заголовок -->
-        <div class="text-center mb-7">
-            <h1 class="mb-3 mt-5" style="font-size: 2.5rem; font-weight: 800;">
-                <i class="bi bi-shield-lock-fill me-2 text-cyber-primary"></i>ГЕНЕРАТОР ПАРОЛЕЙ
-            </h1>
-            <p class="text-cyber-subtext lead">
-                Создавайте <span class="text-cyber-primary">неприступные</span> пароли с искусственным интеллектом
-            </p>
+        <!-- Заголовок с кнопкой назад -->
+        <div class="module-header">
+            <div class="header-content">
+                <!-- Кнопка На главную -->
+                <div class="home-btn">
+                    <a href="{{ url_for('index') }}" class="btn-home-main d-flex align-items-center">
+                        <i class="bi bi-house-door me-2"></i>На главную
+                    </a>
+                </div>
+                
+                <div class="d-flex flex-column align-items-center w-100">
+                    <h1 class="mb-3 mt-5" style="font-size: 2.5rem; font-weight: 800;">
+                        <i class="bi bi-shield-lock-fill me-2 text-cyber-primary"></i>ГЕНЕРАТОР ПАРОЛЕЙ
+                    </h1>
+                    <p class="text-cyber-subtext lead">
+                        Создавайте <span class="text-cyber-primary">неприступные</span> пароли 
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="row g-4">
@@ -1511,8 +1601,59 @@
         </div>
     </div>
 
+    <!-- Футер -->
+    <footer class="cyber-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <div class="footer-brand">
+                        <i class="bi bi-shield-shaded me-2" style="color: var(--cyber-primary);"></i>
+                        CyberGuardian
+                    </div>
+                    <p class="footer-description">
+                        Ваш цифровой защитник в мире кибербезопасности.
+                        Обучаем, защищаем и развиваем навыки безопасности.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="social-link" target="_blank">
+                            <i class="bi bi-telegram"></i>
+                        </a>
+                        <a href="https://github.com/AndrewYanorove/cyberguardian" class="social-link" target="_blank">
+                            <i class="bi bi-github"></i>
+                        </a>
+                        <a href="mailto:cyberguardian100@gmail.com" class="social-link">
+                            <i class="bi bi-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Быстрые ссылки</h5>
+                    <a href="{{ url_for('index') }}">Главная</a>
+                    <a href="{{ url_for('dashboard') }}">Дашборд</a>
+                    <a href="{{ url_for('education.education_home') }}">Обучение</a>
+                    <a href="{{ url_for('ddos.ddos_simulator') }}">DDoS Simulator</a>
+                    <a href="{{ url_for('about') }}">О проекте</a>
+                </div>
+
+                <div class="footer-links">
+                    <h5>Инструменты</h5>
+                    <a href="{{ url_for('passwords.password_generator') }}">Генератор паролей</a>
+                    <a href="{{ url_for('encryption.encryption_tools') }}">Шифрование</a>
+                    <a href="{{ url_for('scanner.scanner_dashboard') }}">Сканер безопасности</a>
+                    <a href="{{ url_for('ai.ai_chat') }}">ИИ-помощник</a>
+                    <a href="{{ url_for('games.games_dashboard') }}">Кибер-тренировка</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© {{ current_year }} CyberGuardian | Все права защищены</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        // JavaScript код остается практически таким же, как в предыдущей версии
+        // JavaScript код остается таким же, как в предыдущей версии
         // с небольшими изменениями для работы с новыми классами
 
         let currentPasswordType = 'strong';
@@ -1996,56 +2137,6 @@
             }
         });
     </script>
-    <!-- Футер -->
-    <footer class="cyber-footer">
-        <div class="container-max">
-            <div class="footer-grid">
-                <div class="footer-info">
-                    <div class="footer-brand">
-                        <i class="bi bi-shield-shaded me-2" style="color: var(--cyber-primary);"></i>
-                        CyberGuardian
-                    </div>
-                    <p class="footer-description">
-                        Ваш цифровой защитник в мире кибербезопасности.
-                        Обучаем, защищаем и развиваем навыки безопасности.
-                    </p>
-                    <div class="social-links">
-                        <a href="https://t.me/+edp2_cec4aE2Y2Fi" class="social-link" target="_blank">
-                            <i class="bi bi-telegram"></i>
-                        </a>
-                        <a href="https://github.com/AndrewYanorove/cyberguardian" class="social-link" target="_blank">
-                            <i class="bi bi-github"></i>
-                        </a>
-                        <a href="mailto:cyberguardian100@gmail.com" class="social-link">
-                            <i class="bi bi-envelope"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="footer-links">
-                    <h5>Быстрые ссылки</h5>
-                    <a href="{{ url_for('index') }}">Главная</a>
-                    <a href="{{ url_for('dashboard') }}">Дашборд</a>
-                    <a href="{{ url_for('education.education_home') }}">Обучение</a>
-                    <a href="{{ url_for('ddos.ddos_simulator') }}">DDoS Simulator</a>
-                    <a href="{{ url_for('about') }}">О проекте</a>
-                </div>
-
-                <div class="footer-links">
-                    <h5>Инструменты</h5>
-                    <a href="{{ url_for('passwords.password_generator') }}">Генератор паролей</a>
-                    <a href="{{ url_for('encryption.encryption_tools') }}">Шифрование</a>
-                    <a href="{{ url_for('scanner.scanner_dashboard') }}">Сканер безопасности</a>
-                    <a href="{{ url_for('ai.ai_chat') }}">ИИ-помощник</a>
-                    <a href="{{ url_for('games.games_dashboard') }}">Кибер-тренировка</a>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>© {{ current_year }} CyberGuardian | Все права защищены</p>
-            </div>
-        </div>
-    </footer>
 </body>
 
 </html>
