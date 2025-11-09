@@ -5,15 +5,33 @@
 {% block extra_css %}
 <style>
 .story-detail-container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 80px 20px 20px; /* Добавлен отступ сверху */
+    animation: fadeInUp 0.6s ease;
+    min-height: calc(100vh - 80px); /* Обеспечиваем минимальную высоту */
+}
+
+.back-to-forum.top {
+    margin-bottom: 2rem;
 }
 
 .story-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--cyber-border);
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--cyber-border);
+    position: relative;
+}
+
+.story-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+    border-radius: 3px;
 }
 
 .story-meta {
@@ -22,146 +40,265 @@
     margin-bottom: 1rem;
     font-size: 0.9rem;
     color: var(--cyber-subtext);
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .story-category {
-    background: var(--cyber-primary);
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
     color: #000;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
 }
 
 .story-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 1.2rem;
     color: var(--cyber-text-bright);
     line-height: 1.3;
+    background: linear-gradient(135deg, var(--cyber-text-bright), var(--cyber-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .story-author {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.8rem;
     color: var(--cyber-subtext);
+    font-size: 1rem;
+}
+
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
 }
 
 .story-content {
     background: var(--cyber-bg-card);
-    border: 1px solid var(--cyber-border);
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    line-height: 1.7;
+    border: 2px solid var(--cyber-border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
     white-space: pre-wrap;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.story-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--cyber-primary), var(--cyber-accent));
 }
 
 .story-actions {
     display: flex;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    justify-content: center;
 }
 
 .btn-like, .btn-share {
-    background: transparent;
-    border: 1px solid var(--cyber-border);
+    background: var(--cyber-bg-card);
+    border: 2px solid var(--cyber-border);
     color: var(--cyber-text);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 15px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.8rem;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .btn-like:hover, .btn-share:hover {
     border-color: var(--cyber-primary);
     color: var(--cyber-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 168, 255, 0.2);
 }
 
 .btn-like.liked {
-    background: var(--cyber-primary);
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
     color: #000;
-    border-color: var(--cyber-primary);
+    border-color: transparent;
+    box-shadow: 0 8px 25px rgba(0, 168, 255, 0.4);
 }
 
 .comments-section {
-    margin-top: 3rem;
+    margin-top: 3.5rem;
+    animation: fadeInUp 0.8s ease;
 }
 
 .comments-header {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
     color: var(--cyber-text-bright);
+    font-weight: 700;
+    text-align: center;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.comments-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+    border-radius: 3px;
 }
 
 .comment-form {
     background: var(--cyber-bg-card);
-    border: 1px solid var(--cyber-border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    border: 2px solid var(--cyber-border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.comment-form:focus-within {
+    border-color: var(--cyber-primary);
+    box-shadow: 0 15px 50px rgba(0, 168, 255, 0.15);
 }
 
 .comment-input {
     width: 100%;
-    min-height: 100px;
-    padding: 1rem;
+    min-height: 120px;
+    padding: 1.2rem;
     background: var(--cyber-darker);
-    border: 1px solid var(--cyber-border);
-    border-radius: 8px;
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
     color: var(--cyber-text);
     font-family: inherit;
+    font-size: 1rem;
     resize: vertical;
+    transition: all 0.3s ease;
 }
 
 .comment-input:focus {
     outline: none;
     border-color: var(--cyber-primary);
+    box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
 }
 
 .btn-comment {
-    background: var(--cyber-primary);
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
     color: #000;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1.1rem;
     cursor: pointer;
-    margin-top: 1rem;
-    transition: all 0.3s ease;
+    margin-top: 1.2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
 }
 
 .btn-comment:hover {
-    background: var(--cyber-secondary);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4);
 }
 
 .comments-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .comment {
     background: var(--cyber-bg-card);
-    border: 1px solid var(--cyber-border);
-    border-radius: 12px;
-    padding: 1.5rem;
+    border: 2px solid var(--cyber-border);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.comment::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--cyber-accent), var(--cyber-primary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.comment:hover {
+    border-color: var(--cyber-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(0, 168, 255, 0.1);
+}
+
+.comment:hover::before {
+    opacity: 1;
 }
 
 .comment-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .comment-author {
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 700;
     color: var(--cyber-text-bright);
+}
+
+.comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
 }
 
 .comment-date {
@@ -170,51 +307,178 @@
 }
 
 .comment-content {
-    line-height: 1.6;
+    line-height: 1.7;
     white-space: pre-wrap;
+    font-size: 1.05rem;
 }
 
 .no-comments {
     text-align: center;
-    padding: 2rem;
+    padding: 3rem 2rem;
     color: var(--cyber-subtext);
+}
+
+.no-comments i {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+.no-comments p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
 }
 
 .admin-actions {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    justify-content: center;
 }
 
 .btn-admin {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
     font-size: 0.9rem;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 2px solid transparent;
 }
 
 .btn-edit {
-    background: var(--cyber-warning);
+    background: linear-gradient(135deg, var(--cyber-warning), #ffd54f);
+    color: #000;
+}
+
+.btn-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+    text-decoration: none;
     color: #000;
 }
 
 .btn-delete {
-    background: var(--cyber-danger);
+    background: linear-gradient(135deg, var(--cyber-danger), #ff6b6b);
+    color: white;
+    border: none;
+}
+
+.btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
     color: white;
 }
 
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Стили для уведомлений */
+.story-notification {
+    position: fixed;
+    top: 120px; /* Смещаем ниже хедера */
+    right: 20px;
+    z-index: 10000;
+    animation: slideInRight 0.3s ease;
+}
+
+.notification-content {
+    background: var(--cyber-bg-card);
+    border: 2px solid;
+    border-radius: 15px;
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.notification-success {
+    border-color: var(--cyber-success);
+    color: var(--cyber-success);
+}
+
+.notification-warning {
+    border-color: var(--cyber-warning);
+    color: var(--cyber-warning);
+}
+
+.notification-danger {
+    border-color: var(--cyber-danger);
+    color: var(--cyber-danger);
+}
+
+.notification-info {
+    border-color: var(--cyber-primary);
+    color: var(--cyber-primary);
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
 @media (max-width: 768px) {
+    .story-detail-container {
+        padding: 70px 15px 15px; /* Меньший отступ на мобильных */
+    }
+    
     .story-title {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
+    }
+    
+    .story-content {
+        padding: 1.8rem;
+    }
+    
+    .story-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .admin-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .story-notification {
+        top: 100px;
+        right: 15px;
+        left: 15px;
+    }
+}
+
+/* Дополнительные стили для лучшего отображения на маленьких экранах */
+@media (max-width: 480px) {
+    .story-detail-container {
+        padding: 60px 10px 10px;
     }
     
     .story-content {
         padding: 1.5rem;
     }
     
-    .story-actions {
-        flex-direction: column;
+    .comment-form {
+        padding: 1.5rem;
+    }
+    
+    .comment {
+        padding: 1.5rem;
     }
 }
 </style>
@@ -222,25 +486,36 @@
 
 {% block content %}
 <div class="story-detail-container">
+
+    <div class="story-detail-container">
+    <!-- Кнопка назад вверху -->
+    <div class="back-to-forum top">
+        <a href="{{ url_for('forum.forum_home') }}" class="btn-back">
+            <i class="bi bi-arrow-left"></i> К списку историй
+        </a>
+    </div>
+
     <!-- Заголовок и мета-информация -->
     <div class="story-header">
         <div class="story-meta">
             <span class="story-category">
-                {% if story.category == 'scam' %}Мошенничество
-                {% elif story.category == 'phishing' %}Фишинг
-                {% elif story.category == 'social' %}Социальная инженерия
-                {% else %}Другие случаи
+                {% if story.category == 'scam' %}🕵️ Мошенничество
+                {% elif story.category == 'phishing' %}🎣 Фишинг
+                {% elif story.category == 'social' %}👥 Социальная инженерия
+                {% else %}🔍 Другие случаи
                 {% endif %}
             </span>
-            <span>{{ story.created_at.strftime('%d.%m.%Y в %H:%M') }}</span>
-            <span><i class="bi bi-eye"></i> {{ story.views_count }}</span>
+            <span>📅 {{ story.created_at.strftime('%d.%m.%Y в %H:%M') }}</span>
+            <span>👁️ {{ story.views_count }} просмотров</span>
         </div>
         
         <h1 class="story-title">{{ story.title }}</h1>
         
         <div class="story-author">
-            <i class="bi bi-person"></i>
-            {{ story.author.username }}
+            <div class="author-avatar">
+                {{ story.author.username[0]|upper }}
+            </div>
+            <span>Автор: {{ story.author.username }}</span>
         </div>
     </div>
 
@@ -254,11 +529,11 @@
         <button class="btn-like {% if user_has_liked %}liked{% endif %}" 
                 data-story-id="{{ story.id }}">
             <i class="bi bi-heart{% if user_has_liked %}-fill{% endif %}"></i>
-            <span class="likes-count">{{ story.likes_count }}</span>
+            <span class="likes-count">{{ story.likes_count }}</span> Нравится
         </button>
         
         <button class="btn-share">
-            <i class="bi bi-share"></i> Поделиться
+            <i class="bi bi-share"></i> Поделиться историей
         </button>
     </div>
 
@@ -272,7 +547,7 @@
         <form method="POST" 
               action="{{ url_for('forum.reject_story', story_id=story.id) }}" 
               style="display: inline;"
-              onsubmit="return confirm('Удалить эту историю?')">
+              onsubmit="return confirm('Вы уверены, что хотите удалить эту историю?')">
             <button type="submit" class="btn-admin btn-delete">
                 <i class="bi bi-trash"></i> Удалить
             </button>
@@ -283,7 +558,7 @@
     <!-- Комментарии -->
     <div class="comments-section">
         <h3 class="comments-header">
-            Комментарии ({{ story.comments|length }})
+            💬 Комментарии ({{ story.comments|length }})
         </h3>
 
         <!-- Форма комментария -->
@@ -293,15 +568,20 @@
               class="comment-form">
             <textarea name="content" 
                       class="comment-input" 
-                      placeholder="Напишите ваш комментарий..."
+                      placeholder="💡 Поделитесь вашим мнением или опытом..."
                       required></textarea>
             <button type="submit" class="btn-comment">
-                <i class="bi bi-send"></i> Отправить комментарий
+                <i class="bi bi-send"></i> Опубликовать комментарий
             </button>
         </form>
         {% else %}
         <div class="comment-form">
-            <p>Чтобы оставить комментарий, <a href="{{ url_for('auth.login') }}">войдите</a> в систему.</p>
+            <p style="text-align: center; margin: 0;">
+                🔒 Чтобы оставить комментарий, 
+                <a href="{{ url_for('auth.login') }}" style="color: var(--cyber-primary); font-weight: 600;">
+                    войдите в систему
+                </a>
+            </p>
         </div>
         {% endif %}
 
@@ -311,8 +591,13 @@
                 {% for comment in story.comments %}
                 <div class="comment">
                     <div class="comment-header">
-                        <span class="comment-author">{{ comment.author.username }}</span>
-                        <span class="comment-date">{{ comment.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
+                        <div class="comment-author">
+                            <div class="comment-avatar">
+                                {{ comment.author.username[0]|upper }}
+                            </div>
+                            {{ comment.author.username }}
+                        </div>
+                        <span class="comment-date">{{ comment.created_at.strftime('%d.%m.%Y в %H:%M') }}</span>
                     </div>
                     <div class="comment-content">
                         {{ comment.content }}
@@ -321,8 +606,9 @@
                 {% endfor %}
             {% else %}
                 <div class="no-comments">
-                    <i class="bi bi-chat"></i>
+                    <i class="bi bi-chat-quote"></i>
                     <p>Пока нет комментариев. Будьте первым!</p>
+                    <small>💡 Поделитесь своим мнением или опытом</small>
                 </div>
             {% endif %}
         </div>
@@ -333,13 +619,44 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Анимация появления элементов
+    const animateOnScroll = () => {
+        const elements = document.querySelectorAll('.comment, .story-content, .comment-form');
+        elements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < window.innerHeight - elementVisible) {
+                element.style.opacity = "1";
+                element.style.transform = "translateY(0)";
+            }
+        });
+    };
+
+    // Инициализация анимации
+    const elements = document.querySelectorAll('.comment, .story-content, .comment-form');
+    elements.forEach(element => {
+        element.style.opacity = "0";
+        element.style.transform = "translateY(20px)";
+        element.style.transition = "all 0.6s ease";
+    });
+
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Initial check
+
     // Лайк истории
     const likeBtn = document.querySelector('.btn-like');
     const likesCount = document.querySelector('.likes-count');
     
     if (likeBtn) {
         likeBtn.addEventListener('click', async function() {
+            if (!{{ 'true' if current_user.is_authenticated else 'false' }}) {
+                showNotification('🔒 Войдите в систему, чтобы ставить лайки', 'warning');
+                return;
+            }
+
             const storyId = this.dataset.storyId;
+            this.style.transform = 'scale(0.95)';
             
             try {
                 const response = await fetch(`/forum/story/${storyId}/like`, {
@@ -356,15 +673,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     if (data.liked) {
                         this.classList.add('liked');
-                        this.innerHTML = `<i class="bi bi-heart-fill"></i> ${data.likes_count}`;
+                        this.innerHTML = `<i class="bi bi-heart-fill"></i> ${data.likes_count} Нравится`;
+                        showNotification('❤️ Вы поставили лайк!', 'success');
                     } else {
                         this.classList.remove('liked');
-                        this.innerHTML = `<i class="bi bi-heart"></i> ${data.likes_count}`;
+                        this.innerHTML = `<i class="bi bi-heart"></i> ${data.likes_count} Нравится`;
+                        showNotification('💔 Лайк удален', 'info');
                     }
                 }
             } catch (error) {
                 console.error('Ошибка:', error);
-                alert('Не удалось поставить лайк');
+                showNotification('❌ Не удалось поставить лайк', 'danger');
+            } finally {
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
             }
         });
     }
@@ -378,14 +701,32 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: '{{ story.title }}',
                     text: '{{ story.content[:100] }}...',
                     url: window.location.href
+                }).then(() => {
+                    showNotification('📤 История успешно опубликована!', 'success');
                 });
             } else {
-                // Fallback - копирование ссылки
                 navigator.clipboard.writeText(window.location.href).then(() => {
-                    alert('Ссылка скопирована в буфер обмена!');
+                    showNotification('🔗 Ссылка скопирована в буфер обмена!', 'success');
                 });
             }
         });
+    }
+
+    // Функция показа уведомлений
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = 'story-notification';
+        notification.innerHTML = `
+            <div class="notification-content notification-${type}">
+                ${message}
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
     }
 });
 </script>

@@ -8,118 +8,286 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 0 20px;
+    animation: fadeInUp 0.8s ease;
 }
 
 .create-story-header {
     text-align: center;
     margin-bottom: 3rem;
+    padding: 2rem 0;
+    position: relative;
+}
+
+.create-story-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+    border-radius: 2px;
+}
+
+.create-story-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--cyber-text-bright), var(--cyber-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.create-story-header p {
+    font-size: 1.2rem;
+    color: var(--cyber-subtext);
+    font-weight: 300;
 }
 
 .create-story-form {
     background: var(--cyber-bg-card);
-    border: 1px solid var(--cyber-border);
-    border-radius: 12px;
-    padding: 2rem;
+    border: 2px solid var(--cyber-border);
+    border-radius: 25px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.create-story-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
 }
 
 .form-label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
     color: var(--cyber-text-bright);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-label::after {
+    content: '*';
+    color: var(--cyber-danger);
+    margin-left: 0.2rem;
 }
 
 .form-control {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.2rem;
     background: var(--cyber-darker);
-    border: 1px solid var(--cyber-border);
-    border-radius: 8px;
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
     color: var(--cyber-text);
     font-size: 1rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--cyber-primary);
-    box-shadow: 0 0 0 2px rgba(0, 168, 255, 0.2);
+    box-shadow: 0 0 0 4px rgba(0, 168, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.form-control:hover {
+    border-color: var(--cyber-primary);
 }
 
 textarea.form-control {
-    min-height: 200px;
+    min-height: 250px;
     resize: vertical;
-    font-family: inherit;
+    line-height: 1.6;
 }
 
 .select-control {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.2rem;
     background: var(--cyber-darker);
-    border: 1px solid var(--cyber-border);
-    border-radius: 8px;
+    border: 2px solid var(--cyber-border);
+    border-radius: 15px;
     color: var(--cyber-text);
     font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.select-control:focus {
+    outline: none;
+    border-color: var(--cyber-primary);
+    box-shadow: 0 0 0 4px rgba(0, 168, 255, 0.15);
 }
 
 .form-help {
     font-size: 0.9rem;
     color: var(--cyber-subtext);
-    margin-top: 0.5rem;
+    margin-top: 0.8rem;
+    padding: 0.8rem 1rem;
+    background: rgba(0, 168, 255, 0.1);
+    border-radius: 10px;
+    border-left: 4px solid var(--cyber-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .btn-submit {
-    background: var(--cyber-primary);
+    background: linear-gradient(135deg, var(--cyber-primary), var(--cyber-accent));
     color: #000;
     border: none;
-    padding: 1rem 2rem;
-    border-radius: 8px;
+    padding: 1.2rem 2.5rem;
+    border-radius: 15px;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
 }
 
 .btn-submit:hover {
-    background: var(--cyber-secondary);
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 35px rgba(0, 168, 255, 0.4);
+}
+
+.btn-submit:hover::before {
+    left: 100%;
+}
+
+.btn-submit:active {
+    transform: translateY(-1px) scale(1.01);
 }
 
 .btn-cancel {
     background: transparent;
     color: var(--cyber-text);
-    border: 1px solid var(--cyber-border);
+    border: 2px solid var(--cyber-border);
     padding: 1rem 2rem;
-    border-radius: 8px;
+    border-radius: 15px;
     font-size: 1.1rem;
     text-decoration: none;
     text-align: center;
     display: block;
-    margin-top: 1rem;
-    transition: all 0.3s ease;
+    margin-top: 1.2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
 }
 
 .btn-cancel:hover {
     background: var(--cyber-border);
     color: var(--cyber-text-bright);
     text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .character-count {
     text-align: right;
     font-size: 0.9rem;
     color: var(--cyber-subtext);
-    margin-top: 0.5rem;
+    margin-top: 0.8rem;
+    font-weight: 600;
+}
+
+.character-count.warning {
+    color: var(--cyber-warning);
+}
+
+.character-count.danger {
+    color: var(--cyber-danger);
+}
+
+.form-tips {
+    background: rgba(32, 201, 151, 0.1);
+    border: 2px solid var(--cyber-success);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-tips h4 {
+    color: var(--cyber-success);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-tips ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.form-tips li {
+    padding: 0.5rem 0;
+    color: var(--cyber-text);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+}
+
+.form-tips li::before {
+    content: '💡';
+    font-size: 0.9rem;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 768px) {
     .create-story-form {
-        padding: 1.5rem;
+        padding: 2rem 1.5rem;
+    }
+    
+    .create-story-header h1 {
+        font-size: 2rem;
+    }
+    
+    .btn-submit, .btn-cancel {
+        padding: 1rem 1.5rem;
     }
 }
 </style>
@@ -128,69 +296,95 @@ textarea.form-control {
 {% block content %}
 <div class="create-story-container">
     <div class="create-story-header">
-        <h1>Поделиться историей</h1>
+        <h1>✍️ Поделиться историей</h1>
         <p>Расскажите о случае мошенничества, чтобы помочь другим</p>
     </div>
 
-    <form method="POST" class="create-story-form">
+    <!-- Советы по написанию -->
+    <div class="form-tips">
+        <h4><i class="bi bi-lightbulb"></i> Советы для хорошей истории</h4>
+        <ul>
+            <li>Опишите ситуацию максимально подробно</li>
+            <li>Укажите как вы поняли, что это мошенничество</li>
+            <li>Поделитесь уроками, которые вы извлекли</li>
+            <li>Не указывайте личную информацию</li>
+            <li>Будьте честны и объективны</li>
+        </ul>
+    </div>
+
+    <form method="POST" class="create-story-form" id="storyForm">
         <div class="form-group">
-            <label class="form-label" for="title">Заголовок *</label>
+            <label class="form-label" for="title">
+                <i class="bi bi-type"></i> Заголовок
+            </label>
             <input type="text" 
                    class="form-control" 
                    id="title" 
                    name="title" 
-                   placeholder="Кратко опишите ситуацию"
+                   placeholder="Например: Попытка мошенничества с банковской картой по телефону"
                    maxlength="200"
                    required>
-            <div class="character-count">
+            <div class="character-count" id="titleCountContainer">
                 <span id="titleCount">0</span>/200 символов
             </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label" for="category">Категория *</label>
+            <label class="form-label" for="category">
+                <i class="bi bi-tags"></i> Категория
+            </label>
             <select class="select-control" id="category" name="category" required>
-                <option value="">Выберите категорию</option>
-                <option value="scam">Мошенничество</option>
-                <option value="phishing">Фишинг</option>
-                <option value="social">Социальная инженерия</option>
-                <option value="other">Другие случаи</option>
+                <option value="">-- Выберите категорию --</option>
+                <option value="scam">🕵️ Мошенничество</option>
+                <option value="phishing">🎣 Фишинг</option>
+                <option value="social">👥 Социальная инженерия</option>
+                <option value="other">🔍 Другие случаи</option>
             </select>
+            <div class="form-help">
+                <i class="bi bi-info-circle"></i>
+                Выберите наиболее подходящую категорию для вашей истории
+            </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label" for="content">Ваша история *</label>
+            <label class="form-label" for="content">
+                <i class="bi bi-text-paragraph"></i> Ваша история
+            </label>
             <textarea class="form-control" 
                       id="content" 
                       name="content" 
-                      placeholder="Опишите подробно что произошло, как вы поняли что это мошенничество, и какие уроки извлекли..."
+                      placeholder="Опишите подробно что произошло, как вы поняли что это мошенничество, и какие уроки извлекли. Постарайтесь быть максимально информативным..."
                       required></textarea>
-            <div class="character-count">
+            <div class="character-count" id="contentCountContainer">
                 <span id="contentCount">0</span> символов
             </div>
             <div class="form-help">
-                💡 Совет: Опишите ситуацию максимально подробно, но не указывайте личную информацию
+                <i class="bi bi-lightbulb"></i>
+                💡 Совет: Минимальная рекомендуемая длина - 200 символов для подробного описания
             </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label" for="tags">Теги (через запятую)</label>
+            <label class="form-label" for="tags">
+                <i class="bi bi-hash"></i> Теги
+            </label>
             <input type="text" 
                    class="form-control" 
                    id="tags" 
                    name="tags" 
-                   placeholder="банк, телефон, интернет, карта">
+                   placeholder="банк, телефон, смс, карта, интернет">
             <div class="form-help">
-                Укажите ключевые слова, чтобы другим было проще найти вашу историю
+                <i class="bi bi-tags"></i>
+                Укажите ключевые слова через запятую, чтобы другим было проще найти вашу историю
             </div>
         </div>
 
-        <button type="submit" class="btn-submit">
+        <button type="submit" class="btn-submit" id="submitBtn">
             <i class="bi bi-send"></i> Опубликовать историю
         </button>
 
         <a href="{{ url_for('forum.forum_home') }}" class="btn-cancel">
-            Отмена
+            <i class="bi bi-arrow-left"></i> Вернуться на форум
         </a>
     </form>
 </div>
@@ -199,20 +393,75 @@ textarea.form-control {
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Счетчик символов для заголовка
     const titleInput = document.getElementById('title');
+    const contentInput = document.getElementById('content');
     const titleCount = document.getElementById('titleCount');
-    
+    const contentCount = document.getElementById('contentCount');
+    const titleCountContainer = document.getElementById('titleCountContainer');
+    const contentCountContainer = document.getElementById('contentCountContainer');
+    const submitBtn = document.getElementById('submitBtn');
+    const form = document.getElementById('storyForm');
+
+    // Счетчик символов для заголовка
     titleInput.addEventListener('input', function() {
-        titleCount.textContent = this.value.length;
+        const length = this.value.length;
+        titleCount.textContent = length;
+        
+        // Визуальная индикация
+        if (length > 180) {
+            titleCountContainer.classList.add('warning');
+            titleCountContainer.classList.remove('danger');
+        } else if (length > 190) {
+            titleCountContainer.classList.remove('warning');
+            titleCountContainer.classList.add('danger');
+        } else {
+            titleCountContainer.classList.remove('warning', 'danger');
+        }
     });
 
     // Счетчик символов для контента
-    const contentInput = document.getElementById('content');
-    const contentCount = document.getElementById('contentCount');
-    
     contentInput.addEventListener('input', function() {
-        contentCount.textContent = this.value.length;
+        const length = this.value.length;
+        contentCount.textContent = length;
+        
+        // Визуальная индикация
+        if (length < 50) {
+            contentCountContainer.classList.add('danger');
+        } else if (length < 200) {
+            contentCountContainer.classList.add('warning');
+            contentCountContainer.classList.remove('danger');
+        } else {
+            contentCountContainer.classList.remove('warning', 'danger');
+        }
+    });
+
+    // Валидация формы
+    form.addEventListener('submit', function(e) {
+        const titleLength = titleInput.value.length;
+        const contentLength = contentInput.value.length;
+        let isValid = true;
+        let message = '';
+
+        if (titleLength < 10) {
+            isValid = false;
+            message = 'Заголовок должен содержать минимум 10 символов';
+        } else if (titleLength > 200) {
+            isValid = false;
+            message = 'Заголовок не должен превышать 200 символов';
+        } else if (contentLength < 50) {
+            isValid = false;
+            message = 'Содержание истории должно быть не менее 50 символов';
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            showNotification(message, 'warning');
+            return false;
+        }
+
+        // Показываем индикатор загрузки
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Публикация...';
+        submitBtn.disabled = true;
     });
 
     // Предупреждение при закрытии страницы
@@ -224,15 +473,70 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('beforeunload', function(e) {
         if (formChanged) {
             e.preventDefault();
-            e.returnValue = '';
+            e.returnValue = 'У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу?';
         }
     });
 
-    // Отправка формы
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function() {
-        formChanged = false;
+    // Анимация фокуса
+    const inputs = document.querySelectorAll('.form-control, .select-control');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
     });
+
+    // Функция показа уведомлений
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = 'story-notification';
+        notification.innerHTML = `
+            <div class="notification-content notification-${type}">
+                ${message}
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 4000);
+    }
+
+    // Добавляем стили для уведомлений
+    const notificationStyles = document.createElement('style');
+    notificationStyles.textContent = `
+        .story-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease;
+        }
+        
+        .notification-content {
+            background: var(--cyber-bg-card);
+            border: 2px solid;
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .notification-warning {
+            border-color: var(--cyber-warning);
+            color: var(--cyber-warning);
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(notificationStyles);
 });
 </script>
 {% endblock %}
