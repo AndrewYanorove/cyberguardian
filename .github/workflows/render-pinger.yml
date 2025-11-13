@@ -1,0 +1,16 @@
+name: ⚡ Render Keeper
+
+on:
+  schedule:
+    - cron: '*/2 * * * *'  # Каждые 2 минуты!
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚡ Quick Ping
+        run: |
+          echo "🕐 $(date): Starting ping..."
+          curl -s -f --max-time 10 "https://cyberguardian-cb1m.onrender.com/api/ping"
+          echo "✅ $(date): Ping successful"
