@@ -1,0 +1,52 @@
+name: 🚀 Render Pinger Army
+
+on:
+  schedule:
+    # Запускать каждые 3 минуты
+    - cron: '*/3 * * * *'
+  # Ручной запуск из интерфейса GitHub
+  workflow_dispatch:
+  # Автозапуск при пуше в главную ветку (опционально)
+  push:
+    branches: [ main, master ]
+
+jobs:
+  ping-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    strategy:
+      matrix:
+        # Меняй на свои реальные URL
+        url:
+          - 'https://cyberguardian-cb1m.onrender.com/'
+          - 'https://cyberguardian-cb1m.onrender.com/education/'
+          - 'https://cyberguardian-cb1m.onrender.com/forum/'
+          - 'https://cyberguardian-cb1m.onrender.com/encryption/'
+          - 'https://cyberguardian-cb1m.onrender.com/ai/'
+    
+    steps:
+      - name: 🕐 Check current time
+        run: echo "🕐 Time: $(date)"
+        
+      - name: 🌐 Ping ${{ matrix.url }}
+        run: |
+          echo "▶️ Starting ping to: ${{ matrix.url }}"
+          
+          # Пробуем сделать запрос с таймаутом
+          response_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "${{ matrix.url }}" || echo "CURL_ERROR")
+          
+          if [ "$response_code" = "200" ] || [ "$response_code" = "201" ] || [ "$response_code" = "302" ]; then
+            echo "✅ SUCCESS: ${{ matrix.url }} - Status: $response_code"
+          else
+            echo "❌ FAILED: ${{ matrix.url }} - Status: $response_code"
+            # НЕ выходим с ошибкой, чтобы другие URL продолжали работать
+          fi
+          
+          echo "---"
+        continue-on-error: true  # Продолжать даже если один URL упал
+        
+      - name: 📊 Log completion
+        run: |
+          echo "🎯 Ping cycle completed for all URLs"
+          echo "⏰ Next run in 3 minutes"

@@ -9,9 +9,9 @@ backup_bp = Blueprint('backup', __name__)
 
 @backup_bp.route('/api/create-backup', methods=['POST'])
 def create_backup_api():
-    """API для создания бэкапа (можно вызывать извне)"""
+    """API для создания бэкапа"""
     try:
-        if create_automatic_backup():
+        if create_persistent_backup():
             return jsonify({
                 'status': 'success', 
                 'message': 'Backup created successfully',
@@ -43,28 +43,28 @@ def backup_status():
     backups.sort(key=lambda x: x['modified'], reverse=True)
     
     return jsonify({
-        'backups': backups[:5],  # Последние 5 бэкапов
+        'backups': backups[:5],
         'total': len(backups),
         'persistent_exists': os.path.exists('backups/persistent_backup.db')
     })
 
-def create_automatic_backup():
-    """Создает автоматический бэкап"""
+def create_persistent_backup():
+    """Создает постоянный бэкап"""
     try:
         source = 'instance/cyberguardian.db'
         if not os.path.exists(source):
             return False
             
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        backup_file = f'backups/auto_backup_{timestamp}.db'
-        
+        # Основной бэкап
+        backup_file = 'backups/persistent_backup.db'
         shutil.copy2(source, backup_file)
         
-        # Сохраняем также как постоянный бэкап
-        persistent_backup = 'backups/persistent_backup.db'
-        shutil.copy2(source, persistent_backup)
+        # Бэкап с timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        auto_backup = f'backups/auto_backup_{timestamp}.db'
+        shutil.copy2(source, auto_backup)
         
-        print(f"💾 Автоматический бэкап создан: {backup_file}")
+        print(f"💾 Бэкап создан: {backup_file}")
         return True
         
     except Exception as e:

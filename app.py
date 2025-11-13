@@ -3,7 +3,6 @@ from flask_compress import Compress
 from dotenv import load_dotenv
 import os
 from datetime import datetime
-import json
 import sqlite3
 import shutil
 
@@ -17,15 +16,14 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'cyberguardian-super-secret-2024')
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     
-    # 🔒 АВТОМАТИЧЕСКАЯ ЗАЩИТА БАЗЫ ДАННЫХ ДЛЯ RENDER
+    # Создаем папки для базы данных и бэкапов
     os.makedirs('instance', exist_ok=True)
     os.makedirs('backups', exist_ok=True)
     
-    # 🔥 ВАЖНО: Используем абсолютный путь для Render
+    # Путь к базе данных
     db_path = os.path.join(os.path.abspath('instance'), 'cyberguardian.db')
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SESSION_TYPE'] = 'filesystem'
     
     # Добавляем сжатие GZIP
     app.config['COMPRESS_ALGORITHM'] = 'gzip'
@@ -66,9 +64,9 @@ def create_app():
     app.register_blueprint(ddos_bp, url_prefix='/ddos')
     app.register_blueprint(forum_bp, url_prefix='/forum')
 
-    # 🔥 АВТОМАТИЧЕСКАЯ ЗАЩИТА ДАННЫХ ПРИ КАЖДОМ ЗАПУСКЕ
+    # 🔥 УМНАЯ ЗАЩИТА ДАННЫХ ПРИ ЗАПУСКЕ
     with app.app_context():
-        auto_protect_database(app)
+        smart_database_protection(app)
 
     # Контекстный процессор для глобальных переменных
     @app.context_processor
@@ -88,14 +86,7 @@ def create_app():
     
     @app.route('/yandex_e87f9664d2590c4e.html')
     def yandex_verify():
-        return """
-        <html>
-        <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        </head>
-        <body>Verification: e87f9664d2590c4e</body>
-        </html>
-        """
+        return render_template('yandex_verify.html')
     
     @app.route('/health')
     def health_check():
@@ -103,12 +94,59 @@ def create_app():
             'status': 'healthy', 
             'timestamp': datetime.now().isoformat(),
             'version': '2.0.0',
-            'services': ['auth', 'education', 'encryption', 'ai', 'threats', 'scanner', 'games']
+            'database': os.path.exists('instance/cyberguardian.db')
         })
     
     @app.route('/about')
     def about():
         return render_template('about.html')
+    
+    @app.route('/api/ping')
+    def ping_service():
+        """Простой пинг для мониторинга"""
+        return jsonify({
+            'status': 'alive',
+            'timestamp': datetime.now().isoformat(),
+            'service': 'CyberGuardian',
+            'version': '2.0.0',
+            'uptime': 'running'
+        })
+
+    @app.route('/api/health-deep')
+    def deep_health_check():
+        """Глубокий пинг с проверкой всех систем"""
+        from database import db
+        from auth.models import User
+        
+        checks = {
+            'web_server': True,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        try:
+            # Проверяем базу данных
+            user_count = User.query.count()
+            checks['database'] = True
+            checks['user_count'] = user_count
+        except Exception as e:
+            checks['database'] = False
+            checks['database_error'] = str(e)
+        
+        # Проверяем файловую систему
+        try:
+            checks['static_files'] = os.path.exists('static')
+            checks['templates'] = os.path.exists('templates')
+        except Exception as e:
+            checks['filesystem_error'] = str(e)
+        
+        status_code = 200 if all(v for k, v in checks.items() if k in ['web_server', 'database']) else 500
+        
+        return jsonify(checks), status_code
+
+    @app.route('/api/bot-friendly')
+    def bot_friendly():
+        """Очень легкий эндпоинт для ботов"""
+        return "OK", 200
     
     @app.route('/sitemap.xml')
     def sitemap():
@@ -125,9 +163,7 @@ def create_app():
     @app.route('/admin', methods=['GET', 'POST'])
     def admin_panel():
         """Админ-панель с защитой от ошибок БД"""
-        
-        # Пароль прямо здесь - легко поменять!
-        ADMIN_PASSWORD = "16795"  # 🔑 Ваш пароль
+        ADMIN_PASSWORD = "16795"
         
         # Выход из системы
         if request.args.get('logout'):
@@ -145,17 +181,13 @@ def create_app():
                 session['admin_login_time'] = datetime.now().isoformat()
                 authenticated = True
             else:
-                return render_template('admin_panel.html', 
-                                    authenticated=False, 
-                                    error=True)
+                return render_template('admin_panel.html', authenticated=False, error=True)
         
         # Если не аутентифицирован, показать форму входа
         if not authenticated:
-            return render_template('admin_panel.html', 
-                                authenticated=False, 
-                                error=False)
+            return render_template('admin_panel.html', authenticated=False, error=False)
         
-        # 🔥 ЗАЩИЩЕННАЯ ЗАГРУЗКА ДАННЫХ
+        # Загрузка данных для админ-панели
         try:
             from auth.models import User
             from education.models import UserProgress
@@ -163,21 +195,15 @@ def create_app():
             
             users = User.query.all()
             
-            # Подготовка данных пользователей
             users_data = []
             for user in users:
                 try:
-                    lessons_completed = UserProgress.query.filter_by(
-                        user_id=user.id, 
-                        completed=True
-                    ).count()
+                    lessons_completed = UserProgress.query.filter_by(user_id=user.id, completed=True).count()
                 except:
                     lessons_completed = 0
                 
                 try:
-                    encryption_count = EncryptionHistory.query.filter_by(
-                        user_id=user.id
-                    ).count()
+                    encryption_count = EncryptionHistory.query.filter_by(user_id=user.id).count()
                 except:
                     encryption_count = 0
                 
@@ -220,6 +246,30 @@ def create_app():
                                 stats={'total_users': 0, 'total_lessons': 0, 'total_encryptions': 0, 'active_users': 0},
                                 error_message=f"Временные проблемы с базой данных: {str(e)}")
 
+    # API для бэкапов
+    @app.route('/api/backup-status')
+    def backup_status():
+        """API для проверки статуса бэкапов"""
+        status = get_backup_status()
+        return jsonify({
+            'status': 'success',
+            'data': status,
+            'timestamp': datetime.now().isoformat()
+        })
+
+    @app.route('/api/create-backup-now', methods=['POST'])
+    def create_backup_now():
+        """Принудительное создание бэкапа"""
+        try:
+            create_persistent_backup()
+            return jsonify({
+                'status': 'success',
+                'message': 'Backup created successfully',
+                'timestamp': datetime.now().isoformat()
+            })
+        except Exception as e:
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
     # API для статистики
     @app.route('/api/stats')
     def get_stats():
@@ -231,93 +281,56 @@ def create_app():
             'ai_questions': 56
         })
     
-    # 🔥 АВТОМАТИЧЕСКИЙ БЭКАП ЧЕРЕЗ API
-    @app.route('/api/auto-backup', methods=['POST'])
-    def auto_backup():
-        """Автоматическое создание бэкапа (для cron jobs)"""
-        try:
-            if create_automatic_backup():
-                return jsonify({'status': 'success', 'message': 'Backup created'})
-            else:
-                return jsonify({'status': 'error', 'message': 'Backup failed'})
-        except Exception as e:
-            return jsonify({'status': 'error', 'message': str(e)})
-    
-    # Обработчик 404 ошибок
+    # Обработчик ошибок
     @app.errorhandler(404)
     def not_found(error):
         return render_template('404.html'), 404
     
-    # Обработчик 500 ошибок
     @app.errorhandler(500)
     def internal_error(error):
         return render_template('500.html'), 500
     
-    # Добавляем кэширование для всех ответов
+    # Кэширование
     @app.after_request
     def add_cache_headers(response):
         if 'static' in request.path:
             response.headers['Cache-Control'] = 'public, max-age=31536000'
         elif response.content_type and 'text/html' in response.content_type:
             response.headers['Cache-Control'] = 'public, max-age=300'
-        elif response.content_type and 'application/json' in response.content_type:
-            response.headers['Cache-Control'] = 'public, max-age=30'
-        
         return response
     
     return app
 
-def auto_protect_database(app):
-    """Автоматическая защита базы данных при каждом запуске"""
+def smart_database_protection(app):
+    """ПРОСТАЯ защита - всегда использует текущие данные"""
     from database import db
-    import sqlite3
     
-    print("🛡️ АВТОМАТИЧЕСКАЯ ЗАЩИТА БАЗЫ ДАННЫХ...")
-    
-    db_path = 'instance/cyberguardian.db'
-    persistent_backup = 'backups/persistent_backup.db'
-    
-    # 1. Создаем папки если их нет
-    os.makedirs('instance', exist_ok=True)
-    os.makedirs('backups', exist_ok=True)
-    
-    # 2. Если есть постоянный бэкап - восстанавливаем из него
-    if os.path.exists(persistent_backup):
-        print("💾 Обнаружен постоянный бэкап, восстанавливаем...")
-        shutil.copy2(persistent_backup, db_path)
-        print("✅ Данные восстановлены из постоянного бэкапа")
-    
-    # 3. Проверяем текущую БД
-    db_exists = os.path.exists(db_path)
-    print(f"📁 Текущая БД существует: {db_exists}")
+    print("🔄 ПРОСТАЯ ЗАЩИТА ДАННЫХ...")
     
     try:
-        if db_exists:
-            # Проверяем целостность существующей БД
-            if check_database_integrity(db_path):
-                print("✅ Текущая БД цела, обновляем структуру...")
-                db.create_all()  # Только обновляем структуру
-                
-                # Создаем бэкап успешной БД
-                create_automatic_backup()
-            else:
-                print("⚠️ Текущая БД повреждена, восстанавливаем...")
-                restore_from_backup_or_create_new(db_path, persistent_backup, db)
-        else:
-            print("🆕 БД не существует, создаем новую...")
-            db.create_all()
-            create_demo_data()
-            create_automatic_backup()
-            
-        # 4. Всегда создаем постоянный бэкап после успешной инициализации
-        if os.path.exists(db_path):
-            shutil.copy2(db_path, persistent_backup)
-            print("💾 Создан постоянный бэкап для следующего деплоя")
-            
+        # ВСЕГДА создаем/обновляем структуру БД
+        db.create_all()
+        print("✅ Структура БД обновлена")
+        
+        # Проверяем, нужно ли добавить демо-данные
+        try:
+            from auth.models import User
+            if User.query.count() == 0:
+                create_demo_data()
+                print("👤 Добавлены демо-данные")
+        except:
+            print("⚠️ Не удалось проверить пользователей")
+        
+        # ВСЕГДА создаем бэкап текущего состояния
+        create_persistent_backup()
+        print("💾 Создан бэкап текущих данных")
+        
+        print("🎯 Данные защищены!")
+        
     except Exception as e:
-        print(f"❌ Ошибка инициализации БД: {e}")
-        # Пробуем восстановить
-        restore_from_backup_or_create_new(db_path, persistent_backup, db)
+        print(f"❌ Ошибка: {e}")
+        # Пробуем просто создать БД
+        db.create_all()
 
 def check_database_integrity(db_path):
     """Проверяет целостность базы данных"""
@@ -330,7 +343,7 @@ def check_database_integrity(db_path):
         result = cursor.fetchone()
         
         # Проверяем основные таблицы
-        required_tables = ['user', 'user_progress', 'encryption_history']
+        required_tables = ['user', 'user_progress', 'encryption_history', 'story_comments']
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
         existing_tables = [row[0] for row in cursor.fetchall()]
         
@@ -338,56 +351,69 @@ def check_database_integrity(db_path):
         for table in required_tables:
             if table not in existing_tables:
                 print(f"❌ Отсутствует таблица: {table}")
+                conn.close()
                 return False
         
         conn.close()
-        return result[0] == 'ok'
+        integrity_ok = result[0] == 'ok'
+        print(f"🔍 Целостность БД: {integrity_ok}")
+        return integrity_ok
         
     except Exception as e:
         print(f"❌ Ошибка проверки целостности: {e}")
         return False
 
-def restore_from_backup_or_create_new(db_path, backup_path, db):
-    """Восстанавливает из бэкапа или создает новую БД"""
-    if os.path.exists(backup_path):
-        print("🔥 Восстанавливаем из бэкапа...")
-        shutil.copy2(backup_path, db_path)
-        db.create_all()  # Обновляем структуру
-        print("✅ Восстановлено из бэкапа")
-    else:
-        print("💥 Бэкапа нет, создаем чистую БД...")
-        db.create_all()
-        create_demo_data()
-
-def create_automatic_backup():
-    """Создает автоматический бэкап"""
+def create_persistent_backup():
+    """Создает постоянный бэкап"""
     try:
         source = 'instance/cyberguardian.db'
         if not os.path.exists(source):
             return False
             
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        backup_file = f'backups/auto_backup_{timestamp}.db'
-        
+        backup_file = 'backups/persistent_backup.db'
         shutil.copy2(source, backup_file)
         
-        # Сохраняем также как постоянный бэкап
-        persistent_backup = 'backups/persistent_backup.db'
-        shutil.copy2(source, persistent_backup)
+        # Также создаем бэкап с timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        auto_backup = f'backups/auto_backup_{timestamp}.db'
+        shutil.copy2(source, auto_backup)
         
-        print(f"💾 Автоматический бэкап создан: {backup_file}")
+        print(f"💾 Бэкап создан: {backup_file}")
         return True
         
     except Exception as e:
         print(f"⚠️ Ошибка создания бэкапа: {e}")
         return False
 
+def get_backup_status():
+    """Возвращает статус бэкапов"""
+    status = {
+        'current_db_exists': os.path.exists('instance/cyberguardian.db'),
+        'persistent_backup_exists': os.path.exists('backups/persistent_backup.db'),
+        'current_db_size': 0,
+        'backup_size': 0,
+        'auto_backups_count': 0
+    }
+    
+    if status['current_db_exists']:
+        status['current_db_size'] = os.path.getsize('instance/cyberguardian.db')
+    
+    if status['persistent_backup_exists']:
+        status['backup_size'] = os.path.getsize('backups/persistent_backup.db')
+    
+    # Считаем авто-бэкапы
+    if os.path.exists('backups'):
+        status['auto_backups_count'] = len([
+            f for f in os.listdir('backups') 
+            if f.startswith('auto_backup_') and f.endswith('.db')
+        ])
+    
+    return status
+
 def create_demo_data():
     """Создание демо-данных только для ПУСТОЙ БД"""
     from database import db
     from auth.models import User
-    from education.models import UserProgress
-    from encryption.models import EncryptionHistory
     
     try:
         # Проверяем, есть ли уже пользователи
@@ -411,10 +437,11 @@ app = create_app()
 
 if __name__ == '__main__':
     print("🚀 CyberGuardian 2.0 запускается...")
-    print("🛡️ АВТОМАТИЧЕСКАЯ ЗАЩИТА ДАННЫХ АКТИВИРОВАНА!")
-    print("🎯 Данные сохранятся при следующем деплое!")
+    print("🛡️ УМНАЯ СИСТЕМА ЗАЩИТЫ ДАННЫХ АКТИВИРОВАНА!")
+    print("💾 Бэкапы создаются автоматически при каждом запуске")
     print("📖 Документация: http://localhost:5000")
     print("🔧 Health check: http://localhost:5000/health")
+    print("🔍 Backup status: http://localhost:5000/api/backup-status")
     print("=" * 60)
     
     app.run(debug=True, host='0.0.0.0', port=5000)
