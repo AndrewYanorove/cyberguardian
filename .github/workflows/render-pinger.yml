@@ -1,52 +1,18 @@
-name: 🚀 Render Pinger Army
+name: ⚡ Render Keeper
 
 on:
   schedule:
-    # Запускать каждые 3 минуты
-    - cron: '*/3 * * * *'
-  # Ручной запуск из интерфейса GitHub
+    - cron: '*/2 * * * *'  # ⚡ КАЖДЫЕ 2 МИНУТЫ!
   workflow_dispatch:
-  # Автозапуск при пуше в главную ветку (опционально)
-  push:
-    branches: [ main, master ]
 
 jobs:
-  ping-render:
+  keep-alive:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-    
-    strategy:
-      matrix:
-        # Меняй на свои реальные URL
-        url:
-          - 'https://cyberguardian-cb1m.onrender.com/'
-          - 'https://cyberguardian-cb1m.onrender.com/education/'
-          - 'https://cyberguardian-cb1m.onrender.com/forum/'
-          - 'https://cyberguardian-cb1m.onrender.com/encryption/'
-          - 'https://cyberguardian-cb1m.onrender.com/ai/'
-    
+    timeout-minutes: 2
     steps:
-      - name: 🕐 Check current time
-        run: echo "🕐 Time: $(date)"
-        
-      - name: 🌐 Ping ${{ matrix.url }}
+      - name: ⚡ Quick Ping
         run: |
-          echo "▶️ Starting ping to: ${{ matrix.url }}"
-          
-          # Пробуем сделать запрос с таймаутом
-          response_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "${{ matrix.url }}" || echo "CURL_ERROR")
-          
-          if [ "$response_code" = "200" ] || [ "$response_code" = "201" ] || [ "$response_code" = "302" ]; then
-            echo "✅ SUCCESS: ${{ matrix.url }} - Status: $response_code"
-          else
-            echo "❌ FAILED: ${{ matrix.url }} - Status: $response_code"
-            # НЕ выходим с ошибкой, чтобы другие URL продолжали работать
-          fi
-          
-          echo "---"
-        continue-on-error: true  # Продолжать даже если один URL упал
-        
-      - name: 📊 Log completion
-        run: |
-          echo "🎯 Ping cycle completed for all URLs"
-          echo "⏰ Next run in 3 minutes"
+          echo "⚡ $(date): Pinging Render..."
+          # ОДИН быстрый запрос к главной странице
+          curl -s --max-time 10 "https://cyberguardian-cb1m.onrender.com/" > /dev/null
+          echo "✅ $(date): Ping successful"
