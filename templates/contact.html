@@ -19,18 +19,18 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h4 class="cyber-text mb-4">📧 Написать нам</h4>
-                        <form>
+                        <form action="mailto:cyberguardian100@gmail.com" method="post" enctype="text/plain">
                             <div class="mb-3">
                                 <label class="form-label cyber-text">Имя</label>
-                                <input type="text" class="form-control cyber-input" required>
+                                <input type="text" name="name" class="form-control cyber-input" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label cyber-text">Email</label>
-                                <input type="email" class="form-control cyber-input" required>
+                                <input type="email" name="email" class="form-control cyber-input" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label cyber-text">Сообщение</label>
-                                <textarea class="form-control cyber-input" rows="5" required></textarea>
+                                <textarea class="form-control cyber-input" name="message" rows="5" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-cyber w-100">
                                 <i class="bi bi-send me-2"></i>Отправить
@@ -41,13 +41,13 @@
                     <div class="col-md-6">
                         <h4 class="cyber-text mb-4">📍 Мы в соцсетях</h4>
                         <div class="d-flex flex-column gap-3">
-                            <a href="#" class="btn btn-cyber-outline">
+                            <a href="https://t.me/+edp2_cec4aE2Y2Fi" target="_blank" class="btn btn-cyber-outline">
                                 <i class="bi bi-telegram me-2"></i>Telegram
                             </a>
-                            <a href="#" class="btn btn-cyber-outline">
+                            <a href="https://github.com/AndrewYanorove/cyberguardian" target="_blank" class="btn btn-cyber-outline">
                                 <i class="bi bi-github me-2"></i>GitHub
                             </a>
-                            <a href="#" class="btn btn-cyber-outline">
+                            <a href="mailto:cyberguardian100@gmail.com" class="btn btn-cyber-outline">
                                 <i class="bi bi-envelope me-2"></i>Email
                             </a>
                         </div>
@@ -65,6 +65,16 @@
                             <p class="cyber-subtext">
                                 Для срочных вопросов используйте Telegram или email
                             </p>
+                        </div>
+
+                        <!-- Прямые ссылки -->
+                        <div class="mt-4">
+                            <h5 class="cyber-text mb-3">🔗 Прямые ссылки</h5>
+                            <div class="cyber-subtext">
+                                <p><i class="bi bi-telegram me-2"></i><a href="https://t.me/+edp2_cec4aE2Y2Fi" target="_blank" class="text-cyber-primary">Наш Telegram-канал</a></p>
+                                <p><i class="bi bi-github me-2"></i><a href="https://github.com/AndrewYanorove/cyberguardian" target="_blank" class="text-cyber-primary">Исходный код на GitHub</a></p>
+                                <p><i class="bi bi-envelope me-2"></i><a href="mailto:cyberguardian100@gmail.com" class="text-cyber-primary">cyberguardian100@gmail.com</a></p>
+                            </div>
                         </div>
                     </div>
                 </div>

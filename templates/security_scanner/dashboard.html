@@ -126,6 +126,30 @@
     gap: 1.5rem;
     margin: 2rem 0;
 }
+
+.dev-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 10;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.card-dev-wrapper {
+    position: relative;
+}
 </style>
 {% endblock %}
 
@@ -143,22 +167,41 @@
         </div>
     </div>
 
+    <!-- Блок "В разработке" -->
+    <div class="alert alert-warning mb-4">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-tools display-6 me-3"></i>
+            <div>
+                <h5 class="alert-heading mb-2">🚧 Модуль в активной разработке</h5>
+                <p class="mb-1">
+                    <strong>Внимание:</strong> Сканер безопасности находится в стадии разработки. 
+                    Используются демо-данные для тестирования интерфейса.
+                </p>
+                <p class="mb-0">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Некоторые функции могут работать нестабильно или быть временно недоступны
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- Быстрое сканирование -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="scanner-card text-center">
+            <div class="scanner-card text-center card-dev-wrapper">
+                <span class="dev-badge">В РАЗРАБОТКЕ</span>
                 <i class="bi bi-speedometer2 display-1 text-cyber-primary mb-3"></i>
                 <h3 class="cyber-text mb-3">Быстрое сканирование системы</h3>
                 <p class="cyber-subtext mb-4">
-                    Проведите комплексную проверку безопасности за 30 секунд
+                    Демо-версия комплексной проверки безопасности
                 </p>
                 <button class="quick-scan-btn" onclick="runQuickScan()">
-                    <i class="bi bi-play-circle me-2"></i>Запустить быстрое сканирование
+                    <i class="bi bi-play-circle me-2"></i>Запустить демо-сканирование
                 </button>
                 
                 <div class="scan-animation" id="quickScanAnimation">
                     <div class="cyber-loader mx-auto mb-3"></div>
-                    <p class="cyber-text">Сканирование системы...</p>
+                    <p class="cyber-text">Демо-сканирование системы...</p>
                     <div class="scan-progress">
                         <div class="progress-bar" id="scanProgress" style="width: 0%"></div>
                     </div>
@@ -177,7 +220,8 @@
             <h3 class="cyber-text mb-4">🔧 Инструменты сканирования</h3>
             <div class="scanner-grid">
                 <!-- Сканер паролей -->
-                <div class="scanner-card">
+                <div class="scanner-card card-dev-wrapper">
+                    <span class="dev-badge">РАБОТАЕТ</span>
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-key display-4 text-cyber-primary me-3"></i>
                         <div>
@@ -191,7 +235,8 @@
                 </div>
 
                 <!-- Сканер email -->
-                <div class="scanner-card">
+                <div class="scanner-card card-dev-wrapper">
+                    <span class="dev-badge">В РАЗРАБОТКЕ</span>
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-envelope display-4 text-cyber-secondary me-3"></i>
                         <div>
@@ -205,7 +250,8 @@
                 </div>
 
                 <!-- Сканер сети -->
-                <div class="scanner-card">
+                <div class="scanner-card card-dev-wrapper">
+                    <span class="dev-badge">В РАЗРАБОТКЕ</span>
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-hdd-network display-4 text-cyber-accent me-3"></i>
                         <div>
@@ -219,7 +265,8 @@
                 </div>
 
                 <!-- Сканер уязвимостей -->
-                <div class="scanner-card">
+                <div class="scanner-card card-dev-wrapper">
+                    <span class="dev-badge">В РАЗРАБОТКЕ</span>
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-bug display-4 text-danger me-3"></i>
                         <div>
@@ -303,8 +350,13 @@ async function runQuickScan() {
         result.style.display = 'block';
         
         result.innerHTML = `
+            <div class="alert alert-info mb-3">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Демо-результаты:</strong> Все данные сгенерированы для тестирования интерфейса
+            </div>
+            
             <h4 class="cyber-text mb-3">
-                <i class="bi bi-check-circle text-success me-2"></i>Сканирование завершено
+                <i class="bi bi-check-circle text-success me-2"></i>Демо-сканирование завершено
             </h4>
             
             <div class="row text-center mb-4">
@@ -350,7 +402,7 @@ async function runQuickScan() {
             
             <div class="text-center mt-4">
                 <button class="btn btn-cyber-outline" onclick="runQuickScan()">
-                    <i class="bi bi-arrow-repeat me-2"></i>Повторить сканирование
+                    <i class="bi bi-arrow-repeat me-2"></i>Повторить демо-сканирование
                 </button>
             </div>
         `;
@@ -362,7 +414,7 @@ async function runQuickScan() {
         result.innerHTML = `
             <div class="alert alert-danger">
                 <i class="bi bi-exclamation-triangle me-2"></i>
-                Ошибка при сканировании. Попробуйте еще раз.
+                Ошибка при сканировании. Функция находится в разработке.
             </div>
         `;
     }
