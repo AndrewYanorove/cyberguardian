@@ -23,6 +23,18 @@
         text-shadow: 0 0 50px var(--cyber-primary-glow);
         margin-bottom: 1rem;
     }
+
+    /* Добавь этот стиль в CSS */
+    .module-card .btn-cyber-outline {
+        min-width: 160px;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 180px;
+    }
     
     .feature-icon-lg.icon-education { color: var(--cyber-primary); }
     .feature-icon-lg.icon-tools { color: var(--cyber-accent); }
@@ -218,6 +230,7 @@
     }
     
     /* --- Стили: Секция "Таймлайн" --- */
+    /* --- Стили: Секция "Таймлайн" --- */
     .timeline-section {
         position: relative;
         padding: 2rem 0;
@@ -233,7 +246,7 @@
         transform: translateX(-50%);
         z-index: 0;
     }
-    
+
     .timeline-item {
         position: relative;
         width: 50%;
@@ -247,7 +260,7 @@
         opacity: 1;
         transform: translateY(0);
     }
-    
+
     .timeline-item:nth-child(odd) {
         left: 0;
         text-align: right;
@@ -256,11 +269,11 @@
         left: 50%;
         text-align: left;
     }
-    
+
     .timeline-dot {
-        content: '';
         position: absolute;
-        top: 2.5rem;
+        top: 50%; /* ИЗМЕНЕНО: центрируем по вертикали */
+        transform: translateY(-50%); /* ИЗМЕНЕНО: центрируем по вертикали */
         width: 20px;
         height: 20px;
         background: var(--cyber-bg-card-dark);
@@ -271,17 +284,15 @@
     }
     .timeline-item:nth-child(odd) .timeline-dot {
         right: -10px;
-        transform: translateX(50%);
     }
     .timeline-item:nth-child(even) .timeline-dot {
         left: -10px;
-        transform: translateX(-50%);
     }
     .timeline-item:hover .timeline-dot {
         background: var(--cyber-primary);
         box-shadow: var(--cyber-glow-primary);
     }
-    
+
     .timeline-content {
         background: var(--cyber-bg-card);
         border: 2px solid var(--cyber-border);
@@ -299,7 +310,7 @@
         color: var(--cyber-primary);
         margin-bottom: 0.5rem;
     }
-    
+
     @media (max-width: 992px) {
         .timeline-section::before {
             left: 20px;
@@ -313,7 +324,7 @@
         }
         .timeline-dot {
             left: 20px !important;
-            transform: translateX(-50%) !important;
+            transform: translateX(-50%) translateY(-50%); /* ИЗМЕНЕНО: двойное центрирование */
         }
     }
     
