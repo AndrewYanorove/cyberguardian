@@ -312,6 +312,9 @@ def smart_database_protection(app):
         db.create_all()
         print("✅ Структура БД обновлена")
         
+        from education.progress_service import ProgressService
+        ProgressService.initialize_course_data()
+        
         # Проверяем, нужно ли добавить демо-данные
         try:
             from auth.models import User

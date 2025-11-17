@@ -1247,6 +1247,9 @@ function processUserData(userData) {
         let videoProgress = 0;
         let videoDuration = 0;
         let currentSublesson = 0;
+        let isLessonCompleted = {{ lesson_progress.completed|tojson|default('false') }};
+        let totalTimeSpent = {{ lesson_progress.time_spent|default(0) }};
+        let startTime = new Date();
 
         // DOM Elements
         const videoPlayer = document.getElementById('videoPlayer');
@@ -1268,7 +1271,57 @@ function processUserData(userData) {
             setupVideoPlayer();
             setupSublessons();
             setupEventListeners();
-            updateProgressRing(0);
+            
+            // Initialize progress from server data
+            const initialProgress = {{ lesson_progress.score|default(0) }};
+            updateProgressRing(initialProgress);
+            updateLessonProgress(initialProgress);
+            
+            // Update completion status if already completed
+            if (isLessonCompleted) {
+                markLessonAsCompletedUI();
+            }
+            
+            // Start tracking time
+            startTimeTracking();
+        }
+
+        // Time tracking
+        function startTimeTracking() {
+            // Send initial time update
+            updateTimeSpent();
+            
+            // Update time every 30 seconds
+            setInterval(updateTimeSpent, 30000);
+        }
+
+        function updateTimeSpent() {
+            const currentTime = new Date();
+            const timeDiff = Math.floor((currentTime - startTime) / 1000); // in seconds
+            
+            // Only send update if user spent significant time
+            if (timeDiff > 10) {
+                fetch('/education/api/lesson/time', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        lesson_id: '{{ lesson.id }}',
+                        time_spent: timeDiff
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        totalTimeSpent += timeDiff;
+                        startTime = currentTime; // Reset timer
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating time:', error);
+                });
+            }
         }
 
         // Video Player functionality
@@ -1417,8 +1470,6 @@ function processUserData(userData) {
         }
 
         // Lesson progress tracking
-        let isLessonCompleted = false;
-
         function updateLessonProgress(progress) {
             const percentage = Math.min(100, Math.max(0, progress));
             lessonProgressBar.style.width = percentage + '%';
@@ -1435,10 +1486,8 @@ function processUserData(userData) {
 
         function markVideoAsCompleted() {
             if (!isLessonCompleted) {
-                isLessonCompleted = true;
-                completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
-                completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
-                showNotification('success', 'Видео просмотрено! Урок завершен.', 'success');
+                // Auto-complete lesson when video is finished
+                completeLessonOnServer(100); // 100% score for watching full video
             }
         }
 
@@ -1481,11 +1530,14 @@ function processUserData(userData) {
                     toggleBtn.innerHTML = '<i class="bi bi-chevron-up"></i>';
                 }
                 
-                // Mark as completed
+                // Mark as completed in UI
                 const sublessonIcon = sublessonItem.querySelector('.sublesson-icon i');
                 sublessonIcon.className = 'bi bi-check-circle-fill';
                 
                 showNotification('info', `Подурок "${sublessonItem.querySelector('h5').textContent}" завершен!`, 'info');
+                
+                // Update progress on server
+                updateLessonProgressOnServer(25); // 25% progress for each sublesson
             }
         }
 
@@ -1622,26 +1674,82 @@ function processUserData(userData) {
             }, 1000);
         }
 
+        // Lesson completion API calls
+        function updateLessonProgressOnServer(progressIncrement) {
+            // This would update progress without marking as completed
+            const currentProgress = parseInt(lessonProgressText.textContent);
+            const newProgress = Math.min(100, currentProgress + progressIncrement);
+            updateLessonProgress(newProgress);
+        }
+
+        function completeLessonOnServer(score = 100) {
+            if (isLessonCompleted) return; // Prevent duplicate submissions
+            
+            fetch('/education/api/lesson/complete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    course_id: '{{ course.id }}',
+                    module_id: '{{ module.id }}',
+                    lesson_id: '{{ lesson.id }}',
+                    score: score,
+                    time_spent: totalTimeSpent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    markLessonAsCompletedUI();
+                    showNotification('success', 'Урок завершен! Прогресс сохранен.', 'success');
+                    
+                    // Update course progress if available
+                    if (data.progress) {
+                        console.log('Общий прогресс курса:', data.progress + '%');
+                    }
+                } else {
+                    showNotification('error', 'Ошибка при сохранении прогресса: ' + data.error, 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error completing lesson:', error);
+                showNotification('error', 'Ошибка сети при сохранении прогресса', 'danger');
+            });
+        }
+
+        function markLessonAsCompletedUI() {
+            isLessonCompleted = true;
+            completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
+            completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
+            updateLessonProgress(100);
+            
+            // Disable complete button to prevent duplicate submissions
+            completeLessonBtn.disabled = true;
+            completeLessonBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Урок завершен';
+            completeLessonBtn.classList.remove('btn-cyber-success');
+            completeLessonBtn.classList.add('btn-secondary');
+            
+            // Enable next lesson button if it exists
+            const nextLessonBtn = document.querySelector('a[href*="/lesson/"]');
+            if (nextLessonBtn) {
+                nextLessonBtn.classList.add('pulse');
+            }
+        }
+
         // Lesson actions
         function completeLesson() {
-            if (!isVideoLoaded) {
-                showNotification('warning', 'Пожалуйста, посмотрите видео перед завершением урока', 'warning');
+            if (isLessonCompleted) {
+                showNotification('info', 'Урок уже завершен!', 'info');
                 return;
             }
 
+            if (!isVideoLoaded) {
+                showNotification('warning', 'Рекомендуем посмотреть видео перед завершением урока', 'warning');
+            }
+
             if (confirm('Вы уверены, что хотите отметить урок как завершенный?')) {
-                isLessonCompleted = true;
-                completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
-                completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
-                updateLessonProgress(100);
-                
-                showNotification('success', 'Урок завершен! Переходите к следующему.', 'success');
-                
-                // Enable next lesson button if it exists
-                const nextLessonBtn = document.querySelector('a[href*="/lesson/"]');
-                if (nextLessonBtn) {
-                    nextLessonBtn.classList.add('pulse');
-                }
+                completeLessonOnServer(100);
             }
         }
 
@@ -1668,6 +1776,11 @@ function processUserData(userData) {
 
         // Notification system
         function showNotification(title, message, type) {
+            // Remove existing notifications
+            document.querySelectorAll('.alert.position-fixed').forEach(alert => {
+                alert.remove();
+            });
+
             const notification = document.createElement('div');
             notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
             notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
@@ -1718,6 +1831,14 @@ function processUserData(userData) {
                         volumeBtn.innerHTML = currentVideo.muted ? 
                             '<i class="bi bi-volume-mute-fill"></i>' : 
                             '<i class="bi bi-volume-up-fill"></i>';
+                    }
+                    break;
+                case 'c':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        if (!isLessonCompleted) {
+                            completeLesson();
+                        }
                     }
                     break;
             }

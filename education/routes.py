@@ -1,38 +1,31 @@
 from flask import (
-    Blueprint,
-    render_template,
-    request,
-    jsonify,
-    session,
-    redirect,
-    url_for,
-    current_app
+    Blueprint, render_template, request, jsonify, session, 
+    redirect, url_for, current_app
 )
 from datetime import datetime
-import random
 import os
 from werkzeug.utils import secure_filename
+from flask_login import current_user, login_required
 
 from .courses_data import get_course, get_all_courses, get_course_lesson, get_course_module
 from .course_materials import get_quiz, get_practice
+from .progress_service import ProgressService
 
 education_bp = Blueprint("education", __name__, url_prefix="/education")
-
-# Настройки загрузки файлов
-ALLOWED_EXTENSIONS = {'mp4', 'mov', 'avi', 'mkv', 'webm'}
-MAX_FILE_SIZE = 500 * 1024 * 1024  # 500MB
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @education_bp.route("/")
 def education_home():
     """Главная страница модуля обучения"""
     courses_data = get_all_courses()
     
-    courses = [
-        {
+    courses = []
+    for course_id, course_data in courses_data.items():
+        if current_user.is_authenticated:
+            progress = ProgressService.get_course_progress(current_user.id, course_id)
+        else:
+            progress = 0
+            
+        courses.append({
             "id": course_id,
             "title": course_data["title"],
             "description": course_data["description"],
@@ -40,10 +33,8 @@ def education_home():
             "rating": course_data["rating"],
             "students_count": course_data["students_count"],
             "estimated_time": course_data["estimated_time"],
-            "progress": random.randint(0, 100),
-        }
-        for course_id, course_data in courses_data.items()
-    ]
+            "progress": progress,
+        })
 
     return render_template(
         "education/education_home.html", 
@@ -52,28 +43,43 @@ def education_home():
     )
 
 @education_bp.route("/course/<course_id>")
+@login_required
 def course_page(course_id):
-    """Страница курса с подробным содержанием"""
+    """Страница курса с реальным прогрессом"""
     course_data = get_course(course_id)
     if not course_data:
         return "Страница не найдена", 404
 
-    # Симуляция прогресса пользователя
+    # Получаем реальный прогресс пользователя
+    progress_percentage = ProgressService.get_course_progress(current_user.id, course_id)
+    user_progress = ProgressService.get_user_progress(current_user.id, course_id)
+    
+    # Считаем завершенные уроки
+    total_lessons = sum(len(module['lessons']) for module in course_data['modules'])
+    completed_lessons = sum(1 for p in user_progress.values() if p['completed'])
+    
     progress = {
-        "percentage": random.randint(0, 100),
-        "completed": random.randint(0, 20),
-        "in_progress": random.randint(0, 5),
-        "total": 25,
+        "percentage": progress_percentage,
+        "completed": completed_lessons,
+        "in_progress": 0,
+        "total": total_lessons,
     }
 
-    # Добавляем информацию о завершении уроков
+    # Добавляем информацию о завершении уроков из БД
     for module in course_data["modules"]:
-        module["completed_lessons"] = random.randint(0, len(module["lessons"]))
+        module_completed = 0
         for lesson in module["lessons"]:
-            lesson["completed"] = random.choice([True, False])
+            lesson_progress = user_progress.get(lesson['id'])
+            lesson["completed"] = lesson_progress['completed'] if lesson_progress else False
+            if lesson["completed"]:
+                module_completed += 1
+            
+            # Обрабатываем подуроки
             if "sublessons" in lesson:
                 for sublesson in lesson["sublessons"]:
-                    sublesson["completed"] = random.choice([True, False])
+                    sublesson["completed"] = lesson["completed"]
+        
+        module["completed_lessons"] = module_completed
 
     return render_template(
         "education/course.html",
@@ -83,8 +89,9 @@ def course_page(course_id):
     )
 
 @education_bp.route("/course/<course_id>/lesson/<lesson_id>")
+@login_required
 def lesson_page(course_id, lesson_id):
-    """Страница урока"""
+    """Страница урока с отслеживанием прогресса"""
     lesson_data, module_data = get_course_lesson(course_id, lesson_id)
     if not lesson_data:
         return "Страница не найдена", 404
@@ -104,6 +111,9 @@ def lesson_page(course_id, lesson_id):
         all_lessons[current_index + 1] if current_index < len(all_lessons) - 1 else None
     )
 
+    # Получаем прогресс текущего урока
+    lesson_progress = ProgressService.get_lesson_progress(current_user.id, lesson_id)
+
     return render_template(
         "education/lesson.html",
         course=course_data,
@@ -111,8 +121,161 @@ def lesson_page(course_id, lesson_id):
         lesson=lesson_data,
         prev_lesson=prev_lesson,
         next_lesson=next_lesson,
+        lesson_progress=lesson_progress
     )
 
+@education_bp.route("/api/lesson/complete", methods=["POST"])
+@login_required
+def mark_lesson_complete():
+    """API для отметки урока как завершенного"""
+    data = request.get_json()
+    
+    course_id = data.get('course_id')
+    module_id = data.get('module_id')
+    lesson_id = data.get('lesson_id')
+    score = data.get('score', 100)
+    time_spent = data.get('time_spent', 0)
+    
+    if not all([course_id, module_id, lesson_id]):
+        return jsonify({'error': 'Missing required parameters'}), 400
+    
+    success = ProgressService.mark_lesson_completed(
+        current_user.id, course_id, module_id, lesson_id, score, time_spent
+    )
+    
+    if success:
+        return jsonify({
+            'success': True,
+            'message': 'Прогресс сохранен',
+            'progress': ProgressService.get_course_progress(current_user.id, course_id)
+        })
+    else:
+        return jsonify({'error': 'Failed to save progress'}), 500
+
+@education_bp.route("/api/lesson/time", methods=["POST"])
+@login_required
+def update_lesson_time():
+    """API для обновления времени, проведенного в уроке"""
+    data = request.get_json()
+    
+    lesson_id = data.get('lesson_id')
+    time_spent = data.get('time_spent', 0)
+    
+    if not lesson_id:
+        return jsonify({'error': 'Lesson ID is required'}), 400
+    
+    success = ProgressService.update_lesson_time(current_user.id, lesson_id, time_spent)
+    
+    if success:
+        return jsonify({'success': True})
+    else:
+        return jsonify({'error': 'Failed to update time'}), 500
+
+@education_bp.route("/api/quiz/complete", methods=["POST"])
+@login_required
+def mark_quiz_complete():
+    """API для отметки теста как завершенного и обновления прогресса"""
+    data = request.get_json()
+    
+    course_id = data.get('course_id')
+    module_id = data.get('module_id')
+    lesson_id = data.get('lesson_id')
+    score = data.get('score', 0)
+    passed = data.get('passed', False)
+    
+    if not all([course_id, module_id, lesson_id]):
+        return jsonify({'error': 'Missing required parameters'}), 400
+    
+    # Если тест пройден успешно, отмечаем урок как завершенный
+    if passed:
+        success = ProgressService.mark_lesson_completed(
+            current_user.id, course_id, module_id, lesson_id, score, time_spent=0
+        )
+    else:
+        # Если не пройден, просто обновляем прогресс без завершения
+        success = ProgressService.update_lesson_score(
+            current_user.id, lesson_id, score
+        )
+    
+    if success:
+        return jsonify({
+            'success': True,
+            'message': 'Результаты теста сохранены',
+            'progress': ProgressService.get_course_progress(current_user.id, course_id)
+        })
+    else:
+        return jsonify({'error': 'Failed to save quiz results'}), 500
+
+@education_bp.route("/course/<course_id>/certificate")
+@login_required
+def course_certificate(course_id):
+    """Страница сертификата курса"""
+    course_data = get_course(course_id)
+    if not course_data:
+        return "Страница не найдена", 404
+
+    # Получаем реальный сертификат из БД
+    certificates = ProgressService.get_user_certificates(current_user.id)
+    user_certificate = next((c for c in certificates if c.course_id == course_id), None)
+    
+    if not user_certificate:
+        return "Сертификат не найден. Завершите курс для получения сертификата.", 404
+
+    certificate_data = {
+        "id": user_certificate.certificate_id,
+        "course_name": course_data["title"],
+        "student_name": current_user.username,
+        "completion_date": user_certificate.completion_date.strftime("%d.%m.%Y"),
+        "score": user_certificate.score,
+    }
+
+    return render_template(
+        "education/certificate.html", 
+        course=course_data, 
+        certificate=certificate_data
+    )
+
+@education_bp.route("/certificates")
+@login_required
+def certificates():
+    """Страница сертификатов пользователя"""
+    user_certificates = ProgressService.get_user_certificates(current_user.id)
+    
+    certificates_data = []
+    for cert in user_certificates:
+        course_data = get_course(cert.course_id)
+        if course_data:
+            certificates_data.append({
+                "id": cert.id,
+                "course_name": course_data["title"],
+                "issue_date": cert.completion_date.strftime("%Y-%m-%d"),
+                "expiry_date": (cert.completion_date.replace(year=cert.completion_date.year + 2)).strftime("%Y-%m-%d"),
+                "certificate_url": url_for('education.course_certificate', course_id=cert.course_id),
+                "verified": True,
+            })
+    
+    return render_template("education/certificates.html", certificates=certificates_data)
+
+@education_bp.route("/achievements")
+@login_required
+def achievements():
+    """Страница достижений пользователя"""
+    user_achievements = ProgressService.get_user_achievements(current_user.id)
+    
+    achievements_data = []
+    for achievement in user_achievements:
+        achievements_data.append({
+            "id": achievement.id,
+            "name": achievement.achievement_name,
+            "description": achievement.achievement_description,
+            "icon": achievement.icon or "bi-emoji-smile",
+            "earned": True,
+            "earned_date": achievement.earned_date.strftime("%Y-%m-%d"),
+        })
+    
+    return render_template("education/achievements.html", achievements=achievements_data)
+
+# Остальные маршруты остаются без изменений
 @education_bp.route("/course/<course_id>/module/<module_id>")
 def module_detail(course_id, module_id):
     """Детальная страница модуля"""
@@ -142,6 +305,7 @@ def module_detail(course_id, module_id):
     )
 
 @education_bp.route("/course/<course_id>/quiz/<lesson_id>")
+@login_required
 def lesson_quiz(course_id, lesson_id):
     """Страница теста урока"""
     quiz_data = get_quiz(lesson_id)
@@ -151,15 +315,20 @@ def lesson_quiz(course_id, lesson_id):
     course_data = get_course(course_id)
     lesson_data, module_data = get_course_lesson(course_id, lesson_id)
     
+    # Получаем прогресс урока
+    lesson_progress = ProgressService.get_lesson_progress(current_user.id, lesson_id)
+    
     return render_template(
         "education/quiz.html",
         course=course_data,
         lesson=lesson_data,
         module=module_data,
         quiz=quiz_data,
+        lesson_progress=lesson_progress
     )
 
 @education_bp.route("/course/<course_id>/practice/<lesson_id>")
+@login_required
 def lesson_practice(course_id, lesson_id):
     """Страница практического задания"""
     practice_data = get_practice(lesson_id)
@@ -169,18 +338,25 @@ def lesson_practice(course_id, lesson_id):
     course_data = get_course(course_id)
     lesson_data, module_data = get_course_lesson(course_id, lesson_id)
     
+    # Получаем прогресс урока
+    lesson_progress = ProgressService.get_lesson_progress(current_user.id, lesson_id)
+    
     return render_template(
         "education/practice.html",
         course=course_data,
         lesson=lesson_data,
         module=module_data,
         practice=practice_data,
+        lesson_progress=lesson_progress
     )
 
 @education_bp.route("/api/quiz/submit", methods=["POST"])
+@login_required
 def submit_quiz():
     """API для отправки результатов теста"""
     data = request.get_json()
+    course_id = data.get('course_id')
+    module_id = data.get('module_id')
     lesson_id = data.get('lesson_id')
     answers = data.get('answers', {})
     
@@ -215,6 +391,14 @@ def submit_quiz():
             total_score += 1
     
     percentage = (total_score / max_score) * 100 if max_score > 0 else 0
+    passed = percentage >= 70
+    
+    # Сохраняем результаты теста в прогресс
+    if course_id and module_id:
+        success = ProgressService.mark_quiz_completed(
+            current_user.id, course_id, module_id, lesson_id, 
+            total_score, max_score, passed
+        )
     
     return jsonify({
         'success': True,
@@ -222,94 +406,33 @@ def submit_quiz():
         'max_score': max_score,
         'percentage': percentage,
         'results': results,
-        'passed': percentage >= 70
+        'passed': passed,
+        'progress': ProgressService.get_course_progress(current_user.id, course_id) if course_id else 0
     })
 
-@education_bp.route("/course/<course_id>/certificate")
-def course_certificate(course_id):
-    """Страница сертификата курса"""
-    course_data = get_course(course_id)
-    if not course_data:
-        return "Страница не найдена", 404
-
-    certificate_data = {
-        "id": f"CERT-{random.randint(1000, 9999)}",
-        "course_name": course_data["title"],
-        "student_name": "Иван Иванов",
-        "completion_date": datetime.now().strftime("%d.%m.%Y"),
-        "score": random.randint(85, 98),
-    }
-
-    return render_template(
-        "education/certificate.html", 
-        course=course_data, 
-        certificate=certificate_data
+@education_bp.route("/api/practice/complete", methods=["POST"])
+@login_required
+def mark_practice_complete():
+    """API для отметки практического задания как завершенного"""
+    data = request.get_json()
+    
+    course_id = data.get('course_id')
+    module_id = data.get('module_id')
+    lesson_id = data.get('lesson_id')
+    score = data.get('score', 100)
+    
+    if not all([course_id, module_id, lesson_id]):
+        return jsonify({'error': 'Missing required parameters'}), 400
+    
+    success = ProgressService.mark_lesson_completed(
+        current_user.id, course_id, module_id, lesson_id, score, time_spent=0
     )
-
-@education_bp.route("/certificates")
-def certificates():
-    """Страница сертификатов пользователя"""
-    certificates_data = [
-        {
-            "id": 1,
-            "course_name": "Основы кибербезопасности",
-            "issue_date": "2024-01-15",
-            "expiry_date": "2026-01-15",
-            "certificate_url": "#",
-            "verified": True,
-        }
-    ]
-    return render_template("education/certificates.html", certificates=certificates_data)
-
-@education_bp.route("/achievements")
-def achievements():
-    """Страница достижений пользователя"""
-    achievements_data = [
-        {
-            "id": 1,
-            "name": "Первый шаг",
-            "description": "Завершите первый урок",
-            "icon": "bi-emoji-smile",
-            "earned": True,
-            "earned_date": "2024-01-10",
-        }
-    ]
-    return render_template("education/achievements.html", achievements=achievements_data)
-
-@education_bp.route("/course/<course_id>/video_intro")
-def course_video_intro(course_id):
-    """Страница с вступительным видео курса"""
-    course_data = get_course(course_id)
-    if not course_data:
-        return "Страница не найдена", 404
     
-    return render_template(
-        "education/video_intro.html",
-        course=course_data
-    )
-
-@education_bp.route("/api/generate_password")
-def generate_password_api():
-    """API для генерации надежных паролей"""
-    import random
-    import string
-    
-    adjectives = ["Быстрый", "Сильный", "Умный", "Смелый", "Ловкий", "Яркий", "Тихий", "Громкий"]
-    nouns = ["Тигр", "Дракон", "Феникс", "Единорог", "Волк", "Орел", "Дельфин", "Ястреб"]
-    symbols = ["!", "@", "#", "$", "%", "&", "*"]
-    
-    adjective = random.choice(adjectives)
-    noun = random.choice(nouns)
-    number = random.randint(10, 99)
-    symbol = random.choice(symbols)
-    
-    password = f"{adjective}{noun}{number}{symbol}"
-    
-    # Альтернативный вариант
-    characters = string.ascii_letters + string.digits + "!@#$%&*"
-    alt_password = ''.join(random.choice(characters) for i in range(16))
-    
-    return jsonify({
-        'simple': password,
-        'strong': alt_password
-    })
+    if success:
+        return jsonify({
+            'success': True,
+            'message': 'Практическое задание завершено',
+            'progress': ProgressService.get_course_progress(current_user.id, course_id)
+        })
+    else:
+        return jsonify({'error': 'Failed to save practice results'}), 500
