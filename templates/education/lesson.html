@@ -854,15 +854,16 @@
                             <i class="bi bi-play-circle-fill" style="font-size: 4rem; color: var(--cyber-primary); margin-bottom: 1rem;"></i>
                             <h4 class="cyber-text-bright mb-2">Видео материал урока</h4>
                             <p class="cyber-subtext text-center px-4">
-                                Загрузите видеофайл или используйте ссылку для просмотра обучающего материала
+                                Вставьте ссылку на видео для просмотра обучающего материала
                             </p>
-                            <div class="mt-3">
-                                <button class="btn btn-cyber-outline me-2" onclick="document.getElementById('videoFileInput').click()">
-                                    <i class="bi bi-upload me-2"></i>Загрузить видео
-                                </button>
-                                <button class="btn btn-cyber-outline" onclick="showVideoUrlModal()">
-                                    <i class="bi bi-link-45deg me-2"></i>Использовать ссылку
-                                </button>
+                            <div class="mt-3 w-75">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="videoUrlInput" placeholder="https://www.youtube.com/watch?v=...">
+                                    <button class="btn btn-cyber" id="loadVideoBtn">
+                                        <i class="bi bi-play-fill me-2"></i>Загрузить
+                                    </button>
+                                </div>
+                                <small class="cyber-subtext mt-2">Поддерживаются: YouTube, Vimeo и другие популярные платформы</small>
                             </div>
                         </div>
                     </div>
@@ -951,7 +952,7 @@ function processUserData(userData) {
                             </div>
                         {% else %}
                             <div class="text-center py-5">
-                                <i class="bi bi-journal-x" style="font-size: 3rem; color: var(--cyber-subtext); margin-bottom: 1rem;"></i>
+                                <i class="bi bi-journal-x" style="font-size: 3rem; color: var(--cyber-text-light); margin-bottom: 1rem;"></i>
                                 <h4 class="cyber-text mb-3">Контент урока готовится</h4>
                                 <p class="cyber-subtext">
                                     Материалы для этого урока находятся в разработке. Скоро здесь появится полезный и интересный контент.
@@ -1053,8 +1054,8 @@ function processUserData(userData) {
                         <div class="progress-text" id="lessonProgressText">0%</div>
                     </div>
                     
-                    <div class="cyber-progress mb-2">
-                        <div class="cyber-progress-bar" id="lessonProgressBar" style="width: 0%"></div>
+                    <div class="progress mb-2" style="height: 10px;">
+                        <div class="progress-bar bg-primary" id="lessonProgressBar" style="width: 0%"></div>
                     </div>
                     <div class="d-flex justify-content-between">
                         <small class="cyber-subtext">Прогресс просмотра</small>
@@ -1062,129 +1063,56 @@ function processUserData(userData) {
                     </div>
                 </div>
 
-                <!-- Video Upload -->
-                <div class="sidebar-card">
-                    <h5 class="cyber-text-bright mb-4">
-                        <i class="bi bi-cloud-upload me-2"></i>Загрузка видео
-                    </h5>
-                    
-                    <div class="upload-area" id="uploadArea">
-                        <i class="bi bi-cloud-upload" style="font-size: 2.5rem; color: var(--cyber-primary); margin-bottom: 1rem;"></i>
-                        <h6 class="cyber-text-bright mb-2">Перетащите видео файл сюда</h6>
-                        <p class="cyber-subtext mb-3">или</p>
-                        <input type="file" class="d-none" id="videoFileInput" accept="video/*">
-                        <button class="btn btn-cyber-outline btn-sm" onclick="document.getElementById('videoFileInput').click()">
-                            Выберите файл
-                        </button>
-                        <p class="cyber-subtext mt-3 mb-0">
-                            <small>MP4, WebM, MOV до 500MB</small>
-                        </p>
-                    </div>
-
-                    <div class="mt-3">
-                        <input type="text" class="form-control mb-2" id="videoUrl" 
-                               placeholder="Или вставьте ссылку на видео" 
-                               style="background: var(--cyber-bg-card-light); border-color: var(--cyber-border); color: var(--cyber-text);">
-                        <button class="btn btn-cyber w-100" id="loadVideoBtn">
-                            <i class="bi bi-link-45deg me-2"></i>Загрузить по ссылке
-                        </button>
-                    </div>
-                </div>
-
                 <!-- Video Library -->
                 <div class="sidebar-card">
                     <h5 class="cyber-text-bright mb-4">
-                        <i class="bi bi-collection-play me-2"></i>Библиотека видео
+                        <i class="bi bi-collection-play me-2"></i>Выберите видео под ваш модуль:
                     </h5>
                     
                     <div class="video-library">
-                        <div class="video-item active" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4">
+                        <div class="video-item active" data-video-url="https://www.youtube.com/watch?v=pAUzloZkxWE&t=2s">
                             <div class="video-thumbnail">
                                 <i class="bi bi-play-circle-fill"></i>
                             </div>
                             <div>
-                                <div class="cyber-text-bright small">Основы кибербезопасности</div>
-                                <div class="cyber-subtext smaller">Введение в триаду CIA</div>
+                                <div class="cyber-text-bright small">Модуль 1: 
+                                    Пароли</div>
+                                <div class="cyber-subtext smaller">Надёжный пароль.</div>
                             </div>
                         </div>
-                        <div class="video-item" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4">
+                        
+                    <div class="video-item" data-video-url="https://www.youtube.com/watch?v=6VZL0DJWr7g">
                             <div class="video-thumbnail">
-                                <i class="bi bi-play-circle-fill"></i>
+                                <i class="bi bi-play-circle"></i>
                             </div>
                             <div>
-                                <div class="cyber-text-bright small">Типы киберугроз</div>
-                                <div class="cyber-subtext smaller">Вирусы, трояны, ransomware</div>
+                                <div class="cyber-text-bright small">Модуль 2: Фишинг</div>
+                                <div class="cyber-subtext smaller">Фишинг: как мошенники крадут деньги и данные</div>
                             </div>
                         </div>
-                        <div class="video-item" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4">
+                    <div class="video-library">
+                        <div class="video-item active" data-video-url="https://www.youtube.com/watch?v=Gowz4lqalrA">
                             <div class="video-thumbnail">
                                 <i class="bi bi-play-circle-fill"></i>
                             </div>
                             <div>
-                                <div class="cyber-text-bright small">Методы защиты</div>
-                                <div class="cyber-subtext smaller">Шифрование и аутентификация</div>
+                                <div class="cyber-text-bright small">Модуль 3: Методы защиты</div>
+                                <div class="cyber-subtext smaller">Как защититься от вредоносного программного обеспечения</div>
+                            </div>
+                        </div>
+                    <div class="video-item" data-video-url="https://www.youtube.com/watch?v=SOuHis0hXJ0">
+                            <div class="video-thumbnail">
+                                <i class="bi bi-play-circle"></i>
+                            </div>
+                            <div>
+                                <div class="cyber-text-bright small">Модуль 4: Что можно и нельзя публиковать в соцсетях</div>
+                                <div class="cyber-subtext smaller">Главное о правилах безопасности в социальных сетях</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Lesson Resources -->
-                <div class="sidebar-card">
-                    <h5 class="cyber-text-bright mb-4">
-                        <i class="bi bi-download me-2"></i>Ресурсы урока
-                    </h5>
-                    
-                    <ul class="resources-list">
-                        <li class="resource-item">
-                            <div class="resource-icon">
-                                <i class="bi bi-file-pdf"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="cyber-text-bright mb-1">Презентация урока</h6>
-                                <p class="cyber-subtext mb-0">PDF • 2.4 MB</p>
-                            </div>
-                            <button class="btn btn-cyber-outline btn-sm" onclick="downloadResource('presentation')">
-                                <i class="bi bi-download"></i>
-                            </button>
-                        </li>
-                        <li class="resource-item">
-                            <div class="resource-icon">
-                                <i class="bi bi-file-text"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="cyber-text-bright mb-1">Конспект урока</h6>
-                                <p class="cyber-subtext mb-0">DOCX • 1.1 MB</p>
-                            </div>
-                            <button class="btn btn-cyber-outline btn-sm" onclick="downloadResource('notes')">
-                                <i class="bi bi-download"></i>
-                            </button>
-                        </li>
-                        <li class="resource-item">
-                            <div class="resource-icon">
-                                <i class="bi bi-file-code"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="cyber-text-bright mb-1">Примеры кода</h6>
-                                <p class="cyber-subtext mb-0">ZIP • 3.2 MB</p>
-                            </div>
-                            <button class="btn btn-cyber-outline btn-sm" onclick="downloadResource('code')">
-                                <i class="bi bi-download"></i>
-                            </button>
-                        </li>
-                        <li class="resource-item">
-                            <div class="resource-icon">
-                                <i class="bi bi-link-45deg"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="cyber-text-bright mb-1">Дополнительные материалы</h6>
-                                <p class="cyber-subtext mb-0">Ссылки и ресурсы</p>
-                            </div>
-                            <button class="btn btn-cyber-outline btn-sm" onclick="showAdditionalResources()">
-                                <i class="bi bi-box-arrow-up-right"></i>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+    
 
                 <!-- Quick Actions -->
                 <div class="sidebar-card">
@@ -1202,37 +1130,7 @@ function processUserData(userData) {
                         <button class="btn btn-cyber-outline text-start" onclick="shareLesson()">
                             <i class="bi bi-share me-2"></i>Поделиться уроком
                         </button>
-                        <button class="btn btn-cyber-outline text-start" onclick="printLesson()">
-                            <i class="bi bi-printer me-2"></i>Распечатать материал
-                        </button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Video URL Modal -->
-    <div class="modal fade" id="videoUrlModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content" style="background: var(--cyber-bg-card); border: 2px solid var(--cyber-border);">
-                <div class="modal-header">
-                    <h5 class="modal-title cyber-text-bright">
-                        <i class="bi bi-link-45deg me-2"></i>Загрузка видео по ссылке
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="cyber-text mb-3">Введите ссылку на видео (YouTube, Vimeo или прямой URL):</p>
-                    <input type="url" class="form-control mb-3" id="modalVideoUrl" 
-                           placeholder="https://www.youtube.com/watch?v=..." 
-                           style="background: var(--cyber-bg-card-light); border-color: var(--cyber-border); color: var(--cyber-text);">
-                    <div class="form-text cyber-subtext">
-                        Поддерживаются: YouTube, Vimeo, MP4, WebM, MOV ссылки
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-cyber-outline" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-cyber" onclick="loadVideoFromModal()">Загрузить</button>
                 </div>
             </div>
         </div>
@@ -1253,6 +1151,8 @@ function processUserData(userData) {
 
         // DOM Elements
         const videoPlayer = document.getElementById('videoPlayer');
+        const videoUrlInput = document.getElementById('videoUrlInput');
+        const loadVideoBtn = document.getElementById('loadVideoBtn');
         const playPauseBtn = document.getElementById('playPauseBtn');
         const videoProgressBar = document.getElementById('videoProgress');
         const videoProgressFilled = document.getElementById('videoProgressFilled');
@@ -1342,24 +1242,11 @@ function processUserData(userData) {
             } else if (videoUrl.includes('vimeo.com')) {
                 loadVimeoVideo(videoUrl);
             } else {
-                loadDirectVideo(videoUrl);
+                loadEmbedVideo(videoUrl);
             }
             
             isVideoLoaded = true;
-            showNotification('success', 'Видео загружено и готово к просмотру!', 'success');
-        }
-
-        function loadDirectVideo(videoUrl) {
-            const video = document.createElement('video');
-            video.src = videoUrl;
-            video.controls = false;
-            video.style.width = '100%';
-            video.style.height = '100%';
-            video.style.objectFit = 'contain';
-            
-            setupVideoEvents(video);
-            videoPlayer.appendChild(video);
-            currentVideo = video;
+            showNotification('success', 'Видео загружено и готово к просмотру!');
         }
 
         function loadYouTubeVideo(videoUrl) {
@@ -1383,6 +1270,18 @@ function processUserData(userData) {
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+            iframe.allowFullscreen = true;
+            
+            videoPlayer.appendChild(iframe);
+            currentVideo = iframe;
+            document.querySelector('.video-controls').style.display = 'none';
+        }
+
+        function loadEmbedVideo(videoUrl) {
+            const iframe = document.createElement('iframe');
+            iframe.src = videoUrl;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
             iframe.allowFullscreen = true;
             
             videoPlayer.appendChild(iframe);
@@ -1534,29 +1433,22 @@ function processUserData(userData) {
                 const sublessonIcon = sublessonItem.querySelector('.sublesson-icon i');
                 sublessonIcon.className = 'bi bi-check-circle-fill';
                 
-                showNotification('info', `Подурок "${sublessonItem.querySelector('h5').textContent}" завершен!`, 'info');
+                showNotification('info', `Подурок "${sublessonItem.querySelector('h5').textContent}" завершен!`);
                 
                 // Update progress on server
                 updateLessonProgressOnServer(25); // 25% progress for each sublesson
             }
         }
 
-        // File upload functionality
+        // Event listeners
         function setupEventListeners() {
-            // File upload
-            document.getElementById('videoFileInput').addEventListener('change', function(e) {
-                if (e.target.files.length > 0) {
-                    handleFileUpload(e.target.files[0]);
-                }
-            });
-
             // URL upload
-            document.getElementById('loadVideoBtn').addEventListener('click', function() {
-                const url = document.getElementById('videoUrl').value;
+            loadVideoBtn.addEventListener('click', function() {
+                const url = videoUrlInput.value;
                 if (url) {
                     loadVideo(url);
                 } else {
-                    showNotification('error', 'Пожалуйста, введите ссылку на видео', 'danger');
+                    showNotification('error', 'Пожалуйста, введите ссылку на видео');
                 }
             });
 
@@ -1570,26 +1462,6 @@ function processUserData(userData) {
                 });
             });
 
-            // Drag and drop
-            const uploadArea = document.getElementById('uploadArea');
-            uploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-            
-            uploadArea.addEventListener('dragleave', function() {
-                uploadArea.classList.remove('dragover');
-            });
-            
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    handleFileUpload(files[0]);
-                }
-            });
-
             // Video controls
             playPauseBtn.addEventListener('click', togglePlayPause);
             videoProgressBar.addEventListener('click', seekVideo);
@@ -1599,41 +1471,9 @@ function processUserData(userData) {
             completeLessonBtn.addEventListener('click', completeLesson);
         }
 
-        function handleFileUpload(file) {
-            if (file && file.type.startsWith('video/')) {
-                if (file.size > 500 * 1024 * 1024) {
-                    showNotification('error', 'Файл слишком большой. Максимальный размер: 500MB', 'danger');
-                    return;
-                }
-                
-                const videoUrl = URL.createObjectURL(file);
-                loadVideo(videoUrl);
-                showNotification('success', `Видео "${file.name}" успешно загружено!`, 'success');
-            } else {
-                showNotification('error', 'Пожалуйста, выберите видео файл', 'danger');
-            }
-        }
-
-        // Modal functionality
-        function showVideoUrlModal() {
-            const modal = new bootstrap.Modal(document.getElementById('videoUrlModal'));
-            modal.show();
-        }
-
-        function loadVideoFromModal() {
-            const url = document.getElementById('modalVideoUrl').value;
-            if (url) {
-                loadVideo(url);
-                const modal = bootstrap.Modal.getInstance(document.getElementById('videoUrlModal'));
-                modal.hide();
-            } else {
-                showNotification('error', 'Пожалуйста, введите ссылку на видео', 'danger');
-            }
-        }
-
         // Interactive elements
         function analyzeCode() {
-            showNotification('info', 'Анализ кода...', 'info');
+            showNotification('info', 'Анализ кода...');
             
             setTimeout(() => {
                 const analysisResult = `
@@ -1648,30 +1488,13 @@ function processUserData(userData) {
                 `;
                 
                 document.querySelector('.interactive-element').insertAdjacentHTML('beforeend', analysisResult);
-                showNotification('success', 'Анализ завершен! Найдены уязвимости безопасности.', 'success');
+                showNotification('success', 'Анализ завершен! Найдены уязвимости безопасности.');
             }, 2000);
         }
 
-        function downloadResource(type) {
-            const resources = {
-                'presentation': 'Презентация урока',
-                'notes': 'Конспект урока', 
-                'code': 'Примеры кода'
-            };
-            
-            showNotification('info', `Скачивание: ${resources[type]}`, 'info');
-            // In real app, this would trigger actual download
-            setTimeout(() => {
-                showNotification('success', `${resources[type]} успешно скачан!`, 'success');
-            }, 1500);
-        }
-
-        function showAdditionalResources() {
-            showNotification('info', 'Загрузка дополнительных материалов...', 'info');
-            // In real app, this would show a modal with resources
-            setTimeout(() => {
-                showNotification('success', 'Дополнительные материалы загружены!', 'success');
-            }, 1000);
+        function openResource(url) {
+            window.open(url, '_blank');
+            showNotification('info', 'Открываю ресурс в новой вкладке...');
         }
 
         // Lesson completion API calls
@@ -1702,19 +1525,19 @@ function processUserData(userData) {
             .then(data => {
                 if (data.success) {
                     markLessonAsCompletedUI();
-                    showNotification('success', 'Урок завершен! Прогресс сохранен.', 'success');
+                    showNotification('success', 'Урок завершен! Прогресс сохранен.');
                     
                     // Update course progress if available
                     if (data.progress) {
                         console.log('Общий прогресс курса:', data.progress + '%');
                     }
                 } else {
-                    showNotification('error', 'Ошибка при сохранении прогресса: ' + data.error, 'danger');
+                    showNotification('error', 'Ошибка при сохранении прогресса: ' + data.error);
                 }
             })
             .catch(error => {
                 console.error('Error completing lesson:', error);
-                showNotification('error', 'Ошибка сети при сохранении прогресса', 'danger');
+                showNotification('error', 'Ошибка сети при сохранении прогресса');
             });
         }
 
@@ -1740,12 +1563,12 @@ function processUserData(userData) {
         // Lesson actions
         function completeLesson() {
             if (isLessonCompleted) {
-                showNotification('info', 'Урок уже завершен!', 'info');
+                showNotification('info', 'Урок уже завершен!');
                 return;
             }
 
             if (!isVideoLoaded) {
-                showNotification('warning', 'Рекомендуем посмотреть видео перед завершением урока', 'warning');
+                showNotification('warning', 'Рекомендуем посмотреть видео перед завершением урока');
             }
 
             if (confirm('Вы уверены, что хотите отметить урок как завершенный?')) {
@@ -1754,7 +1577,7 @@ function processUserData(userData) {
         }
 
         function addBookmark() {
-            showNotification('success', 'Урок добавлен в закладки!', 'success');
+            showNotification('success', 'Урок добавлен в закладки!');
         }
 
         function shareLesson() {
@@ -1766,23 +1589,23 @@ function processUserData(userData) {
                 });
             } else {
                 navigator.clipboard.writeText(window.location.href);
-                showNotification('info', 'Ссылка на урок скопирована в буфер обмена!', 'info');
+                showNotification('info', 'Ссылка на урок скопирована в буфер обмена!');
             }
         }
 
-        function printLesson() {
-            window.print();
-        }
-
         // Notification system
-        function showNotification(title, message, type) {
+        function showNotification(title, message, type = 'info') {
             // Remove existing notifications
             document.querySelectorAll('.alert.position-fixed').forEach(alert => {
                 alert.remove();
             });
 
+            const alertClass = type === 'success' ? 'alert-success' : 
+                              type === 'error' ? 'alert-danger' : 
+                              type === 'warning' ? 'alert-warning' : 'alert-info';
+            
             const notification = document.createElement('div');
-            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
             notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
             notification.innerHTML = `
                 <div class="d-flex align-items-center">

@@ -7,9 +7,9 @@ COURSES_DATA = {
         "title": "Кибербезопасность для подростков",
         "description": "Увлекательный курс по основам цифровой безопасности. Научись защищать свои данные и распознавать интернет-угрозы.",
         "difficulty": "beginner",
-        "estimated_time": "1 минута",
+        "estimated_time": "3 часа",
         "rating": 4.9,
-        "students_count": 25420,
+        "students_count": 100,
         "instructor": {
             "name": "Анна Смирнова",
             "role": "Детский психолог и эксперт по кибербезопасности",
@@ -602,7 +602,7 @@ COURSES_DATA = {
         "difficulty": "beginner",
         "estimated_time": "15 часов",
         "rating": 4.8,
-        "students_count": 18200,
+        "students_count": 0,
         "video_intro": "https://www.youtube.com/embed/gaming_security_video",
         "modules": []
     },
@@ -614,7 +614,7 @@ COURSES_DATA = {
         "difficulty": "beginner",
         "estimated_time": "12 часов",
         "rating": 4.7,
-        "students_count": 15600,
+        "students_count": 0,
         "video_intro": "https://www.youtube.com/embed/smartphone_security_video",
         "modules": []
     }
