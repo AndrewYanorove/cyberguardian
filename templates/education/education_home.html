@@ -183,15 +183,12 @@
             border: 2px solid var(--cyber-border);
             border-radius: 20px;
             padding: 2rem;
-            display: flex;
-            flex-direction: column;
             margin-bottom: 2rem;
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(10px);
             box-shadow: var(--cyber-shadow-soft);
             position: relative;
             overflow: hidden;
-            height: 400px;
         }
 
         .cyber-card::before {
@@ -1455,6 +1452,59 @@
     </section>
 
     <div class="container-max">
+        <!-- Quick Actions -->
+        <section class="section-spacing">
+            <h2 class="section-title cyber-title-primary">
+                <i class="bi bi-lightning me-2"></i>Быстрые действия
+            </h2>
+
+            <div class="quick-actions-grid">
+                <div class="quick-action-card" onclick="location.href='{{ url_for('education.certificates') }}'">
+                    <div class="quick-action-icon">
+                        <i class="bi bi-award"></i>
+                    </div>
+                    <h4 class="cyber-text-bright mb-2">Мои сертификаты</h4>
+                    <p class="cyber-subtext">Просмотр полученных сертификатов и достижений</p>
+                    <div class="mt-3">
+                        <span class="cyber-badge cyber-badge-accent">3 сертификата</span>
+                    </div>
+                </div>
+
+                <div class="quick-action-card" onclick="location.href='{{ url_for('education.achievements') }}'">
+                    <div class="quick-action-icon">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+                    <h4 class="cyber-text-bright mb-2">Достижения</h4>
+                    <p class="cyber-subtext">Мои значки, награды и прогресс обучения</p>
+                    <div class="mt-3">
+                        <span class="cyber-badge cyber-badge-warning">12 достижений</span>
+                    </div>
+                </div>
+
+                <div class="quick-action-card" onclick="showRecentActivity()">
+                    <div class="quick-action-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <h4 class="cyber-text-bright mb-2">История обучения</h4>
+                    <p class="cyber-subtext">Последняя активность и прогресс по курсам</p>
+                    <div class="mt-3">
+                        <span class="cyber-badge">15 активностей</span>
+                    </div>
+                </div>
+
+                <div class="quick-action-card" onclick="showLearningStats()">
+                    <div class="quick-action-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h4 class="cyber-text-bright mb-2">Статистика</h4>
+                    <p class="cyber-subtext">Подробная аналитика вашего обучения</p>
+                    <div class="mt-3">
+                        <span class="cyber-badge cyber-badge-primary">42% прогресс</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Featured Courses -->
         <section id="featured-courses" class="section-spacing">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -1477,6 +1527,7 @@
 
                     <div class="course-content">
                         <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
+                        
                         <!-- Бейдж "В разработке" для всех курсов кроме первого -->
                         {% if course.id != 'cybersecurity-for-teens' %}
                         <div class="position-absolute top-0 end-0 m-3">
@@ -1485,14 +1536,13 @@
                             </span>
                         </div>
                         {% endif %}
+                        
                         <p class="cyber-text mb-4">{{ course.description }}</p>
 
                         <div class="course-meta d-flex flex-wrap gap-2 mb-4">
                             <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                <i
-                                    class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
-                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
-                                == 'intermediate' else 'Продвинутый' }}
+                                <i class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty == 'intermediate' else 'Продвинутый' }}
                             </span>
                             <span class="cyber-badge">
                                 <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
@@ -1516,8 +1566,7 @@
                             {% if course.id == 'cybersecurity-for-teens' %}
                             <!-- Активная кнопка для основного курса -->
                             <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
-                                <i
-                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
+                                <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
                                 {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
                             </a>
                             {% else %}
@@ -1697,16 +1746,6 @@
 
                     <div class="course-content">
                         <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
-
-                        <!-- Бейдж "В разработке" для курсов в разработке -->
-                        {% if course.id in ['gaming-security', 'smartphone-security'] %}
-                        <div class="position-absolute top-0 end-0 m-3">
-                            <span class="cyber-badge cyber-badge-warning">
-                                <i class="bi bi-tools me-1"></i>В разработке
-                            </span>
-                        </div>
-                        {% endif %}
-
                         <p class="cyber-text mb-4">{{ course.description }}</p>
 
                         <div class="course-meta d-flex flex-wrap gap-2 mb-4">
@@ -1733,23 +1772,119 @@
                         </div>
 
                         <div class="d-grid">
-                            {% if course.id == 'cybersecurity-for-teens' %}
                             <a href="{{ url_for('education.course_page', course_id=course.id) }}"
                                 class="btn {% if course.progress == 0 %}btn-cyber{% else %}btn-cyber-outline{% endif %}">
                                 <i
                                     class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
                                 {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
                             </a>
-                            {% else %}
-                            <!-- Неактивная кнопка для курсов в разработке -->
-                            <button class="btn btn-cyber-outline" disabled style="opacity: 0.6; cursor: not-allowed;">
-                                <i class="bi bi-clock me-2"></i>Скоро будет доступно
-                            </button>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
                 {% endfor %}
+            </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="section-spacing">
+            <h2 class="section-title cyber-title-primary">
+                <i class="bi bi-activity me-2"></i>Недавняя активность
+            </h2>
+
+            <div class="cyber-card">
+                <div class="activity-timeline">
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Завершен урок "Основы сетевой безопасности"</h5>
+                                    <p class="cyber-subtext mb-0">Курс: Основы кибербезопасности • Результат теста: 92%
+                                    </p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">2 часа назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-patch-question"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Пройден тест "Типы кибератак"</h5>
+                                    <p class="cyber-subtext mb-0">Курс: Основы кибербезопасности • Результат: 85%</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">Вчера, 14:30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-play-circle"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Начат модуль "Методы социальной инженерии"</h5>
+                                    <p class="cyber-subtext mb-0">Курс: Этичный хакинг • Прогресс: 15%</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">2 дня назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-award"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Получено достижение "Первые шаги"</h5>
+                                    <p class="cyber-subtext mb-0">Завершение 5 уроков в первом курсе</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">3 дня назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-content">
+                            <div class="d-flex align-items-center">
+                                <div class="activity-icon">
+                                    <i class="bi bi-file-text"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="cyber-text-bright mb-1">Загружен проект "Анализ фишинговой атаки"</h5>
+                                    <p class="cyber-subtext mb-0">Курс: Этичный хакинг • Оценка: 95%</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="cyber-badge">4 дня назад</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-cyber-outline" onclick="loadMoreActivity()">
+                        <i class="bi bi-arrow-down me-2"></i>Загрузить еще
+                    </button>
+                </div>
             </div>
         </section>
 
