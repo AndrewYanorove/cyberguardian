@@ -3,498 +3,755 @@
 {% block content %}
 
 <style>
-    .features-buttons-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        align-items: stretch;
-        width: 100%;
+    /* --- Стили для 3-блочного "Feature Showcase" --- */
+    .feature-showcase {
+        transition: all 0.3s ease;
+        border-radius: 20px;
+        padding: 2.5rem 0;
+        margin-bottom: 3rem;
+        position: relative;
     }
 
-    .feature-card {
-        display: flex;
-        flex-direction: column;
-        min-height: 350px;
-        height: auto;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .feature-card h3 {
-        flex-shrink: 0;
-        height: 60px;
+    .feature-icon-lg {
+        font-size: 10rem;
+        opacity: 0.1;
+        transform: rotate(-10deg);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         display: flex;
         align-items: center;
-        margin-bottom: 1rem;
-        text-align: center !important;
         justify-content: center;
-    }
-
-    .feature-card p {
-        flex: 1;
+        text-shadow: 0 0 50px var(--cyber-primary-glow);
         margin-bottom: 1rem;
+    }
+
+    /* Добавь этот стиль в CSS */
+    .module-card .btn-cyber-outline {
+        min-width: 160px;
+        text-align: center;
+        justify-content: center;
         display: flex;
-        align-items: flex-start;
+        align-items: center;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 180px;
+    }
+    
+    .feature-icon-lg.icon-education { color: var(--cyber-primary); }
+    .feature-icon-lg.icon-tools { color: var(--cyber-accent); }
+    .feature-icon-lg.icon-ai { color: var(--cyber-info); }
+
+    .feature-showcase:hover {
+        background: var(--cyber-bg-card-light);
+        box-shadow: var(--cyber-shadow-medium);
+        transform: translateY(-5px);
     }
 
-    .feature-card p {
-        text-align: center !important;
+    .feature-showcase:hover .feature-icon-lg {
+        opacity: 0.4;
+        transform: rotate(0deg) scale(1.1);
     }
+    
+    .feature-showcase:hover .feature-icon-lg.icon-education { color: var(--cyber-primary); }
+    .feature-showcase:hover .feature-icon-lg.icon-tools { color: var(--cyber-accent); }
+    .feature-showcase:hover .feature-icon-lg.icon-ai { color: var(--cyber-info); }
 
-    .feature-card .feature-icon {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    /* ФИКС ДЛЯ КНОПОК - УБИРАЕМ ОВАЛ И ДЕЛАЕМ ВЫШЕ */
-    .feature-card .feature-btn {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-align: center !important;
-        margin-top: auto !important;
-        margin-bottom: 1rem !important;
-        padding: 1rem 1.5rem !important;
-        border-radius: 12px !important;
-        text-decoration: none !important;
-        transition: all 0.3s ease !important;
-        position: relative;
-        overflow: hidden;
-        border: 2px solid var(--cyber-primary);
-        background: transparent;
-        color: var(--cyber-primary);
+    /* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ БЕЙДЖЕЙ */
+    .feature-showcase .cyber-badge {
+        display: inline-block;
+        margin-bottom: 1.5rem !important;
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
         font-weight: 700;
-        font-size: 1.1rem;
-        width: calc(100% - 2rem);
-        margin-left: auto !important;
-        margin-right: auto !important;
-        min-height: 60px !important;
-        line-height: 1.2 !important;
+        letter-spacing: 1px;
+        position: relative;
+        z-index: 2;
+        transform: translateZ(0);
     }
 
-    .feature-card .feature-btn-danger {
-        border-color: var(--cyber-danger);
-        color: var(--cyber-danger);
+    /* ИСПРАВЛЕННЫЕ ОТСТУПЫ ДЛЯ КОНТЕНТА */
+    .feature-showcase .col-lg-7 {
+        padding-top: 1rem;
     }
 
-    .feature-card .feature-btn:hover {
-        background: var(--cyber-primary);
-        color: #000;
-        box-shadow: 0 8px 25px rgba(0, 168, 255, 0.3);
-        text-decoration: none;
-        transform: translateY(-2px);
+    .feature-showcase h2.cyber-title {
+        margin-top: 0.5rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
     }
 
-    .feature-card .feature-btn-danger:hover {
-        background: var(--cyber-danger);
-        color: #000;
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
-        transform: translateY(-2px);
+    .feature-showcase .cyber-lead {
+        margin-bottom: 2rem;
+        line-height: 1.7;
     }
 
-    /* Убираем все анимации овала */
-    .feature-card .feature-btn::before,
-    .feature-card .feature-btn-danger::before {
-        display: none !important;
+    /* ИСПРАВЛЕННЫЕ КНОПКИ */
+    .feature-showcase .btn-cyber-outline {
+        margin-right: 0.75rem;
+        margin-bottom: 0.5rem;
+        padding: 0.8rem 1.5rem;
+        font-weight: 600;
     }
 
     /* Адаптивность */
-    @media (max-width: 1200px) {
-        .feature-card {
-            flex: 0 0 calc(33.333% - 20px);
-            height: 370px;
+    @media (max-width: 992px) {
+        .feature-icon-lg {
+            font-size: 8rem;
+            margin-bottom: 2rem;
         }
+        
+        .feature-showcase {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        .feature-showcase .btn-cyber-outline {
+            margin-bottom: 0.75rem;
+            display: inline-block;
+        }
+        
+        .feature-showcase .cyber-badge {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .feature-showcase h2.cyber-title {
+            margin-top: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .feature-showcase {
+            padding: 1.5rem 0;
+        }
+        
+        .feature-icon-lg {
+            font-size: 6rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-showcase .cyber-badge {
+            margin-bottom: 1.25rem !important;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Дополнительные гарантии от перекрытия */
+    .feature-showcase .col-lg-7 > *:first-child {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    /* --- Стили для Hero SVG --- */
+    .hero-svg-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .hero-svg-bg svg {
+        width: 100%;
+        height: 100%;
+        opacity: 0.15;
+    }
+
+    .hero-svg-bg .svg-line {
+        stroke: var(--cyber-primary);
+        stroke-width: 1;
+        stroke-dasharray: 5 5;
+        animation: svg-pulse 10s linear infinite alternate;
+    }
+
+    .hero-svg-bg .svg-dot {
+        fill: var(--cyber-accent);
+        r: 3;
+        animation: svg-float 8s ease-in-out infinite alternate;
+    }
+
+    .hero-svg-bg .svg-dot-lg {
+        fill: var(--cyber-primary);
+        r: 5;
+        animation: svg-float 12s ease-in-out infinite alternate;
+    }
+    
+    @keyframes svg-pulse {
+        from { stroke-dashoffset: 0; }
+        to { stroke-dashoffset: 100; }
+    }
+    @keyframes svg-float {
+        0% { transform: translate(0, 0); }
+        50% { transform: translate(10px, 20px); }
+        100% { transform: translate(0, 0); }
+    }
+
+    .cyber-hero .container-max {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* --- Стили: Секция "Ключевые модули" --- */
+    .module-card {
+        background: var(--cyber-bg-card-dark);
+        border: 2px solid var(--cyber-border);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .module-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--cyber-primary);
+        box-shadow: var(--cyber-shadow-medium), 0 0 20px rgba(0, 168, 255, 0.1);
+    }
+    .module-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    .module-card:hover .module-icon {
+        transform: scale(1.1);
+    }
+    .module-card .cyber-title-primary {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .module-card p {
+        flex-grow: 1;
+        color: var(--cyber-subtext);
+        margin-bottom: 1.5rem;
+    }
+    
+    /* --- Стили: Секция "Таймлайн" --- */
+    /* --- Стили: Секция "Таймлайн" --- */
+    .timeline-section {
+        position: relative;
+        padding: 2rem 0;
+    }
+    .timeline-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 4px;
+        height: 100%;
+        background: var(--cyber-border);
+        transform: translateX(-50%);
+        z-index: 0;
+    }
+
+    .timeline-item {
+        position: relative;
+        width: 50%;
+        padding: 1rem 3rem;
+        margin-bottom: 2rem;
+        opacity: 0; 
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .timeline-item.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .timeline-item:nth-child(odd) {
+        left: 0;
+        text-align: right;
+    }
+    .timeline-item:nth-child(even) {
+        left: 50%;
+        text-align: left;
+    }
+
+    .timeline-dot {
+        position: absolute;
+        top: 50%; /* ИЗМЕНЕНО: центрируем по вертикали */
+        transform: translateY(-50%); /* ИЗМЕНЕНО: центрируем по вертикали */
+        width: 20px;
+        height: 20px;
+        background: var(--cyber-bg-card-dark);
+        border: 4px solid var(--cyber-primary);
+        border-radius: 50%;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+    .timeline-item:nth-child(odd) .timeline-dot {
+        right: -10px;
+    }
+    .timeline-item:nth-child(even) .timeline-dot {
+        left: -10px;
+    }
+    .timeline-item:hover .timeline-dot {
+        background: var(--cyber-primary);
+        box-shadow: var(--cyber-glow-primary);
+    }
+
+    .timeline-content {
+        background: var(--cyber-bg-card);
+        border: 2px solid var(--cyber-border);
+        padding: 2rem;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+    .timeline-item:hover .timeline-content {
+        border-color: var(--cyber-primary);
+        box-shadow: var(--cyber-shadow-medium);
+    }
+    .timeline-step {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--cyber-primary);
+        margin-bottom: 0.5rem;
     }
 
     @media (max-width: 992px) {
-        .feature-card {
-            flex: 0 0 calc(50% - 20px);
-            height: 360px;
+        .timeline-section::before {
+            left: 20px;
         }
-    }
-
-    @media (max-width: 768px) {
-        .feature-card {
-            height: 340px;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .feature-card {
-            flex: 0 0 100%;
-            height: 320px;
-            max-width: 100%;
-        }
-
-        @media (max-width: 1200px) {
-            .features-buttons-container {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            }
-        }
-
-        @media (max-width: 992px) {
-            .features-buttons-container {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 15px;
-            }
-
-            .feature-card {
-                min-height: 320px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .features-buttons-container {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .feature-card {
-                min-height: 300px;
-                margin: 0 10px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .features-buttons-container {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .feature-card {
-                min-height: 280px;
-                margin: 0 5px;
-            }
-        }
-
-        .container-max {
+        .timeline-item {
             width: 100%;
-            max-width: 100%;
-            padding-left: 15px;
-            padding-right: 15px;
-            margin-left: auto;
-            margin-right: auto;
+            left: 0 !important;
+            padding-left: 5rem;
+            padding-right: 1rem;
+            text-align: left !important;
+        }
+        .timeline-dot {
+            left: 20px !important;
+            transform: translateX(-50%) translateY(-50%); /* ИЗМЕНЕНО: двойное центрирование */
         }
     }
-
-    /* Мобильная версия - исправление слетающих кнопок */
-    @media (max-width: 768px) {
-        .features-buttons-container {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 15px !important;
-            width: 100% !important;
-        }
-
-        .feature-card {
-            width: 100% !important;
-            max-width: 400px !important;
-            min-height: 280px !important;
-            margin: 0 auto !important;
-            display: flex !important;
-            flex-direction: column !important;
-        }
-
-        .feature-card .feature-btn {
-            margin-top: auto !important;
-            width: 90% !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            margin-bottom: 1rem !important;
-            min-height: 44px !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-        }
-
-        .feature-card .feature-icon,
-        .feature-card h3,
-        .feature-card p {
-            text-align: center !important;
-            width: 100% !important;
-        }
-
-        .feature-card .feature-icon {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            margin: 0 auto !important;
-        }
+    
+    /* --- Стили: Секция "Отзывы" (Слайдер) --- */
+    .testimonial-slider-wrapper {
+        position: relative;
+        overflow: hidden;
+        max-width: 900px;
+        margin: 0 auto;
+        border-radius: 20px;
+        background: var(--cyber-bg-card-dark);
+        padding: 3rem;
+        border: 2px solid var(--cyber-border);
+    }
+    .testimonial-slider-track {
+        display: flex;
+        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .testimonial-card {
+        flex: 0 0 100%;
+        padding: 0 2rem;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .testimonial-quote {
+        font-size: 1.5rem;
+        font-style: italic;
+        color: var(--cyber-text-bright);
+        line-height: 1.5;
+        margin-bottom: 2rem;
+    }
+    .testimonial-quote::before {
+        content: '“';
+        font-size: 4rem;
+        color: var(--cyber-primary);
+        display: block;
+        line-height: 1;
+    }
+    .testimonial-author {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--cyber-accent);
+    }
+    .testimonial-role {
+        color: var(--cyber-subtext);
+    }
+    
+    .slider-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--cyber-bg-card);
+        border: 2px solid var(--cyber-border);
+        color: var(--cyber-primary);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    .slider-nav-btn:hover {
+        background: var(--cyber-primary);
+        color: #000;
+        box-shadow: var(--cyber-glow-primary);
+    }
+    .slider-nav-btn#prevBtn { left: 1rem; }
+    .slider-nav-btn#nextBtn { right: 1rem; }
+    
+    /* --- Общий класс для анимации --- */
+    .scroll-animate {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .scroll-animate.is-visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 
-    /* Для очень маленьких экранов */
-    @media (max-width: 480px) {
-        .features-buttons-container {
-            gap: 12px !important;
-            padding: 0 10px !important;
-        }
-
-        .feature-card {
-            min-height: 260px !important;
-            max-width: 100% !important;
-        }
-
-        .feature-card .feature-btn {
-            width: 95% !important;
-            min-height: 42px !important;
-            font-size: 0.9rem !important;
-        }
-
-        .feature-card h3 {
-            font-size: 1.1rem !important;
-            margin-bottom: 0.8rem !important;
-        }
-
-        .feature-card p {
-            font-size: 0.9rem !important;
-            margin-bottom: 0.8rem !important;
-        }
+    /* ИСПРАВЛЕНИЕ: Корректировка для заголовка, чтобы не обрезался */
+    .cyber-title {
+        word-break: break-word;
+        overflow-wrap: break-word;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
     }
-
-    /* Дополнительный фикс для iOS Safari */
-    @supports (-webkit-touch-callout: none) {
-        .feature-card {
-            min-height: 300px !important;
+    @media (max-width: 576px) {
+        h1.cyber-title, h1.display-3 {
+            font-size: 2.2rem !important;
         }
-    }
-
-    /* Фикс для viewport на мобильных */
-    @media (max-width: 768px) {
-        .container-max {
-            padding-left: 10px !important;
-            padding-right: 10px !important;
-        }
-
-        .section-spacing {
-            padding: 2rem 0 !important;
+        h2.cyber-title {
+            font-size: 2rem !important;
         }
     }
 </style>
 
-<head>
-    <link rel="stylesheet" href="static/css/main.css">
-</head>
 
-<!-- Hero Section -->
-<section class="cyber-hero">
-    <div class="container-max">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="cyber-title display-3 mb-4 fade-in-up">
-                    <i class="bi bi-shield-shaded me-3"></i><b>Ваш цифровой щит в мире кибербезопасности</b>
+<section class="cyber-hero" style="padding-top: 6rem; padding-bottom: 6rem; position: relative;">
+    
+    <div class="hero-svg-bg">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500">
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:var(--cyber-primary);stop-opacity:0.5" />
+                    <stop offset="100%" style="stop-color:var(--cyber-accent);stop-opacity:0.5" />
+                </linearGradient>
+            </defs>
+            <path class="svg-line" d="M100 100 L300 150 L500 100 L700 200 L900 150 L1100 250 L1300 200" fill="none" />
+            <path class="svg-line" d="M150 300 L350 350 L550 300 L750 400 L950 350 L1150 450 L1350 400" fill="none" style="animation-delay: -2s;" />
+            <path class="svg-line" d="M50 50 L250 100 L450 50 L650 150 L850 100 L1050 200 L1250 150" fill="none" style="animation-delay: -4s;" />
+            <path class="svg-line" d="M200 450 L400 400 L600 450 L800 350 L1000 400 L1200 300 L1400 350" fill="none" style="animation-delay: -6s;" />
+            <path class="svg-line" d="M100 100 L150 300" fill="none" />
+            <path class="svg-line" d="M300 150 L350 350" fill="none" style="animation-delay: -1s;" />
+            <path class="svg-line" d="M500 100 L550 300" fill="none" />
+            <path class="svg-line" d="M700 200 L750 400" fill="none" style="animation-delay: -3s;" />
+            <path class="svg-line" d="M900 150 L950 350" fill="none" />
+            <path class="svg-line" d="M1100 250 L1150 450" fill="none" style="animation-delay: -5s;" />
+            <path class="svg-line" d="M1300 200 L1350 400" fill="none" />
+            <path class="svg-line" d="M250 100 L400 400" fill="none" style="animation-delay: -2s;" />
+            <path class="svg-line" d="M650 150 L800 350" fill="none" />
+            <path class="svg-line" d="M1050 200 L1200 300" fill="none" style="animation-delay: -4s;" />
+            <circle class="svg-dot" cx="100" cy="100" />
+            <circle class="svg-dot-lg" cx="300" cy="150" style="animation-delay: -1s;" />
+            <circle class="svg-dot" cx="500" cy="100" />
+            <circle class="svg-dot-lg" cx="700" cy="200" style="animation-delay: -2s;" />
+            <circle class="svg-dot" cx="900" cy="150" />
+            <circle class="svg-dot-lg" cx="1100" cy="250" style="animation-delay: -3s;" />
+            <circle class="svg-dot" cx="1300" cy="200" />
+            <circle class="svg-dot-lg" cx="150" cy="300" style="animation-delay: -4s;" />
+            <circle class="svg-dot" cx="350" cy="350" />
+            <circle class="svg-dot-lg" cx="550" cy="300" style="animation-delay: -5s;" />
+            <circle class="svg-dot" cx="750" cy="400" />
+            <circle class="svg-dot-lg" cx="950" cy="350" style="animation-delay: -6s;" />
+            <circle class="svg-dot" cx="1150" cy="450" />
+            <circle class="svg-dot-lg" cx="1350" cy="400" style="animation-delay: -7s;" />
+            <circle class="svg-dot" cx="50" cy="50" />
+            <circle class="svg-dot-lg" cx="250" cy="100" style="animation-delay: -1s;" />
+            <circle class="svg-dot" cx="450" cy="50" />
+            <circle class="svg-dot-lg" cx="650" cy="150" style="animation-delay: -2s;" />
+            <circle class="svg-dot" cx="850" cy="100" />
+            <circle class="svg-dot-lg" cx="1050" cy="200" style="animation-delay: -3s;" />
+            <circle class="svg-dot" cx="1250" cy="150" />
+            <circle class="svg-dot-lg" cx="200" cy="450" style="animation-delay: -4s;" />
+            <circle class="svg-dot" cx="400" cy="400" />
+            <circle class="svg-dot-lg" cx="600" cy="450" style="animation-delay: -5s;" />
+            <circle class="svg-dot" cx="800" cy="350" />
+            <circle class="svg-dot-lg" cx="1000" cy="400" style="animation-delay: -6s;" />
+            <circle class="svg-dot" cx="1200" cy="300" />
+            <circle class="svg-dot-lg" cx="1400" cy="350" style="animation-delay: -7s;" />
+        </svg>
+    </div>
+
+    <div class="container-max text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="scroll-animate" style="animation-delay: 0s;">
+                    <i class="bi bi-shield-shaded" style="font-size: 5rem; color: var(--cyber-primary); text-shadow: var(--cyber-glow-primary);"></i>
+                </div>
+                
+                <h1 class="cyber-title display-3 my-4 scroll-animate" style="animation-delay: 0.1s;">
+                    Добро пожаловать в CyberGuardian
                 </h1>
-                <p class="cyber-lead mb-4 fade-in-up" style="animation-delay: 0.1s;">
-                    Защищайся, учись и исследуй с помощью современных технологий.
-                    Стань киберзащитником уже сегодня и получи востребованные навыки в области информационной
-                    безопасности.
+                
+                <p class="cyber-lead mb-5 scroll-animate" style="animation-delay: 0.2s;">
+                    Ваш персональный центр по кибербезопасности. 
+                    Обучайтесь, защищайте данные и анализируйте угрозы в интерактивной среде.
                 </p>
-                <div class="d-flex flex-wrap gap-3 mb-4 fade-in-up" style="animation-delay: 0.2s;">
+                
+                <div class="d-flex flex-wrap gap-3 justify-content-center scroll-animate" style="animation-delay: 0.3s;">
                     <a href="{{ url_for('education.education_home') }}" class="btn-cyber btn-lg">
                         <i class="bi bi-book me-2"></i>Начать обучение
                     </a>
-                    <a href="{{ url_for('scanner.scanner_dashboard') }}" class="btn-cyber-outline btn-lg">
-                        <i class="bi bi-shield-check me-2"></i>Проверить безопасность
-                    </a>
-                    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger btn-lg">
-                        <i class="bi bi-lightning-charge me-2"></i>DDoS Simulator
+                    <a href="{{ url_for('dashboard') }}" class="btn-cyber-outline btn-lg">
+                        <i class="bi bi-grid me-2"></i>Перейти в дашборд
                     </a>
                 </div>
-
-                <!-- Quick Stats -->
-                <div class="stats-grid fade-in-up" style="animation-delay: 0.3s;">
-                    <div class="stat-card">
-                        <span class="stat-number">8</span>
-                        <span class="stat-label">Курсов доступно</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">50+</span>
-                        <span class="stat-label">Алгоритмов шифрования</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">24/7</span>
-                        <span class="stat-label">ИИ-помощник доступен</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">100%</span>
-                        <span class="stat-label">Безопасная учебная среда</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 text-center">
-                <i class="bi bi-shield-lock float-animation" style="font-size: 8rem; color: var(--cyber-primary); opacity: 0.9;"></i>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
 <section class="section-spacing">
     <div class="container-max">
-        <h2 class="section-title cyber-title-primary fade-in-up">
-            <i class="bi bi-stars me-2"></i>Возможности платформы
-        </h2>
-
-        <!-- Контейнер для всех кнопок в одной строке -->
-        <div class="features-buttons-container fade-in-up">
-            <!-- Первая строка фич -->
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-book"></i>
+        
+        <!-- Обучение -->
+        <div class="row align-items-center feature-showcase scroll-animate">
+            <div class="col-lg-5 text-center">
+                <div class="feature-icon-lg icon-education">
+                    <i class="bi bi-book-half"></i>
                 </div>
-                <h3 class="cyber-text-bright mb-3">Интерактивное обучение</h3>
-                <p class="cyber-text mb-4">Уроки по кибербезопасности, тесты и симуляции атак для полного погружения в тему.</p>
-                <a href="{{ url_for('education.education_home') }}" class="feature-btn">
-                    Изучать
+            </div>
+            <div class="col-lg-7">
+                <div style="margin-bottom: 1.5rem;">
+                    <span class="cyber-badge cyber-badge-primary">Обучение</span>
+                </div>
+                <h2 class="cyber-title mb-3" style="font-size: 2.5rem; margin-top: 0.5rem;">Интерактивные Курсы</h2>
+                <p class="cyber-lead mb-4">
+                    Погрузитесь в мир кибербезопасности с нашими адаптивными курсами.
+                    От основ до сложных техник взлома — все в одном месте.
+                </p>
+                <a href="{{ url_for('education.education_home') }}" class="btn-cyber-outline">
+                    <i class="bi bi-play-circle me-2"></i>Все курсы
                 </a>
             </div>
+        </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-key"></i>
+        <!-- Инструменты -->
+        <div class="row align-items-center flex-lg-row-reverse feature-showcase scroll-animate">
+            <div class="col-lg-5 text-center">
+                <div class="feature-icon-lg icon-tools">
+                    <i class="bi bi-safe"></i>
                 </div>
-                <h3 class="cyber-text-bright mb-3">Генератор паролей</h3>
-                <p class="cyber-text mb-4">Создание и проверка надежных паролей для защиты ваших учетных записей.</p>
-                <a href="{{ url_for('passwords.password_generator') }}" class="feature-btn">
-                    Использовать
+            </div>
+            <div class="col-lg-7">
+                <div style="margin-bottom: 1.5rem;">
+                    <span class="cyber-badge cyber-badge-accent">Инструменты</span>
+                </div>
+                <h2 class="cyber-title mb-3" style="font-size: 2.5rem; margin-top: 0.5rem;">Набор Кибер-Утилит</h2>
+                <p class="cyber-lead mb-4">
+                    Используйте наш генератор надежных паролей и инструменты шифрования
+                     для обеспечения максимальной защиты ваших личных данных.
+                </p>
+                <a href="{{ url_for('passwords.password_generator') }}" class="btn-cyber-outline" style="border-color: var(--cyber-accent); color: var(--cyber-accent);">
+                    <i class="bi bi-shield-lock me-2"></i>Генератор паролей
+                </a>
+                <a href="{{ url_for('encryption.encryption_tools') }}" class="btn-cyber-outline ms-lg-2">
+                    <i class="bi bi-lock me-2"></i>Шифратор
                 </a>
             </div>
+        </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="bi bi-lock"></i>
-                </div>
-                <h3 class="cyber-text-bright mb-3">Шифрование данных</h3>
-                <p class="cyber-text mb-4">Шифрование текстов и файлов с использованием современных алгоритмов.</p>
-                <a href="{{ url_for('encryption.encryption_tools') }}" class="feature-btn">
-                    Шифровать
-                </a>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">
+        <!-- AI Помощник -->
+        <div class="row align-items-center feature-showcase scroll-animate">
+            <div class="col-lg-5 text-center">
+                <div class="feature-icon-lg icon-ai">
                     <i class="bi bi-robot"></i>
                 </div>
-                <h3 class="cyber-text-bright mb-3">ИИ-помощник</h3>
-                <p class="cyber-text mb-4">Ваш персональный консультант по безопасности, доступный 24/7.</p>
-                <a href="{{ url_for('ai.ai_chat') }}" class="feature-btn">
-                    Спросить
-                </a>
             </div>
-
-            <!-- Вторая строка фич -->
-            <div class="feature-card">
-                <div class="feature-icon" style="color: var(--cyber-warning);">
-                    <i class="bi bi-shield-exclamation"></i>
+            <div class="col-lg-7">
+                <div style="margin-bottom: 1.5rem;">
+                    <span class="cyber-badge cyber-badge-primary" style="background: linear-gradient(135deg, rgba(84, 160, 255, 0.2), rgba(84, 160, 255, 0.1)); border-color: var(--cyber-info); color: var(--cyber-info);">AI Помощник</span>
                 </div>
-                <h3 class="cyber-text-bright mb-3">Мониторинг угроз</h3>
-                <p class="cyber-text mb-4">Отслеживание киберугроз в реальном времени и получение уведомлений.</p>
-                <a href="{{ url_for('threats.threat_dashboard') }}" class="feature-btn">
-                    Мониторить
-                </a>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon" style="color: var(--cyber-success);">
-                    <i class="bi bi-shield-check"></i>
-                </div>
-                <h3 class="cyber-text-bright mb-3">Сканер безопасности</h3>
-                <p class="cyber-text mb-4">Комплексная проверка системы на уязвимости и проблемы безопасности.</p>
-                <a href="{{ url_for('scanner.scanner_dashboard') }}" class="feature-btn">
-                    Сканировать
-                </a>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon" style="color: var(--cyber-info);">
-                    <i class="bi bi-joystick"></i>
-                </div>
-                <h3 class="cyber-text-bright mb-3">Кибер-тренировка и развлечения</h3>
-                <p class="cyber-text mb-4">Обучение через увлекательные игры, квизы и практические задания.</p>
-                <a href="{{ url_for('games.games_dashboard') }}" class="feature-btn">
-                    Играть
-                </a>
-            </div>
-
-            <div class="feature-card" style="border-color: var(--cyber-danger);">
-                <div class="feature-icon" style="color: var(--cyber-danger);">
-                    <i class="bi bi-lightning-charge"></i>
-                </div>
-                <h3 class="cyber-text-bright mb-3">DDoS Simulator</h3>
-                <p class="cyber-text mb-4">Изучение механизмов DDoS атак и методов защиты в безопасной среде.</p>
-                <a href="{{ url_for('ddos.ddos_simulator') }}" class="feature-btn feature-btn-danger">
-                    Исследовать
+                <h2 class="cyber-title mb-3" style="font-size: 2.5rem; margin-top: 0.5rem;">Ваш Эксперт 24/7</h2>
+                <p class="cyber-lead mb-4">
+                    Задайте любой вопрос о кибербезопасности и получите мгновенный,
+                    экспертный ответ от нашего продвинутого искусственного интеллекта.
+                </p>
+                <a href="{{ url_for('ai.ai_chat') }}" class="btn-cyber-outline" style="border-color: var(--cyber-info); color: var(--cyber-info);">
+                    <i class="bi bi-chat-dots me-2"></i>Спросить AI
                 </a>
             </div>
         </div>
+
     </div>
 </section>
 
-<!-- Final CTA -->
-<section class="section-spacing">
-    <div class="container-max">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="cyber-card text-center">
-                    <h2 class="cyber-title-primary mb-3">Готов стать киберзащитником?</h2>
-                    <p class="cyber-lead mb-4">
-                        Присоединяйся к сообществу CyberGuardian и прокачай свои навыки кибер-безопасности
-                    </p>
-
-                    <div class="d-flex flex-wrap gap-3 justify-content-center">
-                        <a href="{{ url_for('auth.register') }}" class="btn-cyber btn-lg">
-                            <i class="bi bi-person-plus me-2"></i>Присоединиться
-                        </a>
-                        <a href="{{ url_for('education.education_home') }}" class="btn-cyber-outline btn-lg">
-                            <i class="bi bi-play-circle me-2"></i>Начать обучение
-                        </a>
-                        <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-danger btn-lg">
-                            <i class="bi bi-lightning me-2"></i>DDoS Simulator
-                        </a>
-                    </div>
-
-                    <div class="mt-4">
-                        <p class="cyber-subtext">
-                            Уже присоединились к нам?
-                            <a href="{{ url_for('auth.login') }}" class="cyber-text-bright" style="text-decoration: none;">Войдите в аккаунт</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Additional Stats -->
 <section class="section-spacing" style="background: var(--cyber-bg-card-dark);">
     <div class="container-max">
-        <div class="row text-center">
-            <div class="col-md-3 mb-4">
-                <div class="stat-card">
-                    <span class="stat-number">3</span>
-                    <span class="stat-label">Игры доступно</span>
+        <h2 class="section-title cyber-title-primary text-center mx-auto scroll-animate" style="max-width: 600px;">
+            Платформа в Цифрах
+        </h2>
+        
+        <div class="stats-grid mt-5">
+            <div class="stat-card scroll-animate" style="animation-delay: 0s;">
+                <span class="stat-number">3+</span>
+                <span class="stat-label">Интерактивных курсов</span>
+            </div>
+            <div class="stat-card scroll-animate" style="animation-delay: 0.1s;">
+                <span class="stat-number">3+</span>
+                <span class="stat-label">Алгоритмов шифрования</span>
+            </div>
+            
+            <div class="stat-card scroll-animate" style="animation-delay: 0.2s;">
+                <span class="stat-number" data-no-animate="true">24/7</span>
+                <span class="stat-label">AI-Помощник</span>
+            </div>
+            <div class="stat-card scroll-animate" style="animation-delay: 0.3s;">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Безопасная среда</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-spacing">
+    <div class="container-max">
+        <h2 class="section-title cyber-title-primary text-center mx-auto scroll-animate" style="max-width: 600px;">
+            Все Инструменты в Одном Месте
+        </h2>
+        <p class="cyber-lead text-center mx-auto mb-5 scroll-animate" style="max-width: 800px; animation-delay: 0.1s;">
+            Мы объединили все необходимые инструменты и учебные материалы в единую экосистему для вашего удобства.
+        </p>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="module-card scroll-animate" style="animation-delay: 0s;">
+                    <div class="module-icon" style="color: var(--cyber-danger);">
+                        <i class="bi bi-lightning-charge"></i>
+                    </div>
+                    <h3 class="cyber-title-primary">DDoS Лаборатория</h3>
+                    <p>Изучите механизмы DDoS атак и методы защиты в нашей безопасной и интерактивной среде.</p>
+                    <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-outline mt-auto">В лабораторию</a>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
-                <div class="stat-card">
-                    <span class="stat-number">500+</span>
-                    <span class="stat-label">Практических заданий</span>
+            <div class="col-lg-3 col-md-6">
+                <div class="module-card scroll-animate" style="animation-delay: 0.1s;">
+                    <div class="module-icon" style="color: var(--cyber-warning);">
+                        <i class="bi bi-broadcast"></i>
+                    </div>
+                    <h3 class="cyber-title-primary">Мониторинг Угроз</h3>
+                    <p>Интерактивная карта кибератак и актуальная лента новостей об уязвимостях в реальном времени.</p>
+                    <a href="{{ url_for('threats.threat_dashboard') }}" class="btn-cyber-outline mt-auto">Смотреть карту</a>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
-                <div class="stat-card">
-                    <span class="stat-number">15</span>
-                    <span class="stat-label">Экспертов индустрии</span>
+            <div class="col-lg-3 col-md-6">
+                <div class="module-card scroll-animate" style="animation-delay: 0.2s;">
+                    <div class="module-icon" style="color: var(--cyber-success);">
+                        <i class="bi bi-joystick"></i>
+                    </div>
+                    <h3 class="cyber-title-primary">Кибер-Тренировка</h3>
+                    <p>Обучайтесь через увлекательные игры: симулятор фишинга, квизы и интерактивные задания.</p>
+                    <a href="{{ url_for('games.games_dashboard') }}" class="btn-cyber-outline mt-auto">Начать игру</a>
                 </div>
             </div>
-            <div class="col-md-3 mb-4">
-                <div class="stat-card">
-                    <span class="stat-number">24/7</span>
-                    <span class="stat-label">Поддержка</span>
+            <div class="col-lg-3 col-md-6">
+                <div class="module-card scroll-animate" style="animation-delay: 0.3s;">
+                    <div class="module-icon" style="color: var(--cyber-primary);">
+                        <i class="bi bi-chat-square-text"></i>
+                    </div>
+                    <h3 class="cyber-title-primary">Форум Историй</h3>
+                    <p>Делитесь своим опытом и читайте реальные истории о кибер-мошенничестве и защите.</p>
+                    <a href="{{ url_for('forum.forum_home') }}" class="btn-cyber-outline mt-auto">Читать истории</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-spacing" style="background: var(--cyber-bg-card-dark);">
+    <div class="container-max">
+        <h2 class="section-title cyber-title-primary text-center mx-auto scroll-animate" style="max-width: 600px;">
+            Ваш Путь к Безопасности
+        </h2>
+        
+        <div class="timeline-section mt-5">
+            <div class="timeline-item scroll-animate">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-step">Шаг 1: Регистрация</span>
+                    <h4 class="cyber-title-primary mb-3">Создайте Аккаунт</h4>
+                    <p class="cyber-subtext">Пройдите быструю регистрацию, чтобы получить доступ ко всем возможностям платформы и начать отслеживать свой прогресс.</p>
+                </div>
+            </div>
+            <div class="timeline-item scroll-animate">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-step">Шаг 2: Обучение</span>
+                    <h4 class="cyber-title-primary mb-3">Изучите Теорию</h4>
+                    <p class="cyber-subtext">Пройдите наши интерактивные курсы, чтобы понять основы: от фишинга до сложных сетевых атак и методов шифрования.</p>
+                </div>
+            </div>
+            <div class="timeline-item scroll-animate">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="timeline-step">Шаг 3: Практика</span>
+                    <h4 class="cyber-title-primary mb-3">Закрепите Навыки</h4>
+                    <p class="cyber-subtext">Используйте наши инструменты: проверьте пароли, зашифруйте файлы и испытайте свои силы в DDoS-симуляторе.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-spacing">
+    <div class="container-max">
+        
+        <div class="testimonial-slider-wrapper scroll-animate">
+            <div class="testimonial-slider-track">
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">
+                        Этот AI — мой спасатель в учебе! Когда не понимаю материал из курсов, всегда обращаюсь к нему. Объясняет даже сложные темы простыми словами. Настоящий цифровой наставник!
+                    <div class="testimonial-author">Алексей В.</div>
+                    <div class="testimonial-role">Студент, Факультет ИБ</div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">
+                        Наконец-то нашла курсы, которые объясняют сложные вещи простым языком. Курс Кибербезопасность для подростков , очень хорош для начинающих.
+                    </p>
+                    <div class="testimonial-author">Мария П.</div>
+                    <div class="testimonial-role">Ученица 10 класса</div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">
+                        Использую генератор паролей и шифратор почти каждый день. Очень удобно, что все нужные инструменты в одном месте.
+                    </p>
+                    <div class="testimonial-author">Сергей Л.</div>
+                    <div class="testimonial-role">Фрилансер</div>
+                </div>
+            </div>
+            
+            <button class="slider-nav-btn" id="prevBtn"><i class="bi bi-chevron-left"></i></button>
+            <button class="slider-nav-btn" id="nextBtn"><i class="bi bi-chevron-right"></i></button>
+        </div>
+    </div>
+</section>
+
+<section class="section-spacing" style="background: var(--cyber-bg-card);">
+    <div class="container-max">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center scroll-animate">
+                <h2 class="cyber-title-primary mb-4" style="font-size: 2.5rem;">
+                    Готовы повысить свою цифровую грамотность?
+                </h2>
+                <p class="cyber-lead mb-5">
+                    Присоединяйтесь к нашему сообществу и начните свой путь
+                    к становлению экспертом по кибербезопасности уже сегодня.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    <a href="{{ url_for('auth.register') }}" class="btn-cyber btn-lg">
+                        <i class="bi bi-person-plus me-2"></i>Создать аккаунт
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn-cyber-outline btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+                    </a>
                 </div>
             </div>
         </div>
@@ -502,59 +759,137 @@
 </section>
 
 <script>
-    // Additional animations for index page
     document.addEventListener('DOMContentLoaded', function () {
-        // Floating animation for hero icon
-        const heroIcon = document.querySelector('.float-animation');
-        if (heroIcon) {
-            heroIcon.style.animation = 'float 6s ease-in-out infinite';
-        }
-
-        // Staggered animation for feature cards
-        const featureCards = document.querySelectorAll('.feature-card');
-        featureCards.forEach((card, index) => {
-            card.style.animationDelay = `${0.1 + (index * 0.1)}s`;
-        });
-
-        // Parallax effect for hero section
-        window.addEventListener('scroll', function () {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.cyber-hero');
-            if (hero) {
-                hero.style.backgroundPositionY = `${scrolled * 0.5}px`;
-            }
-        });
-
-        // Interactive stats counter
-        const statNumbers = document.querySelectorAll('.stat-number');
+        
+        // --------------------------------------------------
+        // Продвинутый Intersection Observer для всех анимаций
+        // --------------------------------------------------
+        const animatedElements = document.querySelectorAll('.scroll-animate, .stat-number, .timeline-item');
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const statNumber = entry.target;
-                    if (!statNumber.classList.contains('animated')) {
-                        statNumber.classList.add('animated');
-                        const target = parseInt(statNumber.textContent);
-                        const duration = 2000;
-                        const step = target / (duration / 16);
-                        let current = 0;
-
-                        const timer = setInterval(() => {
-                            current += step;
-                            if (current >= target) {
-                                clearInterval(timer);
-                                statNumber.textContent = target + (statNumber.textContent.includes('+') ? '+' : '');
-                            } else {
-                                statNumber.textContent = Math.floor(current) + (statNumber.textContent.includes('+') ? '+' : '');
-                            }
-                        }, 16);
+                    // Элемент виден
+                    
+                    // 1. Общая анимация появления
+                    if (entry.target.classList.contains('scroll-animate') || entry.target.classList.contains('timeline-item')) {
+                        entry.target.classList.add('is-visible');
                     }
+                    
+                    // 2. Анимация счетчика статистики
+                    if (entry.target.classList.contains('stat-number') && !entry.target.classList.contains('animated')) {
+                        animateStat(entry.target);
+                    }
+                    
+                    // Отключаем наблюдение, чтобы анимация не повторялась
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.5 });
-
-        statNumbers.forEach(stat => {
-            observer.observe(stat);
+        }, { 
+            threshold: 0.2 // Запускаем, когда видно 20% элемента
         });
+
+        // Начинаем наблюдение за всеми элементами
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+
+        // --------------------------------------------------
+        // Функция: Анимация счетчика статистики
+        // --------------------------------------------------
+        function animateStat(statNumber) {
+            statNumber.classList.add('animated');
+            
+            const targetText = statNumber.textContent;
+            const hasPlus = targetText.includes('+');
+            const target = parseInt(targetText.replace('+', ''));
+            
+            if (isNaN(target)) return; 
+
+            const duration = 2000;
+            let start = 0;
+            const stepTime = 16; // ~60 fps
+            const totalSteps = Math.round(duration / stepTime);
+            const increment = target / totalSteps;
+
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    clearInterval(timer);
+                    statNumber.textContent = target + (hasPlus ? '+' : '');
+                } else {
+                    statNumber.textContent = Math.floor(start) + (hasPlus ? '+' : '');
+                }
+            }, stepTime);
+        }
+
+        // --------------------------------------------------
+        // Функция: Слайдер отзывов
+        // --------------------------------------------------
+        const track = document.querySelector('.testimonial-slider-track');
+        if (track) {
+            const slides = Array.from(track.children);
+            const nextButton = document.getElementById('nextBtn');
+            const prevButton = document.getElementById('prevBtn');
+            // Проверка, есть ли слайды, прежде чем получать их ширину
+            if(slides.length > 0) {
+                const slideWidth = slides[0].getBoundingClientRect().width;
+                let currentIndex = 0;
+
+                // Функция для перемещения слайдов
+                const moveToSlide = (targetIndex) => {
+                    if (track) {
+                        track.style.transform = 'translateX(-' + slideWidth * targetIndex + 'px)';
+                    }
+                    currentIndex = targetIndex;
+                };
+
+                // Кнопка "Вперед"
+                if (nextButton) {
+                    nextButton.addEventListener('click', () => {
+                        let nextIndex = currentIndex + 1;
+                        if (nextIndex >= slides.length) {
+                            nextIndex = 0; // Возвращаемся в начало
+                        }
+                        moveToSlide(nextIndex);
+                    });
+                }
+
+                // Кнопка "Назад"
+                if (prevButton) {
+                    prevButton.addEventListener('click', () => {
+                        let prevIndex = currentIndex - 1;
+                        if (prevIndex < 0) {
+                            prevIndex = slides.length - 1; // Переходим в конец
+                        }
+                        moveToSlide(prevIndex);
+                    });
+                }
+
+                // Автоматическая прокрутка (опционально)
+                setInterval(() => {
+                    let nextIndex = currentIndex + 1;
+                    if (nextIndex >= slides.length) {
+                        nextIndex = 0;
+                    }
+                    moveToSlide(nextIndex);
+                }, 7000); // Каждые 7 секунд
+
+                // Адаптация при изменении размера окна
+                window.addEventListener('resize', () => {
+                    if (slides.length > 0) {
+                        const newSlideWidth = slides[0].getBoundingClientRect().width;
+                        track.style.transition = 'none'; // Отключаем анимацию
+                        track.style.transform = 'translateX(-' + newSlideWidth * currentIndex + 'px)';
+                        setTimeout(() => {
+                            track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                        }, 50);
+                    }
+                });
+            }
+        }
+
     });
 </script>
+
 {% endblock %}

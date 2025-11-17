@@ -15,6 +15,24 @@
                 </p>
             </div>
 
+            <!-- Блок "В разработке" -->
+            <div class="alert alert-warning mb-4">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-tools display-6 me-3"></i>
+                    <div>
+                        <h5 class="alert-heading mb-2">🚧 Модуль в разработке</h5>
+                        <p class="mb-1">
+                            <strong>Внимание:</strong> В настоящее время используется демо-версия сканера. 
+                            Все результаты являются тестовыми данными для демонстрации возможностей.
+                        </p>
+                        <p class="mb-0">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Реальная функциональность появится в следующих обновлениях
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <div class="scanner-card">
                 <h4 class="cyber-text mb-4">🌐 Сканирование сети</h4>
                 
@@ -23,6 +41,10 @@
                         <label class="form-label cyber-text">Цель сканирования:</label>
                         <input type="text" class="form-control cyber-input" id="targetInput" 
                                value="192.168.1.1" placeholder="IP адрес или домен">
+                        <div class="form-text text-warning">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            Используются демо-данные для тестирования
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label cyber-text">Тип сканирования:</label>
@@ -35,12 +57,12 @@
                 </div>
 
                 <button onclick="scanNetwork()" class="btn btn-cyber w-100 mb-4">
-                    <i class="bi bi-radar me-2"></i>Начать сканирование
+                    <i class="bi bi-radar me-2"></i>Запустить демо-сканирование
                 </button>
 
                 <div class="scan-animation" id="networkScanAnimation" style="display: none;">
                     <div class="cyber-loader mx-auto mb-3"></div>
-                    <p class="cyber-text">Сканирование сети...</p>
+                    <p class="cyber-text">Сканирование сети (демо-режим)...</p>
                     <div class="scan-progress">
                         <div class="progress-bar" id="networkScanProgress" style="width: 0%"></div>
                     </div>
@@ -54,6 +76,11 @@
             <!-- Результаты сканирования -->
             <div class="scanner-card mt-4" id="scanResults" style="display: none;">
                 <h4 class="cyber-text mb-4">📊 Результаты сканирования</h4>
+                
+                <div class="alert alert-info mb-4">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Демо-результаты:</strong> Все данные сгенерированы для тестирования интерфейса
+                </div>
                 
                 <div class="row mb-4">
                     <div class="col-md-4">
@@ -218,7 +245,7 @@ function displayNetworkResult(result) {
     // Показываем рекомендации
     resultDiv.innerHTML = `
         <h5 class="cyber-text mb-3">
-            <i class="bi bi-check-circle text-success me-2"></i>Сканирование завершено
+            <i class="bi bi-check-circle text-success me-2"></i>Демо-сканирование завершено
         </h5>
         
         <div class="security-meter mb-3">

@@ -1432,33 +1432,7 @@
 
             <!-- Sidebar -->
             <div class="col-lg-4">
-                <!-- Instructor Card -->
-                <div class="sidebar-card">
-                    <h5 class="cyber-text-bright mb-4">
-                        <i class="bi bi-person-gear me-2"></i>Инструктор курса
-                    </h5>
-
-                    <div class="d-flex align-items-start mb-4">
-                        <div class="instructor-avatar">
-                            {{ course.instructor.name.split(' ')[0][0] }}{{ course.instructor.name.split(' ')[1][0] }}
-                        </div>
-                        <div>
-                            <h6 class="cyber-text-bright mb-1">{{ course.instructor.name }}</h6>
-                            <p class="cyber-subtext mb-2">{{ course.instructor.role }}</p>
-                            <div class="d-flex gap-2">
-                                <span class="cyber-badge cyber-badge-info">
-                                    <i class="bi bi-star-fill me-1"></i>{{ course.instructor.rating }}
-                                </span>
-                                <span class="cyber-badge">
-                                    <i class="bi bi-people me-1"></i>{{ course.instructor.students }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p class="cyber-text">{{ course.instructor.bio }}</p>
-                </div>
-
+                
                 <!-- Requirements -->
                 <div class="sidebar-card">
                     <h5 class="cyber-text-bright mb-4">
@@ -1473,22 +1447,6 @@
                         </li>
                         {% endfor %}
                     </ul>
-                </div>
-
-                <!-- Course Resources -->
-                <div class="sidebar-card">
-                    <h5 class="cyber-text-bright mb-4">
-                        <i class="bi bi-collection me-2"></i>Ресурсы курса
-                    </h5>
-
-                    <div class="d-grid gap-2">
-                        {% for resource in course.resources %}
-                        <button class="btn btn-cyber-outline text-start"
-                            onclick="downloadResource('{{ resource.name }}')">
-                            <i class="bi bi-{{ resource.icon }} me-2"></i>{{ resource.name }}
-                        </button>
-                        {% endfor %}
-                    </div>
                 </div>
 
                 <!-- Learning Statistics -->

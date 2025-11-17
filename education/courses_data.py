@@ -29,7 +29,7 @@ COURSES_DATA = {
             {"name": "Игровые тесты", "icon": "controller"},
         ],
         "final_exam": True,
-        "video_intro": "https://www.youtube.com/embed/dQw4w9WgXcQ",  # Пример видео
+        "video_intro": "https://rutube.ru/video/b88c977bb0a5abf66cd4d0e959970249/?r=plwd",  # Пример видео
         "modules": [
             {
                 "id": "module-1",
@@ -39,7 +39,7 @@ COURSES_DATA = {
                 "difficulty": "beginner",
                 "estimated_time": "5 часов",
                 "completed_lessons": 0,
-                "video_overview": "https://www.youtube.com/embed/3K4O5j5h5EE",
+                "video_overview": "https://rutube.ru/video/b88c977bb0a5abf66cd4d0e959970249/?r=plwd",
                 "lessons": [
                     {
                         "id": "lesson-1-1",
@@ -49,7 +49,7 @@ COURSES_DATA = {
                         "completed": False,
                         "quiz": True,
                         "practice": False,
-                        "video_url": "https://www.youtube.com/watch?v=pAUzloZkxWE&pp=ygUs0L_QvtGH0LXQvNGDINC_0LDRgNC-0LvQuCDRgtCw0Log0LLQsNC20L3RiyA%3D",
+                        "video_url": "https://rutube.ru/video/b88c977bb0a5abf66cd4d0e959970249/?r=plwd",
                         "sublessons": [
                             {
                                 "id": "sub-1-1-1",

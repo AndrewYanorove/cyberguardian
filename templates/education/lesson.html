@@ -373,8 +373,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ===== INTERACTIVE ELEMENTS ===== */
@@ -711,20 +718,20 @@
             .lesson-header {
                 padding: 1.5rem;
             }
-            
+
             .video-player {
                 height: 300px;
             }
-            
+
             .content-card {
                 padding: 1.5rem;
             }
-            
+
             .lesson-navigation {
                 flex-direction: column;
                 gap: 1rem;
             }
-            
+
             .lesson-navigation .btn {
                 width: 100%;
                 justify-content: center;
@@ -733,9 +740,17 @@
 
         /* ===== ANIMATIONS ===== */
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .pulse {
@@ -744,7 +759,10 @@
 
         /* ===== ACCESSIBILITY ===== */
         @media (prefers-reduced-motion: reduce) {
-            *, ::before, ::after {
+
+            *,
+            ::before,
+            ::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
@@ -814,7 +832,7 @@
                         <div class="col-md-8">
                             <h1 class="cyber-title mb-3">{{ lesson.title }}</h1>
                             <p class="cyber-lead mb-4">{{ lesson.description }}</p>
-                            
+
                             <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
                                 <span class="cyber-badge">
                                     <i class="bi bi-clock me-2"></i>{{ lesson.duration }} минут
@@ -851,13 +869,15 @@
                 <div class="video-container">
                     <div class="video-player" id="videoPlayer">
                         <div class="video-placeholder">
-                            <i class="bi bi-play-circle-fill" style="font-size: 4rem; color: var(--cyber-primary); margin-bottom: 1rem;"></i>
+                            <i class="bi bi-play-circle-fill"
+                                style="font-size: 4rem; color: var(--cyber-primary); margin-bottom: 1rem;"></i>
                             <h4 class="cyber-text-bright mb-2">Видео материал урока</h4>
                             <p class="cyber-subtext text-center px-4">
                                 Загрузите видеофайл или используйте ссылку для просмотра обучающего материала
                             </p>
                             <div class="mt-3">
-                                <button class="btn btn-cyber-outline me-2" onclick="document.getElementById('videoFileInput').click()">
+                                <button class="btn btn-cyber-outline me-2"
+                                    onclick="document.getElementById('videoFileInput').click()">
                                     <i class="bi bi-upload me-2"></i>Загрузить видео
                                 </button>
                                 <button class="btn btn-cyber-outline" onclick="showVideoUrlModal()">
@@ -866,7 +886,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="video-controls">
                         <button class="control-btn" id="playPauseBtn">
                             <i class="bi bi-play-fill"></i>
@@ -889,46 +909,50 @@
                     <h2 class="section-title cyber-text-bright">
                         <i class="bi bi-journal-text me-2"></i>Содержание урока
                     </h2>
-                    
+
                     <div class="lesson-content">
                         {% if lesson.sublessons %}
-                            <div class="sublessons-container">
-                                {% for sublesson in lesson.sublessons %}
-                                <div class="sublesson-item {% if loop.first %}active{% endif %}" data-sublesson-id="{{ sublesson.id }}">
-                                    <div class="sublesson-header">
-                                        <div class="d-flex align-items-center">
-                                            <div class="sublesson-icon">
-                                                <i class="bi bi-{% if sublesson.completed %}check-circle-fill{% else %}play-circle{% endif %}"></i>
-                                            </div>
-                                            <div>
-                                                <h5 class="cyber-text-bright mb-1">{{ sublesson.title }}</h5>
-                                                <p class="cyber-subtext mb-0">{{ sublesson.description }}</p>
-                                            </div>
+                        <div class="sublessons-container">
+                            {% for sublesson in lesson.sublessons %}
+                            <div class="sublesson-item {% if loop.first %}active{% endif %}"
+                                data-sublesson-id="{{ sublesson.id }}">
+                                <div class="sublesson-header">
+                                    <div class="d-flex align-items-center">
+                                        <div class="sublesson-icon">
+                                            <i
+                                                class="bi bi-{% if sublesson.completed %}check-circle-fill{% else %}play-circle{% endif %}"></i>
                                         </div>
-                                        <div class="sublesson-meta">
-                                            <span class="cyber-badge me-3">
-                                                <i class="bi bi-clock me-1"></i>{{ sublesson.duration }} мин
-                                            </span>
-                                            <button class="btn btn-cyber-outline btn-sm toggle-sublesson">
-                                                <i class="bi bi-chevron-down"></i>
-                                            </button>
+                                        <div>
+                                            <h5 class="cyber-text-bright mb-1">{{ sublesson.title }}</h5>
+                                            <p class="cyber-subtext mb-0">{{ sublesson.description }}</p>
                                         </div>
                                     </div>
-                                    
-                                    <div class="sublesson-content">
-                                        {{ sublesson.content|safe }}
-                                        
-                                        <!-- Interactive Elements for Sublesson -->
-                                        {% if loop.index == 1 %}
-                                        <div class="interactive-element mt-4">
-                                            <h6 class="cyber-text-bright mb-3">
-                                                <i class="bi bi-lightbulb me-2 text-warning"></i>Практическое упражнение
-                                            </h6>
-                                            <p class="cyber-text mb-3">
-                                                Попробуйте применить полученные знания на практике. Проанализируйте предложенный сценарий и определите, какие принципы кибербезопасности были нарушены.
-                                            </p>
-                                            <div class="code-block">
-                                                <pre class="cyber-text mb-0"><code>// Пример уязвимого кода
+                                    <div class="sublesson-meta">
+                                        <span class="cyber-badge me-3">
+                                            <i class="bi bi-clock me-1"></i>{{ sublesson.duration }} мин
+                                        </span>
+                                        <button class="btn btn-cyber-outline btn-sm toggle-sublesson">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="sublesson-content">
+                                    {{ sublesson.content|safe }}
+
+                                    <!-- Interactive Elements for Sublesson -->
+                                    {% if loop.index == 1 %}
+                                    <div class="interactive-element mt-4">
+                                        <h6 class="cyber-text-bright mb-3">
+                                            <i class="bi bi-lightbulb me-2 text-warning"></i>Практическое упражнение
+                                        </h6>
+                                        <p class="cyber-text mb-3">
+                                            Попробуйте применить полученные знания на практике. Проанализируйте
+                                            предложенный сценарий и определите, какие принципы кибербезопасности были
+                                            нарушены.
+                                        </p>
+                                        <div class="code-block">
+                                            <pre class="cyber-text mb-0"><code>// Пример уязвимого кода
 function processUserData(userData) {
     // Нарушение конфиденциальности - данные не шифруются
     localStorage.setItem('user_data', JSON.stringify(userData));
@@ -939,24 +963,26 @@ function processUserData(userData) {
     // Нарушение доступности - нет обработки ошибок
     sendToServer(userData);
 }</code></pre>
-                                            </div>
-                                            <button class="btn btn-cyber-outline mt-3" onclick="analyzeCode()">
-                                                <i class="bi bi-search me-2"></i>Проанализировать код
-                                            </button>
                                         </div>
-                                        {% endif %}
+                                        <button class="btn btn-cyber-outline mt-3" onclick="analyzeCode()">
+                                            <i class="bi bi-search me-2"></i>Проанализировать код
+                                        </button>
                                     </div>
+                                    {% endif %}
                                 </div>
-                                {% endfor %}
                             </div>
+                            {% endfor %}
+                        </div>
                         {% else %}
-                            <div class="text-center py-5">
-                                <i class="bi bi-journal-x" style="font-size: 3rem; color: var(--cyber-subtext); margin-bottom: 1rem;"></i>
-                                <h4 class="cyber-text mb-3">Контент урока готовится</h4>
-                                <p class="cyber-subtext">
-                                    Материалы для этого урока находятся в разработке. Скоро здесь появится полезный и интересный контент.
-                                </p>
-                            </div>
+                        <div class="text-center py-5">
+                            <i class="bi bi-journal-x"
+                                style="font-size: 3rem; color: var(--cyber-subtext); margin-bottom: 1rem;"></i>
+                            <h4 class="cyber-text mb-3">Контент урока готовится</h4>
+                            <p class="cyber-subtext">
+                                Материалы для этого урока находятся в разработке. Скоро здесь появится полезный и
+                                интересный контент.
+                            </p>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -970,12 +996,13 @@ function processUserData(userData) {
                                 <i class="bi bi-code-slash me-2"></i>Практическое задание
                             </h4>
                             <p class="cyber-text mb-0">
-                                Это урок содержит практическое задание для закрепления материала. Примените полученные знания на практике.
+                                Это урок содержит практическое задание для закрепления материала. Примените полученные
+                                знания на практике.
                             </p>
                         </div>
                         <div class="col-md-4 text-end">
-                            <a href="{{ url_for('education.lesson_practice', course_id=course.id, lesson_id=lesson.id) }}" 
-                               class="btn btn-cyber">
+                            <a href="{{ url_for('education.lesson_practice', course_id=course.id, lesson_id=lesson.id) }}"
+                                class="btn btn-cyber">
                                 <i class="bi bi-arrow-right me-2"></i>Перейти к практике
                             </a>
                         </div>
@@ -996,8 +1023,8 @@ function processUserData(userData) {
                             </p>
                         </div>
                         <div class="col-md-4 text-end">
-                            <a href="{{ url_for('education.lesson_quiz', course_id=course.id, lesson_id=lesson.id) }}" 
-                               class="btn btn-cyber-warning" id="startQuizBtn">
+                            <a href="{{ url_for('education.lesson_quiz', course_id=course.id, lesson_id=lesson.id) }}"
+                                class="btn btn-cyber-warning" id="startQuizBtn">
                                 <i class="bi bi-play-circle me-2"></i>Начать тест
                             </a>
                         </div>
@@ -1008,13 +1035,12 @@ function processUserData(userData) {
                 <!-- Lesson Navigation -->
                 <div class="lesson-navigation">
                     {% if prev_lesson %}
-                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=prev_lesson.id) }}" 
-                       class="btn btn-cyber-outline">
+                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=prev_lesson.id) }}"
+                        class="btn btn-cyber-outline">
                         <i class="bi bi-arrow-left me-2"></i>Предыдущий урок
                     </a>
                     {% else %}
-                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
-                       class="btn btn-cyber-outline">
+                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber-outline">
                         <i class="bi bi-arrow-left me-2"></i>К содержанию курса
                     </a>
                     {% endif %}
@@ -1024,13 +1050,12 @@ function processUserData(userData) {
                     </button>
 
                     {% if next_lesson %}
-                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=next_lesson.id) }}" 
-                       class="btn btn-cyber">
+                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=next_lesson.id) }}"
+                        class="btn btn-cyber">
                         Следующий урок <i class="bi bi-arrow-right ms-2"></i>
                     </a>
                     {% else %}
-                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
-                       class="btn btn-cyber">
+                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
                         Завершить курс <i class="bi bi-check-lg ms-2"></i>
                     </a>
                     {% endif %}
@@ -1044,7 +1069,7 @@ function processUserData(userData) {
                     <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-graph-up me-2"></i>Прогресс урока
                     </h5>
-                    
+
                     <div class="progress-ring mb-3">
                         <svg class="progress-ring-circle" width="120" height="120">
                             <circle class="progress-ring-bg" cx="60" cy="60" r="50"></circle>
@@ -1052,7 +1077,7 @@ function processUserData(userData) {
                         </svg>
                         <div class="progress-text" id="lessonProgressText">0%</div>
                     </div>
-                    
+
                     <div class="cyber-progress mb-2">
                         <div class="cyber-progress-bar" id="lessonProgressBar" style="width: 0%"></div>
                     </div>
@@ -1067,13 +1092,15 @@ function processUserData(userData) {
                     <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-cloud-upload me-2"></i>Загрузка видео
                     </h5>
-                    
+
                     <div class="upload-area" id="uploadArea">
-                        <i class="bi bi-cloud-upload" style="font-size: 2.5rem; color: var(--cyber-primary); margin-bottom: 1rem;"></i>
+                        <i class="bi bi-cloud-upload"
+                            style="font-size: 2.5rem; color: var(--cyber-primary); margin-bottom: 1rem;"></i>
                         <h6 class="cyber-text-bright mb-2">Перетащите видео файл сюда</h6>
                         <p class="cyber-subtext mb-3">или</p>
                         <input type="file" class="d-none" id="videoFileInput" accept="video/*">
-                        <button class="btn btn-cyber-outline btn-sm" onclick="document.getElementById('videoFileInput').click()">
+                        <button class="btn btn-cyber-outline btn-sm"
+                            onclick="document.getElementById('videoFileInput').click()">
                             Выберите файл
                         </button>
                         <p class="cyber-subtext mt-3 mb-0">
@@ -1082,9 +1109,9 @@ function processUserData(userData) {
                     </div>
 
                     <div class="mt-3">
-                        <input type="text" class="form-control mb-2" id="videoUrl" 
-                               placeholder="Или вставьте ссылку на видео" 
-                               style="background: var(--cyber-bg-card-light); border-color: var(--cyber-border); color: var(--cyber-text);">
+                        <input type="text" class="form-control mb-2" id="videoUrl"
+                            placeholder="Или вставьте ссылку на видео"
+                            style="background: var(--cyber-bg-card-light); border-color: var(--cyber-border); color: var(--cyber-text);">
                         <button class="btn btn-cyber w-100" id="loadVideoBtn">
                             <i class="bi bi-link-45deg me-2"></i>Загрузить по ссылке
                         </button>
@@ -1096,9 +1123,10 @@ function processUserData(userData) {
                     <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-collection-play me-2"></i>Библиотека видео
                     </h5>
-                    
+
                     <div class="video-library">
-                        <div class="video-item active" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4">
+                        <div class="video-item active"
+                            data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4">
                             <div class="video-thumbnail">
                                 <i class="bi bi-play-circle-fill"></i>
                             </div>
@@ -1107,7 +1135,8 @@ function processUserData(userData) {
                                 <div class="cyber-subtext smaller">Введение в триаду CIA</div>
                             </div>
                         </div>
-                        <div class="video-item" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4">
+                        <div class="video-item"
+                            data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4">
                             <div class="video-thumbnail">
                                 <i class="bi bi-play-circle-fill"></i>
                             </div>
@@ -1116,7 +1145,8 @@ function processUserData(userData) {
                                 <div class="cyber-subtext smaller">Вирусы, трояны, ransomware</div>
                             </div>
                         </div>
-                        <div class="video-item" data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4">
+                        <div class="video-item"
+                            data-video-url="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_5mb.mp4">
                             <div class="video-thumbnail">
                                 <i class="bi bi-play-circle-fill"></i>
                             </div>
@@ -1133,7 +1163,7 @@ function processUserData(userData) {
                     <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-download me-2"></i>Ресурсы урока
                     </h5>
-                    
+
                     <ul class="resources-list">
                         <li class="resource-item">
                             <div class="resource-icon">
@@ -1191,9 +1221,10 @@ function processUserData(userData) {
                     <h5 class="cyber-text-bright mb-4">
                         <i class="bi bi-lightning me-2"></i>Быстрые действия
                     </h5>
-                    
+
                     <div class="d-grid gap-2">
-                        <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber-outline text-start">
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}"
+                            class="btn btn-cyber-outline text-start">
                             <i class="bi bi-arrow-left me-2"></i>Назад к курсу
                         </a>
                         <button class="btn btn-cyber-outline text-start" onclick="addBookmark()">
@@ -1223,9 +1254,9 @@ function processUserData(userData) {
                 </div>
                 <div class="modal-body">
                     <p class="cyber-text mb-3">Введите ссылку на видео (YouTube, Vimeo или прямой URL):</p>
-                    <input type="url" class="form-control mb-3" id="modalVideoUrl" 
-                           placeholder="https://www.youtube.com/watch?v=..." 
-                           style="background: var(--cyber-bg-card-light); border-color: var(--cyber-border); color: var(--cyber-text);">
+                    <input type="url" class="form-control mb-3" id="modalVideoUrl"
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        style="background: var(--cyber-bg-card-light); border-color: var(--cyber-border); color: var(--cyber-text);">
                     <div class="form-text cyber-subtext">
                         Поддерживаются: YouTube, Vimeo, MP4, WebM, MOV ссылки
                     </div>
@@ -1247,6 +1278,9 @@ function processUserData(userData) {
         let videoProgress = 0;
         let videoDuration = 0;
         let currentSublesson = 0;
+        let isLessonCompleted = {{ lesson_progress.completed|tojson|default('false') }};
+        let totalTimeSpent = {{ lesson_progress.time_spent|default(0) }};
+        let startTime = new Date();
 
         // DOM Elements
         const videoPlayer = document.getElementById('videoPlayer');
@@ -1268,7 +1302,57 @@ function processUserData(userData) {
             setupVideoPlayer();
             setupSublessons();
             setupEventListeners();
-            updateProgressRing(0);
+            
+            // Initialize progress from server data
+            const initialProgress = {{ lesson_progress.score|default(0) }};
+            updateProgressRing(initialProgress);
+            updateLessonProgress(initialProgress);
+            
+            // Update completion status if already completed
+            if (isLessonCompleted) {
+                markLessonAsCompletedUI();
+            }
+            
+            // Start tracking time
+            startTimeTracking();
+        }
+
+        // Time tracking
+        function startTimeTracking() {
+            // Send initial time update
+            updateTimeSpent();
+            
+            // Update time every 30 seconds
+            setInterval(updateTimeSpent, 30000);
+        }
+
+        function updateTimeSpent() {
+            const currentTime = new Date();
+            const timeDiff = Math.floor((currentTime - startTime) / 1000); // in seconds
+            
+            // Only send update if user spent significant time
+            if (timeDiff > 10) {
+                fetch('/education/api/lesson/time', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        lesson_id: '{{ lesson.id }}',
+                        time_spent: timeDiff
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        totalTimeSpent += timeDiff;
+                        startTime = currentTime; // Reset timer
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating time:', error);
+                });
+            }
         }
 
         // Video Player functionality
@@ -1283,7 +1367,7 @@ function processUserData(userData) {
         function loadVideo(videoUrl) {
             // Clear current video
             videoPlayer.innerHTML = '';
-            
+
             if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
                 loadYouTubeVideo(videoUrl);
             } else if (videoUrl.includes('vimeo.com')) {
@@ -1291,7 +1375,7 @@ function processUserData(userData) {
             } else {
                 loadDirectVideo(videoUrl);
             }
-            
+
             isVideoLoaded = true;
             showNotification('success', 'Видео загружено и готово к просмотру!', 'success');
         }
@@ -1303,7 +1387,7 @@ function processUserData(userData) {
             video.style.width = '100%';
             video.style.height = '100%';
             video.style.objectFit = 'contain';
-            
+
             setupVideoEvents(video);
             videoPlayer.appendChild(video);
             currentVideo = video;
@@ -1317,7 +1401,7 @@ function processUserData(userData) {
             iframe.style.height = '100%';
             iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
             iframe.allowFullscreen = true;
-            
+
             videoPlayer.appendChild(iframe);
             currentVideo = iframe;
             document.querySelector('.video-controls').style.display = 'none';
@@ -1331,7 +1415,7 @@ function processUserData(userData) {
             iframe.style.height = '100%';
             iframe.allow = 'autoplay; fullscreen; picture-in-picture';
             iframe.allowFullscreen = true;
-            
+
             videoPlayer.appendChild(iframe);
             currentVideo = iframe;
             document.querySelector('.video-controls').style.display = 'none';
@@ -1344,25 +1428,25 @@ function processUserData(userData) {
         }
 
         function setupVideoEvents(video) {
-            video.addEventListener('loadedmetadata', function() {
+            video.addEventListener('loadedmetadata', function () {
                 videoDuration = video.duration;
                 updateVideoTime(0, videoDuration);
             });
-            
-            video.addEventListener('timeupdate', function() {
+
+            video.addEventListener('timeupdate', function () {
                 if (videoDuration > 0) {
                     videoProgress = (video.currentTime / video.duration) * 100;
                     videoProgressFilled.style.width = videoProgress + '%';
                     updateVideoTime(video.currentTime, video.duration);
                     updateLessonProgress(videoProgress);
-                    
+
                     if (videoProgress >= 95 && !isLessonCompleted) {
                         markVideoAsCompleted();
                     }
                 }
             });
-            
-            video.addEventListener('ended', function() {
+
+            video.addEventListener('ended', function () {
                 playPauseBtn.innerHTML = '<i class="bi bi-play-fill"></i>';
                 isVideoPlaying = false;
                 markVideoAsCompleted();
@@ -1372,7 +1456,7 @@ function processUserData(userData) {
         // Video controls
         function togglePlayPause() {
             if (!currentVideo) return;
-            
+
             if (currentVideo.tagName === 'VIDEO') {
                 if (isVideoPlaying) {
                     currentVideo.pause();
@@ -1387,12 +1471,12 @@ function processUserData(userData) {
 
         function seekVideo(event) {
             if (!currentVideo || currentVideo.tagName !== 'VIDEO') return;
-            
+
             const progressRect = videoProgressBar.getBoundingClientRect();
             const clickX = event.clientX - progressRect.left;
             const progressWidth = progressRect.width;
             const seekTime = (clickX / progressWidth) * currentVideo.duration;
-            
+
             currentVideo.currentTime = seekTime;
         }
 
@@ -1411,14 +1495,12 @@ function processUserData(userData) {
             const currentSeconds = Math.floor(current % 60);
             const durationMinutes = Math.floor(duration / 60);
             const durationSeconds = Math.floor(duration % 60);
-            
-            videoTime.textContent = 
+
+            videoTime.textContent =
                 `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')} / ${durationMinutes}:${durationSeconds.toString().padStart(2, '0')}`;
         }
 
         // Lesson progress tracking
-        let isLessonCompleted = false;
-
         function updateLessonProgress(progress) {
             const percentage = Math.min(100, Math.max(0, progress));
             lessonProgressBar.style.width = percentage + '%';
@@ -1435,25 +1517,23 @@ function processUserData(userData) {
 
         function markVideoAsCompleted() {
             if (!isLessonCompleted) {
-                isLessonCompleted = true;
-                completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
-                completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
-                showNotification('success', 'Видео просмотрено! Урок завершен.', 'success');
+                // Auto-complete lesson when video is finished
+                completeLessonOnServer(100); // 100% score for watching full video
             }
         }
 
         // Sublessons functionality
         function setupSublessons() {
             document.querySelectorAll('.sublesson-item').forEach((item, index) => {
-                item.addEventListener('click', function(e) {
+                item.addEventListener('click', function (e) {
                     if (!e.target.closest('.toggle-sublesson') && !e.target.closest('button')) {
                         toggleSublesson(this);
                     }
                 });
-                
+
                 const toggleBtn = item.querySelector('.toggle-sublesson');
                 if (toggleBtn) {
-                    toggleBtn.addEventListener('click', function(e) {
+                    toggleBtn.addEventListener('click', function (e) {
                         e.stopPropagation();
                         toggleSublesson(item);
                     });
@@ -1463,7 +1543,7 @@ function processUserData(userData) {
 
         function toggleSublesson(sublessonItem) {
             const isActive = sublessonItem.classList.contains('active');
-            
+
             // Close all sublessons
             document.querySelectorAll('.sublesson-item').forEach(item => {
                 item.classList.remove('active');
@@ -1472,7 +1552,7 @@ function processUserData(userData) {
                     toggleBtn.innerHTML = '<i class="bi bi-chevron-down"></i>';
                 }
             });
-            
+
             // Open clicked sublesson if it wasn't active
             if (!isActive) {
                 sublessonItem.classList.add('active');
@@ -1480,26 +1560,34 @@ function processUserData(userData) {
                 if (toggleBtn) {
                     toggleBtn.innerHTML = '<i class="bi bi-chevron-up"></i>';
                 }
-                
+<<<<<<< HEAD
+
                 // Mark as completed
+=======
+                
+                // Mark as completed in UI
+>>>>>>> 2d172d46bcf64539fa9821e3811d451398253e1c
                 const sublessonIcon = sublessonItem.querySelector('.sublesson-icon i');
                 sublessonIcon.className = 'bi bi-check-circle-fill';
-                
+
                 showNotification('info', `Подурок "${sublessonItem.querySelector('h5').textContent}" завершен!`, 'info');
+                
+                // Update progress on server
+                updateLessonProgressOnServer(25); // 25% progress for each sublesson
             }
         }
 
         // File upload functionality
         function setupEventListeners() {
             // File upload
-            document.getElementById('videoFileInput').addEventListener('change', function(e) {
+            document.getElementById('videoFileInput').addEventListener('change', function (e) {
                 if (e.target.files.length > 0) {
                     handleFileUpload(e.target.files[0]);
                 }
             });
 
             // URL upload
-            document.getElementById('loadVideoBtn').addEventListener('click', function() {
+            document.getElementById('loadVideoBtn').addEventListener('click', function () {
                 const url = document.getElementById('videoUrl').value;
                 if (url) {
                     loadVideo(url);
@@ -1510,7 +1598,7 @@ function processUserData(userData) {
 
             // Video library
             document.querySelectorAll('.video-item').forEach(item => {
-                item.addEventListener('click', function() {
+                item.addEventListener('click', function () {
                     document.querySelectorAll('.video-item').forEach(i => i.classList.remove('active'));
                     this.classList.add('active');
                     const videoUrl = this.getAttribute('data-video-url');
@@ -1520,16 +1608,16 @@ function processUserData(userData) {
 
             // Drag and drop
             const uploadArea = document.getElementById('uploadArea');
-            uploadArea.addEventListener('dragover', function(e) {
+            uploadArea.addEventListener('dragover', function (e) {
                 e.preventDefault();
                 uploadArea.classList.add('dragover');
             });
-            
-            uploadArea.addEventListener('dragleave', function() {
+
+            uploadArea.addEventListener('dragleave', function () {
                 uploadArea.classList.remove('dragover');
             });
-            
-            uploadArea.addEventListener('drop', function(e) {
+
+            uploadArea.addEventListener('drop', function (e) {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
                 const files = e.dataTransfer.files;
@@ -1553,7 +1641,7 @@ function processUserData(userData) {
                     showNotification('error', 'Файл слишком большой. Максимальный размер: 500MB', 'danger');
                     return;
                 }
-                
+
                 const videoUrl = URL.createObjectURL(file);
                 loadVideo(videoUrl);
                 showNotification('success', `Видео "${file.name}" успешно загружено!`, 'success');
@@ -1582,7 +1670,7 @@ function processUserData(userData) {
         // Interactive elements
         function analyzeCode() {
             showNotification('info', 'Анализ кода...', 'info');
-            
+
             setTimeout(() => {
                 const analysisResult = `
                     <div class="alert alert-success mt-3">
@@ -1594,7 +1682,7 @@ function processUserData(userData) {
                         </ul>
                     </div>
                 `;
-                
+
                 document.querySelector('.interactive-element').insertAdjacentHTML('beforeend', analysisResult);
                 showNotification('success', 'Анализ завершен! Найдены уязвимости безопасности.', 'success');
             }, 2000);
@@ -1603,10 +1691,10 @@ function processUserData(userData) {
         function downloadResource(type) {
             const resources = {
                 'presentation': 'Презентация урока',
-                'notes': 'Конспект урока', 
+                'notes': 'Конспект урока',
                 'code': 'Примеры кода'
             };
-            
+
             showNotification('info', `Скачивание: ${resources[type]}`, 'info');
             // In real app, this would trigger actual download
             setTimeout(() => {
@@ -1622,26 +1710,97 @@ function processUserData(userData) {
             }, 1000);
         }
 
+        // Lesson completion API calls
+        function updateLessonProgressOnServer(progressIncrement) {
+            // This would update progress without marking as completed
+            const currentProgress = parseInt(lessonProgressText.textContent);
+            const newProgress = Math.min(100, currentProgress + progressIncrement);
+            updateLessonProgress(newProgress);
+        }
+
+        function completeLessonOnServer(score = 100) {
+            if (isLessonCompleted) return; // Prevent duplicate submissions
+            
+            fetch('/education/api/lesson/complete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    course_id: '{{ course.id }}',
+                    module_id: '{{ module.id }}',
+                    lesson_id: '{{ lesson.id }}',
+                    score: score,
+                    time_spent: totalTimeSpent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    markLessonAsCompletedUI();
+                    showNotification('success', 'Урок завершен! Прогресс сохранен.', 'success');
+                    
+                    // Update course progress if available
+                    if (data.progress) {
+                        console.log('Общий прогресс курса:', data.progress + '%');
+                    }
+                } else {
+                    showNotification('error', 'Ошибка при сохранении прогресса: ' + data.error, 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error completing lesson:', error);
+                showNotification('error', 'Ошибка сети при сохранении прогресса', 'danger');
+            });
+        }
+
+        function markLessonAsCompletedUI() {
+            isLessonCompleted = true;
+            completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
+            completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
+            updateLessonProgress(100);
+            
+            // Disable complete button to prevent duplicate submissions
+            completeLessonBtn.disabled = true;
+            completeLessonBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Урок завершен';
+            completeLessonBtn.classList.remove('btn-cyber-success');
+            completeLessonBtn.classList.add('btn-secondary');
+            
+            // Enable next lesson button if it exists
+            const nextLessonBtn = document.querySelector('a[href*="/lesson/"]');
+            if (nextLessonBtn) {
+                nextLessonBtn.classList.add('pulse');
+            }
+        }
+
         // Lesson actions
         function completeLesson() {
-            if (!isVideoLoaded) {
-                showNotification('warning', 'Пожалуйста, посмотрите видео перед завершением урока', 'warning');
+            if (isLessonCompleted) {
+                showNotification('info', 'Урок уже завершен!', 'info');
                 return;
             }
 
+            if (!isVideoLoaded) {
+                showNotification('warning', 'Рекомендуем посмотреть видео перед завершением урока', 'warning');
+            }
+
             if (confirm('Вы уверены, что хотите отметить урок как завершенный?')) {
+<<<<<<< HEAD
                 isLessonCompleted = true;
                 completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
                 completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
                 updateLessonProgress(100);
-                
+
                 showNotification('success', 'Урок завершен! Переходите к следующему.', 'success');
-                
+
                 // Enable next lesson button if it exists
                 const nextLessonBtn = document.querySelector('a[href*="/lesson/"]');
                 if (nextLessonBtn) {
                     nextLessonBtn.classList.add('pulse');
                 }
+=======
+                completeLessonOnServer(100);
+>>>>>>> 2d172d46bcf64539fa9821e3811d451398253e1c
             }
         }
 
@@ -1668,6 +1827,11 @@ function processUserData(userData) {
 
         // Notification system
         function showNotification(title, message, type) {
+            // Remove existing notifications
+            document.querySelectorAll('.alert.position-fixed').forEach(alert => {
+                alert.remove();
+            });
+
             const notification = document.createElement('div');
             notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
             notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 400px;';
@@ -1691,10 +1855,10 @@ function processUserData(userData) {
         }
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (!currentVideo) return;
-            
-            switch(e.key) {
+
+            switch (e.key) {
                 case ' ':
                     e.preventDefault();
                     togglePlayPause();
@@ -1715,9 +1879,17 @@ function processUserData(userData) {
                 case 'm':
                     if (currentVideo.tagName === 'VIDEO') {
                         currentVideo.muted = !currentVideo.muted;
-                        volumeBtn.innerHTML = currentVideo.muted ? 
-                            '<i class="bi bi-volume-mute-fill"></i>' : 
+                        volumeBtn.innerHTML = currentVideo.muted ?
+                            '<i class="bi bi-volume-mute-fill"></i>' :
                             '<i class="bi bi-volume-up-fill"></i>';
+                    }
+                    break;
+                case 'c':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        if (!isLessonCompleted) {
+                            completeLesson();
+                        }
                     }
                     break;
             }
@@ -1727,4 +1899,5 @@ function processUserData(userData) {
         document.addEventListener('DOMContentLoaded', initLesson);
     </script>
 </body>
+
 </html>

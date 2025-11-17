@@ -169,7 +169,7 @@ class OptimizedGigaChatClient:
             system_prompt, _ = self._optimize_prompt(message)
             
             payload = {
-                "model": "GigaChat-Max",  # ⚡ ИЗМЕНЕНО: GigaChat-Max вместо GigaChat
+                "model": "GigaChat",  # ⚡ ИЗМЕНЕНО: GigaChat-Max вместо GigaChat
                 "messages": [
                     {
                         "role": "system",
