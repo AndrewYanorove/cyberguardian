@@ -183,12 +183,15 @@
             border: 2px solid var(--cyber-border);
             border-radius: 20px;
             padding: 2rem;
+            display: flex;
+            flex-direction: column;
             margin-bottom: 2rem;
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(10px);
             box-shadow: var(--cyber-shadow-soft);
             position: relative;
             overflow: hidden;
+            height: 400px;
         }
 
         .cyber-card::before {
@@ -1474,11 +1477,6 @@
 
                     <div class="course-content">
                         <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
-<<<<<<< HEAD
-
-=======
-                        
->>>>>>> 2d172d46bcf64539fa9821e3811d451398253e1c
                         <!-- Бейдж "В разработке" для всех курсов кроме первого -->
                         {% if course.id != 'cybersecurity-for-teens' %}
                         <div class="position-absolute top-0 end-0 m-3">
@@ -1487,17 +1485,14 @@
                             </span>
                         </div>
                         {% endif %}
-<<<<<<< HEAD
-
-=======
-                        
->>>>>>> 2d172d46bcf64539fa9821e3811d451398253e1c
                         <p class="cyber-text mb-4">{{ course.description }}</p>
 
                         <div class="course-meta d-flex flex-wrap gap-2 mb-4">
                             <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                <i class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
-                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty == 'intermediate' else 'Продвинутый' }}
+                                <i
+                                    class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
+                                == 'intermediate' else 'Продвинутый' }}
                             </span>
                             <span class="cyber-badge">
                                 <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
@@ -1521,7 +1516,8 @@
                             {% if course.id == 'cybersecurity-for-teens' %}
                             <!-- Активная кнопка для основного курса -->
                             <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
-                                <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
+                                <i
+                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
                                 {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
                             </a>
                             {% else %}
