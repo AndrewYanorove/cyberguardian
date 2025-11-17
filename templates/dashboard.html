@@ -4,222 +4,233 @@
 
 {% block extra_css %}
 <style>
-.games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin: 3rem 0;
-}
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
 
-.game-card {
-    background: rgba(20, 20, 20, 0.9);
-    border: 2px solid var(--cyber-border);
-    border-radius: 15px;
-    padding: 2rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
+    /* Добавьте этот стиль */
+    body {
+        padding-top: 2rem;
+    }
 
-.game-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.5s ease;
-}
+    .cyber-icon-large {
+        width: 80px;
+        height: 80px;
+        /* остальные стили */
+    }
 
-.game-card:hover::before {
-    left: 100%;
-}
+    .game-card {
+        background: rgba(20, 20, 20, 0.9);
+        border: 2px solid var(--cyber-border);
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
 
-.game-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--cyber-primary);
-    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
-}
+    .game-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
 
-.game-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: var(--cyber-primary);
-}
+    .game-card:hover::before {
+        left: 100%;
+    }
 
-.game-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: white;
-}
+    .game-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--cyber-primary);
+        box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+    }
 
-.game-description {
-    color: var(--cyber-subtext);
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-}
+    .game-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--cyber-primary);
+    }
 
-.stats-container {
-    background: rgba(20, 20, 20, 0.9);
-    border: 2px solid var(--cyber-border);
-    border-radius: 15px;
-    padding: 2rem;
-    margin: 2rem 0;
-}
+    .game-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: white;
+    }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
+    .game-description {
+        color: var(--cyber-subtext);
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
 
-.stat-item {
-    text-align: center;
-    padding: 1.5rem;
-    background: rgba(30, 30, 30, 0.8);
-    border-radius: 10px;
-    border: 1px solid var(--cyber-border);
-}
+    .stats-container {
+        background: rgba(20, 20, 20, 0.9);
+        border: 2px solid var(--cyber-border);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
 
-.stat-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: var(--cyber-primary);
-    margin-bottom: 0.5rem;
-}
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
 
-.stat-label {
-    color: var(--cyber-subtext);
-    font-size: 0.9rem;
-}
+    .stat-item {
+        text-align: center;
+        padding: 1.5rem;
+        background: rgba(30, 30, 30, 0.8);
+        border-radius: 10px;
+        border: 1px solid var(--cyber-border);
+    }
 
-.leaderboard {
-    background: rgba(20, 20, 20, 0.9);
-    border: 2px solid var(--cyber-border);
-    border-radius: 15px;
-    padding: 2rem;
-    margin: 2rem 0;
-}
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--cyber-primary);
+        margin-bottom: 0.5rem;
+    }
 
-.leader-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: background 0.3s ease;
-}
+    .stat-label {
+        color: var(--cyber-subtext);
+        font-size: 0.9rem;
+    }
 
-.leader-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
+    .leaderboard {
+        background: rgba(20, 20, 20, 0.9);
+        border: 2px solid var(--cyber-border);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
 
-.leader-item:last-child {
-    border-bottom: none;
-}
+    .leader-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: background 0.3s ease;
+    }
 
-.leader-rank {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--cyber-primary);
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-right: 1rem;
-}
+    .leader-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
 
-.leader-avatar {
-    font-size: 1.5rem;
-    margin-right: 1rem;
-}
+    .leader-item:last-child {
+        border-bottom: none;
+    }
 
-.leader-info {
-    flex: 1;
-}
+    .leader-rank {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--cyber-primary);
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 1rem;
+    }
 
-.leader-name {
-    font-weight: bold;
-    color: white;
-}
+    .leader-avatar {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
 
-.leader-stats {
-    color: var(--cyber-subtext);
-    font-size: 0.9rem;
-}
+    .leader-info {
+        flex: 1;
+    }
 
-.leader-score {
-    font-weight: bold;
-    color: var(--cyber-primary);
-}
+    .leader-name {
+        font-weight: bold;
+        color: white;
+    }
 
-.featured-game {
-    background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
-    border: 2px solid var(--cyber-primary);
-    border-radius: 15px;
-    padding: 2rem;
-    margin: 2rem 0;
-    text-align: center;
-}
+    .leader-stats {
+        color: var(--cyber-subtext);
+        font-size: 0.9rem;
+    }
 
-.featured-badge {
-    background: var(--cyber-primary);
-    color: black;
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    display: inline-block;
-    margin-bottom: 1rem;
-}
+    .leader-score {
+        font-weight: bold;
+        color: var(--cyber-primary);
+    }
 
-.achievements {
-    background: rgba(20, 20, 20, 0.9);
-    border: 2px solid var(--cyber-border);
-    border-radius: 15px;
-    padding: 2rem;
-    margin: 2rem 0;
-}
+    .featured-game {
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+        border: 2px solid var(--cyber-primary);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem 0;
+        text-align: center;
+    }
 
-.achievement-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
+    .featured-badge {
+        background: var(--cyber-primary);
+        color: black;
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
 
-.achievement-item {
-    text-align: center;
-    padding: 1rem;
-    background: rgba(30, 30, 30, 0.8);
-    border-radius: 10px;
-    border: 1px solid var(--cyber-border);
-    transition: all 0.3s ease;
-}
+    .achievements {
+        background: rgba(20, 20, 20, 0.9);
+        border: 2px solid var(--cyber-border);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
 
-.achievement-item.locked {
-    opacity: 0.5;
-}
+    .achievement-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
 
-.achievement-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
+    .achievement-item {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(30, 30, 30, 0.8);
+        border-radius: 10px;
+        border: 1px solid var(--cyber-border);
+        transition: all 0.3s ease;
+    }
 
-.achievement-name {
-    font-size: 0.9rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
+    .achievement-item.locked {
+        opacity: 0.5;
+    }
 
-.achievement-desc {
-    font-size: 0.8rem;
-    color: var(--cyber-subtext);
-}
+    .achievement-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .achievement-name {
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .achievement-desc {
+        font-size: 0.8rem;
+        color: var(--cyber-subtext);
+    }
 </style>
 {% endblock %}
 
@@ -244,7 +255,7 @@
                 <span class="featured-badge">ИГРА НЕДЕЛИ</span>
                 <h2 class="cyber-text mb-3">Охотник за фишингом</h2>
                 <p class="cyber-subtext mb-4">
-                    Научитесь распознавать мошеннические письма и защитите себя от фишинговых атак. 
+                    Научитесь распознавать мошеннические письма и защитите себя от фишинговых атак.
                     Проверьте свою бдительность в этой увлекательной игре!
                 </p>
                 <a href="{{ url_for('games.phishing_hunter') }}" class="btn btn-cyber btn-lg">
@@ -266,7 +277,8 @@
                     </div>
                     <div class="game-title">Охотник за фишингом</div>
                     <div class="game-description">
-                        Научитесь распознавать мошеннические письма. Анализируйте emails и определяйте, какие из них представляют угрозу.
+                        Научитесь распознавать мошеннические письма. Анализируйте emails и определяйте, какие из них
+                        представляют угрозу.
                     </div>
                     <a href="{{ url_for('games.phishing_hunter') }}" class="btn btn-cyber">
                         <i class="bi bi-play-circle me-2"></i>Играть
@@ -280,7 +292,8 @@
                     </div>
                     <div class="game-title">Мастер <br> паролей</div>
                     <div class="game-description">
-                        Оценивайте надежность паролей и создавайте собственные. Узнайте, как создать действительно безопасный пароль.
+                        Оценивайте надежность паролей и создавайте собственные. Узнайте, как создать действительно
+                        безопасный пароль.
                     </div>
                     <a href="{{ url_for('games.password_master') }}" class="btn btn-cyber">
                         <i class="bi bi-play-circle me-2"></i>Играть
@@ -294,7 +307,8 @@
                     </div>
                     <div class="game-title">Шифровальный вызов</div>
                     <div class="game-description">
-                        Освойте основы криптографии. Шифруйте сообщения с помощью различных методов и разгадывайте шифры.
+                        Освойте основы криптографии. Шифруйте сообщения с помощью различных методов и разгадывайте
+                        шифры.
                     </div>
                     <a href="{{ url_for('games.encryption_challenge') }}" class="btn btn-cyber">
                         <i class="bi bi-play-circle me-2"></i>Играть
@@ -308,7 +322,8 @@
                     </div>
                     <div class="game-title">Онлайн Кибер-квиз</div>
                     <div class="game-description">
-                        Проверьте свои знания по кибербезопасности. Ответьте на вопросы и узнайте, насколько вы осведомлены в цифровой безопасности.
+                        Проверьте свои знания по кибербезопасности. Ответьте на вопросы и узнайте, насколько вы
+                        осведомлены в цифровой безопасности.
                     </div>
                     <a href="{{ url_for('games.cyber_quiz') }}" class="btn btn-cyber">
                         <i class="bi bi-play-circle me-2"></i>Играть
@@ -404,54 +419,54 @@
 
 {% block extra_js %}
 <script>
-// Загрузка статистики
-async function loadStats() {
-    try {
-        const response = await fetch('/games/api/games/stats');
-        const data = await response.json();
-        updateStatsDisplay(data);
-    } catch (error) {
-        console.error('Ошибка загрузки статистики:', error);
+    // Загрузка статистики
+    async function loadStats() {
+        try {
+            const response = await fetch('/games/api/games/stats');
+            const data = await response.json();
+            updateStatsDisplay(data);
+        } catch (error) {
+            console.error('Ошибка загрузки статистики:', error);
+        }
     }
-}
 
-// Обновление отображения статистики
-function updateStatsDisplay(stats) {
-    const overall = stats.overall || {};
-    
-    document.querySelector('#statsGrid .stat-item:nth-child(1) .stat-value').textContent = 
-        overall.total_games || 0;
-    document.querySelector('#statsGrid .stat-item:nth-child(2) .stat-value').textContent = 
-        overall.total_score || 0;
-    document.querySelector('#statsGrid .stat-item:nth-child(3) .stat-value').textContent = 
-        overall.win_rate ? overall.win_rate + '%' : '0%';
-    
-    // Подсчет достижений (простая логика)
-    let achievements = 0;
-    if (overall.total_games > 10) achievements++;
-    if (overall.total_score > 1000) achievements++;
-    if (overall.win_rate > 80) achievements++;
-    
-    document.querySelector('#statsGrid .stat-item:nth-child(4) .stat-value').textContent = 
-        achievements;
-}
+    // Обновление отображения статистики
+    function updateStatsDisplay(stats) {
+        const overall = stats.overall || {};
 
-// Загрузка таблицы лидеров
-async function loadLeaderboard() {
-    try {
-        const response = await fetch('/games/api/games/leaderboard');
-        const data = await response.json();
-        updateLeaderboardDisplay(data.leaders);
-    } catch (error) {
-        console.error('Ошибка загрузки лидерборда:', error);
+        document.querySelector('#statsGrid .stat-item:nth-child(1) .stat-value').textContent =
+            overall.total_games || 0;
+        document.querySelector('#statsGrid .stat-item:nth-child(2) .stat-value').textContent =
+            overall.total_score || 0;
+        document.querySelector('#statsGrid .stat-item:nth-child(3) .stat-value').textContent =
+            overall.win_rate ? overall.win_rate + '%' : '0%';
+
+        // Подсчет достижений (простая логика)
+        let achievements = 0;
+        if (overall.total_games > 10) achievements++;
+        if (overall.total_score > 1000) achievements++;
+        if (overall.win_rate > 80) achievements++;
+
+        document.querySelector('#statsGrid .stat-item:nth-child(4) .stat-value').textContent =
+            achievements;
     }
-}
 
-// Обновление таблицы лидеров
-function updateLeaderboardDisplay(leaders) {
-    const leaderboardList = document.getElementById('leaderboardList');
-    
-    leaderboardList.innerHTML = leaders.map((leader, index) => `
+    // Загрузка таблицы лидеров
+    async function loadLeaderboard() {
+        try {
+            const response = await fetch('/games/api/games/leaderboard');
+            const data = await response.json();
+            updateLeaderboardDisplay(data.leaders);
+        } catch (error) {
+            console.error('Ошибка загрузки лидерборда:', error);
+        }
+    }
+
+    // Обновление таблицы лидеров
+    function updateLeaderboardDisplay(leaders) {
+        const leaderboardList = document.getElementById('leaderboardList');
+
+        leaderboardList.innerHTML = leaders.map((leader, index) => `
         <div class="leader-item">
             <div class="leader-rank">${index + 1}</div>
             <div class="leader-avatar">${leader.avatar}</div>
@@ -462,48 +477,48 @@ function updateLeaderboardDisplay(leaders) {
             <div class="leader-score">${leader.score}</div>
         </div>
     `).join('');
-}
-
-// Сброс статистики
-async function resetStats() {
-    if (!confirm('Вы уверены, что хотите сбросить всю статистику игр?')) {
-        return;
     }
-    
-    try {
-        const response = await fetch('/games/api/games/reset', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        
-        const result = await response.json();
-        if (result.success) {
-            showAlert('Статистика успешно сброшена!', 'success');
-            loadStats();
+
+    // Сброс статистики
+    async function resetStats() {
+        if (!confirm('Вы уверены, что хотите сбросить всю статистику игр?')) {
+            return;
         }
-    } catch (error) {
-        console.error('Ошибка сброса статистики:', error);
-        showAlert('Ошибка при сбросе статистики', 'danger');
-    }
-}
 
-// Показать алерт
-function showAlert(message, type) {
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.innerHTML = `
+        try {
+            const response = await fetch('/games/api/games/reset', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                showAlert('Статистика успешно сброшена!', 'success');
+                loadStats();
+            }
+        } catch (error) {
+            console.error('Ошибка сброса статистики:', error);
+            showAlert('Ошибка при сбросе статистики', 'danger');
+        }
+    }
+
+    // Показать алерт
+    function showAlert(message, type) {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.innerHTML = `
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    document.querySelector('.container').prepend(alert);
-}
+        document.querySelector('.container').prepend(alert);
+    }
 
-// Запуск при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    loadStats();
-    loadLeaderboard();
-});
+    // Запуск при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function () {
+        loadStats();
+        loadLeaderboard();
+    });
 </script>
 {% endblock %}

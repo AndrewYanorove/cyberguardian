@@ -7,7 +7,7 @@ COURSES_DATA = {
         "title": "Кибербезопасность для подростков",
         "description": "Увлекательный курс по основам цифровой безопасности. Научись защищать свои данные и распознавать интернет-угрозы.",
         "difficulty": "beginner",
-        "estimated_time": "30 часов",
+        "estimated_time": "1 минута",
         "rating": 4.9,
         "students_count": 25420,
         "instructor": {
