@@ -668,9 +668,6 @@
 
         /* ===== NAVIGATION ===== */
         .lesson-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-top: 3rem;
             padding-top: 2rem;
             border-top: 2px solid var(--cyber-border);
@@ -686,6 +683,19 @@
             font-weight: 600;
             color: var(--cyber-text);
             transition: all 0.3s ease;
+        }
+
+        /* ===== CARD TEXT FIX ===== */
+        .card-body {
+            color: var(--cyber-text) !important;
+        }
+
+        .card-body h5 {
+            color: var(--cyber-text-bright) !important;
+        }
+
+        .card-body p {
+            color: var(--cyber-text) !important;
         }
 
         .cyber-badge-primary {
@@ -1008,33 +1018,40 @@ function processUserData(userData) {
 
                 <!-- Lesson Navigation -->
                 <div class="lesson-navigation">
-                    {% if prev_lesson %}
-                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=prev_lesson.id) }}" 
-                       class="btn btn-cyber-outline">
-                        <i class="bi bi-arrow-left me-2"></i>Предыдущий урок
-                    </a>
-                    {% else %}
-                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
-                       class="btn btn-cyber-outline">
-                        <i class="bi bi-arrow-left me-2"></i>К содержанию курса
-                    </a>
-                    {% endif %}
+                    <div class="alert alert-info mb-3">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Завершение урока:</strong> если вы просмотрели все материалы урока и завершили тест, нажмите кнопку и завершите урок
+                    </div>
 
-                    <button class="btn btn-cyber-success" id="completeLessonBtn">
-                        <i class="bi bi-check-circle me-2"></i>Завершить урок
-                    </button>
+                    <div class="d-flex justify-content-between align-items-center">
+                        {% if prev_lesson %}
+                        <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=prev_lesson.id) }}"
+                           class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-left me-2"></i>Предыдущий урок
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}"
+                           class="btn btn-cyber-outline">
+                            <i class="bi bi-arrow-left me-2"></i>К содержанию курса
+                        </a>
+                        {% endif %}
 
-                    {% if next_lesson %}
-                    <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=next_lesson.id) }}" 
-                       class="btn btn-cyber">
-                        Следующий урок <i class="bi bi-arrow-right ms-2"></i>
-                    </a>
-                    {% else %}
-                    <a href="{{ url_for('education.course_page', course_id=course.id) }}" 
-                       class="btn btn-cyber">
-                        Завершить курс <i class="bi bi-check-lg ms-2"></i>
-                    </a>
-                    {% endif %}
+                        <button class="btn btn-cyber-success" id="completeLessonBtn">
+                            <i class="bi bi-check-circle me-2"></i>Завершить урок
+                        </button>
+
+                        {% if next_lesson %}
+                        <a href="{{ url_for('education.lesson_page', course_id=course.id, lesson_id=next_lesson.id) }}"
+                           class="btn btn-cyber">
+                            Следующий урок <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('education.course_page', course_id=course.id) }}"
+                           class="btn btn-cyber">
+                            Завершить курс <i class="bi bi-check-lg ms-2"></i>
+                        </a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
@@ -1393,12 +1410,6 @@ function processUserData(userData) {
         // Sublessons functionality
         function setupSublessons() {
             document.querySelectorAll('.sublesson-item').forEach((item, index) => {
-                item.addEventListener('click', function(e) {
-                    if (!e.target.closest('.toggle-sublesson') && !e.target.closest('button')) {
-                        toggleSublesson(this);
-                    }
-                });
-                
                 const toggleBtn = item.querySelector('.toggle-sublesson');
                 if (toggleBtn) {
                     toggleBtn.addEventListener('click', function(e) {
