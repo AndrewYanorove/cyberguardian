@@ -359,53 +359,33 @@ def submit_quiz():
     module_id = data.get('module_id')
     lesson_id = data.get('lesson_id')
     answers = data.get('answers', {})
-    
+    score = data.get('score', 0)
+    max_score = data.get('max_score', 0)
+    percentage = data.get('percentage', 0)
+    passed = data.get('passed', False)
+
+    print(f"Quiz submit received: course_id={course_id}, lesson_id={lesson_id}, score={score}, passed={passed}")
+
     quiz_data = get_quiz(lesson_id)
     if not quiz_data:
         return jsonify({'error': 'Quiz not found'}), 404
-    
-    # Проверяем ответы
-    results = []
-    total_score = 0
-    max_score = len(quiz_data['questions'])
-    
-    for question in quiz_data['questions']:
-        question_id = str(question['id'])
-        user_answer = answers.get(question_id)
-        is_correct = False
-        
-        if question['type'] == 'multiple_choice':
-            is_correct = user_answer == question['correct_answer']
-        elif question['type'] == 'multiple_select':
-            is_correct = set(user_answer or []) == set(question['correct_answers'])
-        elif question['type'] == 'matching':
-            is_correct = True
-        
-        results.append({
-            'question_id': question_id,
-            'is_correct': is_correct,
-            'explanation': question.get('explanation', '')
-        })
-        
-        if is_correct:
-            total_score += 1
-    
-    percentage = (total_score / max_score) * 100 if max_score > 0 else 0
-    passed = percentage >= 70
-    
+
     # Сохраняем результаты теста в прогресс
     if course_id and module_id:
         success = ProgressService.mark_quiz_completed(
-            current_user.id, course_id, module_id, lesson_id, 
-            total_score, max_score, passed
+            current_user.id, course_id, module_id, lesson_id,
+            score, max_score, passed
         )
-    
+        print(f"Progress saved: success={success}")
+    else:
+        success = False
+        print("Missing course_id or module_id")
+
     return jsonify({
         'success': True,
-        'score': total_score,
+        'score': score,
         'max_score': max_score,
         'percentage': percentage,
-        'results': results,
         'passed': passed,
         'progress': ProgressService.get_course_progress(current_user.id, course_id) if course_id else 0
     })
