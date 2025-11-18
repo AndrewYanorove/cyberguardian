@@ -400,6 +400,7 @@
             overflow-x: auto;
             font-family: 'Courier New', monospace;
             position: relative;
+            color: var(--cyber-text);
         }
 
         .code-block::before {
@@ -937,21 +938,36 @@
                                             <p class="cyber-text mb-3">
                                                 Попробуйте применить полученные знания на практике. Проанализируйте предложенный сценарий и определите, какие принципы кибербезопасности были нарушены.
                                             </p>
-                                            <div class="code-block">
-                                                <pre class="cyber-text mb-0"><code>// Пример уязвимого кода
-function processUserData(userData) {
-    // Нарушение конфиденциальности - данные не шифруются
-    localStorage.setItem('user_data', JSON.stringify(userData));
-    
-    // Нарушение целостности - нет проверки данных
-    updateUserProfile(userData);
-    
-    // Нарушение доступности - нет обработки ошибок
-    sendToServer(userData);
-}</code></pre>
+                                            <div class="scenario-block">
+                                                <p class="cyber-text mb-3">
+                                                    <strong>Сценарий:</strong> Вы получили email от "вашего банка" с темой "Срочное обновление пароля". В письме говорится, что ваш аккаунт будет заблокирован через 24 часа, если вы не обновите пароль. Есть ссылка "Обновить пароль сейчас". Что вы сделаете?
+                                                </p>
+                                                <div class="mb-3">
+                                                    <label class="cyber-text-bright">Ваш ответ:</label>
+                                                    <textarea id="scenarioAnswer" class="form-control" rows="3" placeholder="Опишите, что вы предпримете в этой ситуации..."></textarea>
+                                                </div>
+                                                <button class="btn btn-cyber-outline me-2" onclick="saveAnswer()">
+                                                    <i class="bi bi-save me-2"></i>Сохранить ответ
+                                                </button>
+                                                <button class="btn btn-cyber-outline" onclick="analyzeScenario()">
+                                                    <i class="bi bi-search me-2"></i>Проанализировать сценарий
+                                                </button>
                                             </div>
-                                            <button class="btn btn-cyber-outline mt-3" onclick="analyzeCode()">
-                                                <i class="bi bi-search me-2"></i>Проанализировать код
+                                        </div>
+                                        {% elif loop.index == 2 %}
+                                        <div class="interactive-element mt-4">
+                                            <h6 class="cyber-text-bright mb-3">
+                                                <i class="bi bi-shield-check me-2 text-success"></i>Планирование защиты
+                                            </h6>
+                                            <p class="cyber-text mb-3">
+                                                Создайте план защиты ваших данных в интернете. Опишите шаги, которые вы предпримете для обеспечения безопасности.
+                                            </p>
+                                            <div class="mb-3">
+                                                <label class="cyber-text-bright">Ваш план защиты:</label>
+                                                <textarea id="storagePlan" class="form-control" rows="4" placeholder="Опишите ваш план защиты данных..."></textarea>
+                                            </div>
+                                            <button class="btn btn-cyber-outline" onclick="saveStoragePlan()">
+                                                <i class="bi bi-save me-2"></i>Сохранить план
                                             </button>
                                         </div>
                                         {% endif %}
@@ -1161,9 +1177,13 @@ function processUserData(userData) {
         let videoProgress = 0;
         let videoDuration = 0;
         let currentSublesson = 0;
-        let isLessonCompleted = {{ lesson_progress.completed|tojson|default('false') }};
-        let totalTimeSpent = {{ lesson_progress.time_spent|default(0) }};
+        let isLessonCompleted = false;
+        let totalTimeSpent = 0;
         let startTime = new Date();
+
+        // Lesson progress data from server
+        const lessonProgressData = {{ lesson_progress|tojson }};
+        isLessonCompleted = lessonProgressData.completed;
 
         // DOM Elements
         const videoPlayer = document.getElementById('videoPlayer');
@@ -1187,17 +1207,17 @@ function processUserData(userData) {
             setupVideoPlayer();
             setupSublessons();
             setupEventListeners();
-            
+
             // Initialize progress from server data
-            const initialProgress = {{ lesson_progress.score|default(0) }};
+            const initialProgress = lessonProgressData.completed ? 100 : 0;
             updateProgressRing(initialProgress);
             updateLessonProgress(initialProgress);
-            
+
             // Update completion status if already completed
-            if (isLessonCompleted) {
+            if (lessonProgressData.completed) {
                 markLessonAsCompletedUI();
             }
-            
+
             // Start tracking time
             startTimeTracking();
         }
@@ -1482,24 +1502,60 @@ function processUserData(userData) {
         }
 
         // Interactive elements
-        function analyzeCode() {
-            showNotification('info', 'Анализ кода...');
-            
+        function saveAnswer() {
+            const answer = document.getElementById('scenarioAnswer').value;
+            if (!answer.trim()) {
+                showNotification('warning', 'Пожалуйста, введите ваш ответ перед сохранением.');
+                return;
+            }
+
+            // Save to localStorage
+            const lessonId = '{{ lesson.id }}';
+            const key = `lesson_${lessonId}_answer`;
+            localStorage.setItem(key, answer);
+
+            showNotification('success', 'Ваш ответ успешно сохранен!');
+
+            // Update progress for completing the exercise
+            updateLessonProgressOnServer(20); // 20% progress for saving answer
+        }
+
+        function analyzeScenario() {
+            showNotification('info', 'Анализ сценария...');
+
             setTimeout(() => {
                 const analysisResult = `
-                    <div class="alert alert-success mt-3">
-                        <h6><i class="bi bi-check-circle me-2"></i>Результаты анализа:</h6>
+                    <div class="alert alert-info mt-3">
+                        <h6><i class="bi bi-info-circle me-2"></i>Анализ сценария:</h6>
                         <ul class="mb-0">
-                            <li><strong>Конфиденциальность:</strong> Нарушена - данные сохраняются без шифрования</li>
-                            <li><strong>Целостность:</strong> Нарушена - отсутствует проверка входных данных</li>
-                            <li><strong>Доступность:</strong> Нарушена - нет обработки ошибок</li>
+                            <li><strong>Признаки фишинга:</strong> Срочность, угроза блокировки, подозрительная ссылка</li>
+                            <li><strong>Правильные действия:</strong> Не кликать на ссылку, проверить адрес банка самостоятельно</li>
+                            <li><strong>Защита:</strong> Использовать антивирус, двухфакторную аутентификацию</li>
                         </ul>
                     </div>
                 `;
-                
+
                 document.querySelector('.interactive-element').insertAdjacentHTML('beforeend', analysisResult);
-                showNotification('success', 'Анализ завершен! Найдены уязвимости безопасности.');
+                showNotification('success', 'Анализ завершен! Изучите рекомендации по безопасности.');
             }, 2000);
+        }
+
+        function saveStoragePlan() {
+            const plan = document.getElementById('storagePlan').value;
+            if (!plan.trim()) {
+                showNotification('warning', 'Пожалуйста, опишите ваш план защиты перед сохранением.');
+                return;
+            }
+
+            // Save to localStorage
+            const lessonId = '{{ lesson.id }}';
+            const key = `lesson_${lessonId}_storage_plan`;
+            localStorage.setItem(key, plan);
+
+            showNotification('success', 'Ваш план защиты успешно сохранен!');
+
+            // Update progress for completing the exercise
+            updateLessonProgressOnServer(30); // 30% progress for saving storage plan
         }
 
         function openResource(url) {
@@ -1513,6 +1569,27 @@ function processUserData(userData) {
             const currentProgress = parseInt(lessonProgressText.textContent);
             const newProgress = Math.min(100, currentProgress + progressIncrement);
             updateLessonProgress(newProgress);
+
+            // Send progress update to server
+            fetch('/education/api/lesson/progress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    lesson_id: '{{ lesson.id }}',
+                    progress: newProgress
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error('Error updating progress:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error updating progress:', error);
+            });
         }
 
         function completeLessonOnServer(score = 100) {
@@ -1556,13 +1633,13 @@ function processUserData(userData) {
             completionStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Завершено';
             completionStatus.style.background = 'linear-gradient(135deg, var(--cyber-accent), #00e676)';
             updateLessonProgress(100);
-            
+
             // Disable complete button to prevent duplicate submissions
             completeLessonBtn.disabled = true;
             completeLessonBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Урок завершен';
             completeLessonBtn.classList.remove('btn-cyber-success');
             completeLessonBtn.classList.add('btn-secondary');
-            
+
             // Enable next lesson button if it exists
             const nextLessonBtn = document.querySelector('a[href*="/lesson/"]');
             if (nextLessonBtn) {
