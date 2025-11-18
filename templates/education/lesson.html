@@ -401,6 +401,7 @@
             overflow-x: auto;
             font-family: 'Courier New', monospace;
             position: relative;
+            color: var(--cyber-text);
         }
 
         .code-block::before {
@@ -936,23 +937,13 @@
                                                 <i class="bi bi-lightbulb me-2 text-warning"></i>Практическое упражнение
                                             </h6>
                                             <p class="cyber-text mb-3">
-                                                Попробуйте применить полученные знания на практике. Проанализируйте предложенный сценарий и определите, какие принципы кибербезопасности были нарушены.
+                                                Представьте ситуацию: ваш друг отправил вам сообщение в соцсети с просьбой прислать фото из школьного альбома. Что бы вы сделали?
                                             </p>
-                                            <div class="code-block">
-                                                <pre class="cyber-text mb-0"><code>// Пример уязвимого кода
-function processUserData(userData) {
-    // Нарушение конфиденциальности - данные не шифруются
-    localStorage.setItem('user_data', JSON.stringify(userData));
-    
-    // Нарушение целостности - нет проверки данных
-    updateUserProfile(userData);
-    
-    // Нарушение доступности - нет обработки ошибок
-    sendToServer(userData);
-}</code></pre>
+                                            <div class="alert alert-info">
+                                                <strong>Сценарий:</strong> Неизвестный человек пишет: "Привет! Я друг твоего друга из параллельного класса. Можешь прислать фото с последнего школьного праздника? Мне нужно для презентации."
                                             </div>
-                                            <button class="btn btn-cyber-outline mt-3" onclick="analyzeCode()">
-                                                <i class="bi bi-search me-2"></i>Проанализировать код
+                                            <button class="btn btn-cyber-outline mt-3" onclick="analyzeScenario()">
+                                                <i class="bi bi-search me-2"></i>Проанализировать ситуацию
                                             </button>
                                         </div>
                                         {% endif %}
@@ -1162,8 +1153,8 @@ function processUserData(userData) {
         let videoProgress = 0;
         let videoDuration = 0;
         let currentSublesson = 0;
-        let isLessonCompleted = {{ lesson_progress.completed|tojson|default('false') }};
-        let totalTimeSpent = {{ lesson_progress.time_spent|default(0) }};
+        let isLessonCompleted = false;
+        let totalTimeSpent = 0;
         let startTime = new Date();
 
         // DOM Elements
@@ -1190,7 +1181,7 @@ function processUserData(userData) {
             setupEventListeners();
             
             // Initialize progress from server data
-            const initialProgress = {{ lesson_progress.score|default(0) }};
+            const initialProgress = 0;
             updateProgressRing(initialProgress);
             updateLessonProgress(initialProgress);
             
@@ -1483,9 +1474,35 @@ function processUserData(userData) {
         }
 
         // Interactive elements
+        function analyzeScenario() {
+            showNotification('info', 'Анализ ситуации...');
+
+            setTimeout(() => {
+                const analysisResult = `
+                    <div class="alert alert-warning mt-3">
+                        <h6><i class="bi bi-exclamation-triangle me-2"></i>Анализ ситуации:</h6>
+                        <ul class="mb-0">
+                            <li><strong>Подозрительные признаки:</strong> Неизвестный человек просит личные фото</li>
+                            <li><strong>Риск:</strong> Может быть попыткой фишинга или кражи личных данных</li>
+                            <li><strong>Правильное действие:</strong> Не отправлять фото незнакомцам, проверить личность</li>
+                        </ul>
+                        <div class="alert alert-success mt-2">
+                            <strong>Безопасное поведение:</strong> Всегда проверяйте, кто просит ваши данные!
+                        </div>
+                    </div>
+                `;
+
+                const element = document.querySelector('.interactive-element');
+                if (element) {
+                    element.insertAdjacentHTML('beforeend', analysisResult);
+                }
+                showNotification('success', 'Анализ завершен! Помните о правилах безопасности.');
+            }, 2000);
+        }
+
         function analyzeCode() {
             showNotification('info', 'Анализ кода...');
-            
+
             setTimeout(() => {
                 const analysisResult = `
                     <div class="alert alert-success mt-3">
@@ -1497,10 +1514,110 @@ function processUserData(userData) {
                         </ul>
                     </div>
                 `;
-                
-                document.querySelector('.interactive-element').insertAdjacentHTML('beforeend', analysisResult);
+
+                const element = document.querySelector('.interactive-element');
+                if (element) {
+                    element.insertAdjacentHTML('beforeend', analysisResult);
+                }
                 showNotification('success', 'Анализ завершен! Найдены уязвимости безопасности.');
             }, 2000);
+        }
+
+        // Save functions for interactive elements
+        function saveAnswer() {
+            const textarea = document.querySelector('.practice-preview textarea');
+            if (textarea && textarea.value.trim()) {
+                localStorage.setItem('cyber_answer', textarea.value.trim());
+                showNotification('success', 'Ответ сохранен!', 'Ваш ответ успешно сохранен в браузере.');
+            } else {
+                showNotification('warning', 'Введите ответ', 'Пожалуйста, напишите свой ответ перед сохранением.');
+            }
+        }
+
+        function saveThoughts() {
+            const textarea = document.querySelector('.practice-preview textarea');
+            if (textarea && textarea.value.trim()) {
+                localStorage.setItem('cyber_thoughts', textarea.value.trim());
+                showNotification('success', 'Мысли сохранены!', 'Ваши мысли успешно сохранены в браузере.');
+            } else {
+                showNotification('warning', 'Опишите свои мысли', 'Пожалуйста, опишите свои чувства и действия.');
+            }
+        }
+
+        function saveStoragePlan() {
+            const textarea = document.querySelector('.practice-preview textarea');
+            if (textarea && textarea.value.trim()) {
+                localStorage.setItem('cyber_storage_plan', textarea.value.trim());
+                showNotification('success', 'План сохранен!', 'Ваш план безопасного хранения успешно сохранен.');
+            } else {
+                showNotification('warning', 'Опишите план', 'Пожалуйста, опишите свой план улучшения хранения паролей.');
+            }
+        }
+
+        function checkPhotos() {
+            const checkboxes = document.querySelectorAll('.form-check input[type="checkbox"]');
+            let correctCount = 0;
+            let totalCount = checkboxes.length;
+
+            checkboxes.forEach((checkbox, index) => {
+                if (index === 1 && checkbox.checked) correctCount++; // photo2 is correct
+                if (index === 0 && !checkbox.checked) correctCount++; // photo1 should not be checked
+                if (index === 2 && !checkbox.checked) correctCount++; // photo3 should not be checked
+            });
+
+            const score = Math.round((correctCount / totalCount) * 100);
+            showNotification('info', `Результат: ${score}%`, `Вы правильно оценили безопасность фото. Продолжайте изучение!`);
+        }
+
+        function checkPasswordStrength() {
+            const input = document.getElementById('passwordInput');
+            const resultDiv = document.getElementById('strengthResult');
+
+            if (!input || !resultDiv) return;
+
+            const password = input.value;
+            let strength = 0;
+            let feedback = [];
+
+            if (password.length >= 8) {
+                strength += 25;
+                feedback.push('Длина хорошая');
+            } else {
+                feedback.push('Пароль слишком короткий');
+            }
+
+            if (password.length >= 12) {
+                strength += 25;
+                feedback.push('Очень длинный пароль');
+            }
+
+            if (/[A-Z]/.test(password)) {
+                strength += 25;
+                feedback.push('Есть заглавные буквы');
+            } else {
+                feedback.push('Добавьте заглавные буквы');
+            }
+
+            if (/[0-9]/.test(password)) {
+                strength += 25;
+                feedback.push('Есть цифры');
+            } else {
+                feedback.push('Добавьте цифры');
+            }
+
+            let color = 'text-danger';
+            let strengthText = 'Слабый';
+
+            if (strength >= 75) {
+                color = 'text-success';
+                strengthText = 'Отличный';
+            } else if (strength >= 50) {
+                color = 'text-warning';
+                strengthText = 'Средний';
+            }
+
+            resultDiv.innerHTML = `<span class="${color}"><strong>${strengthText} пароль</strong></span><br><small>${feedback.join(', ')}</small>`;
+            resultDiv.style.color = 'var(--cyber-text)';
         }
 
         function openResource(url) {
