@@ -442,9 +442,9 @@ if __name__ == '__main__':
     print("🚀 CyberGuardian 2.0 запускается...")
     print("🛡️ УМНАЯ СИСТЕМА ЗАЩИТЫ ДАННЫХ АКТИВИРОВАНА!")
     print("💾 Бэкапы создаются автоматически при каждом запуске")
-    print("📖 Документация: http://localhost:5000")
+    print("📖 Документация: http://localhost:8006")
     print("🔧 Health check: http://localhost:5000/health")
     print("🔍 Backup status: http://localhost:5000/api/backup-status")
     print("=" * 60)
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=8006)
