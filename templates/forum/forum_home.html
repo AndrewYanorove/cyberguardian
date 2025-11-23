@@ -2,6 +2,10 @@
 {% extends "base.html" %}
 {% block title %}Форум историй - CyberGuardian{% endblock %}
 
+{% block meta_description %}Форум историй CyberGuardian - поделитесь своим опытом кибермошенничества и узнайте о реальных случаях фишинга, мошенничества и защиты данных.{% endblock %}
+
+{% block meta_keywords %}форум, истории, кибермошенничество, фишинг, защита данных, кибербезопасность, истории пользователей, мошенничество{% endblock %}
+
 {% block extra_css %}
 <style>
 .forum-container {
@@ -26,8 +30,8 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-accent));
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 168, 255, 0.05), rgba(148, 0, 211, 0.05));
 }
 
 .forum-title {
@@ -53,10 +57,6 @@
     gap: 2rem;
     margin-bottom: 3rem;
 }
-
-.story-item {
-    background: var(--cyber-bg-card);
-    border: 2px solid var(--cyber-border);
     border-radius: 25px;
     padding: 2rem;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);

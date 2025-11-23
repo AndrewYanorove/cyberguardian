@@ -1,6 +1,122 @@
-{% extends "base.html" %}
+ {% extends "base.html" %}
 
 {% block content %}
+
+<!-- Schema.org structured data for educational content -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Course",
+      "name": "Интерактивные Курсы по Кибербезопасности",
+      "description": "Погрузитесь в мир кибербезопасности с нашими адаптивными курсами. От основ до сложных техник взлома — все в одном месте.",
+      "provider": {
+        "@type": "Organization",
+        "name": "CyberGuardian",
+        "url": "{{ request.url_root[:-1] }}"
+      },
+      "educationalLevel": "Beginner to Advanced",
+      "teaches": [
+        "Основы кибербезопасности",
+        "Защита от фишинга",
+        "Шифрование данных",
+        "DDoS атаки и защита",
+        "Генерация безопасных паролей"
+      ],
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "online",
+        "instructor": {
+          "@type": "Organization",
+          "name": "CyberGuardian AI"
+        }
+      }
+    },
+    {
+      "@type": "Service",
+      "name": "Генератор Надежных Паролей",
+      "description": "Инструмент для создания безопасных паролей и обеспечения максимальной защиты ваших личных данных.",
+      "provider": {
+        "@type": "Organization",
+        "name": "CyberGuardian"
+      },
+      "serviceType": "Password Generation Tool",
+      "areaServed": "Worldwide"
+    },
+    {
+      "@type": "Service",
+      "name": "Инструменты Шифрования",
+      "description": "Инструменты для шифрования и защиты данных с использованием современных алгоритмов шифрования.",
+      "provider": {
+        "@type": "Organization",
+        "name": "CyberGuardian"
+      },
+      "serviceType": "Encryption Tools",
+      "areaServed": "Worldwide"
+    },
+    {
+      "@type": "Service",
+      "name": "AI-Помощник по Кибербезопасности",
+      "description": "Ваш эксперт 24/7 для вопросов о кибербезопасности с мгновенными, экспертными ответами.",
+      "provider": {
+        "@type": "Organization",
+        "name": "CyberGuardian"
+      },
+      "serviceType": "AI Assistant",
+      "areaServed": "Worldwide"
+    },
+    {
+      "@type": "Service",
+      "name": "DDoS Лаборатория",
+      "description": "Изучите механизмы DDoS атак и методы защиты в нашей безопасной и интерактивной среде.",
+      "provider": {
+        "@type": "Organization",
+        "name": "CyberGuardian"
+      },
+      "serviceType": "DDoS Simulation Lab",
+      "areaServed": "Worldwide"
+    },
+    {
+      "@type": "Service",
+      "name": "Мониторинг Киберугроз",
+      "description": "Интерактивная карта кибератак и актуальная лента новостей об уязвимостях в реальном времени.",
+      "provider": {
+        "@type": "Organization",
+        "name": "CyberGuardian"
+      },
+      "serviceType": "Threat Monitoring",
+      "areaServed": "Worldwide"
+    },
+    {
+      "@type": "Service",
+      "name": "Кибер-Тренировка",
+      "description": "Обучайтесь через увлекательные игры: симулятор фишинга, квизы и интерактивные задания.",
+      "provider": {
+        "@type": "Organization",
+        "name": "CyberGuardian"
+      },
+      "serviceType": "Cybersecurity Training Games",
+      "areaServed": "Worldwide"
+    },
+    {
+      "@type": "WebSite",
+      "name": "CyberGuardian",
+      "url": "{{ request.url_root[:-1] }}",
+      "description": "Интерактивная платформа для изучения кибербезопасности с курсами, инструментами и AI-помощником",
+      "publisher": {
+        "@type": "Organization",
+        "name": "CyberGuardian"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ request.url_root[:-1] }}/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>
 
 <style>
     /* --- Стили для 3-блочного "Feature Showcase" --- */
@@ -492,8 +608,8 @@
                 </h1>
                 
                 <p class="cyber-lead mb-5 scroll-animate" style="animation-delay: 0.2s;">
-                    Ваш персональный центр по кибербезопасности. 
-                    Обучайтесь, защищайте данные и анализируйте угрозы в интерактивной среде.
+                    Ваш персональный центр по кибербезопасности. Изучайте защиту от фишинга,
+                    шифрование данных, DDoS атаки и другие аспекты цифровой безопасности в интерактивной среде.
                 </p>
                 
                 <div class="d-flex flex-wrap gap-3 justify-content-center scroll-animate" style="animation-delay: 0.3s;">
@@ -545,10 +661,10 @@
                 <div style="margin-bottom: 1.5rem;">
                     <span class="cyber-badge cyber-badge-accent">Инструменты</span>
                 </div>
-                <h2 class="cyber-title mb-3" style="font-size: 2.5rem; margin-top: 0.5rem;">Набор Кибер-Утилит</h2>
+                <h2 class="cyber-title mb-3" style="font-size: 2.5rem; margin-top: 0.5rem;">Набор Кибер-Утилит для Защиты Данных</h2>
                 <p class="cyber-lead mb-4">
-                    Используйте наш генератор надежных паролей и инструменты шифрования
-                     для обеспечения максимальной защиты ваших личных данных.
+                    Используйте наш генератор надежных паролей, инструменты шифрования и анализаторы безопасности
+                     для обеспечения максимальной защиты ваших личных данных от киберугроз.
                 </p>
                 <a href="{{ url_for('passwords.password_generator') }}" class="btn-cyber-outline" style="border-color: var(--cyber-accent); color: var(--cyber-accent);">
                     <i class="bi bi-shield-lock me-2"></i>Генератор паролей
@@ -628,7 +744,7 @@
                         <i class="bi bi-lightning-charge"></i>
                     </div>
                     <h3 class="cyber-title-primary">DDoS Лаборатория</h3>
-                    <p>Изучите механизмы DDoS атак и методы защиты в нашей безопасной и интерактивной среде.</p>
+                    <p>Изучите механизмы DDoS атак, распределенных отказов в обслуживании и методы защиты от кибератак в нашей безопасной среде.</p>
                     <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-outline mt-auto">В лабораторию</a>
                 </div>
             </div>

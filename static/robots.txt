@@ -1,0 +1,50 @@
+User-agent: *
+Allow: /
+
+# Основные страницы
+Allow: /
+Allow: /about
+Allow: /contact
+Allow: /dashboard
+Allow: /education
+Allow: /passwords
+Allow: /encryption
+Allow: /ai
+Allow: /threats
+Allow: /scanner
+Allow: /games
+Allow: /simulators
+Allow: /ddos
+Allow: /forum
+
+# Блокируем админ-панель
+Disallow: /admin
+Disallow: /api/admin
+Disallow: /forum/admin
+
+# Блокируем личные данные
+Disallow: /auth/profile
+Disallow: /auth/login
+Disallow: /auth/register
+Disallow: /auth/logout
+
+# Блокируем системные файлы
+Disallow: /static/
+Disallow: /templates/
+Disallow: /instance/
+Disallow: /backups/
+Disallow: /migrations/
+Disallow: /tests/
+
+# Sitemap
+Sitemap: https://cyberguardian-cb1m.onrender.com/sitemap.xml
+
+# Специфические правила для Yandex
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+# Специфические правила для Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1

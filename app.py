@@ -152,6 +152,10 @@ def create_app():
     def sitemap():
         return app.send_static_file('sitemap.xml')
     
+    @app.route('/robots.txt')
+    def robots():
+        return app.send_static_file('robots.txt')
+    
     @app.route('/contact')
     def contact():
         return render_template('contact.html')

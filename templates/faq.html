@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+{% block title %}Часто задаваемые вопросы - CyberGuardian{% endblock %}
+
+{% block meta_description %}Ответы на часто задаваемые вопросы о кибербезопасности, защите данных, фишинге, шифровании и DDoS атаках. Получите экспертные советы по цифровой безопасности.{% endblock %}
+
+{% block meta_keywords %}часто задаваемые вопросы, кибербезопасность, защита данных, фишинг, шифрование, DDoS атаки, цифровая безопасность, информационная безопасность, FAQ{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="cyber-text glow-text mb-3">
+                <i class="bi bi-question-circle me-2"></i>Часто задаваемые вопросы
+            </h1>
+            <p class="cyber-subtext lead">
+                Ответы на самые популярные вопросы о кибербезопасности, защите данных и цифровой безопасности
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Основной контент -->
+        <div class="col-lg-8 mx-auto">
+            <div class="accordion" id="faqAccordion">
+
+                <!-- Раздел: Основы кибербезопасности -->
+                <h2 class="cyber-title-primary mb-4">🛡️ Основы кибербезопасности</h2>
+
+                <div class="accordion-item cyber-card mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button cyber-text collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Что такое кибербезопасность и почему она важна?
+                        </button>
+                    </h3>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body cyber-subtext">
+                            <p>Кибербезопасность - это практика защиты компьютеров, серверов, мобильных устройств, электронных систем, сетей и данных от цифровых атак. Она важна потому что:</p>
+                            <ul>
+                                <li>Защищает личные данные от кражи</li>
+                                <li>Предотвращает финансовые потери</li>
+                                <li>Обеспечивает конфиденциальность информации</li>
+                                <li>Защищает от мошенничества и фишинга</li>
+                                <li>Сохраняет репутацию и доверие</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item cyber-card mb-3">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button cyber-text collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Какие основные угрозы существуют в интернете?
+                                <p><strong>Фишинг</strong> - распространенный вид кибератаки. Основные признаки:</p>
+                                <ul>
+                                    <li>Неожиданные письма с просьбой предоставить личные данные</li>
+                                    <li>Подозрительные ссылки или вложения</li>
+                                    <li>Срочные требования действий</li>
+                                    <li>Ошибки в адресе отправителя</li>
+                                    <li>Неизвестный отправитель</li>
+                                </ul>
+                                <p>Всегда проверяйте URL перед кликом и не вводите данные на подозрительных сайтах.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed cyber-text" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Как создать надежный пароль?
+                            </button>
+                        </h3>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body cyber-subtext">
+                                <p>Надежный пароль должен быть:</p>
+                                <ul>
+                                    <li><strong>Длинным</strong> - минимум 12 символов</li>
+                                    <li><strong>Сложным</strong> - сочетание букв, цифр, символов</li>
+                                    <li><strong>Уникальным</strong> - не используйте один пароль для разных аккаунтов</li>
+                                    <li><strong>Случайным</strong> - избегайте очевидных комбинаций</li>
+                                </ul>
+                                <p>Используйте наш <a href="{{ url_for('passwords.password_generator') }}">генератор паролей</a> для создания безопасных комбинаций.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Шифрование и защита данных -->
+                <h2 class="cyber-text mb-4 mt-5">🔐 Шифрование и защита данных</h2>
+
+                <div class="accordion" id="faqAccordion2">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed cyber-text" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Что такое шифрование данных?
+                            </button>
+                        </h3>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion2">
+                            <div class="accordion-body cyber-subtext">
+                                <p><strong>Шифрование</strong> - процесс преобразования данных в зашифрованный формат, который может быть прочитан только с помощью специального ключа. Это обеспечивает:</p>
+                                <ul>
+                                    <li>Конфиденциальность информации</li>
+                                    <li>Защиту от несанкционированного доступа</li>
+                                    <li>Безопасность при передаче данных</li>
+                                </ul>
+                                <p>Попробуйте наши <a href="{{ url_for('encryption.encryption_tools') }}">инструменты шифрования</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed cyber-text" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                Как защитить компьютер от вирусов?
+                            </button>
+                        </h3>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion2">
+                            <div class="accordion-body cyber-subtext">
+                                <p>Основные меры защиты от вредоносного ПО:</p>
+                                <ul>
+                                    <li>Установите надежный антивирус</li>
+                                    <li>Регулярно обновляйте систему и программы</li>
+                                    <li>Не открывайте подозрительные файлы</li>
+                                    <li>Используйте firewall</li>
+                                    <li>Делайте резервные копии данных</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DDoS атаки -->
+                <h2 class="cyber-text mb-4 mt-5">⚡ DDoS атаки и защита</h2>
+
+                <div class="accordion" id="faqAccordion3">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed cyber-text" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                Что такое DDoS атака?
+                            </button>
+                        </h3>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion3">
+                            <div class="accordion-body cyber-subtext">
+                                <p><strong>DDoS (Distributed Denial of Service)</strong> - это кибератака, при которой злоумышленники перегружают сервер множеством запросов, делая его недоступным для легитимных пользователей.</p>
+                                <p>Изучите механизмы DDoS атак в нашей <a href="{{ url_for('ddos.ddos_simulator') }}">лаборатории</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed cyber-text" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                                Как защититься от DDoS атак?
+                            </button>
+                        </h3>
+                        <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion3">
+                            <div class="accordion-body cyber-subtext">
+                                <p>Методы защиты от DDoS:</p>
+                                <ul>
+                                    <li>Использование CDN и WAF</li>
+                                    <li>Ограничение трафика (rate limiting)</li>
+                                    <li>Распределение нагрузки</li>
+                                    <li>Мониторинг трафика</li>
+                                    <li>Резервные серверы</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- О платформе -->
+                <h2 class="cyber-text mb-4 mt-5">🎓 О платформе CyberGuardian</h2>
+
+                <div class="accordion" id="faqAccordion4">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed cyber-text" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                                Для кого предназначена платформа?
+                            </button>
+                        </h3>
+                        <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion4">
+                            <div class="accordion-body cyber-subtext">
+                                <p>Наша платформа подходит для:</p>
+                                <ul>
+                                    <li><strong>Начинающих</strong> - тех, кто только начинает изучать кибербезопасность</li>
+                                    <li><strong>Студентов</strong> - учащихся технических специальностей</li>
+                                    <li><strong>Профессионалов</strong> - IT-специалистов, желающих углубить знания</li>
+                                    <li><strong>Всех пользователей</strong> - кто хочет защитить свои данные в интернете</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed cyber-text" type="button" data-bs-toggle="collapse" data-bs-target="#faq9">
+                                Можно ли использовать инструменты платформы бесплатно?
+                            </button>
+                        </h3>
+                        <div id="faq9" class="accordion-collapse collapse" data-bs-parent="#faqAccordion4">
+                            <div class="accordion-body cyber-subtext">
+                                <p>Да! Все инструменты и материалы платформы <strong>полностью бесплатны</strong>. Мы верим, что образование в области кибербезопасности должно быть доступно каждому.</p>
+                                <p>Зарегистрируйтесь, чтобы отслеживать свой прогресс и получать персонализированные рекомендации.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed cyber-text" type="button" data-bs-toggle="collapse" data-bs-target="#faq10">
+                                Как связаться с поддержкой?
+                            </button>
+                        </h3>
+                        <div id="faq10" class="accordion-collapse collapse" data-bs-parent="#faqAccordion4">
+                            <div class="accordion-body cyber-subtext">
+                                <p>Связаться с нами можно несколькими способами:</p>
+                                <ul>
+                                    <li><strong>Telegram</strong>: <a href="https://t.me/cyberguardian_support" target="_blank">@cyberguardian_support</a></li>
+                                    <li><strong>Email</strong>: <a href="mailto:cyberguardian100@gmail.com">cyberguardian100@gmail.com</a></li>
+                                    <li><strong>Форум</strong>: <a href="{{ url_for('forum.forum_home') }}">обсудить на форуме</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Не нашли ответ? -->
+                <div class="cyber-card p-4 mt-5 bg-cyber-dark">
+                    <h3 class="cyber-text text-center mb-3">❓ Не нашли ответ на свой вопрос?</h3>
+                    <p class="cyber-subtext text-center mb-4">
+                        Задайте вопрос нашему ИИ-помощнику или обратитесь в поддержку
+                    </p>
+                    <div class="text-center">
+                        <a href="{{ url_for('ai.ai_chat') }}" class="btn btn-cyber me-2">
+                            <i class="bi bi-robot me-2"></i>Спросить ИИ
+                        </a>
+                        <a href="{{ url_for('contact') }}" class="btn btn-cyber-outline">
+                            <i class="bi bi-envelope me-2"></i>Написать нам
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <a href="{{ url_for('index') }}" class="btn btn-cyber">
+                        <i class="bi bi-arrow-left me-2"></i>На главную
+                    </a>
+                    <a href="{{ url_for('education.education_home') }}" class="btn btn-cyber-outline ms-2">
+                        <i class="bi bi-play-circle me-2"></i>Начать обучение
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.accordion-button:not(.collapsed) {
+    background-color: rgba(0, 168, 255, 0.1);
+    color: var(--cyber-primary);
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--cyber-primary);
+}
+
+.accordion-item {
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: var(--cyber-bg-card);
+}
+
+.accordion-body {
+    background: var(--cyber-bg-card-dark);
+}
+</style>
+{% endblock %}
