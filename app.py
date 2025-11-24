@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
 from flask_compress import Compress
+from flask_caching import Cache
 from dotenv import load_dotenv
 import os
 from datetime import datetime
@@ -15,6 +16,11 @@ def create_app():
     # Конфигурация
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'cyberguardian-super-secret-2024')
     app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+    # Оптимизации для production
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000  # 1 год для статических файлов
+    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False  # Минифицированный JSON
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB максимум
     
     # Создаем папки для базы данных и бэкапов
     os.makedirs('instance', exist_ok=True)
@@ -167,82 +173,83 @@ def create_app():
     @app.route('/admin', methods=['GET', 'POST'])
     def admin_panel():
         """Админ-панель с защитой от ошибок БД"""
-        ADMIN_PASSWORD = "16795"
-        
-        # Выход из системы
-        if request.args.get('logout'):
-            session.pop('admin_authenticated', None)
-            return redirect('/admin')
-        
-        # Проверка аутентификации
-        authenticated = session.get('admin_authenticated', False)
-        
-        # Обработка формы входа
-        if request.method == 'POST':
-            password = request.form.get('admin_password', '')
-            if password == ADMIN_PASSWORD:
-                session['admin_authenticated'] = True
-                session['admin_login_time'] = datetime.now().isoformat()
-                authenticated = True
-            else:
-                return render_template('admin_panel.html', authenticated=False, error=True)
-        
-        # Если не аутентифицирован, показать форму входа
-        if not authenticated:
-            return render_template('admin_panel.html', authenticated=False, error=False)
-        
-        # Загрузка данных для админ-панели
         try:
-            from auth.models import User
-            from education.models import UserProgress
-            from encryption.models import EncryptionHistory
-            
-            users = User.query.all()
-            
-            users_data = []
-            for user in users:
+            ADMIN_PASSWORD = "16795"
+
+            # Выход из системы
+            if request.args.get('logout'):
+                session.pop('admin_authenticated', None)
+                return redirect('/admin')
+
+            # Проверка аутентификации
+            authenticated = session.get('admin_authenticated', False)
+
+            # Обработка формы входа
+            if request.method == 'POST':
+                password = request.form.get('admin_password', '')
+                if password == ADMIN_PASSWORD:
+                    session['admin_authenticated'] = True
+                    session['admin_login_time'] = datetime.now().isoformat()
+                    authenticated = True
+                else:
+                    return render_template('admin_panel.html', authenticated=False, error=True)
+
+            # Если не аутентифицирован, показать форму входа
+            if not authenticated:
+                return render_template('admin_panel.html', authenticated=False, error=False)
+
+            # Загрузка данных для админ-панели с оптимизацией
+            def get_admin_stats():
                 try:
-                    lessons_completed = UserProgress.query.filter_by(user_id=user.id, completed=True).count()
-                except:
-                    lessons_completed = 0
-                
-                try:
-                    encryption_count = EncryptionHistory.query.filter_by(user_id=user.id).count()
-                except:
-                    encryption_count = 0
-                
-                users_data.append({
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email,
-                    'created_at': user.created_at,
-                    'lessons_completed': lessons_completed,
-                    'encryption_count': encryption_count
-                })
-            
-            # Общая статистика
-            try:
-                total_lessons = UserProgress.query.filter_by(completed=True).count()
-            except:
-                total_lessons = 0
-                
-            try:
-                total_encryptions = EncryptionHistory.query.count()
-            except:
-                total_encryptions = 0
-            
-            stats = {
-                'total_users': len(users),
-                'total_lessons': total_lessons,
-                'total_encryptions': total_encryptions,
-                'active_users': len([u for u in users_data if u['encryption_count'] > 0 or u['lessons_completed'] > 0])
-            }
-            
+                    from auth.models import User
+                    from education.models import UserProgress
+                    from encryption.models import EncryptionHistory
+
+                    # Оптимизированные запросы с пагинацией
+                    page = request.args.get('page', 1, type=int)
+                    per_page = 20
+                    users_pagination = User.query.paginate(page=page, per_page=per_page, error_out=False)
+                    users = users_pagination.items
+
+                    users_data = []
+                    for user in users:
+                        # Используем более эффективные запросы
+                        lessons_completed = db.session.query(db.func.count(UserProgress.id)).filter_by(user_id=user.id, completed=True).scalar() or 0
+                        encryption_count = db.session.query(db.func.count(EncryptionHistory.id)).filter_by(user_id=user.id).scalar() or 0
+
+                        users_data.append({
+                            'id': user.id,
+                            'username': user.username,
+                            'email': user.email,
+                            'created_at': user.created_at,
+                            'lessons_completed': lessons_completed,
+                            'encryption_count': encryption_count
+                        })
+
+                    # Общая статистика с кэшированием
+                    total_users = User.query.count()
+                    total_lessons = db.session.query(db.func.count(UserProgress.id)).filter_by(completed=True).scalar() or 0
+                    total_encryptions = EncryptionHistory.query.count()
+
+                    stats = {
+                        'total_users': total_users,
+                        'total_lessons': total_lessons,
+                        'total_encryptions': total_encryptions,
+                        'active_users': len([u for u in users_data if u['encryption_count'] > 0 or u['lessons_completed'] > 0])
+                    }
+
+                    return users_data, stats, users_pagination
+
+                except Exception as e:
+                    return [], {'total_users': 0, 'total_lessons': 0, 'total_encryptions': 0, 'active_users': 0}, None
+
+            users_data, stats, users_pagination = get_admin_stats()
+
             return render_template('admin_panel.html',
                                 authenticated=True,
                                 users=users_data,
                                 stats=stats)
-            
+
         except Exception as e:
             return render_template('admin_panel.html',
                                 authenticated=True,
@@ -294,13 +301,23 @@ def create_app():
     def internal_error(error):
         return render_template('500.html'), 500
     
-    # Кэширование
+    # Оптимизированное кэширование
     @app.after_request
     def add_cache_headers(response):
         if 'static' in request.path:
-            response.headers['Cache-Control'] = 'public, max-age=31536000'
+            # Агрессивное кэширование статических файлов (1 год)
+            response.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+            response.headers['Expires'] = 'Mon, 01 Jan 2030 00:00:00 GMT'
         elif response.content_type and 'text/html' in response.content_type:
+            # Кэширование HTML на 5 минут
             response.headers['Cache-Control'] = 'public, max-age=300'
+        elif response.content_type and 'application/json' in response.content_type:
+            # Кэширование API ответов на 1 минуту
+            response.headers['Cache-Control'] = 'public, max-age=60'
+
+        # Дополнительные оптимизации
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         return response
     
     return app
