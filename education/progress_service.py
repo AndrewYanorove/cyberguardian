@@ -170,7 +170,7 @@ class ProgressService:
         """Отметить завершение теста"""
         try:
             # Рассчитываем процент выполнения
-            percentage = (score / max_score) * 100 if max_score > 0 else 0
+            percentage = round(((score / max_score) * 100), 2) if max_score > 0 else 0
             
             # Если тест пройден успешно, отмечаем урок как завершенный
             if passed and percentage >= 70:
