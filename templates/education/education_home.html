@@ -1430,9 +1430,9 @@
                         <div class="stat-card">
                             <span class="stat-number">
                                 {% if current_user.is_authenticated %}
-                                    {{ (courses[0].progress if courses else 0)|int }}%
+                                {{ (courses[0].progress if courses else 0)|int }}%
                                 {% else %}
-                                    0%
+                                0%
                                 {% endif %}
                             </span>
                             <span class="stat-label">Ваш прогресс</span>
@@ -1464,10 +1464,10 @@
                     <p class="cyber-subtext">Просмотр полученных сертификатов и достижений</p>
                     <div class="mt-3">
                         {% if current_user.is_authenticated %}
-                            {% set cert_count = 1 if courses[0].progress == 100 else 0 %}
-                            <span class="cyber-badge cyber-badge-accent">{{ cert_count }} сертификат</span>
+                        {% set cert_count = 1 if courses[0].progress == 100 else 0 %}
+                        <span class="cyber-badge cyber-badge-accent">{{ cert_count }} сертификат</span>
                         {% else %}
-                            <span class="cyber-badge">0 сертификатов</span>
+                        <span class="cyber-badge">0 сертификатов</span>
                         {% endif %}
                     </div>
                 </div>
@@ -1480,14 +1480,16 @@
                     <p class="cyber-subtext">Подробная аналитика вашего прогресса</p>
                     <div class="mt-3">
                         {% if current_user.is_authenticated %}
-                            <span class="cyber-badge cyber-badge-primary">{{ (courses[0].progress if courses else 0)|int }}% прогресс</span>
+                        <span class="cyber-badge cyber-badge-primary">{{ (courses[0].progress if courses else 0)|int }}%
+                            прогресс</span>
                         {% else %}
-                            <span class="cyber-badge">0% прогресс</span>
+                        <span class="cyber-badge">0% прогресс</span>
                         {% endif %}
                     </div>
                 </div>
 
-                <div class="quick-action-card" onclick="location.href='{{ url_for('education.course_page', course_id='cybersecurity-for-teens') }}'">
+                <div class="quick-action-card"
+                    onclick="location.href='{{ url_for('education.course_page', course_id='cybersecurity-for-teens') }}'">
                     <div class="quick-action-icon">
                         <i class="bi bi-play-circle"></i>
                     </div>
@@ -1527,12 +1529,13 @@
                 <div class="course-card {% if loop.first %}featured{% endif %} fade-in-up"
                     style="animation-delay: {{ loop.index0 * 0.1 }}s;">
                     <div class="course-icon">
-                        <i class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-for-teens' else 'tools' }}"></i>
+                        <i
+                            class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-for-teens' else 'tools' }}"></i>
                     </div>
 
                     <div class="course-content">
                         <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
-                        
+
                         <!-- Бейдж "В разработке" для всех курсов кроме первого -->
                         {% if course.id != 'cybersecurity-for-teens' %}
                         <div class="position-absolute top-0 end-0 m-3">
@@ -1541,13 +1544,15 @@
                             </span>
                         </div>
                         {% endif %}
-                        
+
                         <p class="cyber-text mb-4">{{ course.description }}</p>
 
                         <div class="course-meta d-flex flex-wrap gap-2 mb-4">
                             <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                <i class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
-                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty == 'intermediate' else 'Продвинутый' }}
+                                <i
+                                    class="bi bi-{{ 'shield-check' if course.difficulty == 'beginner' else 'shield-exclamation' if course.difficulty == 'intermediate' else 'shield-fill' }} me-1"></i>
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
+                                == 'intermediate' else 'Продвинутый' }}
                             </span>
                             <span class="cyber-badge">
                                 <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
@@ -1561,11 +1566,14 @@
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="cyber-subtext">Прогресс курса</span>
                                 <span class="cyber-text-bright fw-bold">
-                                    {% if course.id != 'cybersecurity-for-teens' %}0%{% else %}{{ course.progress }}%{% endif %}
+                                    {% if course.id != 'cybersecurity-for-teens' %}0%{% else %}{{ course.progress }}%{%
+                                    endif %}
                                 </span>
                             </div>
                             <div class="cyber-progress">
-                                <div class="cyber-progress-bar" style="width: {% if course.id != 'cybersecurity-for-teens' %}0{% else %}{{ course.progress }}{% endif %}%"></div>
+                                <div class="cyber-progress-bar"
+                                    style="width: {% if course.id != 'cybersecurity-for-teens' %}0{% else %}{{ course.progress }}{% endif %}%">
+                                </div>
                             </div>
                         </div>
 
@@ -1573,7 +1581,8 @@
                             {% if course.id == 'cybersecurity-for-teens' %}
                             <!-- Активная кнопка для основного курса -->
                             <a href="{{ url_for('education.course_page', course_id=course.id) }}" class="btn btn-cyber">
-                                <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
+                                <i
+                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
                                 {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
                             </a>
                             {% else %}
@@ -1609,12 +1618,14 @@
                         <div class="pathway-content flex-grow-1">
                             <h4 class="cyber-text-bright mb-2">Кибербезопасность для подростков</h4>
                             <p class="cyber-subtext mb-0">
-                                Увлекательный курс по основам цифровой безопасности. Научись защищать свои данные и распознавать интернет-угрозы.
+                                Увлекательный курс по основам цифровой безопасности. Научись защищать свои данные и
+                                распознавать интернет-угрозы.
                             </p>
                         </div>
                         <div class="pathway-progress">
                             <div class="cyber-progress mb-2">
-                                <div class="cyber-progress-bar" style="width: {{ courses[0].progress if courses else 0 }}%"></div>
+                                <div class="cyber-progress-bar"
+                                    style="width: {{ courses[0].progress if courses else 0 }}%"></div>
                             </div>
                             <small class="cyber-subtext">{{ courses[0].progress if courses else 0 }}% завершено</small>
                         </div>
@@ -1714,15 +1725,18 @@
             <div class="course-grid" id="coursesContainer">
                 {% for course in courses %}
                 <div class="course-card fade-in-up" data-course-id="{{ course.id }}"
-                    data-difficulty="{{ course.difficulty }}" data-progress="{{ course.progress if course.id == 'cybersecurity-for-teens' else 0 }}"
-                    data-rating="{{ course.rating }}" data-available="{{ 'true' if course.id == 'cybersecurity-for-teens' else 'false' }}">
+                    data-difficulty="{{ course.difficulty }}"
+                    data-progress="{{ course.progress if course.id == 'cybersecurity-for-teens' else 0 }}"
+                    data-rating="{{ course.rating }}"
+                    data-available="{{ 'true' if course.id == 'cybersecurity-for-teens' else 'false' }}">
                     <div class="course-icon">
-                        <i class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-for-teens' else 'tools' }}"></i>
+                        <i
+                            class="bi bi-{{ 'shield-check' if course.id == 'cybersecurity-for-teens' else 'tools' }}"></i>
                     </div>
 
                     <div class="course-content">
                         <h3 class="cyber-text-bright mb-3">{{ course.title }}</h3>
-                        
+
                         {% if course.id != 'cybersecurity-for-teens' %}
                         <div class="position-absolute top-0 end-0 m-3">
                             <span class="cyber-badge cyber-badge-warning">
@@ -1730,12 +1744,13 @@
                             </span>
                         </div>
                         {% endif %}
-                        
+
                         <p class="cyber-text mb-4">{{ course.description }}</p>
 
                         <div class="course-meta d-flex flex-wrap gap-2 mb-4">
                             <span class="difficulty-badge difficulty-{{ course.difficulty }}">
-                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty == 'intermediate' else 'Продвинутый' }}
+                                {{ 'Начинающий' if course.difficulty == 'beginner' else 'Средний' if course.difficulty
+                                == 'intermediate' else 'Продвинутый' }}
                             </span>
                             <span class="cyber-badge">
                                 <i class="bi bi-clock me-1"></i>{{ course.estimated_time }}
@@ -1749,11 +1764,14 @@
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="cyber-subtext">Прогресс</span>
                                 <span class="cyber-text-bright fw-bold">
-                                    {% if course.id != 'cybersecurity-for-teens' %}0%{% else %}{{ course.progress }}%{% endif %}
+                                    {% if course.id != 'cybersecurity-for-teens' %}0%{% else %}{{ course.progress }}%{%
+                                    endif %}
                                 </span>
                             </div>
                             <div class="cyber-progress">
-                                <div class="cyber-progress-bar" style="width: {% if course.id != 'cybersecurity-for-teens' %}0{% else %}{{ course.progress }}{% endif %}%"></div>
+                                <div class="cyber-progress-bar"
+                                    style="width: {% if course.id != 'cybersecurity-for-teens' %}0{% else %}{{ course.progress }}{% endif %}%">
+                                </div>
                             </div>
                         </div>
 
@@ -1761,7 +1779,8 @@
                             {% if course.id == 'cybersecurity-for-teens' %}
                             <a href="{{ url_for('education.course_page', course_id=course.id) }}"
                                 class="btn {% if course.progress == 0 %}btn-cyber{% else %}btn-cyber-outline{% endif %}">
-                                <i class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
+                                <i
+                                    class="bi bi-{{ 'play-circle' if course.progress == 0 else 'arrow-repeat' }} me-2 d-flex align-items-baseline"></i>
                                 {{ 'Начать обучение' if course.progress == 0 else 'Продолжить' }}
                             </a>
                             {% else %}
@@ -1776,65 +1795,65 @@
             </div>
         </section>
 
-    
 
-                <div class="col-md-6">
-                    <div class="cyber-card">
-                        <h4 class="cyber-text-bright mb-3">
-                            <i class="bi bi-award me-2 text-success"></i>Достижения
-                        </h4>
-                        <div class="achievements-list">
-                            <div class="d-flex align-items-center p-3 border-bottom border-cyber">
-                                <div class="achievement-icon me-3">
-                                    <i class="bi bi-play-circle text-primary" style="font-size: 1.5rem;"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="cyber-text-bright mb-1">Первый шаг</h6>
-                                    <p class="cyber-subtext mb-0">Начало обучения</p>
-                                </div>
-                                <div class="text-end">
-                                    <span class="cyber-badge cyber-badge-success">Получено</span>
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex align-items-center p-3 border-bottom border-cyber">
-                                <div class="achievement-icon me-3">
-                                    <i class="bi bi-check-circle text-warning" style="font-size: 1.5rem;"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="cyber-text-bright mb-1">Ученик</h6>
-                                    <p class="cyber-subtext mb-0">Завершите 5 уроков</p>
-                                </div>
-                                <div class="text-end">
-                                    {% if courses and courses[0].progress >= 25 %}
-                                    <span class="cyber-badge cyber-badge-success">Получено</span>
-                                    {% else %}
-                                    <span class="cyber-badge">25%</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex align-items-center p-3">
-                                <div class="achievement-icon me-3">
-                                    <i class="bi bi-trophy text-info" style="font-size: 1.5rem;"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="cyber-text-bright mb-1">Эксперт по безопасности</h6>
-                                    <p class="cyber-subtext mb-0">Завершите весь курс</p>
-                                </div>
-                                <div class="text-end">
-                                    {% if courses and courses[0].progress == 100 %}
-                                    <span class="cyber-badge cyber-badge-success">Получено</span>
-                                    {% else %}
-                                    <span class="cyber-badge">{{ courses[0].progress if courses and courses[0] else 0 }}%</span>
-                                    {% endif %}
-                                </div>
-                            </div>
+
+        <div class="col-md-6">
+            <div class="cyber-card">
+                <h4 class="cyber-text-bright mb-3">
+                    <i class="bi bi-award me-2 text-success"></i>Достижения
+                </h4>
+                <div class="achievements-list">
+                    <div class="d-flex align-items-center p-3 border-bottom border-cyber">
+                        <div class="achievement-icon me-3">
+                            <i class="bi bi-play-circle text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="cyber-text-bright mb-1">Первый шаг</h6>
+                            <p class="cyber-subtext mb-0">Начало обучения</p>
+                        </div>
+                        <div class="text-end">
+                            <span class="cyber-badge cyber-badge-success">Получено</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center p-3 border-bottom border-cyber">
+                        <div class="achievement-icon me-3">
+                            <i class="bi bi-check-circle text-warning" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="cyber-text-bright mb-1">Ученик</h6>
+                            <p class="cyber-subtext mb-0">Завершите 5 уроков</p>
+                        </div>
+                        <div class="text-end">
+                            {% if courses and courses[0].progress >= 25 %}
+                            <span class="cyber-badge cyber-badge-success">Получено</span>
+                            {% else %}
+                            <span class="cyber-badge">25%</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center p-3">
+                        <div class="achievement-icon me-3">
+                            <i class="bi bi-trophy text-info" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="cyber-text-bright mb-1">Эксперт по безопасности</h6>
+                            <p class="cyber-subtext mb-0">Завершите весь курс</p>
+                        </div>
+                        <div class="text-end">
+                            {% if courses and courses[0].progress == 100 %}
+                            <span class="cyber-badge cyber-badge-success">Получено</span>
+                            {% else %}
+                            <span class="cyber-badge">{{ courses[0].progress if courses and courses[0] else 0 }}%</span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
+    </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -2000,6 +2019,23 @@
             }, 250);
         });
 
+        // Intersection Observer for current lesson highlighting
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.lesson-item.current').forEach(item => {
+                        item.classList.remove('current');
+                    });
+                    entry.target.classList.add('current');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.lesson-item').forEach(item => {
+            observer.observe(item);
+        });
+
+
         // Функции для работы бокового меню
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -2103,4 +2139,5 @@
         </div>
     </footer>
 </body>
+
 </html>
