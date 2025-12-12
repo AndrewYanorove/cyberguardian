@@ -102,7 +102,7 @@ cp .env.example .env
 python init_db.py
 
 # 6. Запустить приложение
-python run.py
+python app.py
 После запуска откройте http://localhost:5000 в браузере.
 
 Docker-развёртывание
