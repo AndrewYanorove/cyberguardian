@@ -1,4 +1,4 @@
- {% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 
@@ -151,10 +151,18 @@
         width: 100%;
         max-width: 180px;
     }
-    
-    .feature-icon-lg.icon-education { color: var(--cyber-primary); }
-    .feature-icon-lg.icon-tools { color: var(--cyber-accent); }
-    .feature-icon-lg.icon-ai { color: var(--cyber-info); }
+
+    .feature-icon-lg.icon-education {
+        color: var(--cyber-primary);
+    }
+
+    .feature-icon-lg.icon-tools {
+        color: var(--cyber-accent);
+    }
+
+    .feature-icon-lg.icon-ai {
+        color: var(--cyber-info);
+    }
 
     .feature-showcase:hover {
         background: var(--cyber-bg-card-light);
@@ -166,10 +174,18 @@
         opacity: 0.4;
         transform: rotate(0deg) scale(1.1);
     }
-    
-    .feature-showcase:hover .feature-icon-lg.icon-education { color: var(--cyber-primary); }
-    .feature-showcase:hover .feature-icon-lg.icon-tools { color: var(--cyber-accent); }
-    .feature-showcase:hover .feature-icon-lg.icon-ai { color: var(--cyber-info); }
+
+    .feature-showcase:hover .feature-icon-lg.icon-education {
+        color: var(--cyber-primary);
+    }
+
+    .feature-showcase:hover .feature-icon-lg.icon-tools {
+        color: var(--cyber-accent);
+    }
+
+    .feature-showcase:hover .feature-icon-lg.icon-ai {
+        color: var(--cyber-info);
+    }
 
     /* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ БЕЙДЖЕЙ */
     .feature-showcase .cyber-badge {
@@ -214,21 +230,21 @@
             font-size: 8rem;
             margin-bottom: 2rem;
         }
-        
+
         .feature-showcase {
             text-align: center;
             padding: 2rem 0;
         }
-        
+
         .feature-showcase .btn-cyber-outline {
             margin-bottom: 0.75rem;
             display: inline-block;
         }
-        
+
         .feature-showcase .cyber-badge {
             margin-bottom: 1.5rem !important;
         }
-        
+
         .feature-showcase h2.cyber-title {
             margin-top: 0.75rem;
             margin-bottom: 1.5rem;
@@ -239,12 +255,12 @@
         .feature-showcase {
             padding: 1.5rem 0;
         }
-        
+
         .feature-icon-lg {
             font-size: 6rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .feature-showcase .cyber-badge {
             margin-bottom: 1.25rem !important;
             padding: 0.6rem 1.2rem;
@@ -253,7 +269,7 @@
     }
 
     /* Дополнительные гарантии от перекрытия */
-    .feature-showcase .col-lg-7 > *:first-child {
+    .feature-showcase .col-lg-7>*:first-child {
         margin-top: 0;
         padding-top: 0;
     }
@@ -294,22 +310,36 @@
         r: 5;
         animation: svg-float 12s ease-in-out infinite alternate;
     }
-    
+
     @keyframes svg-pulse {
-        from { stroke-dashoffset: 0; }
-        to { stroke-dashoffset: 100; }
+        from {
+            stroke-dashoffset: 0;
+        }
+
+        to {
+            stroke-dashoffset: 100;
+        }
     }
+
     @keyframes svg-float {
-        0% { transform: translate(0, 0); }
-        50% { transform: translate(10px, 20px); }
-        100% { transform: translate(0, 0); }
+        0% {
+            transform: translate(0, 0);
+        }
+
+        50% {
+            transform: translate(10px, 20px);
+        }
+
+        100% {
+            transform: translate(0, 0);
+        }
     }
 
     .cyber-hero .container-max {
         position: relative;
         z-index: 1;
     }
-    
+
     /* --- Стили: Секция "Ключевые модули" --- */
     .module-card {
         background: var(--cyber-bg-card-dark);
@@ -322,35 +352,41 @@
         display: flex;
         flex-direction: column;
     }
+
     .module-card:hover {
         transform: translateY(-8px);
         border-color: var(--cyber-primary);
         box-shadow: var(--cyber-shadow-medium), 0 0 20px rgba(0, 168, 255, 0.1);
     }
+
     .module-icon {
         font-size: 3rem;
         margin-bottom: 1.5rem;
         transition: all 0.3s ease;
     }
+
     .module-card:hover .module-icon {
         transform: scale(1.1);
     }
+
     .module-card .cyber-title-primary {
         font-size: 1.5rem;
         margin-bottom: 1rem;
     }
+
     .module-card p {
         flex-grow: 1;
         color: var(--cyber-subtext);
         margin-bottom: 1.5rem;
     }
-    
+
     /* --- Стили: Секция "Таймлайн" --- */
     /* --- Стили: Секция "Таймлайн" --- */
     .timeline-section {
         position: relative;
         padding: 2rem 0;
     }
+
     .timeline-section::before {
         content: '';
         position: absolute;
@@ -368,10 +404,11 @@
         width: 50%;
         padding: 1rem 3rem;
         margin-bottom: 2rem;
-        opacity: 0; 
+        opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
+
     .timeline-item.is-visible {
         opacity: 1;
         transform: translateY(0);
@@ -381,6 +418,7 @@
         left: 0;
         text-align: right;
     }
+
     .timeline-item:nth-child(even) {
         left: 50%;
         text-align: left;
@@ -388,8 +426,11 @@
 
     .timeline-dot {
         position: absolute;
-        top: 50%; /* ИЗМЕНЕНО: центрируем по вертикали */
-        transform: translateY(-50%); /* ИЗМЕНЕНО: центрируем по вертикали */
+        left: 20px !important;
+        top: 50%;
+        /* ИЗМЕНЕНО: центрируем по вертикали */
+        transform: translateX(-50%) translateY(-50%);
+        /* ИЗМЕНЕНО: центрируем по вертикали */
         width: 20px;
         height: 20px;
         background: var(--cyber-bg-card-dark);
@@ -398,12 +439,15 @@
         z-index: 1;
         transition: all 0.3s ease;
     }
+
     .timeline-item:nth-child(odd) .timeline-dot {
         right: -10px;
     }
+
     .timeline-item:nth-child(even) .timeline-dot {
         left: -10px;
     }
+
     .timeline-item:hover .timeline-dot {
         background: var(--cyber-primary);
         box-shadow: var(--cyber-glow-primary);
@@ -416,10 +460,12 @@
         border-radius: 16px;
         transition: all 0.3s ease;
     }
+
     .timeline-item:hover .timeline-content {
         border-color: var(--cyber-primary);
         box-shadow: var(--cyber-shadow-medium);
     }
+
     .timeline-step {
         font-size: 1.25rem;
         font-weight: 700;
@@ -431,6 +477,7 @@
         .timeline-section::before {
             left: 20px;
         }
+
         .timeline-item {
             width: 100%;
             left: 0 !important;
@@ -438,12 +485,14 @@
             padding-right: 1rem;
             text-align: left !important;
         }
+
         .timeline-dot {
             left: 20px !important;
-            transform: translateX(-50%) translateY(-50%); /* ИЗМЕНЕНО: двойное центрирование */
+            transform: translateX(-50%) translateY(-50%);
+            /* ИЗМЕНЕНО: двойное центрирование */
         }
     }
-    
+
     /* --- Стили: Секция "Отзывы" (Слайдер) --- */
     .testimonial-slider-wrapper {
         position: relative;
@@ -455,16 +504,19 @@
         padding: 3rem;
         border: 2px solid var(--cyber-border);
     }
+
     .testimonial-slider-track {
         display: flex;
         transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
+
     .testimonial-card {
         flex: 0 0 100%;
         padding: 0 2rem;
         text-align: center;
         box-sizing: border-box;
     }
+
     .testimonial-quote {
         font-size: 1.5rem;
         font-style: italic;
@@ -472,6 +524,7 @@
         line-height: 1.5;
         margin-bottom: 2rem;
     }
+
     .testimonial-quote::before {
         content: '“';
         font-size: 4rem;
@@ -479,15 +532,17 @@
         display: block;
         line-height: 1;
     }
+
     .testimonial-author {
         font-weight: 700;
         font-size: 1.1rem;
         color: var(--cyber-accent);
     }
+
     .testimonial-role {
         color: var(--cyber-subtext);
     }
-    
+
     .slider-nav-btn {
         position: absolute;
         top: 50%;
@@ -503,23 +558,41 @@
         transition: all 0.3s ease;
         z-index: 10;
     }
+
     .slider-nav-btn:hover {
         background: var(--cyber-primary);
         color: #000;
         box-shadow: var(--cyber-glow-primary);
     }
-    .slider-nav-btn#prevBtn { left: 1rem; }
-    .slider-nav-btn#nextBtn { right: 1rem; }
-    
+
+    .slider-nav-btn#prevBtn {
+        left: 1rem;
+    }
+
+    .slider-nav-btn#nextBtn {
+        right: 1rem;
+    }
+
     /* --- Общий класс для анимации --- */
     .scroll-animate {
         opacity: 0;
         transform: translateY(40px);
         transition: opacity 0.7s ease-out, transform 0.7s ease-out;
     }
+
     .scroll-animate.is-visible {
         opacity: 1;
         transform: translateY(0);
+    }
+
+    .stat-sign {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--cyber-primary);
+    }
+
+    .inline {
+        display: inline !important;
     }
 
     /* ИСПРАВЛЕНИЕ: Корректировка для заголовка, чтобы не обрезался */
@@ -530,19 +603,44 @@
         -ms-hyphens: auto;
         hyphens: auto;
     }
+
     @media (max-width: 576px) {
-        h1.cyber-title, h1.display-3 {
+
+        h1.cyber-title,
+        h1.display-3 {
             font-size: 2.2rem !important;
         }
+
         h2.cyber-title {
             font-size: 2rem !important;
+        }
+
+        /* Добавить prefers-reduced-motion для пользователей */
+        @media (prefers-reduced-motion: reduce) {
+
+            .scroll-animate,
+            .feature-icon-lg,
+            .timeline-item {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        /* Исправить позиционирование точек */
+        @media (max-width: 992px) {
+            .timeline-dot {
+                left: 10px !important;
+                /* Вместо 20px */
+                transform: translateY(-50%);
+                /* Убрать translateX */
+            }
         }
     }
 </style>
 
 
 <section class="cyber-hero" style="padding-top: 6rem; padding-bottom: 6rem; position: relative;">
-    
+
     <div class="hero-svg-bg">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500">
             <defs>
@@ -552,9 +650,12 @@
                 </linearGradient>
             </defs>
             <path class="svg-line" d="M100 100 L300 150 L500 100 L700 200 L900 150 L1100 250 L1300 200" fill="none" />
-            <path class="svg-line" d="M150 300 L350 350 L550 300 L750 400 L950 350 L1150 450 L1350 400" fill="none" style="animation-delay: -2s;" />
-            <path class="svg-line" d="M50 50 L250 100 L450 50 L650 150 L850 100 L1050 200 L1250 150" fill="none" style="animation-delay: -4s;" />
-            <path class="svg-line" d="M200 450 L400 400 L600 450 L800 350 L1000 400 L1200 300 L1400 350" fill="none" style="animation-delay: -6s;" />
+            <path class="svg-line" d="M150 300 L350 350 L550 300 L750 400 L950 350 L1150 450 L1350 400" fill="none"
+                style="animation-delay: -2s;" />
+            <path class="svg-line" d="M50 50 L250 100 L450 50 L650 150 L850 100 L1050 200 L1250 150" fill="none"
+                style="animation-delay: -4s;" />
+            <path class="svg-line" d="M200 450 L400 400 L600 450 L800 350 L1000 400 L1200 300 L1400 350" fill="none"
+                style="animation-delay: -6s;" />
             <path class="svg-line" d="M100 100 L150 300" fill="none" />
             <path class="svg-line" d="M300 150 L350 350" fill="none" style="animation-delay: -1s;" />
             <path class="svg-line" d="M500 100 L550 300" fill="none" />
@@ -600,19 +701,21 @@
         <div class="row justify-content-center">
             <div class="col-lg-9">
                 <div class="scroll-animate" style="animation-delay: 0s;">
-                    <i class="bi bi-shield-shaded" style="font-size: 5rem; color: var(--cyber-primary); text-shadow: var(--cyber-glow-primary);"></i>
+                    <i class="bi bi-shield-shaded"
+                        style="font-size: 5rem; color: var(--cyber-primary); text-shadow: var(--cyber-glow-primary);"></i>
                 </div>
-                
+
                 <h1 class="cyber-title display-3 my-4 scroll-animate" style="animation-delay: 0.1s;">
                     Добро пожаловать в CyberGuardian
                 </h1>
-                
+
                 <p class="cyber-lead mb-5 scroll-animate" style="animation-delay: 0.2s;">
                     Ваш персональный центр по кибербезопасности. Изучайте защиту от фишинга,
                     шифрование данных, DDoS атаки и другие аспекты цифровой безопасности в интерактивной среде.
                 </p>
-                
-                <div class="d-flex flex-wrap gap-3 justify-content-center scroll-animate" style="animation-delay: 0.3s;">
+
+                <div class="d-flex flex-wrap gap-3 justify-content-center scroll-animate"
+                    style="animation-delay: 0.3s;">
                     <a href="{{ url_for('education.education_home') }}" class="btn-cyber btn-lg">
                         <i class="bi bi-book me-2"></i>Начать обучение
                     </a>
@@ -627,7 +730,7 @@
 
 <section class="section-spacing">
     <div class="container-max">
-        
+
         <!-- Обучение -->
         <div class="row align-items-center feature-showcase scroll-animate">
             <div class="col-lg-5 text-center">
@@ -661,12 +764,14 @@
                 <div style="margin-bottom: 1.5rem;">
                     <span class="cyber-badge cyber-badge-accent">Инструменты</span>
                 </div>
-                <h2 class="cyber-title mb-3" style="font-size: 2.5rem; margin-top: 0.5rem;">Набор Кибер-Утилит для Защиты Данных</h2>
+                <h2 class="cyber-title mb-3" style="font-size: 2.5rem; margin-top: 0.5rem;">Набор Кибер-Утилит для
+                    Защиты Данных</h2>
                 <p class="cyber-lead mb-4">
                     Используйте наш генератор надежных паролей, инструменты шифрования и анализаторы безопасности
-                     для обеспечения максимальной защиты ваших личных данных от киберугроз.
+                    для обеспечения максимальной защиты ваших личных данных от киберугроз.
                 </p>
-                <a href="{{ url_for('passwords.password_generator') }}" class="btn-cyber-outline" style="border-color: var(--cyber-accent); color: var(--cyber-accent);">
+                <a href="{{ url_for('passwords.password_generator') }}" class="btn-cyber-outline"
+                    style="border-color: var(--cyber-accent); color: var(--cyber-accent);">
                     <i class="bi bi-shield-lock me-2"></i>Генератор паролей
                 </a>
                 <a href="{{ url_for('encryption.encryption_tools') }}" class="btn-cyber-outline ms-lg-2">
@@ -684,14 +789,17 @@
             </div>
             <div class="col-lg-7">
                 <div style="margin-bottom: 1.5rem;">
-                    <span class="cyber-badge cyber-badge-primary" style="background: linear-gradient(135deg, rgba(84, 160, 255, 0.2), rgba(84, 160, 255, 0.1)); border-color: var(--cyber-info); color: var(--cyber-info);">AI Помощник</span>
+                    <span class="cyber-badge cyber-badge-primary"
+                        style="background: linear-gradient(135deg, rgba(84, 160, 255, 0.2), rgba(84, 160, 255, 0.1)); border-color: var(--cyber-info); color: var(--cyber-info);">AI
+                        Помощник</span>
                 </div>
                 <h2 class="cyber-title mb-3" style="font-size: 2.5rem; margin-top: 0.5rem;">Ваш Эксперт 24/7</h2>
                 <p class="cyber-lead mb-4">
                     Задайте любой вопрос о кибербезопасности и получите мгновенный,
                     экспертный ответ от нашего продвинутого искусственного интеллекта.
                 </p>
-                <a href="{{ url_for('ai.ai_chat') }}" class="btn-cyber-outline" style="border-color: var(--cyber-info); color: var(--cyber-info);">
+                <a href="{{ url_for('ai.ai_chat') }}" class="btn-cyber-outline"
+                    style="border-color: var(--cyber-info); color: var(--cyber-info);">
                     <i class="bi bi-chat-dots me-2"></i>Спросить AI
                 </a>
             </div>
@@ -705,7 +813,7 @@
         <h2 class="section-title cyber-title-primary text-center mx-auto scroll-animate" style="max-width: 600px;">
             Платформа в Цифрах
         </h2>
-        
+
         <div class="stats-grid mt-5">
             <div class="stat-card scroll-animate" style="animation-delay: 0s;">
                 <span class="stat-number">3+</span>
@@ -715,13 +823,14 @@
                 <span class="stat-number">3+</span>
                 <span class="stat-label">Алгоритмов шифрования</span>
             </div>
-            
-            <div class="stat-card scroll-animate">
-                <span class="stat-number">24/7</span>
+
+            <div class="stat-card scroll-animate" style="animation-delay: 0.1s;">
+                <span class="stat-number inline">24</span><span class="stat-sign">/</span><span
+                    class="stat-number inline">7</span><br>
                 <span class="stat-label">AI-Помощник</span>
             </div>
             <div class="stat-card scroll-animate" style="animation-delay: 0.3s;">
-                <span class="stat-number">100%</span>
+                <span class="stat-number inline">100</span><span class="stat-sign">%</span><br>
                 <span class="stat-label">Безопасная среда</span>
             </div>
         </div>
@@ -736,7 +845,7 @@
         <p class="cyber-lead text-center mx-auto mb-5 scroll-animate" style="max-width: 800px; animation-delay: 0.1s;">
             Мы объединили все необходимые инструменты и учебные материалы в единую экосистему для вашего удобства.
         </p>
-        
+
         <div class="row g-4">
             <div class="col-lg-3 col-md-6">
                 <div class="module-card scroll-animate" style="animation-delay: 0s;">
@@ -744,7 +853,8 @@
                         <i class="bi bi-lightning-charge"></i>
                     </div>
                     <h3 class="cyber-title-primary">DDoS Лаборатория</h3>
-                    <p>Изучите механизмы DDoS атак, распределенных отказов в обслуживании и методы защиты от кибератак в нашей безопасной среде.</p>
+                    <p>Изучите механизмы DDoS атак, распределенных отказов в обслуживании и методы защиты от кибератак в
+                        нашей безопасной среде.</p>
                     <a href="{{ url_for('ddos.ddos_simulator') }}" class="btn-cyber-outline mt-auto">В лабораторию</a>
                 </div>
             </div>
@@ -755,7 +865,8 @@
                     </div>
                     <h3 class="cyber-title-primary">Мониторинг Угроз</h3>
                     <p>Интерактивная карта кибератак и актуальная лента новостей об уязвимостях в реальном времени.</p>
-                    <a href="{{ url_for('threats.threat_dashboard') }}" class="btn-cyber-outline mt-auto">Смотреть карту</a>
+                    <a href="{{ url_for('threats.threat_dashboard') }}" class="btn-cyber-outline mt-auto">Смотреть
+                        карту</a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -787,14 +898,15 @@
         <h2 class="section-title cyber-title-primary text-center mx-auto scroll-animate" style="max-width: 600px;">
             Ваш Путь к Безопасности
         </h2>
-        
+
         <div class="timeline-section mt-5">
             <div class="timeline-item scroll-animate">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
                     <span class="timeline-step">Шаг 1: Регистрация</span>
                     <h4 class="cyber-title-primary mb-3">Создайте Аккаунт</h4>
-                    <p class="cyber-subtext">Пройдите быструю регистрацию, чтобы получить доступ ко всем возможностям платформы и начать отслеживать свой прогресс.</p>
+                    <p class="cyber-subtext">Пройдите быструю регистрацию, чтобы получить доступ ко всем возможностям
+                        платформы и начать отслеживать свой прогресс.</p>
                 </div>
             </div>
             <div class="timeline-item scroll-animate">
@@ -802,7 +914,8 @@
                 <div class="timeline-content">
                     <span class="timeline-step">Шаг 2: Обучение</span>
                     <h4 class="cyber-title-primary mb-3">Изучите Теорию</h4>
-                    <p class="cyber-subtext">Пройдите наши интерактивные курсы, чтобы понять основы: от фишинга до сложных сетевых атак и методов шифрования.</p>
+                    <p class="cyber-subtext">Пройдите наши интерактивные курсы, чтобы понять основы: от фишинга до
+                        сложных сетевых атак и методов шифрования.</p>
                 </div>
             </div>
             <div class="timeline-item scroll-animate">
@@ -810,7 +923,8 @@
                 <div class="timeline-content">
                     <span class="timeline-step">Шаг 3: Практика</span>
                     <h4 class="cyber-title-primary mb-3">Закрепите Навыки</h4>
-                    <p class="cyber-subtext">Используйте наши инструменты: проверьте пароли, зашифруйте файлы и испытайте свои силы в DDoS-симуляторе.</p>
+                    <p class="cyber-subtext">Используйте наши инструменты: проверьте пароли, зашифруйте файлы и
+                        испытайте свои силы в DDoS-симуляторе.</p>
                 </div>
             </div>
         </div>
@@ -819,31 +933,34 @@
 
 <section class="section-spacing">
     <div class="container-max">
-        
+
         <div class="testimonial-slider-wrapper scroll-animate">
             <div class="testimonial-slider-track">
                 <div class="testimonial-card">
                     <p class="testimonial-quote">
-                        Этот AI — мой спасатель в учебе! Когда не понимаю материал из курсов, всегда обращаюсь к нему. Объясняет даже сложные темы простыми словами. Настоящий цифровой наставник!
+                        Этот AI — мой спасатель в учебе! Когда не понимаю материал из курсов, всегда обращаюсь к нему.
+                        Объясняет даже сложные темы простыми словами. Настоящий цифровой наставник!
                     <div class="testimonial-author">Алексей В.</div>
                     <div class="testimonial-role">Студент, Факультет ИБ</div>
                 </div>
                 <div class="testimonial-card">
                     <p class="testimonial-quote">
-                        Наконец-то нашла курсы, которые объясняют сложные вещи простым языком. Курс Кибербезопасность для подростков , очень хорош для начинающих.
+                        Наконец-то нашла курсы, которые объясняют сложные вещи простым языком. Курс Кибербезопасность
+                        для подростков , очень хорош для начинающих.
                     </p>
                     <div class="testimonial-author">Мария П.</div>
                     <div class="testimonial-role">Ученица 10 класса</div>
                 </div>
                 <div class="testimonial-card">
                     <p class="testimonial-quote">
-                        Использую генератор паролей и шифратор почти каждый день. Очень удобно, что все нужные инструменты в одном месте.
+                        Использую генератор паролей и шифратор почти каждый день. Очень удобно, что все нужные
+                        инструменты в одном месте.
                     </p>
                     <div class="testimonial-author">Сергей Л.</div>
                     <div class="testimonial-role">Фрилансер</div>
                 </div>
             </div>
-            
+
             <button class="slider-nav-btn" id="prevBtn"><i class="bi bi-chevron-left"></i></button>
             <button class="slider-nav-btn" id="nextBtn"><i class="bi bi-chevron-right"></i></button>
         </div>
@@ -876,32 +993,32 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        
+
         // --------------------------------------------------
         // Продвинутый Intersection Observer для всех анимаций
         // --------------------------------------------------
         const animatedElements = document.querySelectorAll('.scroll-animate, .stat-number, .timeline-item');
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     // Элемент виден
-                    
+
                     // 1. Общая анимация появления
                     if (entry.target.classList.contains('scroll-animate') || entry.target.classList.contains('timeline-item')) {
                         entry.target.classList.add('is-visible');
                     }
-                    
+
                     // 2. Анимация счетчика статистики
                     if (entry.target.classList.contains('stat-number') && !entry.target.classList.contains('animated')) {
                         animateStat(entry.target);
                     }
-                    
+
                     // Отключаем наблюдение, чтобы анимация не повторялась
                     observer.unobserve(entry.target);
                 }
             });
-        }, { 
+        }, {
             threshold: 0.2 // Запускаем, когда видно 20% элемента
         });
 
@@ -915,12 +1032,12 @@
         // --------------------------------------------------
         function animateStat(statNumber) {
             statNumber.classList.add('animated');
-            
+
             const targetText = statNumber.textContent;
             const hasPlus = targetText.includes('+');
             const target = parseInt(targetText.replace('+', ''));
-            
-            if (isNaN(target)) return; 
+
+            if (isNaN(target)) return;
 
             const duration = 2000;
             let start = 0;
@@ -948,7 +1065,7 @@
             const nextButton = document.getElementById('nextBtn');
             const prevButton = document.getElementById('prevBtn');
             // Проверка, есть ли слайды, прежде чем получать их ширину
-            if(slides.length > 0) {
+            if (slides.length > 0) {
                 const slideWidth = slides[0].getBoundingClientRect().width + 50;
                 let currentIndex = 0;
 
@@ -1007,7 +1124,7 @@
 
     });
 
-    
+
 </script>
 
 {% endblock %}
