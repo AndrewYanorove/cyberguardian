@@ -179,8 +179,12 @@
                                     <i class="bi bi-check-circle"></i>
                                 </button>
                                 {% endif %}
+
                                 <button onclick="deleteUser({{ user.id }}, '{{ user.username }}')" class="btn btn-sm btn-outline-danger" title="Удалить">
                                     <i class="bi bi-trash"></i>
+                                </button>
+                                <button onclick="loadUserStories({{ user.id }})" class="btn btn-sm btn-outline-info" title="Истории">
+                                    <i class="bi bi-journal-text"></i>
                                 </button>
                             </div>
                         </td>
@@ -218,6 +222,60 @@
             </ul>
         </nav>
         {% endif %}
+    </div>
+
+    <!-- Модальное окно историй пользователя -->
+    <div class="modal fade" id="userStoriesModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="background: var(--cyber-bg-card); border: 2px solid var(--cyber-primary);">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title cyber-text-bright" id="storiesModalTitle">Истории пользователя</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="storiesLoader" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
+                    </div>
+                    <div id="storiesList" class="d-none">
+                        <!-- Здесь будут истории -->
+                    </div>
+                    <div id="noStoriesMessage" class="text-center py-4 d-none text-muted">
+                        У пользователя нет опубликованных историй
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования истории -->
+    <div class="modal fade" id="editStoryModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="background: var(--cyber-bg-card); border: 2px solid var(--cyber-warning);">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title cyber-text-bright">Редактировать историю</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editStoryForm">
+                        <input type="hidden" id="editStoryId">
+                        <div class="mb-3">
+                            <label for="editStoryTitle" class="form-label text-white">Заголовок</label>
+                            <input type="text" class="form-control bg-dark text-white border-secondary" id="editStoryTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editStoryContent" class="form-label text-white">Содержание</label>
+                            <textarea class="form-control bg-dark text-white border-secondary" id="editStoryContent" rows="10" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-warning" onclick="saveStoryChanges()">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
     </div>
     {% endif %}
 </div>
@@ -265,9 +323,139 @@
         }
     }
 
+
     function deleteUser(userId, username) {
         if (confirm(`ВНИМАНИЕ! Вы собираетесь удалить пользователя ${username}.\nЭто действие НЕОБРАТИМО!\n\nПродолжить?`)) {
             apiRequest('delete-user', { user_id: userId });
+        }
+    }
+
+    // === Управление историями ===
+    let storiesModal;
+    let editStoryModal;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        storiesModal = new bootstrap.Modal(document.getElementById('userStoriesModal'));
+        editStoryModal = new bootstrap.Modal(document.getElementById('editStoryModal'));
+    });
+
+    async function loadUserStories(userId) {
+        storiesModal.show();
+        
+        const loader = document.getElementById('storiesLoader');
+        const list = document.getElementById('storiesList');
+        const noStories = document.getElementById('noStoriesMessage');
+        const title = document.getElementById('storiesModalTitle');
+        
+        loader.classList.remove('d-none');
+        list.classList.add('d-none');
+        noStories.classList.add('d-none');
+        
+        try {
+            const response = await fetch(`/admin/get-user-stories/${userId}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                title.textContent = `Истории пользователя ${data.username}`;
+                list.innerHTML = '';
+                
+                if (data.stories.length === 0) {
+                    noStories.classList.remove('d-none');
+                } else {
+                    data.stories.forEach(story => {
+                        const item = document.createElement('div');
+                        item.className = 'card bg-dark border-secondary mb-3';
+                        item.innerHTML = `
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title text-info mb-0">${story.title}</h5>
+                                    <span class="badge bg-secondary">${story.category}</span>
+                                </div>
+                                <p class="card-text text-light small">${story.content}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="text-muted small">
+                                        <i class="bi bi-calendar me-1"></i>${story.created_at}
+                                        <span class="mx-2">|</span>
+                                        <i class="bi bi-eye me-1"></i>${story.views}
+                                        <span class="mx-2">|</span>
+                                        <i class="bi bi-heart me-1"></i>${story.likes}
+                                    </div>
+                                    <div class="btn-group">
+                                        <button onclick="editStory(${story.id})" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil me-1"></i>Редактировать
+                                        </button>
+                                        <button onclick="deleteStory(${story.id})" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash me-1"></i>Удалить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        list.appendChild(item);
+                    });
+                    list.classList.remove('d-none');
+                }
+            } else {
+                showNotification(data.error || 'Ошибка загрузки историй', 'danger');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Ошибка сети при загрузке историй', 'danger');
+        } finally {
+            loader.classList.add('d-none');
+        }
+    }
+
+    async function editStory(storyId) {
+        try {
+            const response = await fetch(`/admin/get-story/${storyId}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                document.getElementById('editStoryId').value = data.story.id;
+                document.getElementById('editStoryTitle').value = data.story.title;
+                document.getElementById('editStoryContent').value = data.story.content;
+                
+                editStoryModal.show();
+            } else {
+                showNotification('Ошибка загрузки истории', 'danger');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Ошибка сети', 'danger');
+        }
+    }
+
+    async function saveStoryChanges() {
+        const id = document.getElementById('editStoryId').value;
+        const title = document.getElementById('editStoryTitle').value;
+        const content = document.getElementById('editStoryContent').value;
+        
+        try {
+            await apiRequest('update-story', {
+                story_id: id,
+                title: title,
+                content: content
+            });
+            
+            editStoryModal.hide();
+            // Не перезагружаем страницу, просто уведомляем
+            // Можно было бы обновить список, но для простоты оставим так
+            // Пользователь может закрыть и открыть список заново
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function deleteStory(storyId) {
+        if (confirm('Вы уверены, что хотите удалить эту историю? Это действие необратимо.')) {
+            try {
+                await apiRequest('delete-story', { story_id: storyId });
+                // Скрываем модальное окно историй, чтобы обновить состояние
+                storiesModal.hide();
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
     }
 </script>

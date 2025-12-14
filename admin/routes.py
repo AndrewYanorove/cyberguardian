@@ -12,11 +12,13 @@ from functools import wraps
 # Импортируем blueprint из модуля
 from . import admin_bp
 
+
 # Импорты из основного приложения
 from database import db
 from auth.models import User
 from education.models import UserProgress
 from encryption.models import EncryptionHistory
+from forum.models import ForumStory
 
 # Импорты системы безопасности
 from security.web_protection import csrf_protection, xss_protection, input_validator, SecurityHeaders
@@ -343,6 +345,7 @@ def get_users_stats_api():
             db.func.count(UserProgress.id) + db.func.count(EncryptionHistory.id)
         ).limit(10).all()
         
+
         return jsonify({
             'success': True,
             'stats': {
@@ -365,3 +368,127 @@ def get_users_stats_api():
         
     except Exception as e:
         return jsonify({'error': f'Ошибка получения статистики: {str(e)}'}), 500
+
+# === Управление историями пользователей ===
+
+@admin_bp.route('/get-user-stories/<int:user_id>', methods=['GET'])
+@admin_required
+def get_user_stories_api(user_id):
+    """Получение всех историй конкретного пользователя"""
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'Пользователь не найден'}), 404
+            
+        stories = ForumStory.query.filter_by(author_id=user_id).order_by(ForumStory.created_at.desc()).all()
+        
+        stories_data = []
+        for story in stories:
+            stories_data.append({
+                'id': story.id,
+                'title': story.title,
+                'content': story.content[:100] + '...' if len(story.content) > 100 else story.content,
+                'category': story.category,
+                'created_at': story.created_at.strftime('%d.%m.%Y %H:%M'),
+                'views': story.views_count,
+                'likes': story.likes_count
+            })
+            
+        return jsonify({
+            'success': True,
+            'username': user.username,
+            'stories': stories_data
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Ошибка при получении историй: {str(e)}'}), 500
+
+@admin_bp.route('/get-story/<int:story_id>', methods=['GET'])
+@admin_required
+def get_story_api(story_id):
+    """Получение одной истории для редактирования"""
+    try:
+        story = ForumStory.query.get(story_id)
+        if not story:
+            return jsonify({'error': 'История не найдена'}), 404
+            
+        return jsonify({
+            'success': True,
+            'story': {
+                'id': story.id,
+                'title': story.title,
+                'content': story.content,
+                'category': story.category
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Ошибка при получении истории: {str(e)}'}), 500
+
+@admin_bp.route('/update-story', methods=['POST'])
+@rate_limit('api')
+@admin_required
+def update_story_api():
+    """Обновление истории"""
+    try:
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form.to_dict()
+            
+        if not data or 'story_id' not in data:
+            return jsonify({'error': 'ID истории обязателен'}), 400
+            
+        story_id = data['story_id']
+        title = data.get('title')
+        content = data.get('content')
+        
+        story = ForumStory.query.get(story_id)
+        if not story:
+            return jsonify({'error': 'История не найдена'}), 404
+            
+        if title:
+            story.title = xss_protection.sanitize_input(title)
+        if content:
+            story.content = xss_protection.sanitize_input(content, max_length=10000)
+            
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'История успешно обновлена'
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Ошибка при обновлении истории: {str(e)}'}), 500
+
+@admin_bp.route('/delete-story', methods=['POST'])
+@rate_limit('api')
+@admin_required
+def delete_story_api():
+    """Удаление истории"""
+    try:
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form.to_dict()
+            
+        if not data or 'story_id' not in data:
+            return jsonify({'error': 'ID истории обязателен'}), 400
+            
+        story_id = data['story_id']
+        
+        story = ForumStory.query.get(story_id)
+        if not story:
+            return jsonify({'error': 'История не найдена'}), 404
+            
+        db.session.delete(story)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'История успешно удалена'
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Ошибка при удалении истории: {str(e)}'}), 500
