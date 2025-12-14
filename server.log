@@ -1,0 +1,19 @@
+🛡️ База данных угроз инициализирована
+✅ GigaChat клиент инициализирован
+🔄 ПРОСТАЯ ЗАЩИТА ДАННЫХ...
+✅ Структура БД обновлена
+✅ Данные курсов инициализированы в БД
+💾 Бэкап создан: backups/persistent_backup.db
+💾 Создан бэкап текущих данных
+🎯 Данные защищены!
+🔄 ПРОСТАЯ ЗАЩИТА ДАННЫХ...
+✅ Структура БД обновлена
+✅ Данные курсов инициализированы в БД
+💾 Бэкап создан: backups/persistent_backup.db
+💾 Создан бэкап текущих данных
+🎯 Данные защищены!
+🚀 Запуск сервера...
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 8006 is in use by another program. Either identify and stop that program, or start the server with a different port.

@@ -1,27 +1,42 @@
-from flask import Flask, render_template, jsonify, request, redirect, url_for, session
+from flask import Flask, render_template, jsonify, request, redirect, url_for, session, make_response
 from donations import donations_bp
 from flask_compress import Compress
 from flask_caching import Cache
 from dotenv import load_dotenv
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import sqlite3
 import shutil
+
+# 🛡️ ИМПОРТ МОДУЛЕЙ БЕЗОПАСНОСТИ
+from security.intrusion_prevention import security_middleware, threat_detector, get_security_stats, force_block_ip, unblock_ip
+from security.web_protection import security_validation_middleware, csrf_protection, xss_protection, input_validator, SecurityHeaders
+from security.auth_security import rate_limiter, two_factor_auth, brute_force_protection, session_security, initialize_auth_security, rate_limit, brute_force_protect, session_security_check
+from security.data_protection import data_encryption, password_manager, file_protection
 
 # Загрузка переменных окружения
 load_dotenv()
 
+
 def create_app():
     app = Flask(__name__)
     
-    # Конфигурация
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'cyberguardian-super-secret-2024')
+    # 🛡️ УСИЛЕННАЯ КОНФИГУРАЦИЯ БЕЗОПАСНОСТИ
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'cyberguardian-ultra-secure-2024-with-encryption!')
     app.config['TEMPLATES_AUTO_RELOAD'] = True
 
-    # Оптимизации для production
+    # Оптимизации для production с безопасностью
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000  # 1 год для статических файлов
     app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False  # Минифицированный JSON
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB максимум
+    
+    # 🔐 ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ БЕЗОПАСНОСТИ
+    app.config['WTF_CSRF_TIME_LIMIT'] = 3600  # CSRF токен действует 1 час
+    app.config['WTF_CSRF_SSL_STRICT'] = False  # Разрешаем CSRF на HTTP для разработки
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)  # Сессия действует 2 часа
+    app.config['SESSION_COOKIE_SECURE'] = False  # Для разработки, в продакшене должно быть True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True  # Защита от XSS
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Защита от CSRF
     
     # Создаем папки для базы данных и бэкапов
     os.makedirs('instance', exist_ok=True)
@@ -32,11 +47,18 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
+
+    # 🔒 НАСТРОЙКА СОБСТВЕННОЙ СИСТЕМЫ БЕЗОПАСНОСТИ
+    # (Вместо Flask-Talisman используем наши модули безопасности)
+    
     # Добавляем сжатие GZIP
     app.config['COMPRESS_ALGORITHM'] = 'gzip'
     app.config['COMPRESS_LEVEL'] = 6
     app.config['COMPRESS_MIN_SIZE'] = 500
     Compress(app)
+    
+
+    # 🛡️ ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ БЕЗОПАСНОСТИ
     
     # Инициализация базы данных
     from database import db
@@ -46,6 +68,30 @@ def create_app():
     from auth.routes import init_login_manager
     init_login_manager(app)
     
+    # 🔐 НАСТРОЙКА БЕЗОПАСНОСТИ СЕССИЙ
+    @app.before_request
+    def setup_security():
+        """Установка системы безопасности для каждого запроса"""
+        # Инициализация отпечатка сессии
+        if 'session_id' not in session:
+            from cryptography.fernet import Fernet
+            import secrets
+            
+            # Генерируем уникальный ID сессии
+            session['session_id'] = secrets.token_urlsafe(32)
+            
+            # Сохраняем отпечаток сессии
+            session_security.store_session_fingerprint(session['session_id'], request)
+        
+        # Запускаем проверку угроз
+        security_middleware()
+        
+
+        # Запускаем валидацию входных данных (исключаем админ-панель)
+        if not request.path.startswith('/admin'):
+            security_validation_middleware()
+    
+
     # Регистрируем blueprint'ы
     from auth.routes import auth_bp
     from education.routes import education_bp
@@ -59,6 +105,7 @@ def create_app():
     from ddos_simulator.routes import ddos_bp
     from forum.routes import forum_bp
     from donations import donations_bp
+    from admin import admin_bp
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(education_bp, url_prefix='/education')
@@ -72,6 +119,11 @@ def create_app():
     app.register_blueprint(ddos_bp, url_prefix='/ddos')
     app.register_blueprint(forum_bp, url_prefix='/forum')
     app.register_blueprint(donations_bp)
+    app.register_blueprint(admin_bp, url_prefix='/admin')
+    
+    # 🛡️ РЕГИСТРАЦИЯ МОДУЛЕЙ БЕЗОПАСНОСТИ
+    auth_security_bp = initialize_auth_security()
+    app.register_blueprint(auth_security_bp, url_prefix='/auth_security')
 
     # 🔥 УМНАЯ ЗАЩИТА ДАННЫХ ПРИ ЗАПУСКЕ
     with app.app_context():
@@ -88,37 +140,46 @@ def create_app():
             'lessons_completed': 12500
         }
     
-    # Главные маршруты
+
+    # 🛡️ ЗАЩИЩЕННЫЕ ГЛАВНЫЕ МАРШРУТЫ
     @app.route('/')
+    @rate_limit('general')
     def index():
         return render_template('index.html')
     
     @app.route('/yandex_e87f9664d2590c4e.html')
+    @rate_limit('general')
     def yandex_verify():
         return render_template('yandex_verify.html')
     
     @app.route('/health')
+    @rate_limit('general')
     def health_check():
         return jsonify({
             'status': 'healthy', 
             'timestamp': datetime.now().isoformat(),
-            'version': '2.0.0',
-            'database': os.path.exists('instance/cyberguardian.db')
+            'version': '2.0.0-ultra-secure',
+            'database': os.path.exists('instance/cyberguardian.db'),
+            'security_enabled': True,
+            'threats_db': os.path.exists('instance/threats.db')
         })
     
     @app.route('/about')
+    @rate_limit('general')
     def about():
         return render_template('about.html')
     
     @app.route('/api/ping')
+    @rate_limit('general')
     def ping_service():
         """Простой пинг для мониторинга"""
         return jsonify({
             'status': 'alive',
             'timestamp': datetime.now().isoformat(),
             'service': 'CyberGuardian',
-            'version': '2.0.0',
-            'uptime': 'running'
+            'version': '2.0.0-ultra-secure',
+            'uptime': 'running',
+            'security_active': True
         })
 
     @app.route('/api/health-deep')
@@ -169,97 +230,11 @@ def create_app():
     def contact():
         return render_template('contact.html')
     
+
     @app.route('/dashboard')
     def dashboard():
         return render_template('dashboard.html')
     
-    @app.route('/admin', methods=['GET', 'POST'])
-    def admin_panel():
-        """Админ-панель с защитой от ошибок БД"""
-        try:
-            ADMIN_PASSWORD = "16795"
-
-            # Выход из системы
-            if request.args.get('logout'):
-                session.pop('admin_authenticated', None)
-                return redirect('/admin')
-
-            # Проверка аутентификации
-            authenticated = session.get('admin_authenticated', False)
-
-            # Обработка формы входа
-            if request.method == 'POST':
-                password = request.form.get('admin_password', '')
-                if password == ADMIN_PASSWORD:
-                    session['admin_authenticated'] = True
-                    session['admin_login_time'] = datetime.now().isoformat()
-                    authenticated = True
-                else:
-                    return render_template('admin_panel.html', authenticated=False, error=True)
-
-            # Если не аутентифицирован, показать форму входа
-            if not authenticated:
-                return render_template('admin_panel.html', authenticated=False, error=False)
-
-            # Загрузка данных для админ-панели с оптимизацией
-            def get_admin_stats():
-                try:
-                    from auth.models import User
-                    from education.models import UserProgress
-                    from encryption.models import EncryptionHistory
-
-                    # Оптимизированные запросы с пагинацией
-                    page = request.args.get('page', 1, type=int)
-                    per_page = 20
-                    users_pagination = User.query.paginate(page=page, per_page=per_page, error_out=False)
-                    users = users_pagination.items
-
-                    users_data = []
-                    for user in users:
-                        # Используем более эффективные запросы
-                        lessons_completed = db.session.query(db.func.count(UserProgress.id)).filter_by(user_id=user.id, completed=True).scalar() or 0
-                        encryption_count = db.session.query(db.func.count(EncryptionHistory.id)).filter_by(user_id=user.id).scalar() or 0
-
-                        users_data.append({
-                            'id': user.id,
-                            'username': user.username,
-                            'email': user.email,
-                            'created_at': user.created_at,
-                            'lessons_completed': lessons_completed,
-                            'encryption_count': encryption_count
-                        })
-
-                    # Общая статистика с кэшированием
-                    total_users = User.query.count()
-                    total_lessons = db.session.query(db.func.count(UserProgress.id)).filter_by(completed=True).scalar() or 0
-                    total_encryptions = EncryptionHistory.query.count()
-
-                    stats = {
-                        'total_users': total_users,
-                        'total_lessons': total_lessons,
-                        'total_encryptions': total_encryptions,
-                        'active_users': len([u for u in users_data if u['encryption_count'] > 0 or u['lessons_completed'] > 0])
-                    }
-
-                    return users_data, stats, users_pagination
-
-                except Exception as e:
-                    return [], {'total_users': 0, 'total_lessons': 0, 'total_encryptions': 0, 'active_users': 0}, None
-
-            users_data, stats, users_pagination = get_admin_stats()
-
-            return render_template('admin_panel.html',
-                                authenticated=True,
-                                users=users_data,
-                                stats=stats)
-
-        except Exception as e:
-            return render_template('admin_panel.html',
-                                authenticated=True,
-                                users=[],
-                                stats={'total_users': 0, 'total_lessons': 0, 'total_encryptions': 0, 'active_users': 0},
-                                error_message=f"Временные проблемы с базой данных: {str(e)}")
-
     # API для бэкапов
     @app.route('/api/backup-status')
     def backup_status():
@@ -284,15 +259,84 @@ def create_app():
         except Exception as e:
             return jsonify({'status': 'error', 'message': str(e)}), 500
 
-    # API для статистики
+
+
+    # 🔒 API ДЛЯ УПРАВЛЕНИЯ БЕЗОПАСНОСТЬЮ
+    
+    @app.route('/api/security/stats')
+    @rate_limit('api')
+    def get_security_api_stats():
+        """Детальная статистика безопасности"""
+        return jsonify({
+            'security_stats': get_security_stats(),
+            'rate_limits': rate_limiter.get_rate_limit_info(request.headers.get('X-Forwarded-For', request.remote_addr)),
+            'brute_force': brute_force_protection.get_attempts_info(request.headers.get('X-Forwarded-For', request.remote_addr)),
+            'threats_detected': threat_detector.get_threat_statistics()
+        })
+    
+    @app.route('/api/security/block-ip', methods=['POST'])
+    @rate_limit('api')
+    def block_ip_api():
+        """Принудительная блокировка IP"""
+        ip = request.json.get('ip', '')
+        reason = request.json.get('reason', 'Ручная блокировка администратором')
+        hours = request.json.get('hours', 24)
+        
+        if not ip:
+            return jsonify({'error': 'IP адрес обязателен'}), 400
+        
+        result = force_block_ip(ip, reason, hours)
+        return jsonify(result)
+    
+    @app.route('/api/security/unblock-ip', methods=['POST'])
+    @rate_limit('api')
+    def unblock_ip_api():
+        """Разблокировка IP"""
+        ip = request.json.get('ip', '')
+        
+        if not ip:
+            return jsonify({'error': 'IP адрес обязателен'}), 400
+        
+        result = unblock_ip(ip)
+        return jsonify(result)
+    
+    @app.route('/api/security/validate-password', methods=['POST'])
+    @rate_limit('api')
+    def validate_password_api():
+        """Валидация сложности пароля"""
+        password = request.json.get('password', '')
+        
+        if not password:
+            return jsonify({'error': 'Пароль обязателен'}), 400
+        
+        result = password_manager.validate_password_strength(password)
+        return jsonify(result)
+    
+    @app.route('/api/security/generate-password', methods=['GET'])
+    @rate_limit('api')
+    def generate_password_api():
+        """Генерация безопасного пароля"""
+        length = request.args.get('length', 16, type=int)
+        length = max(8, min(128, length))  # Ограничиваем длину
+        
+        password = password_manager.generate_secure_password(length)
+        return jsonify({'password': password})
+    
+
+
+    
+    # API для статистики (обновленный)
     @app.route('/api/stats')
+    @rate_limit('api')
     def get_stats():
         return jsonify({
             'users_online': 47,
-            'active_threats': 3,
+            'active_threats': len(threat_detector.blocked_ips),
             'lessons_today': 128,
             'encryptions_today': 89,
-            'ai_questions': 56
+            'ai_questions': 56,
+            'security_enabled': True,
+            'security_version': '2.0.0-ultra-secure'
         })
     
     # Обработчик ошибок

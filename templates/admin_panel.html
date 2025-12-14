@@ -1,332 +1,275 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - CyberGuardian</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .admin-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .admin-header {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .admin-header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        .admin-header .subtitle {
-            opacity: 0.8;
-            font-size: 1.1em;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            background: #f8f9fa;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            border-left: 4px solid #667eea;
-        }
-        
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            color: #7f8c8d;
-            font-size: 1.1em;
-        }
-        
-        .users-section {
-            padding: 30px;
-        }
-        
-        .section-title {
-            font-size: 1.8em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 10px;
-        }
-        
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .users-table th {
-            background: #34495e;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .users-table td {
-            padding: 15px;
-            border-bottom: 1px solid #ecf0f1;
-        }
-        
-        .users-table tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-        
-        .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 600;
-        }
-        
-        .badge-success {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .login-section {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 400px;
-            margin: 100px auto;
-            text-align: center;
-        }
-        
-        .login-title {
-            font-size: 2em;
-            color: #2c3e50;
-            margin-bottom: 30px;
-        }
-        
-        .password-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #ecf0f1;
-            border-radius: 10px;
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            transition: border-color 0.3s;
-        }
-        
-        .password-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .login-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .login-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .error-message {
-            color: #e74c3c;
-            margin-top: 15px;
-            padding: 10px;
-            background: #fadbd8;
-            border-radius: 5px;
-            display: none;
-        }
-        
-        .logout-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        .timestamp {
-            color: #7f8c8d;
-            font-size: 0.9em;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Админ-панель | CyberGuardian{% endblock %}
+
+{% block content %}
+<div class="container-max section-spacing">
     {% if not authenticated %}
     <!-- Форма входа -->
-    <div class="login-section">
-        <div class="login-title">🔐 Admin Panel</div>
-        <form method="POST">
-            <input type="password" name="admin_password" class="password-input" placeholder="Введите пароль администратора" required>
-            <button type="submit" class="login-btn">Войти</button>
-        </form>
-        <div class="error-message" id="errorMessage">
-            Неверный пароль
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="cyber-card fade-in-up">
+                <div class="text-center mb-4">
+                    <i class="bi bi-shield-lock" style="font-size: 3rem; color: var(--cyber-primary);"></i>
+                    <h2 class="cyber-title mt-3">Админ-панель</h2>
+                    <p class="cyber-subtext">Доступ только для авторизованных сотрудников</p>
+                </div>
+
+                {% if error %}
+                <div class="alert alert-danger d-flex align-items-center mb-4" role="alert" style="background: rgba(255, 107, 107, 0.1); border: 1px solid var(--cyber-danger); color: var(--cyber-danger);">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div>Неверный пароль администратора</div>
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% if csrf_token %}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    {% endif %}
+                    
+                    <div class="mb-4">
+                        <label for="admin_password" class="form-label cyber-text-bright">Пароль доступа</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: var(--cyber-darker); border-color: var(--cyber-border); color: var(--cyber-primary);">
+                                <i class="bi bi-key-fill"></i>
+                            </span>
+                            <input type="password" class="form-control" id="admin_password" name="admin_password" 
+                                   required placeholder="Введите пароль..."
+                                   style="background: var(--cyber-darker); border-color: var(--cyber-border); color: var(--cyber-text);">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-cyber w-100">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Войти в систему
+                    </button>
+                </form>
+            </div>
         </div>
-        
-        <script>
-            // Показать ошибку если есть
-            {% if error %}
-            document.getElementById('errorMessage').style.display = 'block';
-            {% endif %}
-        </script>
     </div>
-    
     {% else %}
-    <!-- Админ-панель -->
-    <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
-    
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>🛡️ CyberGuardian Admin</h1>
-            <div class="subtitle">Панель управления пользователями и статистикой</div>
+    <!-- Главная панель -->
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+        <div>
+            <h2 class="cyber-title">
+                <i class="bi bi-speedometer2 text-primary me-2"></i>Панель управления
+            </h2>
+            <p class="cyber-subtext">Мониторинг и управление системой безопасности</p>
         </div>
-        
-        <div class="stats-grid">
+        <a href="?logout=true" class="btn-cyber-danger">
+            <i class="bi bi-box-arrow-right"></i> Выйти
+        </a>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row g-4 mb-5 fade-in-up">
+        <div class="col-md-3">
             <div class="stat-card">
-                <div class="stat-number">{{ stats.total_users }}</div>
-                <div class="stat-label">👥 Всего пользователей</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ stats.total_lessons }}</div>
-                <div class="stat-label">📚 Завершено уроков</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ stats.total_encryptions }}</div>
-                <div class="stat-label">🔐 Операций шифрования</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ stats.active_users }}</div>
-                <div class="stat-label">🎯 Активных пользователей</div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-number">{{ stats.total_users }}</div>
+                        <div class="stat-label">Пользователи</div>
+                    </div>
+                    <i class="bi bi-people fs-1 opacity-50" style="color: var(--cyber-primary);"></i>
+                </div>
             </div>
         </div>
-        
-        <div class="users-section">
-            <h2 class="section-title">📊 Зарегистрированные пользователи</h2>
-            <table class="users-table">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-number" style="color: var(--cyber-danger);">{{ stats.blocked_ips_count }}</div>
+                        <div class="stat-label">Заблокировано IP</div>
+                    </div>
+                    <i class="bi bi-shield-slash fs-1 opacity-50" style="color: var(--cyber-danger);"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-number" style="color: var(--cyber-success);">{{ stats.total_lessons }}</div>
+                        <div class="stat-label">Уроки пройдены</div>
+                    </div>
+                    <i class="bi bi-mortarboard fs-1 opacity-50" style="color: var(--cyber-success);"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="stat-number" style="color: var(--cyber-warning);">{{ stats.total_encryptions }}</div>
+                        <div class="stat-label">Шифрования</div>
+                    </div>
+                    <i class="bi bi-file-earmark-lock fs-1 opacity-50" style="color: var(--cyber-warning);"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Управление пользователями -->
+    <div class="cyber-card fade-in-up">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="cyber-text-bright m-0">
+                <i class="bi bi-people-fill me-2"></i>Пользователи
+            </h4>
+            <div class="cyber-badge cyber-badge-primary">
+                Всего: {{ stats.total_users }}
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover" style="--bs-table-bg: transparent;">
                 <thead>
-                    <tr>
-                        <th>Пользователь</th>
-                        <th>Email</th>
-                        <th>Дата регистрации</th>
-                        <th>Прогресс</th>
-                        <th>Активность</th>
+                    <tr style="border-bottom: 2px solid var(--cyber-border);">
+                        <th scope="col" class="py-3">ID</th>
+                        <th scope="col" class="py-3">Пользователь</th>
+                        <th scope="col" class="py-3">Email</th>
+                        <th scope="col" class="py-3">Регистрация</th>
+                        <th scope="col" class="py-3">Прогресс</th>
+                        <th scope="col" class="py-3">Статус</th>
+                        <th scope="col" class="py-3 text-end">Действия</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="border-top: none;">
                     {% for user in users %}
-                    <tr>
+                    <tr style="border-bottom: 1px solid var(--cyber-border); vertical-align: middle;">
+                        <td><span class="cyber-text-bright">#{{ user.id }}</span></td>
                         <td>
-                            <div class="user-info">
-                                <div class="user-avatar">{{ user.username[0]|upper }}</div>
-                                <div>
-                                    <strong>{{ user.username }}</strong><br>
-                                    <small>ID: {{ user.id }}</small>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    {{ user.username[0]|upper }}
                                 </div>
+                                {{ user.username }}
+                            </div>
+                        </td>
+                        <td class="cyber-subtext">{{ user.email }}</td>
+                        <td class="cyber-subtext">{{ user.created_at.strftime('%d.%m.%Y') if user.created_at else '-' }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25" title="Уроков">
+                                    <i class="bi bi-book me-1"></i>{{ user.lessons_completed }}
+                                </span>
+                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25" title="Шифрований">
+                                    <i class="bi bi-lock me-1"></i>{{ user.encryption_count }}
+                                </span>
                             </div>
                         </td>
                         <td>
-                            {{ user.email[:3] }}***{{ user.email.split('@')[1] }}
-                            <br><small class="timestamp">{{ user.email }}</small>
-                        </td>
-                        <td>
-                            {% if user.created_at %}
-                            {{ user.created_at.strftime('%d.%m.%Y %H:%M') }}
+                            {% if user.is_active %}
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                    <i class="bi bi-check-circle me-1"></i>Активен
+                                </span>
                             {% else %}
-                            <em>Не указана</em>
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                                    <i class="bi bi-dash-circle me-1"></i>Заблокирован
+                                </span>
                             {% endif %}
                         </td>
-                        <td>
-                            <span class="badge badge-success">
-                                {{ user.lessons_completed }} уроков
-                            </span>
-                        </td>
-                        <td>
-                            {{ user.encryption_count }} операций
+                        <td class="text-end">
+                            <div class="btn-group">
+                                {% if user.is_active %}
+                                <button onclick="banUser({{ user.id }}, '{{ user.username }}')" class="btn btn-sm btn-outline-warning" title="Заблокировать">
+                                    <i class="bi bi-slash-circle"></i>
+                                </button>
+                                {% else %}
+                                <button onclick="unbanUser({{ user.id }}, '{{ user.username }}')" class="btn btn-sm btn-outline-success" title="Разблокировать">
+                                    <i class="bi bi-check-circle"></i>
+                                </button>
+                                {% endif %}
+                                <button onclick="deleteUser({{ user.id }}, '{{ user.username }}')" class="btn btn-sm btn-outline-danger" title="Удалить">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        <!-- Пагинация -->
+        {% if users_pagination and users_pagination.pages > 1 %}
+        <nav aria-label="Пагинация" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if users_pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ users_pagination.prev_num }}" style="background: var(--cyber-darker); border-color: var(--cyber-border); color: var(--cyber-text);">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                <li class="page-item disabled">
+                    <span class="page-link" style="background: var(--cyber-bg-card); border-color: var(--cyber-border); color: var(--cyber-primary);">
+                        Стр. {{ users_pagination.page }} из {{ users_pagination.pages }}
+                    </span>
+                </li>
+                
+                {% if users_pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ users_pagination.next_num }}" style="background: var(--cyber-darker); border-color: var(--cyber-border); color: var(--cyber-text);">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
     </div>
-    
-    <script>
-        function logout() {
-            if (confirm('Вы уверены, что хотите выйти?')) {
-                window.location.href = '/admin?logout=true';
-            }
-        }
-        
-        // Авто-обновление каждые 30 секунд
-        setTimeout(() => {
-            window.location.reload();
-        }, 30000);
-    </script>
     {% endif %}
-</body>
-</html>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+    // Функции для работы с API админки
+    async function apiRequest(endpoint, data) {
+        try {
+            const response = await fetch(`/admin/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                showNotification(result.message || 'Успешно!', 'success');
+                // Перезагружаем страницу через 1 секунду для обновления данных
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                showNotification(result.error || 'Ошибка выполнения операции', 'danger');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Произошла ошибка сети', 'danger');
+        }
+    }
+
+    function banUser(userId, username) {
+        if (confirm(`Вы уверены, что хотите заблокировать пользователя ${username}?`)) {
+            apiRequest('ban-user', { user_id: userId, reason: 'Административная блокировка' });
+        }
+    }
+
+    function unbanUser(userId, username) {
+        if (confirm(`Разблокировать пользователя ${username}?`)) {
+            apiRequest('unban-user', { user_id: userId });
+        }
+    }
+
+    function deleteUser(userId, username) {
+        if (confirm(`ВНИМАНИЕ! Вы собираетесь удалить пользователя ${username}.\nЭто действие НЕОБРАТИМО!\n\nПродолжить?`)) {
+            apiRequest('delete-user', { user_id: userId });
+        }
+    }
+</script>
+{% endblock %}
+

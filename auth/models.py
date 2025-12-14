@@ -7,12 +7,20 @@ import json
 class User(db.Model):
     __tablename__ = "users"
 
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
+
+
+    # Безопасность и блокировка
+    user_is_active = db.Column(db.Boolean, default=True)
+    banned_reason = db.Column(db.Text, nullable=True)
+    banned_at = db.Column(db.DateTime, nullable=True)
+    banned_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
 
     # Прогресс пользователя
     completed_lessons = db.Column(db.Text, default="[]")
@@ -43,6 +51,7 @@ class User(db.Model):
             "encryption_usage": self.encryption_usage,
         }
 
+
     # Методы, необходимые для Flask-Login
     @property
     def is_authenticated(self):
@@ -50,7 +59,7 @@ class User(db.Model):
 
     @property
     def is_active(self):
-        return True
+        return self.user_is_active and self.banned_reason is None
 
     @property
     def is_anonymous(self):
