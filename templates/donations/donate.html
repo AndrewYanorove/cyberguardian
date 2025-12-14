@@ -1,0 +1,594 @@
+<!-- templates/donations/donate.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/donations.css') }}">
+
+<section class="section-spacing">
+    <div class="container-max">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Заголовок -->
+                <div class="text-center mb-5 fade-in-up">
+                    <h1 class="cyber-title-primary mb-3">
+                        <i class="bi bi-heart-fill me-2" style="color: var(--cyber-danger);"></i>
+                        Поддержать проект
+                    </h1>
+                    <p class="cyber-lead">
+                        CyberGuardian развивается благодаря таким энтузиастам как вы.
+                        Каждое пожертвование помогает улучшать платформу.
+                    </p>
+                </div>
+
+                <div class="row">
+                    <!-- Левая колонка: Форма пожертвования -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="cyber-card p-4">
+                            <h3 class="cyber-text-bright mb-4">
+                                <i class="bi bi-currency-exchange me-2"></i>Сделать пожертвование
+                            </h3>
+
+                            <!-- Быстрые суммы -->
+                            <div class="mb-4">
+                                <h5 class="cyber-subtext mb-3">Выберите сумму:</h5>
+                                <div class="quick-amounts d-flex flex-wrap gap-2 mb-4">
+                                    <button class="btn-cyber-outline amount-btn" data-amount="100">100 ₽</button>
+                                    <button class="btn-cyber-outline amount-btn" data-amount="300">300 ₽</button>
+                                    <button class="btn-cyber-outline amount-btn active" data-amount="500">500 ₽</button>
+                                    <button class="btn-cyber-outline amount-btn" data-amount="1000">1 000 ₽</button>
+                                    <button class="btn-cyber-outline amount-btn" data-amount="5000">5 000 ₽</button>
+                                </div>
+
+                                <!-- Пользовательская сумма -->
+                                <div class="custom-amount mb-4">
+                                    <label for="customAmount" class="form-label cyber-text">Или введите свою
+                                        сумму:</label>
+                                    <div class="input-group">
+                                        <input type="number" id="customAmount" class="form-control cyber-input"
+                                            placeholder="Введите сумму" min="10" max="50000" value="500">
+                                        <span class="input-group-text cyber-bg">₽</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Способ оплаты -->
+                            <div class="mb-4">
+                                <h5 class="cyber-subtext mb-3">Способ оплаты:</h5>
+                                <div class="payment-methods">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input cyber-check" type="radio" name="paymentMethod"
+                                            id="card" checked>
+                                        <label class="form-check-label cyber-text" for="card">
+                                            <i class="bi bi-credit-card me-2"></i>Банковская карта
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input cyber-check" type="radio" name="paymentMethod"
+                                            id="yoomoney">
+                                        <label class="form-check-label cyber-text" for="yoomoney">
+                                            <i class="bi bi-wallet me-2"></i>ЮMoney
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input cyber-check" type="radio" name="paymentMethod"
+                                            id="crypto">
+                                        <label class="form-check-label cyber-text" for="crypto">
+                                            <i class="bi bi-currency-bitcoin me-2"></i>Криптовалюта
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Кнопка пожертвования -->
+                            <div class="d-grid">
+                                <button id="donateBtn" class="btn-cyber btn-lg">
+                                    <i class="bi bi-heart-fill me-2"></i>Поддержать проект
+                                </button>
+                            </div>
+
+                            <div class="mt-3 text-center">
+                                <small class="cyber-subtext">
+                                    <i class="bi bi-shield-check me-1"></i>
+                                    Безопасная оплата через защищенное соединение
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Правая колонка: Информация -->
+                    <div class="col-lg-4">
+                        <!-- Статистика -->
+                        <div class="cyber-card p-4 mb-4" style="border-color: var(--cyber-primary);">
+                            <h4 class="cyber-text-bright mb-3">
+                                <i class="bi bi-graph-up me-2"></i>Статистика
+                            </h4>
+                            <div class="donation-stats">
+                                <div class="stat-item mb-3">
+                                    <div class="stat-label cyber-subtext">Всего собрано</div>
+                                    <div class="stat-value cyber-text-bright h4" id="totalAmount">0 ₽</div>
+                                </div>
+                                <div class="stat-item mb-3">
+                                    <div class="stat-label cyber-subtext">Поддержали проект</div>
+                                    <div class="stat-value cyber-text-bright h4" id="totalDonors">0 человек</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label cyber-subtext">Последние пожертвования</div>
+                                    <div class="recent-donations mt-2" id="recentDonations">
+                                        <!-- Загрузится через AJAX -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Для чего нужны пожертвования -->
+                        <div class="cyber-card p-4">
+                            <h4 class="cyber-text-bright mb-3">
+                                <i class="bi bi-question-circle me-2"></i>На что пойдут средства?
+                            </h4>
+                            <ul class="funding-list">
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span class="cyber-text">Развитие платформы</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span class="cyber-text">Новые образовательные материалы</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span class="cyber-text">Техническая инфраструктура</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span class="cyber-text">Бесплатный доступ для всех</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ -->
+                <div class="cyber-card p-4 mt-4">
+                    <h3 class="cyber-text-bright mb-4">
+                        <i class="bi bi-info-circle me-2"></i>Часто задаваемые вопросы
+                    </h3>
+                    <div class="accordion" id="donationFAQ">
+                        <div class="accordion-item cyber-border">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button cyber-bg" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq1">
+                                    Безопасны ли платежи?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#donationFAQ">
+                                <div class="accordion-body cyber-text">
+                                    Да, все платежи обрабатываются через защищенные платежные системы с SSL-шифрованием.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item cyber-border">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed cyber-bg" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Можно ли пожертвовать анонимно?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#donationFAQ">
+                                <div class="accordion-body cyber-text">
+                                    Да, вы можете сделать анонимное пожертвование без регистрации на сайте.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item cyber-border">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed cyber-bg" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Предоставляется ли отчетность?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#donationFAQ">
+                                <div class="accordion-body cyber-text">
+                                    Да, мы публикуем ежемесячные отчеты о расходовании средств на нашем сайте.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Установка активной кнопки суммы
+        const amountBtns = document.querySelectorAll('.amount-btn');
+        const customAmountInput = document.getElementById('customAmount');
+
+        amountBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                amountBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                customAmountInput.value = this.dataset.amount;
+            });
+        });
+
+        // Обновление активной кнопки при ручном вводе
+        customAmountInput.addEventListener('input', function () {
+            amountBtns.forEach(b => b.classList.remove('active'));
+        });
+
+        // Загрузка статистики
+        function loadStats() {
+            fetch('/donations/stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('totalAmount').textContent =
+                        data.total_amount.toLocaleString('ru-RU') + ' ₽';
+                    document.getElementById('totalDonors').textContent =
+                        data.total_donors + ' человек';
+
+                    const recentContainer = document.getElementById('recentDonations');
+                    recentContainer.innerHTML = '';
+
+                    data.recent_donations.slice(0, 5).forEach(donation => {
+                        const div = document.createElement('div');
+                        div.className = 'cyber-subtext mb-1';
+                        const date = new Date(donation.date).toLocaleDateString('ru-RU');
+                        div.innerHTML = `<i class="bi bi-cash-coin me-1"></i> ${donation.amount} ₽ • ${date}`;
+                        recentContainer.appendChild(div);
+                    });
+                })
+                .catch(error => console.error('Error loading stats:', error));
+        }
+
+        // Обработка пожертвования
+        document.getElementById('donateBtn').addEventListener('click', function () {
+            const amount = customAmountInput.value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').id;
+
+            if (!amount || amount < 10) {
+                alert('Минимальная сумма пожертвования - 10 рублей');
+                return;
+            }
+
+            // Показываем загрузку
+            this.innerHTML = '<span class="cyber-loader"></span> Обработка...';
+            this.disabled = true;
+
+            // Отправка формы
+            const formData = new FormData();
+            formData.append('amount', amount);
+            formData.append('payment_method', paymentMethod);
+
+            fetch('/donations/process', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '' // CSRF защита отключена
+                }
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.json();
+                    }
+                })
+                .catch(error => {
+                    console.error('Donation error:', error);
+                    alert('Произошла ошибка. Пожалуйста, попробуйте позже.');
+                    this.innerHTML = '<i class="bi bi-heart-fill me-2"></i>Поддержать проект';
+                    this.disabled = false;
+                });
+        });
+
+        // Загружаем статистику при загрузке страницы
+        loadStats();
+    });
+</script>
+
+<style>
+    .quick-amounts .amount-btn.active {
+        background: var(--cyber-primary);
+        color: black;
+        border-color: var(--cyber-primary);
+    }
+
+    .funding-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .accordion-button {
+        background: var(--cyber-dark);
+        color: var(--cyber-text);
+    }
+
+    .accordion-button:not(.collapsed) {
+        background: var(--cyber-darker);
+        color: var(--cyber-primary);
+    }
+
+    .stat-item {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--cyber-border);
+    }
+
+    .stat-item:last-child {
+        border-bottom: none;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+    }
+
+    .stat-value {
+        font-weight: bold;
+    }
+
+    /* static/css/donations.css */
+    .donation-hero {
+        background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(0, 255, 136, 0.1));
+        border-bottom: 2px solid var(--cyber-primary);
+        padding: 4rem 0;
+    }
+
+    .donation-tiers {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .donation-tier {
+        background: rgba(20, 20, 20, 0.8);
+        border: 2px solid var(--cyber-border);
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .donation-tier:hover {
+        transform: translateY(-10px);
+        border-color: var(--cyber-primary);
+        box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+    }
+
+    .donation-tier.popular {
+        border-color: var(--cyber-danger);
+        transform: scale(1.05);
+    }
+
+    .tier-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--cyber-danger);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .tier-amount {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--cyber-primary);
+        margin: 1rem 0;
+    }
+
+    .tier-features {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0;
+        text-align: left;
+    }
+
+    .tier-features li {
+        padding: 0.5rem 0;
+        color: var(--cyber-text);
+        display: flex;
+        align-items: center;
+    }
+
+    .tier-features li i {
+        color: var(--cyber-primary);
+        margin-right: 0.5rem;
+    }
+
+    .progress-container {
+        margin: 2rem 0;
+    }
+
+    .progress-goal {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: var(--cyber-subtext);
+        font-size: 0.9rem;
+    }
+
+    .donor-card {
+        background: rgba(30, 30, 30, 0.5);
+        border: 1px solid var(--cyber-border);
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .donor-card:hover {
+        background: rgba(0, 255, 136, 0.1);
+        border-color: var(--cyber-primary);
+    }
+
+    .donor-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--cyber-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        color: black;
+        font-weight: bold;
+    }
+
+    .donor-info {
+        flex: 1;
+    }
+
+    .donor-name {
+        color: var(--cyber-text);
+        font-weight: 500;
+    }
+
+    .donor-amount {
+        color: var(--cyber-primary);
+        font-weight: bold;
+    }
+
+    .donor-date {
+        color: var(--cyber-subtext);
+        font-size: 0.8rem;
+    }
+
+    .monthly-support {
+        background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 136, 255, 0.1));
+        border: 2px solid var(--cyber-primary);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 3rem 0;
+    }
+
+    .support-benefits {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .benefit-card {
+        background: rgba(20, 20, 20, 0.8);
+        border: 1px solid var(--cyber-border);
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .benefit-card:hover {
+        border-color: var(--cyber-primary);
+        transform: translateY(-5px);
+    }
+
+    .benefit-icon {
+        font-size: 2.5rem;
+        color: var(--cyber-primary);
+        margin-bottom: 1rem;
+    }
+
+    .transparency-section {
+        background: rgba(10, 10, 10, 0.9);
+        border-top: 2px solid var(--cyber-border);
+        padding: 3rem 0;
+    }
+
+    .report-card {
+        background: rgba(20, 20, 20, 0.8);
+        border: 1px solid var(--cyber-border);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        transition: all 0.3s ease;
+    }
+
+    .report-card:hover {
+        border-color: var(--cyber-primary);
+        transform: translateX(10px);
+    }
+
+    .report-date {
+        color: var(--cyber-primary);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .report-amount {
+        color: var(--cyber-text);
+        font-size: 1.2rem;
+    }
+
+    /* Анимация сердца */
+    .heartbeat {
+        animation: heartbeat 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+        0% {
+            transform: scale(1);
+        }
+
+        5% {
+            transform: scale(1.1);
+        }
+
+        10% {
+            transform: scale(1);
+        }
+
+        15% {
+            transform: scale(1.1);
+        }
+
+        20% {
+            transform: scale(1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Стили для кнопок сумм */
+    .amount-btn {
+        min-width: 80px;
+        transition: all 0.3s ease;
+    }
+
+    .amount-btn.active {
+        background: var(--cyber-primary) !important;
+        color: black !important;
+        border-color: var(--cyber-primary) !important;
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .donation-tiers {
+            grid-template-columns: 1fr;
+        }
+
+        .donation-tier.popular {
+            transform: none;
+        }
+
+        .tier-amount {
+            font-size: 2rem;
+        }
+
+        .support-benefits {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+{% endblock %}

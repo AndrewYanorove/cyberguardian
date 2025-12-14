@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
+from donations import donations_bp
 from flask_compress import Compress
 from flask_caching import Cache
 from dotenv import load_dotenv
@@ -57,6 +58,7 @@ def create_app():
     from templates.simulators.routes import simulators_bp
     from ddos_simulator.routes import ddos_bp
     from forum.routes import forum_bp
+    from donations import donations_bp
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(education_bp, url_prefix='/education')
@@ -69,6 +71,7 @@ def create_app():
     app.register_blueprint(simulators_bp, url_prefix='/simulators')
     app.register_blueprint(ddos_bp, url_prefix='/ddos')
     app.register_blueprint(forum_bp, url_prefix='/forum')
+    app.register_blueprint(donations_bp)
 
     # 🔥 УМНАЯ ЗАЩИТА ДАННЫХ ПРИ ЗАПУСКЕ
     with app.app_context():

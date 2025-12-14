@@ -1001,65 +1001,6 @@
             background: var(--cyber-accent);
         }
 
-        /* ===== RESPONSIVE DESIGN ===== */
-        @media (max-width: 768px) {
-            .cyber-header {
-                padding: 0.75rem 0;
-            }
-
-            .header-container {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-
-            .cyber-brand {
-                font-size: 1.25rem;
-            }
-
-            .header-actions {
-                order: 3;
-                width: 100%;
-                justify-content: center;
-                margin-top: 10px;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .sidebar {
-                width: 100%;
-                left: -100%;
-            }
-
-            .social-links {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .cyber-header {
-                padding: 0.5rem 0;
-            }
-
-            .header-actions .btn-cyber-outline,
-            .header-actions .btn-cyber {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .header-actions .btn-cyber span,
-            .header-actions .btn-cyber-outline span {
-                display: none;
-            }
-
-            .header-actions .btn-cyber i,
-            .header-actions .btn-cyber-outline i {
-                margin-right: 0;
-            }
-        }
-
         /* ===== HEADER ===== */
         .cyber-header {
             background: rgba(10, 10, 15, 0.95);
@@ -1187,6 +1128,185 @@
             border-top: 1px solid var(--cyber-border);
             color: var(--cyber-subtext);
         }
+         /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 350px;
+            height: 100vh;
+            background: rgba(10, 10, 15, 0.98);
+            border-right: 2px solid var(--cyber-primary);
+            z-index: 10000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--cyber-border);
+            background: rgba(15, 15, 25, 0.95);
+        }
+
+        .sidebar-menu {
+            padding: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: var(--cyber-text);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(0, 168, 255, 0.1);
+            border-color: var(--cyber-primary);
+            transform: translateX(5px);
+        }
+
+        .sidebar-item i {
+            width: 20px;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--cyber-border);
+            margin: 1rem 0;
+        }
+
+        .sidebar-category {
+            color: var(--cyber-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== DROPDOWN ===== */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            background: var(--cyber-bg-card);
+            border: 2px solid var(--cyber-border);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            margin-top: 0.5rem;
+            right: 0;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .cyber-header {
+                padding: 0.75rem 0;
+            }
+
+            .header-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .cyber-brand {
+                font-size: 1.25rem;
+            }
+
+            .header-actions {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cyber-header {
+                padding: 0.5rem 0;
+            }
+
+            .header-actions .btn-cyber-outline,
+            .header-actions .btn-cyber {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .header-actions .btn-cyber span,
+            .header-actions .btn-cyber-outline span {
+                display: none;
+            }
+
+            .header-actions .btn-cyber i,
+            .header-actions .btn-cyber-outline i {
+                margin-right: 0;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cyber-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-accent);
+        }
 
 
         /* ===== DROPDOWN ===== */
@@ -1263,6 +1383,7 @@
         </div>
     </header>
 
+ 
     <!-- Боковое меню -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -1322,6 +1443,104 @@
 
             <div class="sidebar-divider"></div>
 
+            <!-- Экспертные инструменты -->
+            <div class="sidebar-category">Экспертные инструменты</div>
+
+            <a href="{{ url_for('threats.threat_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-shield-exclamation"></i>
+                <span>Мониторинг угроз</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <a href="{{ url_for('scanner.scanner_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-shield-check"></i>
+                <span>Сканер безопасности</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <a href="{{ url_for('games.games_dashboard') }}" class="sidebar-item">
+                <i class="bi bi-joystick"></i>
+                <span>Кибер-тренировка</span>
+                <span class="cyber-badge cyber-badge-primary ms-auto" style="font-size: 0.6rem;">NEW</span>
+            </a>
+
+            <!-- DDoS Simulator -->
+            <a href="{{ url_for('ddos.ddos_simulator') }}" class="sidebar-item">
+                <i class="bi bi-lightning-charge"></i>
+                <span>DDoS Simulator</span>
+                <span class="cyber-badge cyber-badge-danger ms-auto" style="font-size: 0.6rem;">HOT</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Информационные страницы -->
+            <a href="{{ url_for('about') }}" class="sidebar-item">
+                <i class="bi bi-info-circle"></i>
+                <span>О проекте</span>
+            </a>
+
+            <a href="{{ url_for('contact') }}" class="sidebar-item">
+                <i class="bi bi-envelope"></i>
+                <span>Контакты</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Авторизация -->
+            {% if current_user.is_authenticated %}
+            <div class="sidebar-user-info p-3 mb-3" style="background: var(--cyber-bg-card); border-radius: 10px;">
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar-sidebar"
+                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--cyber-primary); display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                        <i class="bi bi-person" style="color: white;"></i>
+                    </div>
+                    <div>
+                        <div class="username" style="color: var(--cyber-text-bright); font-weight: 600;">{{
+                            current_user.username }}</div>
+                        <div class="user-email" style="color: var(--cyber-subtext); font-size: 0.8rem;">{{
+                            current_user.email if current_user.email else 'Пользователь' }}</div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('auth.profile') }}" class="sidebar-item">
+                <i class="bi bi-person"></i>
+                <span>Профиль</span>
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-item" style="color: var(--cyber-danger);">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Выйти</span>
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}" class="sidebar-item">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Войти</span>
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="sidebar-item">
+                <i class="bi bi-person-plus"></i>
+                <span>Регистрация</span>
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="sidebar-footer p-3" style="border-top: 1px solid var(--cyber-border);">
+            <div class="social-links justify-content-center">
+                <a href="https://t.me/cyberguardian_support" class="social-link" target="_blank">
+                    <i class="bi bi-telegram"></i>
+                </a>
+                <a href="https://github.com" class="social-link" target="_blank">
+                    <i class="bi bi-github"></i>
+                </a>
+                <a href="mailto:support@cyberguardian.ru" class="social-link">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay для закрытия меню -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+        <div class="cyber-container" style="margin-top: 65px;"></div>
             <!-- SVG Gradients -->
             <svg width="0" height="0">
                 <defs>
